@@ -10,13 +10,13 @@
 # Sin caches de hashes: la lista (b) sale del diff git del JSON (+ version de canon).
 #
 # Uso (desde la raiz del repositorio):
-#   powershell -File tools\impacto.ps1 -Materia materias\minimal-api-csharp.json [-Curso minimal-api-csharp]
-#   powershell -File tools\impacto.ps1 -Materia materias\minimal-api-csharp.json -Desde HEAD~1 [-Json]
-#   powershell -File tools\impacto.ps1 -Materia materias\minimal-api-csharp.json -Canon materias\otro-insumo.md
+#   powershell -File tools\impacto.ps1 -Materia materias\LSO [-Curso output/LSO]
+#   powershell -File tools\impacto.ps1 -Materia materias\LSO -Desde HEAD~1 [-Json]
+#   powershell -File tools\impacto.ps1 -Materia materias\LSO -Canon materias\otro-insumo.md
 #
 # Parametros:
-#   -Materia (obligatorio) ruta al curso-data.json de la materia.
-#   -Curso   carpeta del corpus (por defecto, el nombre de la materia sin extension).
+#   -Materia (obligatorio) ruta a la carpeta de la materia (contiene curso-data.json).
+#   -Curso   carpeta del corpus (por defecto, el nombre de la carpeta de la materia).
 #   -Desde   revision git de referencia (por defecto HEAD; el diff incluye cambios sin commitear).
 #   -Canon   rutas adicionales tratadas como canon (cambio canonico -> toda la prosa afectada).
 #   -Json    salida machine-parseable (en lugar del texto plano en espanol).
@@ -55,13 +55,15 @@ function Exit-Uso([string]$msg) {
 
 # --- Validacion de uso y de git ---
 $materiaFull = if ([System.IO.Path]::IsPathRooted($Materia)) { $Materia } else { Join-Path $root $Materia }
-if (-not (Test-Path -LiteralPath $materiaFull)) { Exit-Uso "no existe el curso-data: $Materia" }
-$materiaRel = ([System.IO.Path]::GetFullPath($materiaFull).Substring($root.Length + 1)) -replace '\\', '/'
+if (-not (Test-Path -LiteralPath $materiaFull -PathType Container)) { Exit-Uso "no existe la carpeta de materia: $Materia" }
+$materiaJson = Join-Path $materiaFull 'curso-data.json'
+if (-not (Test-Path -LiteralPath $materiaJson)) { Exit-Uso "falta curso-data.json dentro de: $Materia" }
+$materiaRel = ([System.IO.Path]::GetFullPath($materiaJson).Substring($root.Length + 1)) -replace '\\', '/'
 
 & git -C $root rev-parse --verify "$Desde" > $null 2> $null
 if ($LASTEXITCODE -ne 0) { Exit-Uso "revision git invalida: $Desde" }
 
-if ($Curso -eq '') { $Curso = [System.IO.Path]::GetFileNameWithoutExtension($materiaFull) }
+if ($Curso -eq '') { $Curso = [System.IO.Path]::GetFileName($materiaFull) }
 $cursoRoot = Join-Path $root $Curso
 $cursoUnidades = Join-Path $cursoRoot '02-unidades'
 $corpusPresente = Test-Path -LiteralPath $cursoRoot

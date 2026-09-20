@@ -3,10 +3,10 @@
 # sin prosa: solo estructura, metadatos del curso-data y placeholders <!-- prose: ... -->.
 #
 # Uso (desde la raíz del repositorio):
-#   powershell -File tools\scaffold-clase.ps1 -Materia materias\minimal-api-csharp.json -Encuentro 5 -Salida <carpeta> [-Slug mi-slug] [-Force]
+#   powershell -File tools\scaffold-clase.ps1 -Materia materias\LSO -Encuentro 5 -Salida <carpeta> [-Slug mi-slug] [-Force]
 #
 # Parametros:
-#   -Materia    (obligatorio) ruta al curso-data.json de la materia.
+#   -Materia    (obligatorio) ruta a la carpeta de la materia (contiene curso-data.json).
 #   -Encuentro  (obligatorio) ordinal del encuentro de unidad (debe existir en el JSON).
 #   -Salida     carpeta destino (se crea si no existe).
 #   -Slug       sufijo del nombre de archivo; por defecto se deriva del tema (minúsculas, sin tildes, con guiones).
@@ -30,20 +30,25 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if ($Materia -eq '') {
-  Write-Output 'ERROR: falta -Materia <ruta al curso-data.json>'
+  Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
   exit 1
 }
 if ($Encuentro -le 0) {
   Write-Output 'ERROR: falta -Encuentro <n> (ordinal del encuentro de unidad)'
   exit 1
 }
-if (-not (Test-Path -LiteralPath $Materia)) {
-  Write-Output "ERROR: no se encontro el archivo de materia: $Materia"
+if (-not (Test-Path -LiteralPath $Materia -PathType Container)) {
+  Write-Output "ERROR: no se encontro la carpeta de materia: $Materia"
+  exit 1
+}
+$rutaJson = Join-Path $Materia 'curso-data.json'
+if (-not (Test-Path -LiteralPath $rutaJson)) {
+  Write-Output "ERROR: falta $Materia/curso-data.json"
   exit 1
 }
 
 try {
-  $data = [System.IO.File]::ReadAllText((Resolve-Path -LiteralPath $Materia).Path) | ConvertFrom-Json
+  $data = [System.IO.File]::ReadAllText((Resolve-Path -LiteralPath $rutaJson).Path) | ConvertFrom-Json
 } catch {
   Write-Output "ERROR: JSON invalido: $($_.Exception.Message)"
   exit 1

@@ -2,10 +2,10 @@
 # a partir de curso-data.json + plantillas (tramos invariantes, filas de libro y esqueletos de unidad).
 #
 # Uso (desde la raíz del repositorio):
-#   powershell -File tools\generar-administrativos.ps1 -Materia materias\minimal-api-csharp.json -Salida <carpeta> [-Variante 1]
+#   powershell -File tools\generar-administrativos.ps1 -Materia materias\LSO -Salida <carpeta> [-Variante 1]
 #
 # Parametros:
-#   -Materia   (obligatorio) ruta al curso-data.json de la materia.
+#   -Materia   (obligatorio) carpeta de la materia (contiene curso-data.json).
 #   -Salida    carpeta destino (por defecto, la carpeta actual; se crea si no existe). Escribe:
 #                planificacion-anual.csv
 #                libro-de-aula-1-linea-por-encuentro.csv
@@ -31,11 +31,17 @@ if ($null -eq $Salida -or $Salida -eq '') { $Salida = '.' }
 if ($null -eq $Variante) { $Variante = 0 }
 
 if ($Materia -eq '') {
-  Write-Output 'ERROR: falta -Materia <ruta al curso-data.json>'
+  Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
   exit 1
 }
-if (-not (Test-Path -LiteralPath $Materia)) {
-  Write-Output "ERROR: no se encontro el archivo de materia: $Materia"
+if (-not (Test-Path -LiteralPath $Materia -PathType Container)) {
+  Write-Output "ERROR: no se encontro la carpeta de materia: $Materia"
+  exit 1
+}
+
+$rutaJson = Join-Path $Materia 'curso-data.json'
+if (-not (Test-Path -LiteralPath $rutaJson)) {
+  Write-Output "ERROR: falta $Materia/curso-data.json"
   exit 1
 }
 
@@ -44,7 +50,7 @@ $raiz = Split-Path -Parent $PSScriptRoot
 $rutaTramos = Join-Path $raiz 'plantillas\tramos-invariantes.json'
 $rutaFilasLibro = Join-Path $raiz 'plantillas\libro-filas-invariantes.json'
 $rutaEsqueletos = Join-Path $raiz 'plantillas\esqueletos-unidad.json'
-foreach ($ruta in @($Materia, $rutaTramos, $rutaFilasLibro, $rutaEsqueletos)) {
+foreach ($ruta in @($rutaJson, $rutaTramos, $rutaFilasLibro, $rutaEsqueletos)) {
   if (-not (Test-Path -LiteralPath $ruta)) {
     Write-Output "ERROR: no se encontro el archivo requerido: $ruta"
     exit 1
@@ -55,7 +61,7 @@ try {
   function Read-Json([string]$ruta) {
     [System.IO.File]::ReadAllText((Resolve-Path -LiteralPath $ruta).Path) | ConvertFrom-Json
   }
-  $data = Read-Json $Materia
+  $data = Read-Json $rutaJson
   $tramos = Read-Json $rutaTramos
   $filasLibro = @($(Read-Json $rutaFilasLibro))
   $esqueletos = Read-Json $rutaEsqueletos

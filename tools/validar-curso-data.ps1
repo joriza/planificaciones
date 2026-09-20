@@ -1,7 +1,7 @@
 ﻿# validar-curso-data.ps1 — Validación del curso-data.json de una materia antes de renderizar administrativos.
 #
 # Uso (desde la raíz del repositorio):
-#   powershell -File tools\validar-curso-data.ps1 -Materia materias\minimal-api-csharp.json
+#   powershell -File tools\validar-curso-data.ps1 -Materia materias\LSO
 #
 # Comportamiento: si todo valida, imprime un resumen OK y sale con 0; si hay incumplimientos,
 # los lista TODOS y sale con 1.
@@ -23,19 +23,25 @@ param([string]$Materia = '')
 $ErrorActionPreference = 'Stop'
 
 if ($Materia -eq '') {
-  Write-Output 'ERROR: falta -Materia <ruta al curso-data.json>'
+  Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
   exit 1
 }
-if (-not (Test-Path -LiteralPath $Materia)) {
-  Write-Output "ERROR: no se encontro el archivo de materia: $Materia"
+if (-not (Test-Path -LiteralPath $Materia -PathType Container)) {
+  Write-Output "ERROR: no se encontro la carpeta de materia: $Materia"
+  exit 1
+}
+
+$rutaJson = Join-Path $Materia 'curso-data.json'
+if (-not (Test-Path -LiteralPath $rutaJson)) {
+  Write-Output "ERROR: falta $Materia/curso-data.json"
   exit 1
 }
 
 try {
-  $rutaAbsoluta = (Resolve-Path -LiteralPath $Materia).Path
+  $rutaAbsoluta = (Resolve-Path -LiteralPath $rutaJson).Path
   $data = [System.IO.File]::ReadAllText($rutaAbsoluta) | ConvertFrom-Json
 } catch {
-  Write-Output "ERROR: JSON invalido en $Materia : $($_.Exception.Message)"
+  Write-Output "ERROR: JSON invalido en $rutaJson : $($_.Exception.Message)"
   exit 1
 }
 
@@ -212,7 +218,7 @@ if ($errores.Count -gt 0) {
   foreach ($e in $errores) { Write-Output " - $e" }
   exit 1
 }
-Write-Output "OK: $Materia"
+Write-Output "OK: $rutaJson"
 Write-Output '  curso-data valido: 20 encuentros (4-8, 10-14, 21-25, 27-31), slots u1..u4 y ejes 1-6 completos,'
 Write-Output '  cierres 8/14/25/31 con tp de unidad, celdas de libro <=35.'
 exit 0

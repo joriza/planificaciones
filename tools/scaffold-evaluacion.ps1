@@ -4,10 +4,10 @@
 # Las versiones equivalentes (B/C/D) no se esqueletizan: se generan con tools\generar-version-b.ps1.
 #
 # Uso (desde la raíz del repositorio):
-#   powershell -File tools\scaffold-evaluacion.ps1 -Materia materias\minimal-api-csharp.json -Instancia u2 -Salida <carpeta> [-Force]
+#   powershell -File tools\scaffold-evaluacion.ps1 -Materia materias\LSO -Instancia u2 -Salida <carpeta> [-Force]
 #
 # Parametros:
-#   -Materia    (obligatorio) ruta al curso-data.json de la materia.
+#   -Materia    (obligatorio) ruta a la carpeta de la materia (contiene curso-data.json).
 #   -Instancia  (obligatorio) u1 | u2 | u3 | u4 | 02-03 | 17-18 | 19-20 | 34-35.
 #   -Salida     carpeta destino (se crea si no existe).
 #   -Force      permite sobrescribir archivos existentes.
@@ -28,20 +28,25 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if ($Materia -eq '') {
-  Write-Output 'ERROR: falta -Materia <ruta al curso-data.json>'
+  Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
   exit 1
 }
 if ($Instancia -eq '') {
   Write-Output 'ERROR: falta -Instancia <u1|u2|u3|u4|02-03|17-18|19-20|34-35>'
   exit 1
 }
-if (-not (Test-Path -LiteralPath $Materia)) {
-  Write-Output "ERROR: no se encontro el archivo de materia: $Materia"
+if (-not (Test-Path -LiteralPath $Materia -PathType Container)) {
+  Write-Output "ERROR: no se encontro la carpeta de materia: $Materia"
+  exit 1
+}
+$rutaJson = Join-Path $Materia 'curso-data.json'
+if (-not (Test-Path -LiteralPath $rutaJson)) {
+  Write-Output "ERROR: falta $Materia/curso-data.json"
   exit 1
 }
 
 try {
-  $data = [System.IO.File]::ReadAllText((Resolve-Path -LiteralPath $Materia).Path) | ConvertFrom-Json
+  $data = [System.IO.File]::ReadAllText((Resolve-Path -LiteralPath $rutaJson).Path) | ConvertFrom-Json
 } catch {
   Write-Output "ERROR: JSON invalido: $($_.Exception.Message)"
   exit 1

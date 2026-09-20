@@ -3,11 +3,11 @@
 # readme-descripciones.json) + nota de la cátedra manual (materias/nota-catedra-<materia>.md, opcional).
 #
 # Uso (desde la raíz del repositorio):
-#   powershell -File tools\generar-readme.ps1 -Materia materias\minimal-api-csharp.json -Curso minimal-api-csharp [-Salida <archivo>] [-Force]
+#   powershell -File tools\generar-readme.ps1 -Materia materias\LSO -Curso output\LSO [-Salida <archivo>] [-Force]
 #
 # Parametros:
-#   -Materia (obligatorio) ruta al curso-data.json de la materia.
-#   -Curso   (obligatorio) carpeta del corpus de la materia (p. ej. minimal-api-csharp).
+#   -Materia (obligatorio) carpeta de la materia (contiene curso-data.json y opcionalmente nota-catedra.md).
+#   -Curso   (obligatorio) carpeta del corpus del curso (p. ej. output/LSO).
 #   -Salida  archivo de salida (por defecto <curso>\README.md; si existe y no se pasa -Force, aborta).
 #   -Force   permite sobrescribir el archivo de salida existente.
 #
@@ -31,15 +31,21 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if ($Materia -eq '') {
-  Write-Output 'ERROR: falta -Materia <ruta al curso-data.json>'
+  Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
   exit 1
 }
 if ($Curso -eq '') {
-  Write-Output 'ERROR: falta -Curso <carpeta del corpus de la materia>'
+  Write-Output 'ERROR: falta -Curso <carpeta del corpus del curso>'
   exit 1
 }
-if (-not (Test-Path -LiteralPath $Materia)) {
-  Write-Output "ERROR: no se encontro el archivo de materia: $Materia"
+if (-not (Test-Path -LiteralPath $Materia -PathType Container)) {
+  Write-Output "ERROR: no se encontro la carpeta de materia: $Materia"
+  exit 1
+}
+
+$rutaJson = Join-Path $Materia 'curso-data.json'
+if (-not (Test-Path -LiteralPath $rutaJson)) {
+  Write-Output "ERROR: falta $Materia/curso-data.json"
   exit 1
 }
 
@@ -53,7 +59,7 @@ if (-not (Test-Path -LiteralPath $rutaCurso)) {
 $rutaCursoAbs = (Resolve-Path -LiteralPath $rutaCurso).Path
 $rutaPlantilla = Join-Path $raiz 'plantillas\readme-plantilla.md'
 $rutaDescripciones = Join-Path $raiz 'plantillas\readme-descripciones.json'
-foreach ($ruta in @($Materia, $rutaPlantilla, $rutaDescripciones)) {
+foreach ($ruta in @($rutaJson, $rutaPlantilla, $rutaDescripciones)) {
   if (-not (Test-Path -LiteralPath $ruta)) {
     Write-Output "ERROR: no se encontro el archivo requerido: $ruta"
     exit 1
@@ -66,7 +72,7 @@ function Read-Texto([string]$ruta) {
 }
 
 try {
-  $data = Read-Texto $Materia | ConvertFrom-Json
+  $data = Read-Texto $rutaJson | ConvertFrom-Json
   $plantilla = Read-Texto $rutaPlantilla
   $desc = Read-Texto $rutaDescripciones | ConvertFrom-Json
 } catch {
