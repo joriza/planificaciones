@@ -137,23 +137,40 @@ Continuidad: `continuidad-01-saberes-previos`, `continuidad-02-tras-evaluacion-u
 | # | Tarea | Salida | Estado |
 |---|---|---|---|
 | 1 | Mapa maestro y estructura (este documento) | odd/tasks/minimal-api-csharp-planificacion.md | done |
-| 2 | convenciones-tecnicas.md | 1 archivo | done |
-| 3 | Planificación anual md+csv | 01-planificacion | done |
-| 4 | Libro de aula md+csv ×2 | 01-planificacion | done |
-| 5 | Clases U1 (04-08) + anexos | 02-unidades/01-u1 | done |
-| 6 | Clases U2 (10-14) + anexos | 02-unidades/02-u2 | done |
-| 7 | Clases U3 (21-25) + anexos | 02-unidades/03-u3 | done |
-| 8 | Clases U4 (27-31) + anexos | 02-unidades/04-u4 | done |
-| 9 | Evaluaciones u1-u4 (base+A+B+anexos) | carpetas de unidad | done |
-| 10 | Instancias (01, 16+eval, 33+eval, 36) | 03-instancias | done |
-| 11 | Especiales ×6 + evaluaciones | 04-especiales | done |
-| 12 | Continuidad ×4 + anexos | 05-continuidad | done |
-| 13 | Criterios de aprobación | 06-aprobacion | done |
-| 14 | README índice | README.md | done |
-| 15 | Verificación final (verificar-curso.ps1 + consistencia) y fixes | — | done |
+| 2 | convenciones-tecnicas.md | 1 archivo | done (cf01778) |
+| 3 | Planificación anual md+csv | 01-planificacion | done (cf01778) |
+| 4 | Libro de aula md+csv ×2 | 01-planificacion | done (a6a10fc) |
+| 5 | Clases U1 (04-08) + anexos | 02-unidades/01-u1 | done (88a304b) |
+| 6 | Clases U2 (10-14) + anexos | 02-unidades/02-u2 | done (e3ab605) |
+| 7 | Clases U3 (21-25) + anexos | 02-unidades/03-u3 | done (5afd7da) |
+| 8 | Clases U4 (27-31) + anexos | 02-unidades/04-u4 | done (03f35ff) |
+| 9 | Evaluaciones u1-u4 (base+A+B+anexos) | carpetas de unidad | done (e48e888) |
+| 10 | Instancias (01, 16+eval, 33+eval, 36) | 03-instancias | done (9b4fb79) |
+| 11 | Especiales ×6 + evaluaciones | 04-especiales | done (680ba7f) |
+| 12 | Continuidad ×4 + anexos | 05-continuidad | done (a1c3777) |
+| 13 | Criterios de aprobación | 06-aprobacion | done (a1c3777) |
+| 14 | README índice | README.md | done (c85d3f9) |
+| 15 | Verificación final (verificar-curso.ps1 + consistencia) y fixes | — | done 11/11 PASS (5044630 + verificación) |
 
 ## Registro de commits (evidencia)
 
-| Commit | Tarea(s) |
-|---|---|
-| (se completa al cerrar cada tarea) | — |
+Rama: `feature/minimal-api-csharp-planificacion` (12 commits + cierre):
+
+| Commit | Contenido | Tarea(s) |
+|---|---|---|
+| cf01778 | convenciones-tecnicas + planificación anual (md/csv) | 2, 3 |
+| a6a10fc | libro de aula 1 y 2 líneas (md/csv con BOM) | 4 |
+| 88a304b | clases U1 + anexos | 5 |
+| e3ab605 | clases U2 + anexos | 6 |
+| 5afd7da | clases U3 + anexos | 7 |
+| 03f35ff | clases U4 + anexos | 8 |
+| 9b4fb79 | instancias 01/16/33/36 + evaluaciones cuatrimestrales | 10 |
+| e48e888 | evaluaciones u1-u4 (base+A+B+anexos) | 9 |
+| 680ba7f | especiales ×6 + evaluaciones | 11 |
+| a1c3777 | continuidad ×4 + criterios de aprobación | 12, 13 |
+| 5044630 | fix: regla PUT 200/204 unificada (canon + clases) | 15 |
+| c85d3f9 | README índice | 14 |
+
+Verificación final (gentle-ai-verify): 11/11 PASS · `verificar-curso.ps1` TODO OK exit 0 · 121 archivos · libro 36/72 filas, celdas ≤35, eje y carácter exactos vs mapa · 42 anexos con base · 0 TypedResults en código · 0 fugas del factor de eficacia (los «50 %» de evaluacion-u4 son ponderación de nota) · previews y tiempos 240 verificados por muestreo.
+
+Estado del worktree al cierre: solo quedan sin comitear los cambios preexistentes del usuario (`z-pdt-planificaciones.md`).
