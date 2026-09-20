@@ -1,58 +1,86 @@
 # Anexo docente — Encuentro 4: Primer proyecto Minimal API
 
-> Documento de uso docente. No se distribuye a estudiantes.
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
-## Solución esperada del ejercicio independiente
-
-El ejercicio pide un segundo endpoint `/bienvenida` con un texto propio. Solución de referencia (fragmento de `Program.cs`):
+## 1. Solución del ejercicio independiente (Program.cs completo)
 
 ```csharp
-app.MapGet("/bienvenida", () => "Bienvenido a la API del hospital.");
-```
+// Program.cs - Encuentro 4: ejercicio independiente (solucion del docente)
+// Tres endpoints de texto agregados por el grupo sobre la base de la practica.
 
-`Program.cs` completo esperado al cierre del encuentro:
-
-```csharp
+// 1) Prepara el programa
 var builder = WebApplication.CreateBuilder(args);
+
+// 2) Construye la aplicacion
 var app = builder.Build();
 
-app.MapGet("/hola", () => "¡Hola desde la API del hospital!");
-app.MapGet("/bienvenida", () => "Bienvenido a la API del hospital.");
+// Endpoint guiado de la practica: se conserva como referencia
+app.MapGet("/hola", () => "Hola desde la primera Minimal API!");
 
+app.MapGet("/estado", () => "La API esta funcionando");
+
+// ---- Endpoints del ejercicio independiente ----
+
+// /equipo: los integrantes del grupo, separados por coma
+app.MapGet("/equipo", () => "Integrantes: Ana, Bruno, Carla, Diego");
+
+// /escuela: nombre de la escuela y especialidad que cursa el grupo
+app.MapGet("/escuela", () => "EETP - Especialidad: Programacion");
+
+// /frase: una frase elegida por el grupo
+app.MapGet("/frase", () => "Primero funciona, despues se embellece");
+
+// 4) Deja la API escuchando pedidos
 app.Run();
 ```
 
-Se acepta cualquier texto de respuesta siempre que la ruta sea `/bienvenida` y el endpoint responda correctamente al consultarlo en el navegador.
+Los textos entre comillas son de ejemplo: cada grupo escribe los suyos. Lo verificable es la estructura: tres `MapGet` adicionales, cada uno con su ruta y su string a la derecha de la flecha.
 
-## Criterios de logro mínimos del encuentro
+## 2. Solución de la actividad de extensión
 
-- [ ] Creó el proyecto con `dotnet new web -n HospitalApi` y este compila con `dotnet run`.
-- [ ] `Program.cs` conserva la estructura mínima: builder, `Build()`, `MapGet`, `Run()`.
-- [ ] Consultó `/hola` en el navegador y obtuvo el texto esperado.
-- [ ] Agregó el endpoint `/bienvenida` y lo probó en el navegador.
-- [ ] Aplica el ciclo editar → guardar (`Ctrl+S`) → detener (`Ctrl+C`) → `dotnet run` tras cada cambio.
+1. **`/version`**, con el mismo patrón de `MapGet`: `app.MapGet("/version", () => "v1.0 - clase 4");`
+2. **Recorrida de 404:** el navegador responde con su página `HTTP ERROR 404` para cualquier ruta no definida (`/inexistente`, `/chau`, `/HOLA` en mayúsculas). Conclusión esperada: la API solo conoce las rutas declaradas con `MapGet`, y distingue el texto exacto de la ruta.
 
-## Qué observar durante la práctica
+3. **Experimento de memoria:** tras `Ctrl+C` y `dotnet run`, todos los endpoints responden igual. El estado «vivo» de la API se reconstruye en cada ejecución desde `Program.cs`; en la Unidad 1 eso es suficiente, y en la Unidad 2 el estado pasará a vivir en `hospital.db`.
 
-**Señales de avance fluido:**
-- Editan `Program.cs` sin temor, guardan y reinician la API por su cuenta.
-- Ante un error de compilación, leen la línea que indica la terminal y comparan con el modelo.
+4. **Lectura en voz alta:** orden correcto del archivo: `CreateBuilder` → `Build` → los `MapGet` → `Run`. Si un `MapGet` quedó después de `app.Run()`, no se ejecuta nunca: `Run` deja el programa esperando pedidos y todo lo que esté debajo no corre.
 
-**Señales de bloqueo (intervenir pronto):**
-- Ejecutan `dotnet run` en el directorio equivocado y no identifican el problema.
-- No guardan el archivo antes de reejecutar y concluyen que "el código no funciona".
-- Consultan una URL sin la ruta o mal escrita y asumen que la API está rota.
-- Acumulan varias terminales con instancias simultáneas de la API.
+## 3. Respuesta esperada del ejercicio
 
-**Registro sugerido:** anotar quiénes tienen `/hola` funcionando dentro de los primeros 40 minutos de práctica y quiénes requirieron intervención. Esa lista orienta la formación de parejas en los encuentros siguientes.
+Con la API corriendo (`dotnet run`) y el puerto informado por la terminal:
 
-## Sugerencia de ajustes según el ritmo del grupo
+| Pedido en el navegador | Respuesta esperada |
+| --- | --- |
+| `http://localhost:5080/hola` | `Hola desde la primera Minimal API!` |
+| `http://localhost:5080/estado` | `La API esta funcionando` |
+| `http://localhost:5080/equipo` | Lista de integrantes del grupo, separados por coma |
+| `http://localhost:5080/escuela` | Nombre de escuela + especialidad |
+| `http://localhost:5080/frase` | La frase elegida por el grupo |
+| `http://localhost:5080/noexiste` | Página `HTTP ERROR 404` del navegador |
 
-**Si el grupo avanza lento:**
-- Reducir el ejercicio independiente a un único endpoint nuevo, rehecho junto al docente paso a paso en el proyector.
-- Repetir entre todos, dos veces, el ciclo completo (editar → guardar → `Ctrl+C` → `dotnet run` → recargar el navegador) antes del trabajo individual.
+## 4. Criterios de corrección (lista de verificación)
 
-**Si el grupo avanza rápido:**
-- Proponer un tercer endpoint `/horario` con un texto fijo (por ejemplo, el horario de atención del hospital).
-- Proponer el experimento guiado de definir la misma ruta dos veces y observar el error del compilador: siembra la idea de rutas únicas.
-- Dejar planteada la pregunta "¿qué pasa si quiero que la respuesta cambie en cada pedido?": queda como puente hacia el contenido de la unidad siguiente.
+| ✔ | Criterio |
+| --- | --- |
+| ☐ | El proyecto compila y corre con `dotnet run` sin errores |
+| ☐ | Los tres endpoints del ejercicio existen con las rutas pedidas (`/equipo`, `/escuela`, `/frase`) |
+| ☐ | Cada endpoint devuelve texto plano, no un 404 ni un error |
+| ☐ | Los cambios quedaron guardados en `Program.cs` y la API fue reiniciada antes de probar |
+| ☐ | Al menos un integrante por grupo explica qué hace la flecha `=>` con sus palabras |
+| ☐ | El grupo identifica el origen del 404 (ruta no definida) sin confundirlo con un programa roto |
+
+## 5. Errores esperados y cómo intervenir
+
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| El navegador sigue mostrando el texto viejo | No reinició después de guardar | Pedir que muestre la terminal: ¿hay un `Ctrl+C` + `dotnet run` posterior a la edición? Guiar la rutina guardar → cortar → correr |
+| `dotnet run` falla con «MSBUILD : error MSB1003» o similar | Se ejecutó fuera de la carpeta del proyecto | Verificar carpeta con `pwd`; volver a `cd HospitalApi` y repetir |
+| Pantalla de error 404 en `/equipo` | Ruta escrita distinta a la del `MapGet` (mayúscula, guión, espacio) | Cotejar caracter por caracter la ruta del navegador con la del código |
+| `dotnet new web` creó una carpeta dentro de otra | Comando lanzado en la carpeta equivocada | Ubicar el proyecto anidado, acordar con el grupo cuál conservar y recrear en la carpeta del curso |
+| El endpoint no aparece aunque el código está | `MapGet` escrito debajo de `app.Run()` | Releer el archivo en voz alta marcando las cuatro partes; mover el endpoint antes de `Run` |
+| Terminal «congelada» sin prompt | La API sigue corriendo | Explicar que es el comportamiento esperado: `Ctrl+C` devuelve el prompt |
+
+## 6. Registro de la clase
+
+- Revisar por grupo los tres endpoints funcionando y registrar la participación en la explicación oral (insumo para la evaluación de proceso de la Unidad 1).
+- Anotar los grupos que completaron la extensión: reciben los desafíos de profundización de los encuentros siguientes.

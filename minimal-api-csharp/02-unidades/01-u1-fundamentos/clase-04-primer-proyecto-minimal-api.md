@@ -1,69 +1,74 @@
 # Encuentro 4 — Primer proyecto Minimal API
 
-> Unidad 1 — Fundamentos de C#, Git/GitHub y Minimal API
+> Unidad 1 — Fundamentos de Minimal API con C#
 
 ## 1. Metadatos de bloque
 
 | Campo | Detalle |
 | --- | --- |
-| Encuentro | 4 |
-| Unidad | 1 — Fundamentos de C#, Git/GitHub y Minimal API |
-| Duración teórica | 4 horas reloj (240 minutos) |
-| Concepto nuevo | Primer proyecto Minimal API y su ejecución |
-| Requisitos previos | Terminal básica (vista en encuentros 2 y 3), VS Code, SDK .NET 6 instalado |
+| Encuentro | 4 de 36 |
+| Unidad | 1 — Fundamentos de Minimal API con C# |
+| Eje temático | 1 — Fundamentos de Minimal API |
+| Carácter/Objetivo | Procedimental |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Concepto nuevo | Primer proyecto Minimal API: creación con `dotnet new web`, anatomía de `Program.cs`, ejecución con `dotnet run` y primer endpoint GET |
+| Requisitos previos | Encuentros 2 y 3: terminal y carpetas, URL, ciclo de petición/respuesta y JSON básico. SDK de .NET 6 instalado y verificado |
 | Uso de celular | No permitido |
-| Planificación anual | Encuentro 4: «Primer proyecto Minimal API» |
+| Organización del trabajo | Grupos: alumnos presentes ÷ equipos disponibles (mínimo posible); ningún equipo queda sin usar; rotación de integrantes en cada actividad |
 
 ### Reparto de tiempos teóricos
 
 | Momento | Tiempo teórico |
 | --- | --- |
-| Apertura y puente | 30 min |
-| Teoría mínima | 45 min |
-| Práctica guiada | 90 min |
-| Ejercicio independiente | 55 min |
-| Puesta en común y cierre | 20 min |
+| Apertura y puente | 20 min |
+| Teoría mínima | 40 min |
+| Práctica guiada | 70 min |
+| Ejercicio independiente | 50 min |
+| Extensión y consolidación | 45 min |
+| Cierre | 15 min |
 | **Total** | **240 min** |
 
 ## 2. Objetivos de aprendizaje
 
 Al finalizar el encuentro, cada estudiante puede:
 
-1. Crear un proyecto Minimal API desde la terminal con `dotnet new web`.
-2. Reconocer las cuatro partes mínimas de `Program.cs`: preparar, construir, definir rutas y ejecutar.
-3. Ejecutar la API con `dotnet run` y consultarla desde el navegador.
-4. Agregar un endpoint propio con `MapGet`, cambiando ruta y texto de respuesta.
-5. Detectar y corregir errores típicos: carpeta equivocada, ruta mal escrita, archivo sin guardar.
+1. Crear un proyecto Minimal API desde la terminal con `dotnet new web` y abrirlo en VS Code.
+2. Reconocer las cuatro partes de `Program.cs`: preparar, construir, definir endpoints y ejecutar.
+3. Ejecutar la API con `dotnet run`, consultarla desde el navegador y detenerla con `Ctrl+C`.
+4. Agregar endpoints propios con `MapGet`, cambiando la ruta y el texto de respuesta.
+5. Explicar, con sus palabras, qué hace la flecha `=>` en un endpoint.
 
-## 3. Teoría mínima (45 min)
+## 3. Teoría mínima (40 min)
 
-### Charla rápida: la API como la recepción del hospital
+### Charla rápida: la API como la recepción del hotel
 
-Imaginen la recepción de un hospital. Una persona llega a la ventanilla y pide algo concreto: "¿Dónde queda Farmacia?". La recepción escucha el pedido y contesta exactamente eso, ni más ni menos. Una API web funciona igual: el cliente (un navegador, otra aplicación) hace un **pedido** en una **ruta** (la ventanilla) y la API devuelve una **respuesta** (lo que la recepción contesta). Hoy construimos esa recepción: pequeña, pero real y funcionando.
+Imaginen la recepción de un hotel. Un huésped llega a la ventanilla y pide algo concreto: «¿A qué hora es el desayuno?». El recepcionista no lo manda a la cocina ni le muestra todo el edificio: escucha el pedido y contesta exactamente eso. Una API web funciona igual: el cliente (un navegador, por ahora) hace un **pedido** contra una **ruta** (la ventanilla) y la API devuelve una **respuesta** (lo que contesta la recepción). Nadie entra a la cocina: solo se habla por la ventanilla. Hoy van a construir esa recepción: chiquita, pero real y funcionando.
 
 ### Lo mínimo indispensable
 
 - Una **API web** es un programa que recibe **pedidos** (requests) y devuelve **respuestas** (responses).
-- Cada pedido apunta a una **ruta**: `/hola`, `/estado`. La ruta se escribe después del dominio: `http://localhost:5137/hola`.
-- **Minimal API** es la forma más corta de crear una API con .NET 6: todo el programa vive en un único archivo, `Program.cs`.
-- El ciclo completo es: pedido → la API busca la ruta → responde. Si nadie definió esa ruta, responde `404 - Not Found`: esa ventanilla no existe.
+- Cada pedido apunta a una **ruta**: `/hola`, `/estado`. La ruta se escribe después del dominio: `http://localhost:5080/hola`.
+- **Minimal API** es la forma más corta de crear una API con .NET 6: todo el programa vive en un único archivo, `Program.cs`. No hay carpetas `Models/` ni `Controllers/`: en este curso, una sola hoja.
+- El ciclo completo es: pedido → la API busca la ruta → respuesta. Si nadie definió esa ruta, la API responde `404 - Not Found`: esa ventanilla no existe.
+- Las cuatro partes de todo `Program.cs` de este curso: **preparar** (`CreateBuilder`), **construir** (`Build`), **definir endpoints** (`MapGet`) y **ejecutar** (`Run`).
 
-## 4. Práctica guiada (90 min)
+## 4. Práctica guiada (70 min)
+
+Todo el trabajo se hace en la PC del grupo, con la terminal y VS Code. Un integrante maneja la computadora y la consigna va rotando: cuando termina un paso, cambia la persona al teclado.
 
 ### Paso 1 — Crear el proyecto desde la terminal
 
-Abrir la terminal y ejecutar:
+Abrir la terminal en la carpeta del curso y ejecutar:
 
 ```powershell
 dotnet new web -n HospitalApi
 cd HospitalApi
 ```
 
-`dotnet new web` crea la carpeta `HospitalApi` con el proyecto más pequeño de ASP.NET Core. Salida esperada (resumida):
+`dotnet new web` crea la carpeta `HospitalApi` con el proyecto más chico de ASP.NET Core: dos archivos que importan. Salida esperada (resumida):
 
 ```text
 The template "ASP.NET Core Empty" was created successfully.
-...
 Restore succeeded.
 ```
 
@@ -73,28 +78,46 @@ Restore succeeded.
 code .
 ```
 
-Abrir el archivo `Program.cs`: contiene apenas unas líneas y es el punto de entrada del programa.
-
-### Paso 3 — Reemplazar el contenido de Program.cs
-
-Borrar todo el contenido y dejar solo esto. Guardar con `Ctrl+S`:
+Abrir `Program.cs`. La plantilla trae apenas estas líneas: son las cuatro partes anunciadas en la teoría.
 
 ```csharp
-// Program.cs — la primera Minimal API
-// Una Minimal API es un programa que espera pedidos (requests) y responde (responses).
+var builder = WebApplication.CreateBuilder(args);   // 1) prepara el programa
+var app = builder.Build();                          // 2) construye la aplicacion
 
-var builder = WebApplication.CreateBuilder(args); // prepara el programa
-var app = builder.Build();                        // crea la API
+app.MapGet("/", () => "Hello World!");              // 3) define un endpoint
 
-// MapGet: "cuando alguien pida la ruta /hola, responde este texto".
-// Los paréntesis vacíos () indican que esta respuesta no necesita datos de entrada.
-// La flecha => significa "devuelve lo que está a la derecha": una función muy corta.
-app.MapGet("/hola", () => "¡Hola desde la API del hospital!");
-
-app.Run(); // deja la API escuchando pedidos (Ctrl+C la detiene)
+app.Run();                                          // 4) ejecuta y escucha pedidos
 ```
 
-¿Y esa flecha `=>`? Se llama **expresión lambda**: una función escrita en una sola línea y sin nombre. Por ahora alcanza con leerla como "cuando llegue un pedido a esta ruta, devuelve lo que sigue de la flecha". Volveremos sobre esto más adelante en la unidad.
+### Paso 3 — Escribir la primera API propia
+
+Reemplazar **todo** el contenido de `Program.cs` por esto y guardar con `Ctrl+S`:
+
+```csharp
+// Program.cs - Encuentro 4: la primera Minimal API
+// Una API web es un programa que recibe pedidos y devuelve respuestas.
+
+// 1) Prepara el programa: lee la configuracion de arranque
+var builder = WebApplication.CreateBuilder(args);
+
+// 2) Construye la aplicacion con esa configuracion
+var app = builder.Build();
+
+// 3) Endpoints: cada MapGet dice "cuando pidan ESTA ruta, responde ESTO".
+//    La flecha => es una expresion lambda: una funcion corta y sin nombre.
+//    Por ahora alcanza con leerla asi: "cuando llegue un pedido a la ruta,
+//    devuelve lo que esta a la derecha de la flecha". Vamos a volver sobre
+//    esto mas adelante; por ahora no hay que saber nada mas.
+app.MapGet("/hola", () => "Hola desde la primera Minimal API!");
+
+// Segundo endpoint: el estado de la API, tambien como texto
+app.MapGet("/estado", () => "La API esta funcionando");
+
+// 4) Deja la API escuchando pedidos hasta que se corta con Ctrl+C
+app.Run();
+```
+
+¿Y esa flecha `=>`? Se llama **expresión lambda**: una función escrita en una línea y sin nombre. En los endpoints de hoy significa «recibido el pedido, devolvé lo que sigue de la flecha». No hay que estudiarla hoy: basta con reconocerla cada vez que aparece.
 
 ### Paso 4 — Ejecutar la API
 
@@ -102,57 +125,85 @@ app.Run(); // deja la API escuchando pedidos (Ctrl+C la detiene)
 dotnet run
 ```
 
-Salida esperada en la terminal:
+Salida esperada (el puerto puede cambiar):
 
 ```text
+Building...
 info: Microsoft.Hosting.Lifetime[14]
-      Now listening on: http://localhost:5137
-info: Microsoft.Hosting.Lifetime[0]
-      Application started. Press Ctrl+C to shut down.
+      Now listening on: http://localhost:5080
 ```
 
-El número de puerto puede variar en cada máquina: usar siempre la URL exacta que muestre la consola. Mientras la API está corriendo, la terminal queda ocupada por ella; se detiene con `Ctrl+C`.
+La línea `Now listening on:` es la dirección de la ventanilla. **Ese es el puerto de esta ejecución**: si dice `5080` se usa `5080`; si dice otro número, se usa ese.
 
-### Paso 5 — Consultar la API desde el navegador
+### Paso 5 — Probar en el navegador
 
-Abrir en el navegador la URL que muestra la consola y agregar la ruta `/hola`:
+Abrir en el navegador (el navegador solo envía GET, justo lo que necesitamos hoy):
 
 ```text
-http://localhost:5137/hola   (usar el puerto de cada máquina)
+http://localhost:5080/hola
+http://localhost:5080/estado
 ```
 
-Salida esperada en el navegador:
+Salida esperada en el navegador, como texto plano:
 
 ```text
-¡Hola desde la API del hospital!
+Hola desde la primera Minimal API!
 ```
 
-## 5. Ejercicio independiente (55 min)
+```text
+La API esta funcionando
+```
 
-**Consigna.** Agregar a la API un segundo endpoint: la ruta `/bienvenida`, que responda un texto distinto al de `/hola`. Probar en el navegador que ambos endpoints funcionan.
+Ahora probar una ruta que no existe, por ejemplo `http://localhost:5080/chau`: el navegador muestra su página de error `HTTP ERROR 404`. No es un error del programa: es la API contestando «esa ventanilla no existe».
 
-**Pista.** Copiar la línea de `MapGet` que ya funciona y cambiar dos cosas: la ruta (`"/bienvenida"`) y el texto de respuesta. Recordar guardar el archivo y detener la API con `Ctrl+C` antes de volver a ejecutar `dotnet run`.
+### Paso 6 — Modificar y reiniciar
 
-## 6. Cierre
+Cambiar el texto de `/hola` por otro mensaje, guardar con `Ctrl+S` y recargar el navegador **sin reiniciar la API**: sigue respondiendo lo viejo. La API ya cargó el programa en memoria; para que un cambio valga hay que pararla con `Ctrl+C` y volver a ejecutar `dotnet run`. Recién entonces el navegador muestra el texto nuevo. Esta rutina — guardar, cortar, correr — se usa en todos los encuentros del curso.
+
+### Paso 7 — Detener la API
+
+Volver a la terminal y presionar `Ctrl+C`. El proceso termina y la terminal vuelve a aceptar comandos.
+
+## 5. Ejercicio independiente (50 min)
+
+**Consigna.** Cada grupo agrega a `Program.cs` tres endpoints propios, todos con `MapGet` y respuesta de texto:
+
+1. `/equipo`: los nombres de los integrantes del grupo, separados por coma.
+2. `/escuela`: el nombre de la escuela y la especialidad que cursan.
+3. `/frase`: una frase elegida por el grupo (puede ser del aula, de una canción o de un libro).
+
+Después de escribirlos: guardar, reiniciar con `Ctrl+C` + `dotnet run`, y probar los tres en el navegador. Al terminar, cada integrante explica un endpoint propio: qué ruta responde y qué devuelve.
+
+**Pista.** Copiar el patrón de `/estado` y cambiar dos cosas: el texto entre paréntesis de la ruta y el string que va a la derecha de la flecha `=>`. Un endpoint por línea `MapGet`. Si algo no responde, revisar dos sospechosos de siempre: ¿guardaste con `Ctrl+S`? ¿reiniciaste con `Ctrl+C` + `dotnet run`?
+
+## 6. Extensión y consolidación (45 min)
+
+Actividades para los grupos que terminan la consigna base. La rotación de integrantes sigue: cada ítem lo escribe una persona distinta.
+
+1. **Endpoint `/version`** que devuelva un texto con la versión de la API del grupo (por ejemplo `v1.0 - clase 4`).
+2. **Recorrida de 404:** probar tres rutas inexistentes y anotar qué responde el navegador. Conclusión esperada: el 404 es la API viva diciendo que la ruta no está definida.
+3. **Experimento de memoria:** parar la API con `Ctrl+C` y volver a correr `dotnet run`. Comprobar que los endpoints siguen respondiendo igual: lo que persiste es el código en `Program.cs`, no lo que estaba corriendo.
+4. **Lectura en voz alta:** un integrante lee el `Program.cs` del grupo de arriba hacia abajo y otro va nombrando las cuatro partes (preparar, construir, endpoints, ejecutar). Corregir el orden si algo quedó fuera de lugar.
+
+## 7. Cierre (15 min)
 
 ### Qué te llevás
 
-- `dotnet new web` crea el proyecto, `dotnet run` lo ejecuta y `Ctrl+C` lo detiene.
-- `Program.cs` tiene cuatro momentos: preparar (`builder`), construir (`Build()`), definir rutas (`MapGet`) y escuchar (`Run()`).
-- Un endpoint es una ruta más una respuesta: con eso ya hay una API real.
-- Ante una respuesta inesperada, revisar en orden: ¿guardé?, ¿ejecuté en la carpeta correcta?, ¿la ruta está escrita igual que en el código?
+- `dotnet new web` crea el proyecto mínimo; `dotnet run` lo levanta; `Ctrl+C` lo detiene.
+- Todo el programa vive en `Program.cs`, con sus cuatro partes: preparar, construir, definir endpoints, ejecutar.
+- Un endpoint `MapGet` es una ventanilla: ruta a la izquierda, respuesta a la derecha de la flecha `=>` (expresión lambda: función corta y sin nombre).
+- Tras editar el archivo: `Ctrl+S` para guardar y `Ctrl+C` + `dotnet run` para que el cambio valga.
+- Una ruta sin definir responde `404`: no es un programa roto, es la API contestando que no conoce esa ventanilla.
 
 ### Lo que viene
 
-En el próximo encuentro (Encuentro 5: «Git y GitHub: primer repo») el proyecto gana historial y sale a la web: guardaremos cada avance con Git y publicaremos el proyecto en GitHub.
+En el Encuentro 5 las rutas aprenden a recibir datos: parámetros de ruta como `{nombre}` y `{id:long}`, respuestas en JSON automático con objetos anónimos, y el primer bloque de git local: `git init`, `.gitignore`, `git add`, `git commit` y la rutina de un commit de cierre por clase.
 
-## 7. Errores comunes y trampas
+## 8. Errores comunes y trampas
 
-| Error o trampa | Causa | Fix |
-| --- | --- | --- |
-| `dotnet run` falla y no encuentra el proyecto | La terminal está parada en otra carpeta (por ejemplo, en la carpeta que contiene `HospitalApi`) | Ubicarse dentro de la carpeta del proyecto con `cd HospitalApi` y volver a ejecutar |
-| El navegador muestra "404" o una página vacía | Falta la ruta en la URL o está mal escrita (por ejemplo, se abrió la URL sin `/hola`) | Escribir la ruta completa y exacta después del puerto |
-| Se escribió `/Hola` y la API no responde | Las rutas distinguen mayúsculas de minúsculas: `/Hola` no es `/hola` | Usar la ruta tal cual quedó definida en `MapGet` |
-| La API no arranca y el error menciona el puerto | Otra instancia de la API sigue corriendo y ocupa el puerto | Detener la instancia previa con `Ctrl+C` (o cerrar esa terminal) y ejecutar de nuevo |
-| El programa no compila y la terminal marca una línea | Error de tipeo: falta punto y coma, un paréntesis o una comilla | Leer el número de línea que indica el error y comparar esa línea con el código modelo |
-| La API responde el texto viejo después de editar | Se modificó el archivo pero no se guardó antes de ejecutar | Guardar con `Ctrl+S` y reiniciar con `dotnet run` |
+1. **`dotnet new web` corrido en la carpeta equivocada.** Causa: lanzar el comando dentro de otro proyecto (quedan proyectos anidados). Fix: mirar siempre la carpeta actual con `pwd` (o `cd` sin argumentos) antes de crear, y crear solo en la carpeta del curso.
+2. **Editar sin guardar, o guardar sin reiniciar.** Causa: la API ya cargó el programa en memoria; `Ctrl+S` escribe el archivo pero no reemplaza el proceso. Fix: `Ctrl+S` y después `Ctrl+C` + `dotnet run`, siempre.
+3. **El puerto del compañero no funciona en mi PC.** Causa: cada ejecución puede elegir otro puerto. Fix: usar el que muestra TU línea `Now listening on:`.
+4. **Ruta mal escrita en el navegador** (`/Holaa`, `/hola ` con espacio). Causa: las rutas distinguen el texto exacto. Fix: copiar la ruta tal como está en el `MapGet`.
+5. **Cerrar la ventana de la terminal creyendo que eso detiene la API.** Causa: el proceso puede quedar vivo. Fix: detener con `Ctrl+C` antes de cerrar; si el puerto quedó ocupado, volver a correr y usar el puerto nuevo que informe.
+6. **Buscar la API «dentro» de VS Code.** Causa: confundir el editor con el servidor. Fix: la API corre en la terminal (`dotnet run`); el navegador y VS Code solo la consultan o la editan.
