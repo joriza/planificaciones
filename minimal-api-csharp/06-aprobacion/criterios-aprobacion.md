@@ -1,6 +1,6 @@
 # Criterios de aprobación — Minimal API con C# .NET 6
 
-> Documento institucional de la asignatura, en registro docente formal. Deriva de la planificación anual (`01-planificacion/planificacion-anual.md`) con correlación exacta de encuentros, trabajos e instancias. Explica en lenguaje claro qué se evalúa, qué se exige para aprobar y qué caminos de recuperación existen cuando un objetivo mínimo no se alcanza.
+> Documento institucional de la asignatura, en registro docente formal. Deriva de la planificación anual (`01-planificacion/planificacion-anual.csv`) con correlación exacta de encuentros, trabajos e instancias. Explica en lenguaje claro qué se evalúa, qué se exige para aprobar y qué caminos de recuperación existen cuando un objetivo mínimo no se alcanza.
 
 ## 1. Presentación y destinatarios
 
