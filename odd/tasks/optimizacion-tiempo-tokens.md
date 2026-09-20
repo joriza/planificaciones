@@ -48,6 +48,17 @@ Baseline del Diagnóstico del plan: cada writer releía ~900-1.000 líneas de ca
 | Tarea | Fecha | Tokens (informados) | Notas |
 |---|---|---|---|
 | T1 | 2026-09-20 | — | orquestador inline |
+| T2+T3 | 2026-09-20 | sin instrumentar en runtime | worker: 4 archivos, verificación 20/20 celdas + 4/4 composiciones + 12/12 tramos |
+| T4 | 2026-09-20 | sin instrumentar en runtime | worker: render byte-idéntico ×3 + idempotente; CSV oficiales = BOM+LF |
+| T5 | 2026-09-20 | — | orquestador + worker barrido refs; regen oficial no-op; verificar verde |
+| T6 | 2026-09-20 | sin instrumentar en runtime | worker: lint-canon.ps1; baseline abajo |
+
+### Baseline del linter (T6, 2026-09-20) — 6 ERROR / 7 AVISO
+
+- 5 ERROR `tipo-estructura`: clases 27-31 (U4) no tienen tabla de tiempos (formato real distinto: sprint/mentoría). Deuda de formato o regla específica U4 pendiente de decisión docente.
+- 1 ERROR `registro-tipos`: `evaluacion-intensificaciones-34-35-version-a.md:83` usa `int PatientId` — snippet DEFECTUOSO INTENCIONAL del ejercicio (issue/PR). Candidato a convención de supresión (p. ej. fence annotation) — pendiente de decisión docente.
+- 4 AVISO `preview-libro`: heurística de solapamiento keyword (falsos positivos leves, p. ej. «integrando» vs «integradora»).
+- 3 AVISO `prosa-estampada`: blockquote de unidad compartido por las clases de cada unidad — es estructura intencional, no defecto.
 
 ## Registro de commits
 
