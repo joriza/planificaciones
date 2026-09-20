@@ -1,4 +1,4 @@
-# Encuentro 13 — JOIN de dos tablas y GET con datos reales
+# Encuentro 13 — JOIN de dos tablas y records compuestos
 
 > Unidad 2 — Acceso a datos con SQLite y Dapper
 
@@ -6,272 +6,347 @@
 
 | Campo | Detalle |
 | --- | --- |
-| Encuentro | 13 |
-| Unidad | 2 — Acceso a datos con SQLite y Dapper |
+| Encuentro | 13 de 36 |
+| Unidad | Unidad didáctica 2: Acceso a datos con SQLite y Dapper (clase 4 de 4) |
+| Momento | Clase regular de unidad |
+| Eje temático | Nº 2 — Acceso a datos con Dapper |
+| Carácter/Objetivo | Procedimental: cruzar dos tablas en una consulta |
 | Duración teórica | 4 horas reloj (240 minutos) |
-| Concepto nuevo | JOIN de dos tablas (`INNER JOIN ... ON`), alias de tabla y DTO combinado con alias AS |
-| Requisitos previos | Clase 12 completada (WHERE con parámetros y objeto anónimo, LIKE, endpoints de búsqueda; proyecto `BusquedasApi` con hospital.db funcionando) |
+| Concepto nuevo | `JOIN ... ON` para cruzar dos tablas por su clave; alias de tabla (`p`, `pn`, `a`, `d`); record compuesto que mezcla columnas de dos tablas; concatenación de textos en SQL para nombres completos |
+| Requisitos previos | Clases 10 a 12 completas: SELECT con alias `AS`, consultas parametrizadas, `LIKE` y validación 400/404; conocer las cuatro tablas de `hospital.db` y sus claves |
 | Uso de celular | No permitido |
-| Planificación anual | Encuentro 13: «JOIN de dos tablas / Consulta con relación» y «Pacientes y provincias / GET con datos reales» |
+| Registro | Didáctico: material de clase dirigido al estudiante (el anexo docente va en archivo separado) |
+| Grupos | Alumnos presentes ÷ equipos disponibles (mínimo posible); ningún equipo sin usar; rotación de integrantes en la práctica y el ejercicio |
+| Planificación anual | Encuentro 13: JOIN de dos tablas (`patients`+`province_names`, `admissions`+`doctors`), records compuestos |
 
 ### Reparto de tiempos teóricos
 
 | Momento | Tiempo teórico |
 | --- | --- |
-| Apertura y puente | 30 min |
-| Teoría mínima | 45 min |
-| Práctica guiada | 90 min |
-| Ejercicio independiente | 55 min |
-| Puesta en común y cierre | 20 min |
+| Apertura y puente | 20 min |
+| Teoría mínima | 40 min |
+| Práctica guiada | 70 min |
+| Ejercicio independiente | 50 min |
+| Extensión y consolidación | 45 min |
+| Cierre | 15 min |
 | **Total** | **240 min** |
 
 ## 2. Objetivos de aprendizaje
 
-**Apertura y puente (30 min).** El endpoint de la clase anterior puede devolver el paciente completo, pero muestra `"provinceId": "ON"`. Pregunta disparadora: ¿quién es "ON"? El cliente quiere leer "Ontario", no descifrar códigos. El código vive en `patients` y el nombre vive en otra tabla: `province_names`. ¿Cómo junta la API las dos para responder con datos reales? Hoy se resuelve con el JOIN, la operación que lee dos tablas al mismo tiempo y las empareja por su relación.
+**Apertura y puente (20 min).** Los endpoints de hoy responden dos preguntas que la API todavía no sabe responder: ¿cómo se **llama** la provincia del paciente (no su código `ON`)? y ¿cómo se llama el **médico** de cada ingreso (no solo su id)? El dato está en la base, pero repartido en dos tablas conectadas por una clave. Pregunta disparadora: si el dato está en dos planillas distintas, ¿quién las cruza, el código C# o la base? Hoy se aprende a pedirle el cruce a la base con `JOIN`, que lo hace en su terreno y a su velocidad.
 
 Al finalizar el encuentro, cada estudiante puede:
 
-1. Explicar la relación entre `patients.province_id` y `province_names.province_id` (clave foránea que referencia la tabla de referencia).
-2. Escribir un `JOIN` de dos tablas con alias cortos (`p`, `pn`) y calificar las columnas para evitar la ambigüedad.
-3. Definir un record DTO combinado (propiedades de las dos tablas) y mapear cada columna con alias AS.
-4. Implementar endpoints GET que devuelven datos de las dos tablas, filtrando por columna de cualquiera de ellas.
-5. Aplicar la regla de los parámetros con objeto anónimo también en consultas con JOIN.
+1. Explicar qué tablas cruza un `JOIN` y por qué columna se emparejan (`ON p.province_id = pn.province_id`).
+2. Escribir un SELECT con alias de tabla (`p`, `pn`) para desambiguar columnas de las dos tablas.
+3. Declarar un record compuesto que combine columnas de las dos tablas y mapearlo con alias `AS`.
+4. Concatenar nombre y apellido en SQL con `||` para construir `DoctorName`.
+5. Publicar dos endpoints con JOIN (`/patients/with-province`, `/admissions/with-doctor`), conservando la validación y el 404 con mensaje de la clase 12.
 
-## 3. Teoría mínima (45 min)
+## 3. Teoría mínima (40 min)
 
-### Charla rápida: el cuaderno de códigos
+### Charla rápida: las dos planillas del área de Personal
 
-La recepcionista lee la ficha: "provincia: ON". Nadie en recepción habla en códigos: mira el cuaderno de códigos pegado al mostrador y lee en voz alta "Ontario". La ficha nunca repite el nombre completo: guarda el código, y el cuaderno hace de traductor. El JOIN es exactamente eso: leer la ficha (`patients`) y, por cada código, consultar el cuaderno (`province_names`) para traer el nombre. La traducción es posible porque la relación ya está grabada: el `province_id` de la ficha debe coincidir con el `province_id` del cuaderno.
+El hospital tiene la planilla de pacientes y, aparte, la planilla de provincias con el nombre completo de cada código. En papel, para armar "paciente con su provincia", el empleado apoya una planilla al lado de la otra y va emparejando filas: donde el código coincide, copia el nombre. El cruce no inventa nada: **empareja por la clave que comparten**.
 
-### Lo mínimo indispensable
+`JOIN` es esa orden: `FROM patients p JOIN province_names pn ON p.province_id = pn.province_id` pega cada paciente con la fila de su provincia, y la consulta resultante tiene las columnas de las dos.
 
-**La relación (clave foránea).** El esquema de hospital.db ya la define:
-
-```
-patients.province_id  ── referencia ──>  province_names.province_id
- (el código en la ficha)                (el código + el nombre en el cuaderno)
-```
-
-`patients` tiene 258 filas; `province_names`, 13. Cada paciente apunta a exactamente una provincia.
-
-**El JOIN.** Tres piezas:
+### Anatomía del JOIN
 
 ```sql
-FROM patients p
-JOIN province_names pn ON p.province_id = pn.province_id
+FROM patients p                                  -- la tabla principal, con alias p
+JOIN province_names pn                           -- la tabla que aporta datos, con alias pn
+     ON p.province_id = pn.province_id           -- la regla de emparejamiento
 ```
 
-| Pieza | Qué hace |
-| --- | --- |
-| `FROM patients p` | Tabla base, con alias corto `p` |
-| `JOIN province_names pn` | Tabla relacionada, con alias corto `pn` |
-| `ON p.province_id = pn.province_id` | Condición de enlace: qué filas de las dos tablas corresponden |
+- **Alias de tabla** (`p`, `pn`): nombres cortos para no escribir `patients.` y `province_names.` en cada columna. Con dos columnas `province_id` en juego (una por tabla), el alias dice de dónde sale cada una: `p.province_id` es la del paciente.
+- **`ON`**: la condición de emparejamiento. Si falla (columna mal escrita), el JOIN no rompe: devuelve cruces absurdos o vacíos. Por eso se lee despacio.
+- **Sin alias, ambigüedad**: `province_id` a secas ya no alcanza porque existe en las dos tablas; la base lo rechaza con un error de "columna ambigua".
 
-Por cada fila de `patients`, SQLite busca en `province_names` la fila con el mismo `province_id` y devuelve las dos combinadas. Sin la condición del `ON` (o con una condición equivocada), cada ficha se combina con las 13 provincias: un producto cruzado de 258 × 13 filas sin sentido.
+### El record compuesto: el resultado del cruce
 
-**Nombres repetidos y calificación.** La columna `province_id` existe en las dos tablas. Escrita sin calificación, SQLite no sabe cuál tomar y corta con el error `ambiguous column name: province_id`. Regla: dentro de un JOIN, calificar SIEMPRE las columnas con el alias de tabla.
+El cruce produce filas nuevas, con columnas de las dos tablas. Necesitan un record a medida, **compuesto**: `PatientWithProvince` tiene los datos del paciente más `ProvinceName` (que vive en `province_names`). El mapeo no cambia: cada columna del SELECT lleva su alias `AS` y Dapper encaja por nombre, exactamente igual que desde la clase 10.
 
-| Columna | Cómo se escribe |
-| --- | --- |
-| Datos del paciente | `p.patient_id`, `p.first_name`, `p.city`, ... |
-| Datos de la provincia | `pn.province_name` |
-| El código del enlace | `p.province_id = pn.province_id` |
+### Concatenar textos en SQL con ||
 
-**El DTO combinado.** El resultado mezcla columnas de las dos tablas: necesita un record con todas las propiedades que el SELECT devuelve, y un alias AS por columna:
-
-```csharp
-// Columnas de patients + la traduccion que vive en province_names.
-record PatientWithProvince(long PatientId, string FirstName, string LastName, string? City, string ProvinceName);
-```
-
-Decisión de diseño que el DTO refleja: el JSON expone la traducción (`ProvinceName`), no la clave interna (`province_id`). El endpoint decide qué muestra; la base guarda los códigos.
-
-**Los parámetros no cambian.** Filtrar sobre un JOIN usa exactamente la regla de la clase 12: marcador en el SQL fijo + objeto anónimo.
+Para mostrar "Hazel Patterson" en vez de dos columnas separadas, SQL concatena con `||`:
 
 ```sql
-WHERE p.patient_id = @Id
+d.first_name || ' ' || d.last_name AS DoctorName
 ```
+
+El nombre, un espacio, el apellido: una sola columna `DoctorName` para el record. Es el único lugar del curso donde se escribe texto adentro del SELECT, y es texto fijo (un espacio), no dato del cliente: no se parametriza porque no hay nada que parametrizar.
+
+### Los dos cruces de hoy
+
+| Consulta | Tabla principal | Tabla que aporta | Clave del cruce |
+| --- | --- | --- | --- |
+| Paciente con su provincia | `patients` (p) | `province_names` (pn) | `p.province_id = pn.province_id` |
+| Ingreso con su médico | `admissions` (a) | `doctors` (d) | `a.attending_doctor_id = d.doctor_id` |
+
+El esquema de la base es la guía: cada tabla de movimiento (`patients`, `admissions`) guarda el id de su tabla de referencia, y ese id es la columna del `ON`.
+
+## 4. Práctica guiada (70 min)
+
+### Paso 1 — Partir del proyecto de la unidad
+
+Abrir `u2-api/` (clases 10 a 12). El archivo de hoy mantiene la base común (`GET /patients`, `GET /patients/{id:long}`) y agrega los dos endpoints con JOIN. Los endpoints de búsqueda de la clase 12 pueden seguir en tu archivo: el listado de referencia muestra la base común más lo nuevo, para no alargarlo.
+
+### Paso 2 — Reemplazar Program.cs completo
+
+Reemplazar todo el contenido de `Program.cs` por este archivo (última versión completa del encuentro):
 
 ```csharp
-new { Id = id }
-```
+using Dapper;                    // Ejecuta SQL sobre la conexion
+using Microsoft.Data.Sqlite;     // Conexion al archivo hospital.db
 
-## 4. Práctica guiada (90 min)
+var builder = WebApplication.CreateBuilder(args);   // Arranque estandar de la API
+var app = builder.Build();                          // Construye la aplicacion
 
-### Paso 1 — Crear el proyecto
-
-```powershell
-dotnet new web -n HospitalApi
-cd HospitalApi
-code .
-```
-
-### Paso 2 — Agregar los paquetes
-
-```powershell
-dotnet add package Microsoft.Data.Sqlite
-dotnet add package Dapper
-```
-
-### Paso 3 — Copiar hospital.db a la raíz del proyecto
-
-El mismo archivo de las clases 10 a 12. Verificar que `hospital.db` queda en la raíz, junto al `.csproj`.
-
-### Paso 4 — Reemplazar Program.cs
-
-Abrir `Program.cs`, borrar todo su contenido y pegar este código completo:
-
-```csharp
-using Dapper;
-using Microsoft.Data.Sqlite;
-
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-
-// Cadena de conexion: el archivo hospital.db vive en la raiz del proyecto.
+// Cadena de conexion canonica: hospital.db junto al .csproj
 var connectionString = "Data Source=hospital.db";
 
-// GET /patients/with-province: JOIN de patients + province_names (las 258 filas).
-app.MapGet("/patients/with-province", () =>
+// GET /patients: todos los pacientes, ordenados por apellido y nombre
+app.MapGet("/patients", () =>
 {
     using var connection = new SqliteConnection(connectionString);
 
-    var patients = connection.Query<PatientWithProvince>(@"
-        SELECT p.patient_id AS PatientId,
-               p.first_name AS FirstName,
-               p.last_name AS LastName,
-               p.city AS City,
-               pn.province_name AS ProvinceName
-        FROM patients p
-        JOIN province_names pn ON p.province_id = pn.province_id
-        ORDER BY p.last_name, p.first_name").ToList();
+    var patients = connection.Query<Patient>(
+        @"SELECT patient_id  AS PatientId,
+                 first_name  AS FirstName,
+                 last_name   AS LastName,
+                 gender      AS Gender,
+                 birth_date  AS BirthDate,
+                 city        AS City,
+                 province_id AS ProvinceId,
+                 allergies   AS Allergies,
+                 height      AS Height,
+                 weight      AS Weight
+          FROM patients
+          ORDER BY last_name, first_name");
 
     return Results.Ok(patients);
 });
 
-// GET /patients/{id:int}/with-province: JOIN + filtro con parametro (regla de la clase 12).
-app.MapGet("/patients/{id:int}/with-province", (int id) =>
+// GET /patients/{id}: UN paciente segun su id (404 con mensaje)
+app.MapGet("/patients/{id:long}", (long id) =>
 {
     using var connection = new SqliteConnection(connectionString);
 
-    var patient = connection.Query<PatientWithProvince>(@"
-        SELECT p.patient_id AS PatientId,
-               p.first_name AS FirstName,
-               p.last_name AS LastName,
-               p.city AS City,
-               pn.province_name AS ProvinceName
-        FROM patients p
-        JOIN province_names pn ON p.province_id = pn.province_id
-        WHERE p.patient_id = @Id",
-        // Objeto anonimo: la clave Id completa el marcador @Id.
-        new { Id = id }).FirstOrDefault();
+    var patient = connection.QueryFirstOrDefault<Patient>(
+        @"SELECT patient_id  AS PatientId,
+                 first_name  AS FirstName,
+                 last_name   AS LastName,
+                 gender      AS Gender,
+                 birth_date  AS BirthDate,
+                 city        AS City,
+                 province_id AS ProvinceId,
+                 allergies   AS Allergies,
+                 height      AS Height,
+                 weight      AS Weight
+          FROM patients
+          WHERE patient_id = @id",
+        new { id });
 
-    return patient is null ? Results.NotFound(new { mensaje = "No existe el paciente" })
-                           : Results.Ok(patient);
+    if (patient is null)
+    {
+        return Results.NotFound(new { mensaje = "No existe el paciente con ese id" });
+    }
+
+    return Results.Ok(patient);
 });
 
-app.Run();
+// GET /patients/with-province
+// JOIN de dos tablas: patients (p) + province_names (pn).
+// Cada paciente sale con el NOMBRE de su provincia, no solo el codigo
+app.MapGet("/patients/with-province", () =>
+{
+    using var connection = new SqliteConnection(connectionString);
 
-// Los tipos (records) se declaran al final del archivo cuando el programa
-// usa instrucciones de nivel superior: es una regla de C#.
-// DTO combinado: propiedades de las dos tablas, en PascalCase gracias a los alias AS.
-record PatientWithProvince(long PatientId, string FirstName, string LastName, string? City, string ProvinceName);
+    // Alias de tabla: p = patients, pn = province_names.
+    // ON es la regla de emparejamiento: el codigo de la fila del paciente
+    // tiene que ser igual al codigo de la fila de la provincia
+    var patients = connection.Query<PatientWithProvince>(
+        @"SELECT p.patient_id  AS PatientId,
+                 p.first_name  AS FirstName,
+                 p.last_name   AS LastName,
+                 p.gender      AS Gender,
+                 p.birth_date  AS BirthDate,
+                 p.city        AS City,
+                 pn.province_name AS ProvinceName,
+                 p.allergies   AS Allergies,
+                 p.height      AS Height,
+                 p.weight      AS Weight
+          FROM patients p
+          JOIN province_names pn ON p.province_id = pn.province_id
+          ORDER BY p.last_name, p.first_name");
+
+    return Results.Ok(patients);
+});
+
+// GET /admissions/with-doctor?limit=10
+// JOIN de dos tablas: admissions (a) + doctors (d).
+// Cada ingreso sale con el nombre y la especialidad del medico tratante
+app.MapGet("/admissions/with-doctor", (string? limit) =>
+{
+    // Validacion heredada de la clase 12: si viene ?limit= tiene que
+    // ser numero entero (long, el entero de SQLite); si no viene, 20
+    long max = 20;
+    if (limit is not null && !long.TryParse(limit, out max))
+    {
+        return Results.BadRequest(new { mensaje = "El limite debe ser un numero entero" });
+    }
+
+    using var connection = new SqliteConnection(connectionString);
+
+    // || concatena textos en SQL: nombre, espacio, apellido.
+    // DoctorName es una sola columna nueva para el record compuesto
+    var admissions = connection.Query<AdmissionWithDoctor>(
+        @"SELECT a.patient_id          AS PatientId,
+                 a.admission_date      AS AdmissionDate,
+                 a.discharge_date      AS DischargeDate,
+                 a.diagnosis           AS Diagnosis,
+                 d.first_name || ' ' || d.last_name AS DoctorName,
+                 d.specialty           AS DoctorSpecialty
+          FROM admissions a
+          JOIN doctors d ON a.attending_doctor_id = d.doctor_id
+          ORDER BY a.admission_date DESC
+          LIMIT @max",
+        new { max });
+
+    return Results.Ok(admissions);
+});
+
+app.Run();   // Deja la API escuchando pedidos
+
+// ---- Records: SIEMPRE al final del archivo ----
+
+// Paciente: una fila de la tabla patients (sin cambios desde la clase 10)
+record Patient(
+    long PatientId,      // id: SIEMPRE long (nunca int)
+    string FirstName,
+    string LastName,
+    string Gender,       // "M" o "F"
+    string BirthDate,    // fecha: SIEMPRE string ISO "yyyy-MM-dd" (nunca DateTime)
+    string? City,
+    string ProvinceId,
+    string? Allergies,
+    int? Height,
+    int? Weight
+);
+
+// Record COMPUESTO: columnas de patients + ProvinceName de province_names
+record PatientWithProvince(
+    long PatientId,      // id: SIEMPRE long
+    string FirstName,
+    string LastName,
+    string Gender,
+    string BirthDate,    // fecha: SIEMPRE string ISO "yyyy-MM-dd"
+    string? City,
+    string ProvinceName, // NUEVO: vive en province_names, llega por el JOIN
+    string? Allergies,
+    int? Height,
+    int? Weight
+);
+
+// Record COMPUESTO: columnas de admissions + nombre y especialidad de doctors
+record AdmissionWithDoctor(
+    long PatientId,      // id del paciente internado: SIEMPRE long
+    string AdmissionDate,     // fecha: SIEMPRE string ISO "yyyy-MM-dd"
+    string? DischargeDate,    // nullable: sin alta = aun internado
+    string? Diagnosis,
+    string DoctorName,        // construido con || en el SELECT
+    string DoctorSpecialty
+);
 ```
 
-### Paso 5 — Levantar la API
+### Paso 3 — Probar los dos JOIN en el navegador
 
-```powershell
-dotnet run
-```
+| Pedido | Qué esperar |
+| --- | --- |
+| `/patients/with-province` | Los 258 pacientes, cada uno con `provinceName` completo (`"Ontario"`, no `"ON"`) |
+| `/admissions/with-doctor` | Hasta 20 ingresos (límite por defecto) con `doctorName` y `doctorSpecialty` |
+| `/admissions/with-doctor?limit=5` | 5 ingresos, los más recientes primero (`ORDER BY ... DESC`) |
+| `/admissions/with-doctor?limit=hola` | 400 con mensaje: la validación de la clase 12 sigue en pie |
 
-Anotar el puerto de la línea `Now listening on:` (en los ejemplos se usa `http://localhost:5080`; reemplazar por el puerto propio).
+Observaciones pautadas:
 
-### Paso 6 — Probar los dos endpoints en el navegador
+- En `/patients/with-province` ya no está `provinceId`: el record compuesto lo reemplazó por `provinceName`. El record define qué sale en el JSON.
+- El orden del JSON en `provinceName` es camelCase (`provinceName`, `doctorName`): la serialización automática no cambia con los JOIN.
+- Los ingresos salen del más nuevo al más viejo (`DESC`): el rango de la base es junio 2018 – junio 2019.
 
-- `http://localhost:5080/patients/with-province` → 200 con las 258 filas combinadas; cada fila muestra `provinceName`, no el código.
-- `http://localhost:5080/patients/1/with-province` → 200 con un solo objeto combinado.
-- `http://localhost:5080/patients/9999/with-province` → 404 con mensaje en JSON.
+### Salida esperada (verificada)
 
-### Paso 7 — Experimento: provocar la columna ambigua
-
-El error de ambigüedad es seguro de provocar: no toca los datos, solo corta la consulta.
-
-1. En el primer endpoint, reemplazar el enlace `ON p.province_id = pn.province_id` por `ON province_id = pn.province_id`.
-2. Reiniciar (`dotnet run`) y pedir `http://localhost:5080/patients/with-province` → 500. En la terminal donde corre la API aparece la causa exacta: `SQLite Error 1: 'ambiguous column name: province_id'`.
-3. Leerlo: hay dos columnas con ese nombre (una por tabla) y SQLite no adivina. Devolver la calificación `p.province_id` y verificar que todo vuelve a funcionar.
-
-### Salidas esperadas
-
-**GET /patients/with-province** → 200 con 258 filas (respuesta similar a; los valores concretos dependen de los datos):
+`GET /admissions/with-doctor?limit=1` devuelve un arreglo con 1 objeto con esta estructura exacta (los valores de fila dependen de la copia de la base; la forma es estable):
 
 ```json
 [
   {
-    "patientId": 12,
-    "firstName": "Emily",
-    "lastName": "Watson",
-    "city": "Toronto",
-    "provinceName": "Ontario"
+    "patientId": 178,
+    "admissionDate": "2019-06-02",
+    "dischargeDate": null,
+    "diagnosis": "Pneumonia",
+    "doctorName": "Hazel Patterson",
+    "doctorSpecialty": "Oncologist"
   }
 ]
 ```
 
-**GET /patients/1/with-province** → 200 con un objeto con la misma estructura.
+Verificaciones pautadas: `dischargeDate` `null` en los ingresos aún abiertos; `doctorName` con nombre y apellido en un solo campo; `patientId` es el id del paciente internado (cruzable con `/patients/{id}`).
 
-**GET /patients/9999/with-province** → 404:
-
-```json
-{
-  "mensaje": "No existe el paciente"
-}
-```
-
-Observación sobre la respuesta combinada: el código `ON` desaparece del JSON. El DTO decidió exponer `ProvinceName`; si el día de mañana un cliente necesita también el código, se agrega la columna `pn.province_id AS ProvinceId` y la propiedad al record — el endpoint se adapta ampliando el SELECT y el DTO.
-
-## 5. Ejercicio independiente (55 min)
+## 5. Ejercicio independiente (50 min)
 
 ### Consigna
 
-Agregar al mismo proyecto dos endpoints nuevos:
+Sobre el mismo proyecto `u2-api`:
 
-1. `GET /provinces`: la tabla de referencia completa — los 13 registros de `province_names`, ordenados por nombre. Necesita un DTO propio (record `Province` con propiedades `ProvinceId` y `ProvinceName`). No requiere JOIN: es una sola tabla.
-2. `GET /patients/by-province-name?term=xxx`: los pacientes cuya provincia contenga el término en el nombre — búsqueda parcial con LIKE sobre la tabla relacionada. Por ejemplo `term=Nova` devuelve los pacientes de "Nova Scotia". Devuelve el mismo DTO combinado `PatientWithProvince` de la práctica. Respuesta: 200 con la lista, incluso vacía.
+1. Agregar `GET /provinces`: las 13 provincias y territorios de la tabla `province_names`, con el record `Province(string ProvinceId, string ProvinceName)`, ordenadas por nombre. Es la tabla de referencia más chica de la base: el endpoint sirve para que el cliente elija un código válido.
+2. Agregar `GET /admissions/by-doctor/{id:long}`: los ingresos atendidos por UN médico, con el record compuesto `AdmissionWithDoctor` (nombre del médico incluido vía JOIN), ordenados por fecha descendente. Si el médico no tiene ingresos, responder 404 con mensaje. No hace falta validar si el médico existe: sin ingresos o inexistente, la respuesta es la misma (404 con mensaje).
+
+Requisitos: alias de tabla en ambos JOIN, `ON` comentado, records compuestos al final del archivo, y prueba en el navegador de un médico con ingresos y de uno sin ellos (o con un id inexistente como `9999`).
 
 ### Pista
 
-El punto 1 es un SELECT simple con alias AS, como los de la clase 11. El punto 2 es el JOIN de la práctica más el WHERE con LIKE de la clase 12, apuntando a la columna de la tabla relacionada: `WHERE pn.province_name LIKE @Pattern` — calificada con `pn.`, y con el patrón armado en el valor. Reutilizar el record `PatientWithProvince`. La solución completa está en el anexo docente.
+El ítem 2 es el `/admissions/with-doctor` de la práctica + un `WHERE a.doctor...` cuidado: el filtro es por la columna del JOIN (`a.attending_doctor_id = @id`), parametrizado con `new { id }`. Para el 404, la herramienta es la de la clase 12 (`Count() == 0` → `Results.NotFound(new { mensaje = ... })`). La solución completa está en el anexo docente y se corrige en la puesta en común del bloque siguiente.
 
-## 6. Cierre (20 min)
+## 6. Extensión y consolidación (45 min)
+
+Actividades explícitas del bloque (la solución de la extensión está en el anexo docente):
+
+1. **Consolidación: el dibujo del cruce.** En papel, cada grupo dibuja las dos tablas del ejercicio (`admissions` y `doctors`) con sus columnas, marca la clave del cruce y explica en voz alta qué fila se pega con cuál. Rotación: cada integrante explica un JOIN distinto del archivo (el de pacientes y el de ingresos).
+2. **Extensión: JOIN con filtro por provincia.** Agregar `?province=ON` a `/patients/with-province`: el `WHERE` filtra por `p.province_id` (validación y `LIKE` opcional a criterio del grupo; con igualdad exacta alcanza). Ontario concentra la mayoría de la base: el filtro se nota.
+3. **Extensión: buscar ingresos por diagnóstico con JOIN.** Sobre `/admissions/with-doctor`, agregar `?diagnosis=pain` (parcial, con `LIKE` y validación de la clase 12). Combinado con `?limit=`, es el primer reporte real de la API: ingresos recientes con diagnóstico que contiene "pain", con nombre del médico.
+4. **Commit de avance.** `git add .`, `git commit -m "Clase 13: join de dos tablas y records compuestos"` y `git push`.
+
+## 7. Cierre (15 min)
 
 ### Qué te llevás
 
-- El JOIN lee dos tablas al mismo tiempo y las empareja por la condición del `ON` — la relación ya está definida por la clave foránea.
-- Con alias cortos (`p`, `pn`) y columnas calificadas se evita el error de columna ambigua.
-- El DTO combinado define el JSON: una propiedad por columna, cada columna con su alias AS.
-- Los parámetros con objeto anónimo se usan igual que en la clase 12: `WHERE p.patient_id = @Id` + `new { Id = id }`.
-- El endpoint expone la traducción (`ProvinceName`), no la clave interna; ampliar el SELECT y el DTO es la vía para exponer más.
+- `JOIN ... ON` cruza dos tablas emparejando su clave compartida: el cruce lo hace la base, adentro del SELECT.
+- Los alias de tabla (`p`, `pn`, `a`, `d`) evitan la ambigüedad cuando las dos tablas tienen columnas con el mismo nombre.
+- El resultado de un cruce necesita un record compuesto a medida (`PatientWithProvince`, `AdmissionWithDoctor`): el mapeo por alias `AS` funciona igual que siempre.
+- `d.first_name || ' ' || d.last_name` construye el nombre completo en SQL y lo entrega como una columna más.
+- Todo lo aprendido sigue valiendo con JOIN: parametrización, `ORDER BY`, `LIMIT`, validación 400 y 404 con mensaje.
 
 ### Lo que viene
 
-Encuentro 14: «Endpoints GET sobre la BD / Migración de endpoints» y «Cierre de la Unidad 2 / Preparación del tp-u2». Con WHERE, LIKE y JOIN en caja de herramientas, todo lo visto se integra en una sola API: los endpoints del mini-proyecto en memoria migran a consultas reales sobre hospital.db y los datos dejan de volar cuando se detiene la app.
+- Encuentro 14: escritura con Dapper (INSERT/UPDATE/DELETE parametrizados, 201/400/404); consolidación; cierre U2 y entrega del tp-u2. Hasta hoy la API solo leyó la base; la próxima clase escribe sobre ella (altas, cambios y bajas de médicos), consolida toda la unidad y cierra con la entrega del tp-u2 por GitHub.
 
 ### Recordatorio de commit (rutina desde el Encuentro 5)
 
-Con los endpoints funcionando y el ejercicio terminado, al cierre del encuentro:
-
 ```powershell
 git add .
-git commit -m "Clase 13: JOIN de dos tablas y GET con datos reales"
+git commit -m "Clase 13: join de dos tablas y records compuestos"
 git push
 ```
 
-## 7. Errores comunes y trampas
+## 8. Errores comunes y trampas
 
 | Trampa | Causa | Cómo se resuelve |
 | --- | --- | --- |
-| `ambiguous column name: province_id` | La columna existe en las dos tablas y quedó sin calificar | Calificar SIEMPRE con el alias de tabla: `p.province_id`, `pn.province_name` |
-| Respuesta con miles de filas absurdas | Falta el `ON` o la condición está incompleta: se arma el producto cruzado (258 × 13) | Escribir el enlace completo: `JOIN province_names pn ON p.province_id = pn.province_id` |
-| DTO combinado con propiedades nulas o en 0 | El SELECT trae menos columnas que propiedades tiene el record, o falta un alias AS | Una columna con alias AS por cada propiedad del DTO: el mapeo de Dapper es por nombre |
-| Concatenar valores en el SQL ahora que hay más texto | Creer que el JOIN "justifica" armar el string a mano | La regla no cambia con JOIN: marcador `@` + objeto anónimo |
-| `no such table: province_name` (o `provinces`) | Nombre de tabla escrito de memoria | El nombre exacto es `province_names` (en plural); verificar contra el esquema |
-| Esperar el código de provincia en el JSON | Confundir lo que la base guarda con lo que el endpoint expone | El DTO decidió exponer `ProvinceName`; para el código, agregar `pn.province_id AS ProvinceId` y la propiedad al record |
+| "ambiguous column name: province_id" | La columna existe en las dos tablas y el SELECT no dice de cuál | Calificar toda columna compartida con el alias: `p.province_id`, `pn.province_id` |
+| JOIN con resultado vacío sin explicación | `ON` mal escrito (columnas invertidas o nombres errados): el emparejamiento no encuentra nada | Leer el `ON` en voz alta con el esquema al lado: `a.attending_doctor_id = d.doctor_id`; revisar singular/plural y guiones bajos |
+| Propiedades del record compuesto en `null` o `0` | Alias `AS` del SELECT que no coincide con la propiedad nueva del record | El mapeo es por nombre y no cambia con JOIN: cada columna nueva lleva su alias exacto |
+| `DoctorName` sale cortado o pegado | Olvidar el espacio al concatenar nombre y apellido en el SELECT | El espacio va como texto entre las dos concatenaciones de `DoctorName`; comparar con la versión del anexo docente |
+| Filtrar con `WHERE doctor_id = @id` en el JOIN de ingresos | `doctor_id` es de `doctors`; sin alias, la columna es ambigua o no existe en `admissions` | Usar la columna de la tabla principal con su alias: `WHERE a.attending_doctor_id = @id` |
+| Reemplazar `provinceId` por `provinceName` en el record `Patient` | Modificar el record viejo en vez de crear el compuesto | El record `Patient` queda intacto; el cruce usa su propio record (`PatientWithProvince`) |
