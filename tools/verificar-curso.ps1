@@ -3,10 +3,10 @@
 # Un "curso" es cualquier carpeta que contenga 01-planificacion\planificacion-anual.csv
 # (se busca en la raiz, en subcarpetas y en sub-subcarpetas).
 #
-# Uso (desde la raiz comun de los cursos):
-#   powershell -File verificar-curso.ps1                                verifica todos los cursos detectados
-#   powershell -File verificar-curso.ps1 -Curso LSO\minimal-api-csharp  verifica solo ese curso
-#   powershell -File verificar-curso.ps1 -Encuentros 36 -MaxCell 35     otros valores configurables
+# Uso (desde la raiz del repositorio):
+#   powershell -File tools\verificar-curso.ps1                                verifica todos los cursos detectados
+#   powershell -File tools\verificar-curso.ps1 -Curso LSO\minimal-api-csharp  verifica solo ese curso
+#   powershell -File tools\verificar-curso.ps1 -Encuentros 36 -MaxCell 35     otros valores configurables
 #
 # Chequeos:
 #   1) planificacion-anual.csv: BOM, parseo y suma de Tiempo == Encuentros
@@ -28,7 +28,8 @@ param(
   [int]$MaxCell = 35
 )
 $ErrorActionPreference = 'Stop'
-$root = Split-Path -Parent $MyInvocation.MyCommand.Path
+# El script vive en tools\, pero la deteccion de cursos sigue anclada a la raiz del repositorio.
+$root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
 # Deuda conocida del corpus (rutas relativas a la raiz; reparada la entrada, quitar de aqui):
 $deudaConocida = @{}

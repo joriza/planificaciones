@@ -13,7 +13,10 @@
       "U1 encabeza con «Cinco encuentros de 240 minutos.» (actividadesApertura) y su secuencia fija parentiza cada caja de tiempo: «apertura y puente (20 min), … y cierre (15 min):».",
       "La rotación de U1 es la versión larga: agrega «sin dejar equipos sin usar»; U2-U3 la acortan y U4 la combina con redistribución por issue.",
       "El contenido del tp se escribe como texto literal dentro de actividadesAnual del cierre (trabajo del tp-u1)."
-    ]
+    ],
+    "tecnicas": "Resolución de problemas, pensamiento computacional, trabajo colaborativo, uso de TIC.",
+    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
+    "metodologia": "Evaluación formativa de proceso con revisión del historial de commits del grupo y revisiones parciales en clase; evaluación sumativa del {{tp.u1}} en el encuentro 9 mediante entrega por GitHub y defensa individual; devolución al inicio del encuentro 10."
   },
   "u2": {
     "unidad": "u2",
@@ -28,7 +31,10 @@
     "notas": [
       "U2 abre con la devolución: «Devolución de la Unidad 1 al inicio del encuentro 10.» (actividadesApertura).",
       "A diferencia de U1, la secuencia fija va con la lista de cajas de tiempo entre paréntesis y sin «(» por caja."
-    ]
+    ],
+    "tecnicas": "Resolución de problemas, pensamiento computacional, trabajo colaborativo, uso de TIC.",
+    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
+    "metodologia": "Evaluación formativa de proceso con revisiones parciales de consultas y endpoints y seguimiento del repositorio (carpeta nueva, commits, push); evaluación sumativa del {{tp.u2}} en el encuentro 15 mediante entrega por GitHub y defensa individual; devolución al inicio del encuentro 16."
   },
   "u3": {
     "unidad": "u3",
@@ -43,7 +49,10 @@
     "notas": [
       "U3 abre con la devolución: «Devolución de la Unidad 2 al inicio del encuentro 21.» (actividadesApertura).",
       "Mismo estilo de secuencia fija que U2."
-    ]
+    ],
+    "tecnicas": "Resolución de problemas, pensamiento computacional, trabajo colaborativo, uso de TIC.",
+    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
+    "metodologia": "Evaluación formativa de proceso con revisiones parciales y seguimiento del repositorio; evaluación sumativa del {{tp.u3}} en el encuentro 26 mediante entrega por GitHub y defensa individual; devolución al inicio del encuentro 27."
   },
   "u4": {
     "unidad": "u4",
@@ -59,6 +68,9 @@
       "En U4 el encuentro 27 NO aparece como ítem «encuentro 27, …»: su aporte está integrado en la apertura («Devolución de la Unidad 3 al inicio del encuentro 27 y lanzamiento de la consigna integradora, con confección del README de portada del repositorio.»). El actividadesAnual de n=27 en el JSON queda como dato para el writer de la clase, no se renderiza aquí.",
       "El cierre de U4 añade «, con preparación de la defensa» al final de activitiesAnual de n=31 (ya incluido en el campo).",
       "La rotación de U4 menciona «redistribución de responsabilidades por issue»."
-    ]
+    ],
+    "tecnicas": "Trabajo colaborativo, resolución de problemas, comunicación técnica, uso de TIC.",
+    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
+    "metodologia": "Evaluación formativa de proceso mediante seguimiento de issues, ramas y pull requests, con la revisión entre pares como instancia formativa; evaluación sumativa del {{tp.u4}} en el encuentro 32 mediante entrega por GitHub y defensa individual; devolución al inicio del encuentro 33."
   }
 }
