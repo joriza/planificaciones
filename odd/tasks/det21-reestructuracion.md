@@ -19,10 +19,14 @@ Decisiones confirmadas por el usuario (2025, +det21):
 
 | # | Tarea | Estado |
 |---|---|---|
-| 1 | Fusión de canónicos en el prompt + materias/ (2 archivos nuevos) + borrar absorbidos + z-pdt +det21 | done (commit A) |
-| 2 | verificar-curso.ps1: patrón intensificaciones + comentarios | done (commit A) |
-| 3 | Corpus: 03-encuadre-y-cierres (borrado evals + rework 16/33) | done (commit B) |
-| 4 | Corpus: 04-intensificaciones (renombres + referencias internas) | done (commit B) |
-| 5 | Corpus: anual + libro (E16/E33 + terminología) | done (commit C) |
-| 6 | Corpus: criterios + README + referencias globales | done (commit C) |
-| 7 | Verificación final (verificar-curso + links + correlación) | done |
+| 1 | Fusión de canónicos en el prompt + materias/ (2 archivos nuevos) + borrar absorbidos | done (2fe03eb) |
+| 2 | verificar-curso.ps1: patrón intensificaciones + comentarios | done (2fe03eb + febd7d9) |
+| 3 | Corpus: 03-encuadre-y-cierres (borrado evals + rework 16/33) | done (febd7d9) |
+| 4 | Corpus: 04-intensificaciones (renombres + referencias internas) | done (febd7d9) |
+| 5 | Corpus: anual + libro (E16/E33 + terminología) | done (0fce817) |
+| 6 | Corpus: criterios + README + referencias globales | done (0fce817) |
+| 7 | Verificación final (verificar-curso + links + correlación) | done: TODO OK · 6/6 momentos · 0 patrones viejos · 111 archivos |
+
+## Hallazgo del linter sobre verificar-curso.ps1
+
+El diagnóstico pi-lens L26/L27 (`$Curso = ''` en `param()`) es un falso positivo verificado con tres evidencias: diff contra HEAD solo en líneas de comentario, parser oficial de PowerShell con 0 errores y ejecución completa del script. El hallazgo histórico del session cache no se reprodujo con LSP activo (timeout del servidor).
