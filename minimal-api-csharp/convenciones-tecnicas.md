@@ -1,6 +1,6 @@
 # Convenciones técnicas — Minimal API con C# .NET 6
 
-> **Canon del curso.** Esta hoja es la fuente única de verdad de tipos, formatos y estructura de código de la materia «Minimal API con C# .NET 6». Todos los documentos de la materia (planificación, clases, evaluaciones, encuentros especiales, continuidad y criterios) la obedecen. **Toda divergencia con esta hoja es un defecto**, no una variación de estilo.
+> **Canon del curso.** Esta hoja es la fuente única de verdad de tipos, formatos y estructura de código de la materia «Minimal API con C# .NET 6». Todos los documentos de la materia (planificación, clases, evaluaciones, encuadre y cierres, intensificaciones, continuidad y criterios) la obedecen. **Toda divergencia con esta hoja es un defecto**, no una variación de estilo.
 
 | Campo | Valor |
 | --- | --- |

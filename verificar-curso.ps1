@@ -19,7 +19,7 @@
 #   8) Records de unidades con BD (u2 en adelante): ids long, fechas string
 #      (segun minimal-api-csharp\convenciones-tecnicas.md)
 #   9) Cobertura informativa contra la estructura fija de 36 (ver 0-prompt-plantilla-planificacion.md, seccion [Estructura del ciclo lectivo]):
-#      clases regulares, evaluaciones dedicadas y momentos especiales presentes/faltantes.
+#      clases regulares, evaluaciones dedicadas y momentos de intensificacion presentes/faltantes.
 #      No afecta el exit code: reporta avance, no validez formal.
 # Los incumplimientos en archivos con deuda conocida se reportan como PENDIENTE (no bloquean).
 param(
@@ -137,7 +137,7 @@ foreach ($course in $cursos) {
     if (-not (Test-Path -LiteralPath $base)) { $fails += "ANEXO HUERFANO: $($f.Name) no tiene su archivo base" }
   }
 
-  # 9) Cobertura informativa contra la estructura fija del ciclo (espeja @estructura-anual-36.md).
+  # 9) Cobertura informativa contra la estructura fija del ciclo (espeja 0-prompt-plantilla-planificacion.md, seccion [Estructura del ciclo lectivo]).
   #    No afecta el exit code: reporta avance, no validez formal.
   $instanciasAnual = @(1, 16, 33, 36)
   $evaluacionesDedicadas = [ordered]@{ 9 = 'u1'; 15 = 'u2'; 26 = 'u3'; 32 = 'u4' }

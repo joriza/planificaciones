@@ -34,16 +34,16 @@ Las instancias de evaluación con producto verificable son:
 | Trabajo práctico **tp-u2** | Entrega en 14, evaluación en 15 | Ídem tp-u1, sobre la base `hospital.db` con Dapper |
 | Trabajo práctico **tp-u3** | Entrega en 25, evaluación en 26 | Ídem, con consultas avanzadas y publicación |
 | Trabajo integrador **trabajo-final** | Entrega en 31, defensa en 32 | Entrega por GitHub con el flujo profesional del repositorio y defensa individual del integrador |
-| Evaluación integradora del cuatrimestre 1 | 16 | Prueba práctica individual en versiones A y B sobre los núcleos de las Unidades 1 y 2, más instancia de metacognición |
 | Proyecto puente de las Unidades 1 y 2 | 19 y 20 | Proyecto integrador grupal desarrollado en dos encuentros, con cierre con rúbrica de 100 puntos |
-| Evaluación integradora del cuatrimestre 2 | 33 | Prueba práctica individual en versiones A y B sobre los núcleos de las Unidades 3 y 4, más metacognición anual |
-| Momentos especiales 17-18 y 34-35 | 17-18 y 34-35 | Evaluación en versiones A y B con criterio Apto / No apto aún por objetivo mínimo (ver sección 5) |
+| Momentos de intensificación y fortalecimiento 17-18 y 34-35 | 17-18 y 34-35 | Evaluación en versiones A y B con criterio Apto / No apto aún por objetivo mínimo (ver sección 5) |
 
 Todas las versiones A y B son equivalentes: mismos objetivos y mismos requisitos, con distinto dominio o datos, de modo que la versión asignada no otorgue ventaja ni habilite la copia. La entrega de los trabajos se realiza por GitHub en el repositorio único del grupo, con una carpeta por trabajo; la defensa es siempre **individual**: cada alumno explica y justifica oralmente el propio código.
 
+Los encuentros 16 y 33 no tienen evaluación propia: son cierres de síntesis, integración y metacognición cuatrimestrales — el 16 abre con la devolución de la Unidad 2 y el 33 con la de la Unidad 4 — y por eso no figuran en la tabla anterior.
+
 ## 3. Objetivos mínimos por unidad
 
-Cada unidad define objetivos mínimos irrenunciables. La siguiente tabla es la referencia única de qué debe lograr cada estudiante para acreditar la unidad; se verifica en la evaluación de la unidad, en los momentos especiales y, de persistir, en diciembre y marzo.
+Cada unidad define objetivos mínimos irrenunciables. La siguiente tabla es la referencia única de qué debe lograr cada estudiante para acreditar la unidad; se verifica en la evaluación de la unidad, en las intensificaciones del ciclo y, de persistir, en diciembre y marzo.
 
 | Unidad | Nº | Objetivo mínimo |
 | --- | --- | --- |
@@ -84,7 +84,7 @@ Las capas se aplican **solo sobre los objetivos no alcanzados** registrados en c
 | Capa | Cuándo | Destinatarios | Qué se trabaja | Criterio de resultado |
 | --- | --- | --- | --- | --- |
 | **1. Devolución y reincorporación en las clases siguientes** | Encuentro siguiente a cada evaluación (10, 16, 27 y 33 abren con devolución) y clases regulares posteriores | Quien registre objetivos no alcanzados en la evaluación de unidad | Devolución individual detallada y reincorporación de los objetivos pendientes en las prácticas y trabajos de las clases siguientes | Seguimiento docente registrado; el estado de cada objetivo se actualiza en las instancias siguientes |
-| **2. Momentos especiales de recuperación dentro del ciclo** | Encuentros 17-18 (núcleos de U1 y U2) y 34-35 (núcleos de U3 y U4) | Quien registre objetivos no alcanzados del cuatrimestre; en paralelo, quienes ya los alcanzaron trabajan en profundización | Guías de refuerzo sobre los objetivos pendientes, con pistas diferenciadas por condición; evaluación del momento en versiones A y B | **Apto / No apto aún por objetivo mínimo**, con resultado aún provisorio: acredita lo alcanzado a la fecha y deja registrado qué sigue pendiente |
+| **2. Intensificaciones dentro del ciclo (recuperación y fortalecimiento)** | Encuentros 17-18 (núcleos de U1 y U2) y 34-35 (núcleos de U3 y U4) | Quien registre objetivos no alcanzados del cuatrimestre; en paralelo, quienes ya los alcanzaron trabajan en profundización | Guías de refuerzo sobre los objetivos pendientes, con pistas diferenciadas por condición; evaluación del momento en versiones A y B | **Apto / No apto aún por objetivo mínimo**, con resultado aún provisorio: acredita lo alcanzado a la fecha y deja registrado qué sigue pendiente |
 | **3. Instancia de diciembre** | Diciembre, finalizada la cursada (fuera de la estructura anual) | Quienes no alcanzaron los objetivos mínimos del ciclo | Camino mínimo completo del curso (U1 a U4) en dos encuentros de repaso guiado y evaluación | **Apto / No apto aún por objetivo mínimo** sobre el camino mínimo completo |
 | **4. Instancia de marzo** | Marzo, antes del nuevo ciclo (fuera de la estructura anual) | Quienes no alcanzaron en diciembre y contaron con más tiempo de preparación | El mismo camino mínimo completo, con el **mismo estándar** de diciembre: no se baja la exigencia; cambia el tiempo disponible para prepararla | **Apto / No apto aún por objetivo mínimo**, idéntico criterio a diciembre |
 
@@ -97,7 +97,7 @@ Dos aclaraciones para familias y alumnos:
 
 La cursada de la asignatura queda **aprobada** cuando, en el registro docente del estudiante, se verifican juntas estas dos condiciones:
 
-1. **Todos los objetivos mínimos de las cuatro unidades** (tabla de la sección 3) alcanzan el criterio de **Apto**, verificado en las evaluaciones de unidad, en los momentos especiales o en las instancias de diciembre/marzo.
+1. **Todos los objetivos mínimos de las cuatro unidades** (tabla de la sección 3) alcanzan el criterio de **Apto**, verificado en las evaluaciones de unidad, en las intensificaciones o en las instancias de diciembre/marzo.
 2. **Las defensas individuales fueron presentadas** en los encuentros dedicados de evaluación (9, 15, 26 y 32): la defensa es la evidencia personal de comprensión del propio trabajo y no puede reemplazarse por la entrega grupal.
 
 Si una defensa no pudo presentarse en su encuentro, los objetivos que ella acredita quedan pendientes y se recuperan por las capas de la sección 5, donde la defensa se presenta o se retoma. El resultado final se define por objetivos y no por promedios: no se usan escalas numéricas de aprobación. La rúbrica de 100 puntos corresponde únicamente al proyecto puente de los encuentros 19 y 20, como instrumento de valoración de esa instancia integradora.
@@ -119,5 +119,5 @@ La asignatura asume frente a alumnos y familias estos compromisos verificables:
 | Compromiso | En qué consiste |
 | --- | --- |
 | **Devolución en el encuentro siguiente** | Cada evaluación se devuelve al inicio del encuentro siguiente (10, 16, 27 y 33), con el estado objetivo por objetivo y los núcleos a reforzar. |
-| **Instancias de recuperación organizadas** | Ningún objetivo pendiente queda sin camino: devolución y reincorporación en clase, momentos especiales 17-18 y 34-35 dentro del ciclo, e instancias de diciembre y marzo con criterio conocido y anunciado de antemano. |
+| **Instancias de recuperación organizadas** | Ningún objetivo pendiente queda sin camino: devolución y reincorporación en clase, intensificaciones 17-18 y 34-35 dentro del ciclo, e instancias de diciembre y marzo con criterio conocido y anunciado de antemano. |
 | **Trabajo grupal con recursos optimizados** | Los grupos se recalculan en cada encuentro según los presentes y los equipos disponibles (cantidad mínima posible), ningún equipo queda sin usar mientras haya alumnos sin equipo y los integrantes rotan para que todos pasen por todos los roles. |

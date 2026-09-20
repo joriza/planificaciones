@@ -185,6 +185,6 @@ curl.exe -i -X DELETE http://localhost:5080/tickets/3
 
 - El encuentro 10 **abre con la devolución**, antes de iniciar la Unidad 2: cada alumno recibe su corrección escrita individual, con el desglose ítem por ítem (qué puntúa, qué no y por qué).
 - Comentarios generales al curso antes de arrancar la unidad: los aciertos más frecuentes (estructura del esqueleto, uso de `Results`, mensajes 400 diferenciados) y los errores comunes observados en esta versión.
-- Los ítems no alcanzados se traducen en objetivos pendientes en la planilla y en pistas de recuperación según las capas de `06-aprobacion/criterios-aprobacion.md`: devolución y reincorporación en las clases de la Unidad 2; momentos especiales 17-18 si el pendiente persiste.
+- Los ítems no alcanzados se traducen en objetivos pendientes en la planilla y en pistas de recuperación según las capas de `06-aprobacion/criterios-aprobacion.md`: devolución y reincorporación en las clases de la Unidad 2; intensificaciones 17-18 si el pendiente persiste.
 - La planilla de resultados registra: alumno, versión (A), puntaje por parte (30/30/25/15), total sobre 100, objetivos mínimos de U1 logrados/pendientes y observaciones de la defensa del TP-u1.
 - Si la entrega del tp-u1 quedó incompleta, recordar la regla vigente: se evalúa lo presentado y el repositorio del grupo permanece abierto para completar con nuevos commits y push.

@@ -215,5 +215,5 @@ Sobre el promedio negativo de la Parte 2: es el resultado correcto del criterio 
 
 - Corrección individual escrita por ítem (qué puntúa, qué no y por qué), con el estado de cada objetivo mínimo de la unidad (U3-1 a U3-4). El encuentro 27 abre con esta devolución, junto con la de la defensa y la verificación de entrega.
 - Comentarios generales al curso al abrir la clase: los aciertos más frecuentes (estructura del JOIN triple, existencia antes de consultar) y los errores comunes esperables (paréntesis del filtro de la Parte 3, `ROUND` del promedio, tipos del record contra lo que garantiza el SELECT).
-- Los ítems no alcanzados se traducen en el plan de reincorporación de la capa 1 (`criterios-aprobacion.md`): cada alumno marca en su corrección los núcleos a reforzar, con vista a los encuentros especiales 34-35.
+- Los ítems no alcanzados se traducen en el plan de reincorporación de la capa 1 (`criterios-aprobacion.md`): cada alumno marca en su corrección los núcleos a reforzar, con vista a los encuentros de intensificación y fortalecimiento 34-35.
 - La planilla de resultados registra: alumno, versión A, puntaje por parte (30/25/25/20) y total, resultado de la defensa y estado objetivo por objetivo.

@@ -1,6 +1,6 @@
 # Libro de aula — Minimal API con C# .NET 6 (una línea por encuentro)
 
-Registro docente formal del ciclo anual de la asignatura: 36 encuentros teóricos de 240 minutos. El presente libro deriva con correlación exacta de `planificacion-anual.md` (documento madre) y de la estructura fija de `estructura-anual-36.md`; la numeración de encuentros es su ordinal y no se renumera por eventos del calendario.
+Registro docente formal del ciclo anual de la asignatura: 36 encuentros teóricos de 240 minutos. El presente libro deriva con correlación exacta de `planificacion-anual.md` (documento madre) y de la estructura fija de la sección [Estructura del ciclo lectivo] del prompt principal; la numeración de encuentros es su ordinal y no se renumera por eventos del calendario.
 
 Cada encuentro ocupa una fila. Las columnas Fecha y Material se completan por el docente a medida que el calendario real lo permita. Las celdas de Tema del Día y Actividades respetan el límite de 35 caracteres por línea propio del formato de libro de aula, en estilo telegráfico.
 
@@ -21,9 +21,9 @@ Cada encuentro ocupa una fila. Las columnas Fecha y Material se completan por el
 | 13 | Acceso a datos con Dapper | 2 | Procedimental | JOIN de dos tablas | Records compuestos + JOIN |  |  |
 | 14 | Acceso a datos con Dapper | 2 | Procedimental | Escritura y cierre U2 | INSERT, UPDATE, DELETE + TP |  |  |
 | 15 | Acceso a datos con Dapper | 2 | Procedimental | Evaluación de la Unidad 2 | Defensa oral y prueba A/B |  |  |
-| 16 | Diagnóstico, integración y metacognición | 6 | Conceptual | Cierre cuatrimestre 1 | Integradora A/B + metacognición |  |  |
-| 17 | Diagnóstico, integración y metacognición | 6 | Procedimental | Recuperación U1-U2 (1/2) | Pistas diferenciadas |  |  |
-| 18 | Diagnóstico, integración y metacognición | 6 | Procedimental | Recuperación U1-U2 (2/2) | Refuerzo y profundización |  |  |
+| 16 | Diagnóstico, integración y metacognición | 6 | Conceptual | Cierre del cuatrimestre 1 | Devolución U2, síntesis y metac. |  |  |
+| 17 | Diagnóstico, integración y metacognición | 6 | Procedimental | Intensif. y fortalec. U1-U2 (1/2) | Pistas diferenciadas |  |  |
+| 18 | Diagnóstico, integración y metacognición | 6 | Procedimental | Intensif. y fortalec. U1-U2 (2/2) | Refuerzo y profundización |  |  |
 | 19 | Diagnóstico, integración y metacognición | 6 | Procedimental | Proyecto puente (1/2) | Consigna única y plan |  |  |
 | 20 | Diagnóstico, integración y metacognición | 6 | Procedimental | Proyecto puente (2/2) | Entrega y rúbrica de 100 |  |  |
 | 21 | Integración y publicación | 3 | Procedimental | JOIN de tres tablas | Devolución U2 + endpoints |  |  |
@@ -38,7 +38,7 @@ Cada encuentro ocupa una fila. Las columnas Fecha y Material se completan por el
 | 30 | Trabajo integrador profesional | 4 | Procedimental | Sprint de desarrollo | Mentoría en retirada (GRR) |  |  |
 | 31 | Trabajo integrador profesional | 4 | Procedimental | Cierre U4 y entrega | Trabajo final y defensa |  |  |
 | 32 | Trabajo integrador profesional | 4 | Actitudinal | Defensa del integrador | Defensas individuales |  |  |
-| 33 | Diagnóstico, integración y metacognición | 6 | Conceptual | Cierre cuatrimestre 2 | Integradora A/B + metacognición |  |  |
-| 34 | Diagnóstico, integración y metacognición | 6 | Procedimental | Recuperación U3-U4 (1/2) | Pistas diferenciadas |  |  |
-| 35 | Diagnóstico, integración y metacognición | 6 | Procedimental | Recuperación U3-U4 (2/2) | Refuerzo y profundización |  |  |
+| 33 | Diagnóstico, integración y metacognición | 6 | Conceptual | Cierre del cuatrimestre 2 | Devolución U4, síntesis y metac. |  |  |
+| 34 | Diagnóstico, integración y metacognición | 6 | Procedimental | Intensif. y fortalec. U3-U4 (1/2) | Pistas diferenciadas |  |  |
+| 35 | Diagnóstico, integración y metacognición | 6 | Procedimental | Intensif. y fortalec. U3-U4 (2/2) | Refuerzo y profundización |  |  |
 | 36 | Diagnóstico, integración y metacognición | 6 | Actitudinal | Cierre integral anual | Balance y proyección |  |  |

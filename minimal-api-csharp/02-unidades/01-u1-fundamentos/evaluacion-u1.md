@@ -111,5 +111,5 @@ Tabla de equivalencia:
 ## 11. Devolución
 
 - El **encuentro 10 abre con la devolución**: corrección escrita individual ítem por ítem (qué puntúa, qué no y por qué) y comentarios generales al curso, antes de iniciar la Unidad 2.
-- Los objetivos no alcanzados se traducen en pistas de recuperación según las capas de `06-aprobacion/criterios-aprobacion.md`: devolución y reincorporación en las clases siguientes; momentos especiales 17-18 si el pendiente persiste.
+- Los objetivos no alcanzados se traducen en pistas de recuperación según las capas de `06-aprobacion/criterios-aprobacion.md`: devolución y reincorporación en las clases siguientes; intensificaciones 17-18 si el pendiente persiste.
 - La planilla de resultados registra: alumno, versión (A/B), puntaje por parte, total sobre 100, objetivos mínimos logrados/pendientes y observaciones de la defensa.

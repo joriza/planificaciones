@@ -240,5 +240,5 @@ curl.exe -X POST http://localhost:5080/doctors -H "Content-Type: application/jso
 
 - Corrección individual escrita ítem por ítem (qué puntúa, qué no y por qué), devuelta al **inicio del Encuentro 16**, junto con el resultado de la defensa por objetivo y el estado de la entrega del tp-u2.
 - Comentarios generales al curso: aciertos más frecuentes (estructura de `Program.cs`, uso de `Results`) y errores comunes (parametrización del `LIKE`, alias de columnas, 400/404 sin mensaje).
-- Los ítems y objetivos no alcanzados se traducen en pistas de recuperación para los encuentros especiales 17 y 18: cada alumno marca en su corrección los núcleos a reforzar (parametrización y validación; alias y records; JOIN; INSERT con id generado).
-- La planilla de resultados registra alumno, versión (A), puntaje por parte, total sobre 100, resultado de la defensa por objetivo y observaciones para los especiales.
+- Los ítems y objetivos no alcanzados se traducen en pistas de recuperación para los encuentros de intensificación y fortalecimiento 17 y 18: cada alumno marca en su corrección los núcleos a reforzar (parametrización y validación; alias y records; JOIN; INSERT con id generado).
+- La planilla de resultados registra alumno, versión (A), puntaje por parte, total sobre 100, resultado de la defensa por objetivo y observaciones para las intensificaciones.

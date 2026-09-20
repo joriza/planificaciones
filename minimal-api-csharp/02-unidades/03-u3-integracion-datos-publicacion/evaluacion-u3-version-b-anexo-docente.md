@@ -217,5 +217,5 @@ Sobre `avgHeight` de la Parte 2: `height` es nullable y `AVG` ignora los nulos a
 
 - Corrección individual escrita por ítem (qué puntúa, qué no y por qué), con el estado de cada objetivo mínimo de la unidad (U3-1 a U3-4). El encuentro 27 abre con esta devolución, junto con la de la defensa y la verificación de entrega.
 - Comentarios generales al curso al abrir la clase: los aciertos más frecuentes (JOIN triple con provincias, agrupar por la clave) y los errores comunes esperables (`= NULL` en lugar de `IS NULL`, `COALESCE` faltante, la clave de provincia como texto en la verificación de existencia).
-- Los ítems no alcanzados se traducen en el plan de reincorporación de la capa 1 (`criterios-aprobacion.md`): cada alumno marca en su corrección los núcleos a reforzar, con vista a los encuentros especiales 34-35.
+- Los ítems no alcanzados se traducen en el plan de reincorporación de la capa 1 (`criterios-aprobacion.md`): cada alumno marca en su corrección los núcleos a reforzar, con vista a los encuentros de intensificación y fortalecimiento 34-35.
 - La planilla de resultados registra: alumno, versión B, puntaje por parte (30/25/25/20) y total, resultado de la defensa y estado objetivo por objetivo.

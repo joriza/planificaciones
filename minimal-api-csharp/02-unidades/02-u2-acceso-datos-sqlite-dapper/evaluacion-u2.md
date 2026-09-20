@@ -33,7 +33,7 @@
 
 **Bloque 3 — Prueba práctica en versiones A y B (90 min).** Prueba individual con computadora, sobre la versión asignada: ejercicio pequeño que cubre los núcleos de la unidad (lectura por id, búsqueda con LIKE validada, JOIN de dos tablas, escritura validada e ítems conceptuales breves). Esqueleto de `Program.cs` y `hospital.db` provistos por el docente.
 
-**Bloque 4 — Cierre y registro (30 min).** Registro de la planilla de la instancia (sección 12), comunicación al curso de la devolución (abre el Encuentro 16) y de los núcleos a reforzar en los encuentros especiales 17 y 18.
+**Bloque 4 — Cierre y registro (30 min).** Registro de la planilla de la instancia (sección 12), comunicación al curso de la devolución (abre el Encuentro 16) y de los núcleos a reforzar en los encuentros de intensificación y fortalecimiento 17 y 18.
 
 ## 3. Objetivos evaluados
 
@@ -132,7 +132,7 @@ El resultado de la prueba se expresa sobre 100 puntos, con el desglose ítem por
 ## 11. Devolución
 
 - La devolución abre el **Encuentro 16** (cierre integrador del cuatrimestre 1): corrección escrita individual de la prueba ítem por ítem, resultado de la defensa por objetivo y estado de la entrega del tp-u2.
-- Los núcleos no alcanzados se traducen en pistas de recuperación para los encuentros especiales 17 y 18, con resultado aún provisorio de Apto o No apto (`06-aprobacion/criterios-aprobacion.md`, capas 1 y 2).
+- Los núcleos no alcanzados se traducen en pistas de recuperación para los encuentros de intensificación y fortalecimiento 17 y 18, con resultado aún provisorio de Apto o No apto (`06-aprobacion/criterios-aprobacion.md`, capas 1 y 2).
 
 ## 12. Registro de la instancia
 
@@ -146,6 +146,6 @@ Planilla de resultados del encuentro, una fila por alumno:
 | Defensa | Objetivos U2.1 a U2.4: Apto / No apto aún |
 | Prueba — Partes 1 a 5 | Puntaje por parte (15 / 25 / 25 / 20 / 15) |
 | Total prueba | Sobre 100 |
-| Observaciones | Núcleos a reforzar para los especiales 17-18 |
+| Observaciones | Núcleos a reforzar para las intensificaciones 17-18 |
 
-La planilla alimenta la devolución del Encuentro 16, los encuentros especiales 17-18 y el registro anual de objetivos por estudiante.
+La planilla alimenta la devolución del Encuentro 16, los encuentros de intensificación y fortalecimiento 17-18 y el registro anual de objetivos por estudiante.
