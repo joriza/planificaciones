@@ -3,8 +3,9 @@
 > **Cómo usar este archivo**
 > - Este prompt es el documento principal del encargo y es **autocontenido** en todo lo general: estructura fija del ciclo lectivo, momentos de intensificación y fortalecimiento, flujo de trabajo por fases y reglas fijas. No depende de documentos externos para esas cuestiones.
 > - Documentos compañeros, cargados por referencia: la estructura de clase (`@estructura-de-la-clase.md`) — el formato de cada encuentro, que depende del tipo de materia (teórica, práctica o balanceada) y del alumnado (adolescentes, adultos) — y el archivo de la materia (`@materias/<materia>.md`), que concentra los datos centrales que cambian con cada materia.
-> - Entre implementaciones se editan dos cosas: el **archivo de materia** (curso, stack, contenidos mínimos, tiempos e institución: el centro del armado de toda esta documentación) y el bloque **[Datos particulares]** de este prompt (lo que cambia en cada pedido: libro de aula, continuidad, memoria y control de ejecución).
+> - Entre implementaciones se editan tres cosas: el **archivo de materia** (curso, stack, contenidos mínimos, tiempos e institución), el **curso-data** de la materia (`materias/<materia>.json`: la firma pedagógica de los encuentros de unidad, validada y versionada por el docente) y el bloque **[Datos particulares]** de este prompt (lo que cambia en cada pedido: libro de aula, continuidad, memoria y control de ejecución).
 > - Para un curso nuevo: crear `materias/<nueva-materia>.md` desde `materias/plantilla-materia.md`, completarla, y completar el bloque [Datos particulares] desde la «Versión en blanco» del final de este archivo.
+> - Estructura del repositorio: `materias/` concentra una `<materia>.md` y un `<materia>.json` (curso-data) por materia; `plantillas/` guarda los insumos deterministas compartidos (tramos invariantes con su banco de fraseos, esqueletos de unidad, filas de libro, `digest-codigo.md`); `tools/` guarda los scripts PowerShell de validación, render y verificación (`validar-curso-data.ps1`, `generar-administrativos.ps1`, `verificar-curso.ps1`, `lint-canon.ps1`). Cada curso se genera en su propia subcarpeta.
 > - Las evaluaciones de la asignatura son exclusivamente una por unidad didáctica y una por cada momento de intensificación y fortalecimiento. No existen evaluaciones cuatrimestrales ni de cierre: los encuentros de cierre (16, 33 y 36) son de síntesis, integración y metacognición.
 
 ## Prompt a enviar
@@ -14,7 +15,7 @@ Como docente me encuentro frecuentemente ante la necesidad de planificar las cla
 Necesito que me prepare las clases según la plantilla @estructura-de-la-clase.md
 
 [Canon de documentos — regla fija]
-Cada regla del encargo tiene un único documento canónico, y ese documento es la única fuente de verdad de su tema: la estructura del ciclo lectivo y sus encuentros, los momentos de intensificación y fortalecimiento, el flujo de trabajo, los formatos administrativos y las reglas de evaluación viven en **este mismo prompt**; el formato de cada encuentro, en `@estructura-de-la-clase.md`; los datos centrales del curso (stack, contenidos mínimos, tiempos, institución), en el archivo de materia declarado en [Datos particulares]. Si un texto de este prompt o de un documento canónico repitiera o contradijera a otro, prevalece el canon de su tema y se corrige la repetición en el documento derivado, nunca al revés. Cuando el archivo de materia declare una hoja de convenciones técnicas del curso, esa hoja es, además, el canon de tipos, formatos y estructura del código: toda divergencia con ella es un defecto.
+Cada regla del encargo tiene un único documento canónico, y ese documento es la única fuente de verdad de su tema: la estructura del ciclo lectivo y sus encuentros, los momentos de intensificación y fortalecimiento, el flujo de trabajo, los formatos administrativos y las reglas de evaluación viven en **este mismo prompt**; el formato de cada encuentro, en `@estructura-de-la-clase.md`; los datos centrales del curso (stack, contenidos mínimos, tiempos, institución), en el archivo de materia declarado en [Datos particulares]; la firma pedagógica de los encuentros de unidad (eje, carácter, tema, tiempos y TP de cada uno, más los slots globales), en el curso-data de la materia (`materias/<materia>.json`); los insumos invariantes entre materias (tramos administrativos, banco de fraseos, esqueletos, filas de libro y digest de código), en `plantillas/`. Si un texto de este prompt o de un documento canónico repitiera o contradijera a otro, prevalece el canon de su tema y se corrige la repetición en el documento derivado, nunca al revés. Cuando el archivo de materia declare una hoja de convenciones técnicas del curso, esa hoja es, además, el canon de tipos, formatos y estructura del código: toda divergencia con ella es un defecto.
 
 [Estructura del ciclo lectivo — regla fija]
 La estructura del ciclo es **rígida**: 36 encuentros teóricos, 18 por cuatrimestre. Es el diseño teórico que se presenta formalmente; los eventos del calendario real pueden reducir las clases efectivas, lo cual nunca se expone en los documentos generados.
@@ -88,17 +89,15 @@ El **acuerdo pedagógico** se documenta por grupo de condición, en formato tabl
 En los momentos diferenciados, cada encuentro desarrolla las **dos pistas en paralelo** (con plenarias conjuntas de apertura y cierre); en el momento integrador (19-20) hay una única pista para todo el curso.
 
 [Flujo de trabajo por fases — regla fija]
-Presentados los datos de la materia, trabaje en este orden exacto. Cada freno se denomina por su fase: al llegar a un FRENO de Fase, deténgase y espere mi confirmación antes de continuar:
-1. Consultas: antes de comenzar, realice todas las consultas que considere necesarias.
-2. Planificación anual (documento madre): con los datos de la materia (archivo de materia + [Datos particulares]) y la sección [Estructura del ciclo lectivo], arme la planificación anual por tramos según la sección [Documentos administrativos]. Es la revisión previa al trabajo que más tiempo consume: todo lo demás se deriva de ella. FRENO de Fase 2.
-3. Libro de aula: derivado directo de la planificación anual (correlación exacta de encuentros, ejes y denominaciones), en sus dos versiones y sus CSV. FRENO de Fase 3.
-4. Documentos de clases: genere los encuentros de unidad y las evaluaciones de los encuentros dedicados, según las reglas de estructura y respetando los frenos de fase adicionales declarados en [Datos particulares].
-5. Encuadre, cierres e intensificaciones: los documentos de encuadre y cierres del ciclo según la sección [Encuadre y cierres del ciclo], y un documento por cada momento de intensificación y fortalecimiento según la sección [Momentos de intensificación y fortalecimiento], cada momento con su evaluación en versiones A y B.
-6. Continuidad pedagógica: según la sección [Continuidad pedagógica] y lo declarado en [Datos particulares].
-7. Cierre del repositorio: genere los criterios de aprobación y el README índice. El README debe detallar, para esta materia, la diferencia entre unidades didácticas y ejes temáticos (cuáles ejes coinciden con una unidad y cuáles son organizadores transversales) y el **orden de creación de todos los documentos** de la materia. Debe incluir también una sección de **fundamentación pedagógica del enfoque** en registro docente formal: secuenciación de prerrequisitos antes de su primer uso, reducción de la carga cognitiva, práctica distribuida de los saberes transversales, progresión GRR dentro del encuentro, ancla motivadora previa a las herramientas de infraestructura, retroalimentación oportuna y evaluación auténtica, con una tabla que asocie cada decisión de diseño con su fundamento y su referencia (Sweller, Ausubel, Rosenshine, Pearson y Gallagher, Hattie y Timperley, Johnson y Johnson, Wiggins, entre otros que refuercen el enfoque).
+Presentados los datos de la materia, trabaje en esta cascada data-first, en el orden exacto. Cada freno se denomina por su fase: al llegar a un FRENO de Fase, deténgase y espere mi confirmación antes de continuar. Antes de comenzar, realice todas las consultas que considere necesarias.
+1. Fase 0 — Curso-data (única autoría LLM de la firma pedagógica): redacte `materias/<materia>.json` UNA sola vez, a partir del archivo de materia, del bloque [Datos particulares] y de la sección [Estructura del ciclo lectivo]: los 20 encuentros de unidad (4-8, 10-14, 21-25 y 27-31) con su eje, carácter, tema, tiempos y TP, más los slots globales (celular, recursos, TPs, denominaciones, ejes). Es la revisión previa al trabajo que más tiempo consume: todo lo demás se deriva de ella. Los 12 tramos invariantes del ciclo NO se redactan: viven en `plantillas/`. Si el JSON ya existe y está vigente, no lo re-redacte: valídelo y utilícelo. Controle el resultado con `powershell -File tools/validar-curso-data.ps1 -Materia materias/<materia>.json`. FRENO de Fase 0: yo valido y edito el JSON (tómeme 10-15 minutos); desde ese momento el archivo es mío, versionado en git, y usted no lo reescribe: un curso nuevo arranca del JSON vigente como plantilla.
+2. Fase 1 — Administrativos (render determinista, cero LLM): genere los tres administrativos SOLO CSV con `powershell -File tools/generar-administrativos.ps1 -Materia materias/<materia>.json -Salida <curso>/01-planificacion`: `planificacion-anual.csv` (los 4 tramos de unidad compuestos desde el JSON y los 12 tramos invariantes desde `plantillas/`), `libro-de-aula-1-linea-por-encuentro.csv` y `libro-de-aula-2-lineas-por-encuentro.csv`. Los administrativos son solo CSV: no hay vistas en Markdown. FRENO de Fase 1: yo reviso los CSV renderizados.
+3. Fase 2 — Prosa viva (un writer por carpeta): genere en paralelo las clases de los encuentros de unidad según las reglas de estructura, los documentos de encuadre y cierres del ciclo según la sección [Encuadre y cierres del ciclo], un documento por cada momento de intensificación y fortalecimiento según la sección [Momentos de intensificación y fortalecimiento], y la continuidad pedagógica según la sección [Continuidad pedagógica] y lo declarado en [Datos particulares], respetando los frenos de fase adicionales declarados en [Datos particulares]. Cada writer recibe SOLO: el slice de curso-data de SUS encuentros de unidad (sub-especificación embebida en el encargo, nunca el JSON completo), `plantillas/digest-codigo.md` si produce código, y la referencia `@estructura-de-la-clase.md`; nunca el canon completo.
+4. Fase 3 — Evaluaciones: una por cada unidad didáctica (en su encuentro dedicado) y una por cada momento de intensificación y fortalecimiento, según las secciones [Evaluaciones] y [Momentos de intensificación y fortalecimiento]: consigna maestra y versiones equivalentes.
+5. Fase 4 — Cierre del repositorio y verificación: genere los criterios de aprobación y el README índice. El README debe detallar, para esta materia, la diferencia entre unidades didácticas y ejes temáticos (cuáles ejes coinciden con una unidad y cuáles son organizadores transversales) y el **orden de creación de todos los documentos** de la materia. Debe incluir también una sección de **fundamentación pedagógica del enfoque** en registro docente formal: secuenciación de prerrequisitos antes de su primer uso, reducción de la carga cognitiva, práctica distribuida de los saberes transversales, progresión GRR dentro del encuentro, ancla motivadora previa a las herramientas de infraestructura, retroalimentación oportuna y evaluación auténtica, con una tabla que asocie cada decisión de diseño con su fundamento y su referencia (Sweller, Ausubel, Rosenshine, Pearson y Gallagher, Hattie y Timperley, Johnson y Johnson, Wiggins, entre otros que refuercen el enfoque). Cierre con la verificación completa del corpus: `powershell -File tools/verificar-curso.ps1` y `powershell -File tools/lint-canon.ps1`, corrigiendo todo hallazgo antes de dar el curso por terminado.
 
 [Correlación con la planificación anual — regla fija]
-La planificación anual es el documento madre: todos los demás documentos se derivan de ella y mantienen con ella correlación exacta — numeración de encuentros, denominaciones de unidades, ejes e instancias, tiempos y momentos de evaluación y recuperación. Si durante la creación de cualquier documento surge la necesidad de un cambio, ajuste PRIMERO la planificación anual y propague el cambio en cascada a los documentos derivados. Nunca deje documentos desalineados.
+La planificación anual es el documento madre del corpus: todos los demás documentos se derivan de ella y mantienen con ella correlación exacta — numeración de encuentros, denominaciones de unidades, ejes e instancias, tiempos y momentos de evaluación y recuperación. Su fuente es el curso-data: la anual y el libro de aula son renders de `materias/<materia>.json` más las plantillas. Si durante la creación de cualquier documento surge la necesidad de un cambio, ajuste PRIMERO el curso-data, valídelo con `tools/validar-curso-data.ps1`, re-renderice los administrativos afectados y propague el cambio en cascada a los documentos derivados. Nunca deje documentos desalineados y nunca corrija a mano un CSV renderizado: el cambio se hace en el JSON.
 
 [Distribución del recurso tiempo — regla fija]
 Si se le pasan horas totales del curso, son solo un dato nominal.
@@ -115,11 +114,11 @@ Cada clase debe guardarse en un documento por separado.
 Si lo considera necesario, genere otros documentos que me puedan servir como docente.
 
 [Secuenciación de saberes — regla fija]
-Todo saber que las actividades necesiten como insumo (herramientas, formatos, lenguajes, convenciones) debe enseñarse de forma explícita antes de su primer uso en clase; nunca explicarse recién en el momento en que aparece como requisito. Los saberes que funcionan como infraestructura de trabajo recurrente (por ejemplo, control de versiones, formatos de intercambio de datos o el manejo de la terminal) se incorporan entre los primeros contenidos del curso y se ejercitan como saber transversal en los encuentros siguientes, en lugar de ubicarse en la unidad que primero los exige. Antes de dar por cerrada la planificación anual, verifique la secuencia completa: ningún encuentro puede depender de un saber que aún no se enseñó; si detecta una dependencia, reordene los contenidos y propague el ajuste en cascada a los documentos derivados.
+Todo saber que las actividades necesiten como insumo (herramientas, formatos, lenguajes, convenciones) debe enseñarse de forma explícita antes de su primer uso en clase; nunca explicarse recién en el momento en que aparece como requisito. Los saberes que funcionan como infraestructura de trabajo recurrente (por ejemplo, control de versiones, formatos de intercambio de datos o el manejo de la terminal) se incorporan entre los primeros contenidos del curso y se ejercitan como saber transversal en los encuentros siguientes, en lugar de ubicarse en la unidad que primero los exige. Antes de dar por cerrado el curso-data (Fase 0), verifique la secuencia completa: ningún encuentro puede depender de un saber que aún no se enseñó; si detecta una dependencia, reordene los contenidos en el JSON y propague el ajuste en cascada a los documentos derivados.
 
 [Documentos administrativos — regla fija]
-Además de los documentos de clase, genere los siguientes documentos en formato tabla:
-1) Planificación anual de los encuentros: la cargaré manualmente en la plantilla que presenta cada escuela. Se arma según la sección [Estructura del ciclo lectivo], con **una fila por tramo** de la estructura y Tiempo igual a la cantidad de clases del tramo (solo el número). Columnas:
+Los administrativos son SOLO CSV y no se redactan con LLM: se renderizan con `tools/generar-administrativos.ps1` (Fase 1) desde el curso-data y las plantillas. Sus contenidos son:
+1) `planificacion-anual.csv` — Planificación anual de los encuentros: la cargaré manualmente en la plantilla que presenta cada escuela. Se arma según la sección [Estructura del ciclo lectivo], con **una fila por tramo** de la estructura y Tiempo igual a la cantidad de clases del tramo (solo el número). Composición: los 4 tramos de unidad se componen desde los 5 encuentros de unidad del curso-data; los 12 tramos invariantes salen de `plantillas/tramos-invariantes.json` con su banco de fraseos (variante `varianteFraseos` del JSON). Columnas:
    - Unidad temática (con denominación).
    - Tiempo (cantidad de clases; colocar solo el número).
    - Contenidos.
@@ -130,7 +129,7 @@ Además de los documentos de clase, genere los siguientes documentos en formato 
    - Recursos.
    - Metodología de evaluación.
    > El uso de celular es un dato particular de cada curso: debe indicarse explícitamente en la columna Actividades tal como esté declarado en el archivo de materia (permitido y con su finalidad didáctica, o no permitido).
-2) Síntesis del plan de clases para completar el libro de aula: dos documentos, uno con 1 línea por encuentro y otro con 2 líneas por encuentro para mayor detalle (cada escuela tiene un formato diferente y lo desconozco de antemano). Ambos con las columnas:
+2) `libro-de-aula-1-linea-por-encuentro.csv` y `libro-de-aula-2-lineas-por-encuentro.csv` — Síntesis del plan de clases para completar el libro de aula: uno con 1 línea por encuentro y otro con 2 líneas por encuentro para mayor detalle (cada escuela tiene un formato diferente y lo desconozco de antemano). Cada fila sale del encuentro correspondiente del curso-data (eje, carácter, tema y actividades). Ambos con las columnas:
    - Nº Clase: secuencia numérica correspondiente.
    - Eje Temático: nombre del eje temático.
    - Nº Eje: identificador del eje temático.
@@ -141,8 +140,8 @@ Además de los documentos de clase, genere los siguientes documentos en formato 
    - Fecha: no estimar; la colocará el docente manualmente.
    - Material: no estimar; la colocará el docente manualmente.
    > Si [Datos particulares] declara un límite de caracteres para alguna columna del libro de aula, el contenido debe redactarse dentro de ese límite (estilo telegráfico si hace falta).
-   > Ambos documentos del libro de aula se generan también en versión CSV (solo la tabla), para abrir en planilla con doble clic: separador punto y coma (;), celdas que contengan punto y coma entre comillas dobles, codificación UTF-8 con BOM (acentos correctos en Excel).
-   > El eje temático del libro de aula no siempre coincide con una unidad didáctica: el README debe detallar ese mapeo para la materia (regla de la Fase 2).
+   > Formato de los tres CSV: solo la tabla, separador punto y coma (;), celdas que contengan punto y coma entre comillas dobles, codificación UTF-8 con BOM (acentos correctos en Excel). No se generan vistas .md de los administrativos.
+   > El eje temático del libro de aula no siempre coincide con una unidad didáctica (el mapeo vive en `slots.ejes` del curso-data): el README debe detallarlo para la materia (regla de la Fase 4).
 
 [Entregas por parte de los alumnos — regla fija]
 Se organizarán por grupos. La matrícula y el parque informático varían durante el ciclo, por lo que la cantidad de integrantes por grupo se recalcula en cada encuentro con trabajo grupal: alumnos presentes ÷ equipos disponibles (mínimo posible), optimizando los recursos en función del alumno. Ningún equipo queda sin usar mientras haya alumnos sin equipo.
@@ -171,12 +170,12 @@ Todo documento de continuidad debe incluir esta nota, en registro académico: la
 Redacte los documentos institucionales (planificación anual, libro de aula, criterios de aprobación, continuidad pedagógica y los metadatos y acuerdos de las evaluaciones) en registro docente formal; los materiales de clase dirigidos al alumno conservan el registro didáctico del curso.
 Los anexos docentes (soluciones y criterios) van SIEMPRE en archivos separados con sufijo `-anexo-docente.md`, nunca dentro de los documentos que se entregan a alumnos o a administración.
 Si tiene planificaciones anteriores en memoria, ignórelas; tome de la memoria únicamente lo que se declare en [Datos particulares].
-Siempre que pueda, ejecute en sub-agentes para preservar el contexto principal y acelerar el proceso de creación.
+Siempre que pueda, ejecute en sub-agentes para preservar el contexto principal y acelerar el proceso de creación. Dieta de contexto de cada writer: recibe solo el slice de curso-data de sus encuentros (nunca el JSON completo), `plantillas/digest-codigo.md` si produce código y la referencia de `@estructura-de-la-clase.md`; nunca el canon completo. Reporte compacto obligatorio de cada subagente: máximo 15 líneas — archivos escritos, verificaciones ejecutadas (comando y resultado), desvíos del encargo y uso de tokens si lo conoce; sin prosa narrativa.
 Consulte todo lo que considere necesario antes de comenzar a realizar.
 
 [Datos particulares] ← COMPLETAR EN CADA IMPLEMENTACIÓN — mantener estos campos juntos, no distribuirlos en otras secciones
 
-- Materia: cargar por referencia `@materias/minimal-api-csharp.md` (curso, stack y contenidos mínimos, tiempos e institución viven en ese archivo).
+- Materia: cargar por referencia `@materias/minimal-api-csharp.md` (curso, stack y contenidos mínimos, tiempos e institución viven en ese archivo; su curso-data vigente es `materias/minimal-api-csharp.json`: validarlo y reutilizarlo, no re-redactarlo).
 
 (Libro de aula)
 - Límite de caracteres: Tema del Día y Actividades, máximo 35 por celda (en la versión de 2 líneas, 35 por línea).
@@ -188,7 +187,7 @@ Consulte todo lo que considere necesario antes de comenzar a realizar.
 - Únicamente las especificaciones de la base de datos (hospital.db).
 
 (Control de este pedido)
-- Frenar dentro de la Fase 4 al completar los encuentros de la unidad 1. Luego le pediré que continúe.
+- Frenar dentro de la Fase 2 al completar los encuentros de la unidad 1. Luego le pediré que continúe.
 
 ---
 
@@ -200,7 +199,7 @@ Consulte todo lo que considere necesario antes de comenzar a realizar.
 
 [Datos particulares] ← COMPLETAR EN CADA IMPLEMENTACIÓN — mantener estos campos juntos, no distribuirlos en otras secciones
 
-- Materia: ⟨cargar por referencia el archivo de la materia, p. ej. @materias/mi-materia.md⟩
+- Materia: ⟨cargar por referencia el archivo de la materia, p. ej. @materias/mi-materia.md; si ya existe `materias/<materia>.json` vigente, la Fase 0 se limita a validarlo y reutilizarlo⟩
 
 (Libro de aula)
 - ⟨límite de caracteres por celda/línea de Tema del Día y Actividades⟩ (borrar si no hay límite).
