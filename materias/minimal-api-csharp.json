@@ -1,409 +1,412 @@
 {
-  "materia": "minimal-api-csharp",
+  "materia": "Minimal API con C# .NET 6",
   "denominacion": "Minimal API con C# .NET 6",
   "varianteFraseos": 1,
-  "slots": {
-    "celular": "Sin uso de celular",
-    "recursos": [
-      "Aula-taller",
-      "PC por grupo",
-      "VS Code",
-      "terminal",
-      "hospital.db",
-      "navegador",
-      "GitHub",
-      "proyector"
-    ],
-    "tps": {
-      "u1": "tp-u1",
-      "u2": "tp-u2",
-      "u3": "tp-u3",
-      "u4": "trabajo-final"
-    },
-    "unidades": {
-      "u1": {
-        "denominacion": "Unidad didáctica 1: Fundamentos de Minimal API con C#",
-        "expectativas": "1) Crear, ejecutar y modificar un proyecto Minimal API desde la terminal y el editor. 2) Construir endpoints GET con rutas y parámetros que devuelvan JSON. 3) Implementar un CRUD completo en memoria con verbos HTTP y códigos de respuesta adecuados. 4) Sostener la rutina de git local y completar el primer ciclo de entrega por GitHub con el tp-u1.",
-        "transversales": "Terminal, git y GitHub, y trabajo colaborativo como saberes transversales",
-        "nota": "API en memoria, sin base de datos",
-        "actividadesApertura": "Cinco encuentros de 240 minutos.",
-        "extension": "Quienes completan la consigna base avanzan con actividades de extensión y consolidación explícitas (endpoints adicionales, mejoras de validación, desafíos de rutas)."
-      },
-      "u2": {
-        "denominacion": "Unidad didáctica 2: Acceso a datos con SQLite y Dapper",
-        "expectativas": "1) Conectar la API a hospital.db y ejecutar consultas SELECT con Dapper mapeadas a records. 2) Construir endpoints con WHERE, LIKE, ORDER BY, parámetros de ruta y query string, con validación manual y códigos de estado adecuados. 3) Resolver consultas con JOIN de dos tablas mediante records compuestos. 4) Implementar escritura parametrizada (INSERT, UPDATE, DELETE) y completar la entrega del tp-u2 por GitHub.",
-        "transversales": "Terminal, git y GitHub (carpeta nueva, commits y push) y trabajo colaborativo como saberes transversales",
-        "nota": null,
-        "actividadesApertura": "Devolución de la Unidad 1 al inicio del encuentro 10.",
-        "extension": "Quienes completan la consigna base avanzan con actividades de extensión y consolidación explícitas (consultas adicionales sobre la base real, mejoras de filtros, casos límite)."
-      },
-      "u3": {
-        "denominacion": "Unidad didáctica 3: Integración de datos y publicación",
-        "expectativas": "1) Resolver consultas con JOIN de tres tablas y exponer endpoints compuestos sobre hospital.db. 2) Construir consultas de agregación con GROUP BY y subconsultas simples. 3) Detectar y tratar datos sucios con manejo de errores y respuestas adecuadas. 4) Configurar la cadena de conexión, publicar la API con dotnet publish y completar la entrega del tp-u3.",
-        "transversales": "Terminal, git y GitHub y trabajo colaborativo como saberes transversales",
-        "nota": null,
-        "actividadesApertura": "Devolución de la Unidad 2 al inicio del encuentro 21.",
-        "extension": "Quienes completan la consigna base avanzan con actividades de extensión y consolidación explícitas (reportes adicionales, casos de datos sucios, pruebas de publicación)."
-      },
-      "u4": {
-        "denominacion": "Unidad didáctica 4: Trabajo integrador profesional",
-        "expectativas": "1) Planificar el trabajo final mediante issues con asignación de responsabilidades. 2) Desarrollar por ramas con pull requests revisados y main protegida. 3) Implementar subconsultas y estadísticas sobre hospital.db en el trabajo final. 4) Preparar la defensa y completar la entrega del trabajo-final por GitHub.",
-        "transversales": "Git y GitHub profesionalizados y trabajo colaborativo como ejes transversales",
-        "nota": null,
-        "actividadesApertura": "Devolución de la Unidad 3 al inicio del encuentro 27 y lanzamiento de la consigna integradora, con confección del README de portada del repositorio.",
-        "extension": "Quienes completan los requisitos base avanzan con actividades de extensión (estadísticas adicionales, mejoras de documentación)."
-      }
-    },
-    "ejes": {
-      "1": ["Fundamentos de Minimal API", "unidad", "u1"],
-      "2": ["Acceso a datos con Dapper", "unidad", "u2"],
-      "3": ["Integración y publicación", "unidad", "u3"],
-      "4": ["Trabajo integrador profesional", "unidad", "u4"],
-      "5": ["Terminal, Git y GitHub", "transversal"],
-      "6": ["Diagnóstico, integración y metacognición", "transversal"]
-    }
-  },
   "encuentros": [
     {
       "n": 4,
       "unidad": "u1",
+      "caracter": "Conceptual",
       "eje": 1,
-      "caracter": "Procedimental",
-      "tema": "Primer proyecto Minimal API",
-      "actividadesLibro1": "dotnet new web y primer GET",
-      "actividadesLibro2": ["dotnet new web, anatomía de", "Program.cs, run y primer GET"],
-      "contenido": "Creación del primer proyecto con dotnet new web y anatomía de Program.cs; ejecución con dotnet run y primer endpoint GET probado en el navegador; expresiones lambda elementales",
-      "expectativas": [
-        "Crear y ejecutar un proyecto Minimal API con dotnet new web desde la terminal.",
-        "Explicar la anatomía básica de Program.cs y agregar un primer endpoint GET.",
-        "Probar el endpoint en el navegador y leer la respuesta JSON obtenida."
-      ],
-      "actividadesAnual": "primer proyecto y primer endpoint GET",
       "estructura": "clase",
-      "tp": null
+      "tema": "Introducción a .NET y C#",
+      "actividadesLibro1": "Presentación .NET, tipos, variables",
+      "actividadesLibro2": ["Explicar .NET y C# básico", "Crear primer proyecto dotnet"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 5,
       "unidad": "u1",
-      "eje": 1,
       "caracter": "Procedimental",
-      "tema": "Rutas, parámetros y git",
-      "actividadesLibro1": "Endpoints GET + git init",
-      "actividadesLibro2": ["Rutas y parámetros de ruta", "git local y rutina de commit"],
-      "contenido": "rutas y parámetros de ruta; tipos devueltos y JSON automático; git local como herramienta de trabajo (init, .gitignore, add, commit y rutina de commit por clase)",
-      "expectativas": [
-        "Definir rutas con parámetros y elegir tipos devueltos que generen JSON automático.",
-        "Inicializar git local y sostener la rutina de commit por clase."
-      ],
-      "actividadesAnual": "rutas, parámetros, JSON automático e incorporación de git local con la rutina de commit por clase",
+      "eje": 1,
       "estructura": "clase",
-      "tp": null
+      "tema": "Estructuras de control y métodos",
+      "actividadesLibro1": "Condicionales, bucles y funciones",
+      "actividadesLibro2": ["Repaso escritura de código C#", "Ejercicios con métodos"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 6,
       "unidad": "u1",
-      "eje": 1,
-      "caracter": "Conceptual",
-      "tema": "Verbos HTTP y CRUD",
-      "actividadesLibro1": "Cuadro de referencia + CRUD",
-      "actividadesLibro2": ["Verbos HTTP y códigos de", "respuesta; CRUD en memoria"],
-      "contenido": "verbos HTTP y códigos de respuesta; CRUD completo en memoria sobre una lista estática",
-      "expectativas": [
-        "Describir los verbos HTTP y los códigos de respuesta con un cuadro de referencia rápida.",
-        "Implementar un CRUD completo en memoria sobre una lista estática."
-      ],
-      "actividadesAnual": "verbos HTTP, códigos de respuesta y CRUD en memoria",
+      "caracter": "Procedimental",
+      "eje": 2,
       "estructura": "clase",
-      "tp": null
+      "tema": "Minimal API y endpoint GET",
+      "actividadesLibro1": "Primera Minimal API con MapGet",
+      "actividadesLibro2": ["Crear web API con dotnet new web", "Probar endpoint GET en navegador"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 7,
       "unidad": "u1",
-      "eje": 1,
       "caracter": "Procedimental",
-      "tema": "Mini API integradora",
-      "actividadesLibro1": "Integración y fixes comunes",
-      "actividadesLibro2": ["Integración de rutas, verbos", "y estados; errores comunes"],
-      "contenido": "consolidación con una mini API integradora en memoria, errores comunes y correcciones",
-      "expectativas": [
-        "Integrar rutas, parámetros, verbos y códigos de respuesta en una mini API en memoria.",
-        "Detectar y corregir los errores comunes de compilación y de ejecución."
-      ],
-      "actividadesAnual": "consolidación con una mini API integradora y corrección de errores comunes",
+      "eje": 2,
       "estructura": "clase",
-      "tp": null
+      "tema": "Parámetros y rutas en GET",
+      "actividadesLibro1": "Endpoint con parámetros de ruta",
+      "actividadesLibro2": ["Agregar parámetros a rutas GET", "Filtrar datos con query string"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 8,
       "unidad": "u1",
-      "eje": 5,
-      "caracter": "Procedimental",
-      "tema": "Mini proyecto y cierre U1",
-      "actividadesLibro1": "tp-u1, entrega y push GitHub",
-      "actividadesLibro2": ["Desarrollo del tp-u1 en clase", "y ciclo completo de entrega"],
-      "contenido": "ciclo completo de entrega (repositorio remoto en GitHub, remote add, push) y desarrollo del tp-u1",
-      "expectativas": [
-        "Desarrollar el tp-u1 integrando los núcleos de la Unidad 1.",
-        "Completar el primer ciclo de entrega con repositorio remoto en GitHub (remote add y push)."
-      ],
-      "actividadesAnual": "apertura (15 min), consolidación (75 min), trabajo del tp-u1 (90 min), ciclo completo de entrega con repositorio remoto en GitHub (45 min) y cierre (15 min)",
+      "caracter": "Actitudinal",
+      "eje": 2,
       "estructura": "cierre",
-      "tp": "tp-u1"
+      "tema": "Cierre U1: repaso y TP",
+      "actividadesLibro1": "Sistematización y TP-U1",
+      "actividadesLibro2": ["Repasar conceptos de U1", "Entregar TP-U1 en GitHub"],
+      "tp": "TP-U1: Minimal API GET",
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 10,
       "unidad": "u2",
-      "eje": 2,
-      "caracter": "Procedimental",
-      "tema": "SQLite y Dapper: SELECT",
-      "actividadesLibro1": "Devolución U1 y conexión",
-      "actividadesLibro2": ["Devolución U1, conexión a la", "base y primer SELECT Dapper"],
-      "contenido": "Devolución de la evaluación de la Unidad 1; primera mirada a la base SQLite hospital.db; conexión desde la API y primer SELECT con Dapper mapeado a records (ids long, fechas string ISO)",
-      "expectativas": [
-        "Conectar la API a hospital.db y ejecutar un primer SELECT con Dapper mapeado a records.",
-        "Interpretar el esquema de la base a partir de una primera exploración."
-      ],
-      "actividadesAnual": "exploración de hospital.db, conexión y primer SELECT",
+      "caracter": "Conceptual",
+      "eje": 3,
       "estructura": "clase",
-      "tp": null
+      "tema": "SQLite y SELECT básico",
+      "actividadesLibro1": "Consultas SELECT con WHERE",
+      "actividadesLibro2": ["Conectar SQLite desde C#", "Ejecutar SELECT simple"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 11,
       "unidad": "u2",
-      "eje": 2,
       "caracter": "Procedimental",
-      "tema": "Consultas parametrizadas",
-      "actividadesLibro1": "WHERE y ORDER BY sobre BD",
-      "actividadesLibro2": ["WHERE, ORDER BY, parámetros", "de ruta y query string"],
-      "contenido": "consultas parametrizadas con WHERE y ORDER BY; parámetros de ruta y query string sobre la base",
-      "expectativas": [
-        "Construir consultas parametrizadas con WHERE y ORDER BY sobre la base.",
-        "Combinar parámetros de ruta y query string en los endpoints."
-      ],
-      "actividadesAnual": "consultas parametrizadas y ordenamiento",
+      "eje": 3,
       "estructura": "clase",
-      "tp": null
+      "tema": "SQL: JOIN y ORDER BY",
+      "actividadesLibro1": "JOIN entre pacientes y provincias",
+      "actividadesLibro2": ["Consultas JOIN entre 2 tablas", "Ordenar resultados con ORDER BY"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 12,
       "unidad": "u2",
-      "eje": 2,
       "caracter": "Procedimental",
-      "tema": "Filtros WHERE y LIKE",
-      "actividadesLibro1": "Búsquedas y errores 400/404",
-      "actividadesLibro2": ["Búsquedas con LIKE, validación", "manual, errores 400 y 404"],
-      "contenido": "filtros WHERE y LIKE, búsquedas; validación manual simple y códigos 400 y 404",
-      "expectativas": [
-        "Aplicar filtros WHERE y LIKE para búsquedas sobre hospital.db.",
-        "Validar entradas de manera manual y responder con códigos 400 y 404."
-      ],
-      "actividadesAnual": "filtros, búsquedas, validación manual y códigos 400 y 404",
+      "eje": 4,
       "estructura": "clase",
-      "tp": null
+      "tema": "Dapper: Query<T> con alias",
+      "actividadesLibro1": "Mapeo con Dapper y records",
+      "actividadesLibro2": ["Instalar Dapper, mapear columnas", "Query<T> con registros canónicos"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 13,
       "unidad": "u2",
-      "eje": 2,
       "caracter": "Procedimental",
-      "tema": "JOIN de dos tablas",
-      "actividadesLibro1": "Records compuestos + JOIN",
-      "actividadesLibro2": ["Consultas combinadas entre", "tablas y records compuestos"],
-      "contenido": "JOIN de dos tablas (patients con province_names, admissions con doctors) y records compuestos",
-      "expectativas": [
-        "Resolver consultas con JOIN de dos tablas mediante records compuestos.",
-        "Justificar las claves de cruce elegidas entre las tablas."
-      ],
-      "actividadesAnual": "JOIN de dos tablas",
+      "eje": 4,
       "estructura": "clase",
-      "tp": null
+      "tema": "Parámetros y LIKE en Dapper",
+      "actividadesLibro1": "Consultas parametrizadas con Dapper",
+      "actividadesLibro2": ["Filtrar por alergias con LIKE", "Parametrizar valores con new {}"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 14,
       "unidad": "u2",
-      "eje": 2,
-      "caracter": "Procedimental",
-      "tema": "Escritura y cierre U2",
-      "actividadesLibro1": "INSERT, UPDATE, DELETE + TP",
-      "actividadesLibro2": ["INSERT, UPDATE y DELETE con", "parámetros; tp-u2 y entrega"],
-      "contenido": "escritura con Dapper (INSERT, UPDATE y DELETE parametrizados, códigos 201, 400 y 404); consolidación, cierre de la unidad y entrega del tp-u2",
-      "expectativas": [
-        "Implementar escritura parametrizada (INSERT, UPDATE y DELETE) con códigos 201, 400 y 404.",
-        "Consolidar la unidad y completar la entrega del tp-u2 por GitHub."
-      ],
-      "actividadesAnual": "apertura (15 min), consolidación (75 min), trabajo del tp-u2 (90 min), ciclo de entrega por GitHub (45 min) y cierre (15 min)",
+      "caracter": "Actitudinal",
+      "eje": 4,
       "estructura": "cierre",
-      "tp": "tp-u2"
+      "tema": "Cierre U2: repaso y TP",
+      "actividadesLibro1": "Sistematización y TP-U2",
+      "actividadesLibro2": ["Repasar U1-U2 con Dapper", "Entregar TP-U2 en GitHub"],
+      "tp": "TP-U2: SQLite y Dapper básico",
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 21,
       "unidad": "u3",
-      "eje": 3,
       "caracter": "Procedimental",
-      "tema": "JOIN de tres tablas",
-      "actividadesLibro1": "Devolución U2 + endpoints",
-      "actividadesLibro2": ["Devolución U2, JOIN triple", "y endpoints compuestos"],
-      "contenido": "Devolución de la evaluación de la Unidad 2; JOIN de tres tablas (admissions, patients y doctors) y endpoints compuestos",
-      "expectativas": [
-        "Resolver consultas con JOIN de tres tablas sobre hospital.db.",
-        "Exponer endpoints compuestos que combinen los datos obtenidos."
-      ],
-      "actividadesAnual": "JOIN triple y endpoints compuestos",
+      "eje": 5,
       "estructura": "clase",
-      "tp": null
+      "tema": "INSERT con Dapper y POST",
+      "actividadesLibro1": "Alta con ExecuteScalar y POST",
+      "actividadesLibro2": ["Crear endpoint POST con Dapper", "ExecuteScalar para nuevo ID"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 22,
       "unidad": "u3",
-      "eje": 3,
       "caracter": "Procedimental",
-      "tema": "Agregaciones y GROUP BY",
-      "actividadesLibro1": "COUNT, AVG, SUM, reportes",
-      "actividadesLibro2": ["COUNT, AVG y SUM por", "especialidad y por mes"],
-      "contenido": "agregaciones COUNT, AVG y SUM con GROUP BY (por especialidad, por mes)",
-      "expectativas": [
-        "Construir agregaciones COUNT, AVG y SUM agrupadas con GROUP BY.",
-        "Producir reportes por especialidad y por mes a partir de la base."
-      ],
-      "actividadesAnual": "agregaciones y GROUP BY",
+      "eje": 5,
       "estructura": "clase",
-      "tp": null
+      "tema": "DELETE con Dapper y MapDelete",
+      "actividadesLibro1": "Borrado con Execute",
+      "actividadesLibro2": ["Endpoint DELETE con Dapper", "Devolver 204 en borrado"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 23,
       "unidad": "u3",
-      "eje": 3,
       "caracter": "Procedimental",
-      "tema": "Subconsultas y datos sucios",
-      "actividadesLibro1": "Datos NULL, typos, errores",
-      "actividadesLibro2": ["NULL, typos, fechas erróneas", "y manejo de errores"],
-      "contenido": "subconsultas simples; datos sucios reales (valores NULL, errores de tipeo, fechas erróneas): robustez y manejo de errores",
-      "expectativas": [
-        "Detectar datos sucios (valores NULL, errores de tipeo, fechas erróneas) en consultas reales.",
-        "Aplicar manejo de errores con respuestas adecuadas."
-      ],
-      "actividadesAnual": "subconsultas y datos sucios",
+      "eje": 5,
       "estructura": "clase",
-      "tp": null
+      "tema": "UPDATE con Dapper y MapPut",
+      "actividadesLibro1": "Actualización con Execute PUT",
+      "actividadesLibro2": ["Endpoint PUT para actualizar", "QueryFirstOrDefault existente"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 24,
       "unidad": "u3",
-      "eje": 3,
       "caracter": "Procedimental",
-      "tema": "Configuración y publish",
-      "actividadesLibro1": "Connection string + publish",
-      "actividadesLibro2": ["Connection string en", "appsettings y dotnet publish"],
-      "contenido": "configuración de la cadena de conexión en appsettings.json; publicación con dotnet publish y ejecución en release",
-      "expectativas": [
-        "Configurar la cadena de conexión en appsettings.json.",
-        "Publicar la API con dotnet publish y ejecutarla en release."
-      ],
-      "actividadesAnual": "configuración y publicación",
+      "eje": 5,
       "estructura": "clase",
-      "tp": null
+      "tema": "CRUD completo y JOIN triple",
+      "actividadesLibro1": "JOIN 3 tablas en API CRUD",
+      "actividadesLibro2": ["JOIN 3 admissions+doctors", "QueryFirstOrDefault con parámetro"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 25,
       "unidad": "u3",
-      "eje": 3,
-      "caracter": "Procedimental",
-      "tema": "Sprint y cierre U3",
-      "actividadesLibro1": "TP-u3 y entrega GitHub",
-      "actividadesLibro2": ["Sprint integrador y tp-u3", "con ciclo de entrega"],
-      "contenido": "sprint integrador, cierre de la unidad y entrega del tp-u3",
-      "expectativas": [
-        "Desarrollar el tp-u3 en un sprint integrador.",
-        "Completar la entrega del tp-u3 con el ciclo de entrega por GitHub."
-      ],
-      "actividadesAnual": "apertura (15 min), sprint integrador y consolidación (75 min), trabajo del tp-u3 (90 min), ciclo de entrega por GitHub (45 min) y cierre (15 min)",
+      "caracter": "Actitudinal",
+      "eje": 5,
       "estructura": "cierre",
-      "tp": "tp-u3"
+      "tema": "Cierre U3: repaso y TP",
+      "actividadesLibro1": "Sistematización y TP-U3",
+      "actividadesLibro2": ["Repasar JOINs y CRUD completo", "Entregar TP-U3 en GitHub"],
+      "tp": "TP-U3: CRUD completo",
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 27,
       "unidad": "u4",
-      "eje": 4,
       "caracter": "Procedimental",
-      "tema": "Trabajo final y README",
-      "actividadesLibro1": "Devolución U3, consigna, README",
-      "actividadesLibro2": ["Devolución U3, consigna del", "final y README de portada"],
-      "contenido": "Devolución de la evaluación de la Unidad 3; lanzamiento del trabajo final, consigna integradora con subconsultas y estadísticas sobre hospital.db; README de portada del repositorio",
-      "expectativas": [
-        "Planificar el trabajo final a partir de la consigna integradora.",
-        "Confeccionar el README de portada del repositorio del grupo."
-      ],
-      "actividadesAnual": "lanzamiento de la consigna integradora, con confección del README de portada del repositorio",
+      "eje": 6,
       "estructura": "clase",
-      "tp": null
+      "tema": "Git profesional: ramas y PR",
+      "actividadesLibro1": "Issues, ramas feature y PR",
+      "actividadesLibro2": ["Crear issues en repo grupal", "Abrir ramas por feature"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 28,
       "unidad": "u4",
-      "eje": 5,
       "caracter": "Procedimental",
-      "tema": "Issues y ramas",
-      "actividadesLibro1": "Organización del trabajo",
-      "actividadesLibro2": ["Issues con responsables y", "ramas por feature"],
-      "contenido": "issues y organización del trabajo; ramas por feature y flujo de trabajo",
-      "expectativas": [
-        "Organizar el trabajo mediante issues con responsables y ramas por feature.",
-        "Registrar el avance del proyecto en el repositorio del grupo."
-      ],
-      "actividadesAnual": "issues y ramas por feature",
+      "eje": 6,
       "estructura": "clase",
-      "tp": null
+      "tema": "README de portada y más",
+      "actividadesLibro1": "README, main protegida",
+      "actividadesLibro2": ["Redactar README de portada", "Proteger main con reglas"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 29,
       "unidad": "u4",
-      "eje": 5,
       "caracter": "Procedimental",
-      "tema": "Pull requests y revisión",
-      "actividadesLibro1": "Revisión entre pares",
-      "actividadesLibro2": ["Pull requests, revisión entre", "pares y main protegida"],
-      "contenido": "pull requests con revisión entre pares y main protegida",
-      "expectativas": [
-        "Desarrollar por ramas con pull requests revisados entre pares.",
-        "Aplicar la protección de main en el flujo de trabajo del repositorio."
-      ],
-      "actividadesAnual": "pull requests, revisión entre pares y main protegida",
+      "eje": 6,
       "estructura": "clase",
-      "tp": null
+      "tema": "Consolidación CRUD con JOINs",
+      "actividadesLibro1": "Repaso CRUD + JOINs",
+      "actividadesLibro2": ["Consolidar operaciones CRUD", "Diseñar endpoint de conteo"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 30,
       "unidad": "u4",
-      "eje": 4,
       "caracter": "Procedimental",
-      "tema": "Sprint de desarrollo",
-      "actividadesLibro1": "Mentoría en retirada (GRR)",
-      "actividadesLibro2": ["Sprint con mentoría docente", "en retirada gradual (GRR)"],
-      "contenido": "sprint de desarrollo mentorizado con retirada gradual del acompañamiento docente",
-      "expectativas": [
-        "Avanzar el desarrollo en un sprint mentorizado con acompañamiento decreciente (GRR).",
-        "Sostener el flujo de ramas y pull requests durante el sprint."
-      ],
-      "actividadesAnual": "sprint de desarrollo mentorizado con acompañamiento decreciente",
+      "eje": 6,
       "estructura": "clase",
-      "tp": null
+      "tema": "Avance trabajo final",
+      "actividadesLibro1": "Trabajo final con DB real",
+      "actividadesLibro2": ["Implementar funcionalidades finales", "Preparar defensa individual"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     },
     {
       "n": 31,
       "unidad": "u4",
-      "eje": 4,
-      "caracter": "Procedimental",
-      "tema": "Cierre U4 y entrega",
-      "actividadesLibro1": "Trabajo final y defensa",
-      "actividadesLibro2": ["Consolidación del trabajo", "final, entrega y defensa"],
-      "contenido": "consolidación, preparación de la defensa y entrega del trabajo-final",
-      "expectativas": [
-        "Consolidar el trabajo final y preparar la defensa individual.",
-        "Completar la entrega del trabajo-final por GitHub."
-      ],
-      "actividadesAnual": "apertura (15 min), consolidación (75 min), trabajo del trabajo-final (90 min), ciclo de entrega por GitHub (45 min) y cierre (15 min), con preparación de la defensa",
+      "caracter": "Actitudinal",
+      "eje": 6,
       "estructura": "cierre",
-      "tp": "trabajo-final"
+      "tema": "Cierre U4: entrega final",
+      "actividadesLibro1": "Sistematización y entrega TF",
+      "actividadesLibro2": ["Repasar ejes 1-6 integrados", "Entregar trabajo final en GitHub"],
+      "tp": "Trabajo final: API con Dapper",
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
     }
-  ]
+  ],
+  "slots": {
+    "celular": "No permitido",
+    "recursos": [
+      "VS Code y terminal",
+      "SDK .NET 6",
+      "hospital.db",
+      "Git y GitHub",
+      "Extensiones C# para VS Code",
+      "Thunder Client o curl"
+    ],
+    "denominaciones": {
+      "u1": "Fundamentos de C# y Minimal API",
+      "u2": "Acceso a datos con SQLite y Dapper",
+      "u3": "CRUD completo con Dapper",
+      "u4": "Profesionalización y proyecto final"
+    },
+    "tps": {
+      "u1": "TP-U1: Minimal API GET",
+      "u2": "TP-U2: SQLite y Dapper básico",
+      "u3": "TP-U3: CRUD completo",
+      "u4": "Trabajo final: API con Dapper"
+    },
+    "unidades": {
+      "u1": {
+        "denominacion": "Fundamentos de C# y Minimal API",
+        "expectativas": "Comprender la estructura de .NET y crear endpoints GET básicos.",
+        "transversales": "Git inicial, terminal de comandos, estructura Program.cs.",
+        "actividadesApertura": "Diagnóstico de saberes previos sobre lógica y algoritmos.",
+        "extension": "Explorar más verbos HTTP y tipos de respuesta sin base de datos.",
+        "nota": "Primer contacto con C# y Minimal API. Sin base de datos aún."
+      },
+      "u2": {
+        "denominacion": "Acceso a datos con SQLite y Dapper",
+        "expectativas": "Consultar una base SQLite desde C# usando Dapper con consultas parametrizadas.",
+        "transversales": "Git para entregas, terminal, SQL básico.",
+        "actividadesApertura": "Recuperar conceptos de endpoints GET y conectar con base de datos.",
+        "extension": "Explorar más funciones SQL de agregación en Dapper.",
+        "nota": "Introducción a Dapper. JOIN entre 2 tablas."
+      },
+      "u3": {
+        "denominacion": "CRUD completo con Dapper",
+        "expectativas": "Implementar las cuatro operaciones CRUD vía endpoints HTTP con Dapper.",
+        "transversales": "Git para entregas, JOIN de 3 tablas, validación de existencia.",
+        "actividadesApertura": "Recuperar SELECT parametrizado y avanzar a escritura en BD.",
+        "extension": "Agregar filtros combinados y paginación simple.",
+        "nota": "POST, PUT, DELETE con Dapper. JOIN triple."
+      },
+      "u4": {
+        "denominacion": "Profesionalización y proyecto final",
+        "expectativas": "Publicar un repositorio profesional con README, issues y PR; exponer una API completa.",
+        "transversales": "Git profesional (ramas, PR, main protegida), documentación técnica.",
+        "actividadesApertura": "Recuperar CRUD completo y presentar flujo profesional.",
+        "extension": "Agregar tests de integración básicos con la API.",
+        "nota": "Cierre del ciclo. Defensa individual del trabajo final."
+      }
+    },
+    "ejes": {
+      "1": "Introducción a C# y .NET 6",
+      "2": "Minimal API y endpoints HTTP",
+      "3": "SQLite y SQL básico",
+      "4": "Dapper y consultas parametrizadas",
+      "5": "CRUD con Dapper",
+      "6": "Profesionalización y control de versiones"
+    }
+  }
 }
