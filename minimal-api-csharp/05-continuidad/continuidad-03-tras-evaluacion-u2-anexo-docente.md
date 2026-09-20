@@ -338,6 +338,8 @@ Verificaciones: 258 filas; propiedades en camelCase (`patientId`, `firstName`); 
 | PUT | Reemplazar los datos de un recurso existente | 204 No Content | `Results.NoContent()` |
 | DELETE | Dar de baja (borrar) un recurso | 204 No Content | `Results.NoContent()` |
 
+> Regla del canon: el cuadro describe la API sobre `hospital.db` (Unidad 2 en adelante). En memoria (Unidad 1) el PUT de reemplazo responde `200 OK` con el recurso (`Results.Ok`); el DELETE es siempre `204 No Content`.
+
 **(a)** Un 400 significa que el pedido está roto antes de consultar la base: falta un dato, viene vacío o no es un número válido. Un 404 significa que el pedido era correcto pero no hay nada que responder: el recurso no existe o la búsqueda no trajo resultados.
 
 **(b)** El POST crea algo que antes no existía: se responde 201 con el recurso y la URL donde encontrarlo (encabezado `Location`). El DELETE no deja nada nuevo que mostrar: el 204 confirma que la operación quedó hecha, sin cuerpo.

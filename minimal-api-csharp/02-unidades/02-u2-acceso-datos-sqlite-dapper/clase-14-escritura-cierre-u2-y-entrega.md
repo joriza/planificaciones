@@ -304,6 +304,7 @@ Quien no llegue con el ciclo completo, entrega igual lo que tenga funcionando: l
 - Escribir es `Execute` (UPDATE/DELETE) y `ExecuteScalar<long>` (INSERT + `last_insert_rowid()`), siempre parametrizado igual que la lectura.
 - Las **filas afectadas** son el 404 de la escritura: 0 filas significa id inexistente y nada escrito.
 - Códigos de la escritura: 201 con `Results.Created` y la URL del recurso nuevo; 400 con mensaje si los datos no pasan la validación; 404 con mensaje si el id no existe; 204 sin cuerpo si el cambio quedó hecho.
+- Regla del canon para el PUT: en memoria (Unidad 1) responde `200 OK` con el recurso reemplazado (`Results.Ok`); sobre base de datos con Dapper responde `204 No Content` (`Results.NoContent()`), porque la consulta UPDATE no devuelve el recurso.
 - El cuerpo JSON del POST/PUT aterriza en un record de entrada sin id (`DoctorInput`): el id lo asigna la base.
 - La base protege su integridad: borrar un médico con ingresos dispara un error de clave foránea. Los datos también tienen reglas.
 - La unidad completa: conexión, lectura parametrizada, filtros con validación, JOIN y escritura — todo sobre `hospital.db`, todo en `Program.cs`.

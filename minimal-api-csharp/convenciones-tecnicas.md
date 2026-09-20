@@ -159,11 +159,13 @@ Los handlers devuelven **SIEMPRE** con la clase `Results` de forma explícita (`
 
 | Código | Cuándo se usa | Método canónico | Ejemplo |
 | --- | --- | --- | --- |
-| `200` OK | Lectura encontrada (GET) o reemplazo correcto (PUT) | `Results.Ok(dato)` | `Results.Ok(patient)` |
+| `200` OK | Lectura (GET) o reemplazo correcto en memoria (PUT) | `Results.Ok(dato)` | `Results.Ok(patient)` |
 | `201` Created | Alta correcta (POST), con la URL del recurso nuevo | `Results.Created(url, dato)` | `Results.Created($"/patients/{id}", patient)` |
-| `204` No Content | Borrado correcto (DELETE), respuesta sin cuerpo | `Results.NoContent()` | `Results.NoContent()` |
+| `204` No Content | Borrado correcto (DELETE) y actualización sobre base de datos (PUT/UPDATE con Dapper), respuesta sin cuerpo | `Results.NoContent()` | `Results.NoContent()` |
 | `400` Bad Request | Pedido inválido: dato faltante, mal formado o que no pasa la validación manual | `Results.BadRequest(new { mensaje = "..." })` | `Results.BadRequest(new { mensaje = "La fecha no es valida" })` |
 | `404` Not Found | El id pedido no existe en la base o en la lista | `Results.NotFound(new { mensaje = "..." })` | `Results.NotFound(new { mensaje = "No existe el paciente" })` |
+
+> **Regla condicional del PUT:** sin base de datos (Unidad 1 y APIs en memoria) el reemplazo responde `200 OK` con el recurso actualizado (`Results.Ok(recursoActualizado)`); sobre base de datos con Dapper (Unidad 2 en adelante) responde `204 No Content` (`Results.NoContent()`), porque la consulta UPDATE no devuelve el recurso y así se evita una segunda consulta.
 
 - `500` **nunca** se devuelve a propósito: aparece cuando el servidor falla sin manejo (por ejemplo, un mapeo `int`/`long` mal declarado). Ante un 500, leer el error completo en la terminal donde corre `dotnet run`.
 - Los mensajes de `400` y `404` se escriben en español, dentro de un objeto anónimo `new { mensaje = "..." }`, para que la respuesta tenga un cuerpo legible.
