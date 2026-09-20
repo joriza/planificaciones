@@ -37,10 +37,10 @@ Todas corren con Windows PowerShell 5.1 desde la raíz del repositorio.
 ## Crear un curso nuevo (modo corrida completa)
 
 1. Crear `materias/<nueva-materia>.md` desde `materias/plantilla-materia.md` y completarla.
-2. **Fase 0** (única autoría LLM de la firma pedagógica): redactar `materias/<nueva-materia>.json` — los 20 encuentros de unidad + slots — según `0-prompt-plantilla-planificacion.md`. **FRENO: el docente valida y edita**; desde ahí el JSON es del docente (versionado en git).
+2. **Fase 0** (única autoría LLM de la firma pedagógica): redactar `materias/<nueva-materia>.json` — los 20 encuentros de unidad + slots — según `0-prompt-plantilla-planificacion.md`. **FRENO: el docente valida y edita**; desde ahí el JSON es del docente (versionado en git). Para materias con código, redactar también la hoja de convenciones técnicas del curso desde `plantillas/plantilla-convenciones-tecnicas.md`, con spike de verificación y el mismo FRENO (JSON + hoja).
 3. Validar: `tools\validar-curso-data.ps1`.
 4. **Fase 1** (cero LLM): render de administrativos con `tools\generar-administrativos.ps1`; opcionalmente el README derivado con `tools\generar-readme.ps1`.
-5. **Fases 2-3** (prosa viva): writers por carpeta — cada uno recibe solo el slice de sus encuentros, `plantillas/digest-codigo.md` si escribe código, y `estructura-de-la-clase.md`. Evaluaciones con scaffolds + consigna maestra + versiones equivalentes.
+5. **Fases 2-3** (prosa viva): writers por carpeta — cada uno recibe solo el slice de sus encuentros, `plantillas/digest-codigo.md` si escribe código, la hoja de convenciones técnicas (leerla primero) y `estructura-de-la-clase.md`. Evaluaciones con scaffolds + consigna maestra + versiones equivalentes.
 6. **Fase 4**: `tools\verificar-curso.ps1` y `tools\lint-canon.ps1` en verde.
 
 ## Actualizar un corpus existente (modo actualización)
@@ -49,6 +49,18 @@ Todas corren con Windows PowerShell 5.1 desde la raíz del repositorio.
 2. `tools\impacto.ps1` → plan de regeneración en tres listas (registrar el plan en el odd doc).
 3. Re-render de derivados: siempre todos (idempotentes, costo cero).
 4. El LLM toca **solo** la lista (b) de prosa afectada.
+
+## Regenerar un corpus completo (materia existente)
+
+> Corrida completa de `0-prompt-plantilla-planificacion.md` sobre una materia cuyo curso-data ya está validado: rehace **todos** los documentos derivados con generación reciente. Los CSV salen byte-idénticos (render determinista); la prosa es texto nuevo, equivalente en estructura y canon. El corpus anterior queda en git para comparar (`git diff`).
+
+1. **Rama de seguridad:** `git switch -c regen/<curso>` y `git status` limpio. Todo lo eliminado es recuperable desde git.
+2. **Limpieza:** borrar TODO el contenido de la carpeta del curso (p. ej. `minimal-api-csharp/`), incluida la hoja de convenciones técnicas: todo se regenera en la corrida. No tocar `materias/`, `plantillas/`, `tools/`, `estructura-de-la-clase.md` ni el prompt plantilla.
+3. **Fase 0:** el curso-data ya es del docente: validarlo (`tools\validar-curso-data.ps1`) y reutilizarlo tal cual; no se re-redacta ni se edita. La hoja de convenciones técnicas se recrea desde `plantillas/plantilla-convenciones-tecnicas.md` con **spike de verificación obligatorio** (la carpeta fue borrada: la hoja nace de ejecutar, como en la corrida original) y entra en el mismo FRENO de Fase 0.
+4. **Fases 1-4** del prompt plantilla, sin saltear ninguna: render de los 3 CSV (`tools\generar-administrativos.ps1`), writers por carpeta (slice de curso-data + digest de código + hoja de convenciones + `estructura-de-la-clase.md`), evaluaciones con scaffolds, criterios + README + verificación final.
+5. **Puerta de salida:** `tools\verificar-curso.ps1` en verde y `tools\lint-canon.ps1` sin regresiones contra su baseline documentada (`odd/tasks/`).
+6. **Contexto del agente ejecutor:** raíz del repositorio, `database-docs/`, `materias/`, `plantillas/` y `tools/`; ignorar el resto de carpetas (otros proyectos). Sub-agentes por carpeta, mismo modelo que el principal, reporte compacto ≤ 15 líneas.
+7. **Frenos:** definir antes de lanzar — frenos por defecto del prompt plantilla (más freno opcional al cierre de cada unidad en Fase 2) o corrida completa sin detenciones.
 
 ## Convenciones operativas
 
