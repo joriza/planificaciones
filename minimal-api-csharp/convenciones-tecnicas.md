@@ -47,4 +47,4 @@ Estado: v1 — 2026-09-20. Origen: análisis de fallos silenciosos de sub-agente
 ## 7. Deuda conocida (a reparar; el verificador la reporta como PENDIENTE)
 
 - Reparado 2026-09-20: cierre «Qué te llevás» en E10 y E11; ids `long` en records de las clases 12, 13 y del anexo de la 14. La tabla de deuda de `verificar-curso.ps1` quedó vacía.
-- Pendiente: `database-docs/03-modelos-csharp-dapper.md` usa `int`/`DateOnly`, que falla en runtime. NO copiar tipos de ese documento; manda esta hoja. Pendiente de actualización.
+- Reparado 2026-09-20: `database-docs/03-modelos-csharp-dapper.md` actualizado a los tipos canónicos (`long`/`string`); ya puede usarse como referencia.

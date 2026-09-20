@@ -307,6 +307,13 @@ todo lo necesario está en la ruta raiz del proyecto + la sub carpeta database-d
 A) Utilice sub agentes todo lo que sea posible, para preservar el contexto principal.
 B) Utilice sub agentes con el mismo modelo que el principal todo lo que sea posible, para mejorar los tiempos debido al procesamiento paralelo y para preservar el contexto principal.
 
+## +det19
 
+Entiendo el punto 5. Observación honesta sobre el recorte efectivo del 50%. Ser completamente honesto es lo mejor. Solo que no debe figurar este factor de eficacia en ningun documento generado, es el estimado implicito para todas las tareas.
+Muesteme con un ejemplo de un documento existente la variante que resiste un revision formal.
 
+## +det20
+
+Actualice el documento @z-analisis-pi-agent-glm53flash.md y el punto 5. **Observación honesta sobre el recorte efectivo del 50%.** Modifiquelo para que tenga un nombre tecnico acompañado de florituras en lenguaje pedagógico que indiquen un comportamiento politicamente correcto. (Es que me dá verguenza reconocer un engaño directo y además dejarlo documentado)
+Actualice el prompt plantilla y el readme del proyecto en todos los lugares donde sea necesario.
 

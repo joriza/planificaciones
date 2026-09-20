@@ -14,7 +14,7 @@ Como docente me encuentro frecuentemente ante la necesidad de planificar las cla
 Necesito que me prepare las clases según la plantilla @estructura-de-la-clase.md
 
 [Canon de documentos — regla fija]
-Cada regla del encargo tiene un único documento canónico, y ese documento es la única fuente de verdad de su tema: la estructura del ciclo lectivo y sus instancias (cantidad y ordinal de encuentros, unidades, evaluaciones dedicadas, recuperación y profundización, cierres) viven en @estructura-anual-36.md; el formato de cada encuentro, en @estructura-de-la-clase.md; los encuentros especiales (momentos, ubicación, destinatarios, formato, evaluaciones y nombres), en @encuentros-especiales.md. Este prompt concentra únicamente el flujo de trabajo, los formatos administrativos y los datos de cada curso. Si un texto de este prompt repitiera o contradijera a un documento canónico, prevalece el documento canónico: corríjase la repetición en este prompt, nunca al revés.
+Cada regla del encargo tiene un único documento canónico, y ese documento es la única fuente de verdad de su tema: la estructura del ciclo lectivo y sus instancias (cantidad y ordinal de encuentros, unidades, evaluaciones dedicadas, recuperación y profundización, cierres) viven en @estructura-anual-36.md; el formato de cada encuentro, en @estructura-de-la-clase.md; los encuentros especiales (momentos, ubicación, destinatarios, formato, evaluaciones y nombres), en @encuentros-especiales.md. Este prompt concentra únicamente el flujo de trabajo, los formatos administrativos y los datos de cada curso. Si un texto de este prompt repitiera o contradijera a un documento canónico, prevalece el documento canónico: corríjase la repetición en este prompt, nunca al revés. Cuando [Datos particulares] declare una hoja de convenciones técnicas del curso, esa hoja es, además, el canon de tipos, formatos y estructura del código: toda divergencia con ella es un defecto.
 
 [Flujo de trabajo por fases — regla fija]
 Presentados los datos de la materia, trabaje en este orden exacto. Cada freno se denomina por su fase: al llegar a un FRENO de Fase, deténgase y espere mi confirmación antes de continuar:
@@ -32,8 +32,8 @@ La planificación anual es el documento madre: todos los demás documentos se de
 [Distribución del recurso tiempo — regla fija]
 Si se le pasan horas totales del curso, son solo un dato nominal.
 Los tiempos que realmente cuentan para la creación del material son las horas por encuentro y el tiempo efectivo disponible por encuentro, declarados en [Datos particulares]. La cantidad de encuentros totales y su estructura son fijas y están definidas en @estructura-anual-36.md.
-En la planificación no debe quedar en evidencia ese porcentaje efectivo, pero sí debe ser tomado en cuenta para armar los contenidos. Por ello, elija una forma de rellenar los tiempos de modo que sumen el tiempo teórico: inflar el estimado de tiempos, agregar actividades complementarias explícitas, rotar integrantes en actividades grupales si el tiempo lo permite, o un mix de ellas alternando a lo largo del curso. Elija siempre la variante de apariencia más profesional y menos evidente.
-Exponga tiempos teóricos en cada documento generado; nunca exponga el recorte efectivo.
+En la planificación no debe figurar ese factor de eficacia en ningún documento generado: queda como estimado implícito de planificación. Por ello, concilie ambos tiempos de modo que cada bloque declare actividades reales que justifiquen su duración: actividades de extensión y consolidación explícitas para quienes completan la consigna base (variante preferida), estimaciones por bloque ajustadas al grupo, rotación de integrantes en actividades grupales, o un mix de ellas alternando a lo largo del curso. Elija siempre la variante más defendible ante una revisión formal: cada tiempo declarado debe corresponder a una actividad prevista.
+Exponga tiempos teóricos en cada documento generado.
 
 [Estructura de la planificación — regla fija]
 Organice la planificación según la estructura rígida del ciclo lectivo definida en @estructura-anual-36.md, que es el único canon de esa estructura: no la restate ni la reenumere.
@@ -118,6 +118,7 @@ Consulte todo lo que considere necesario antes de comenzar a realizar.
 - Base de datos: tengo una pequeña base de datos en SQLite para utilizar en los ejemplos; se llama hospital.db.
 - Restricción de archivos: busque la forma de que se toque solo Program.cs; otros archivos solo si es estrictamente necesario, de esta forma se simplifica la cantidad de archivos que debe recordar el alumno.
 - Código de ejemplo: agregue una buena dosis de comentarios para que los estudiantes puedan comprender mejor las acciones del código presentado.
+- Convenciones técnicas: minimal-api-csharp/convenciones-tecnicas.md — fuente única de tipos, formatos y estructura de código de este curso; leerla antes de generar cualquier ejemplo.
 
 (Tiempo)
 - Cantidad de horas por encuentro: 4.
@@ -160,6 +161,7 @@ Consulte todo lo que considere necesario antes de comenzar a realizar.
 - Base de datos: ⟨nombre y motor, si existe⟩ (borrar si no aplica).
 - Restricción de archivos: ⟨límites de estructura del proyecto para el alumno⟩.
 - Código de ejemplo: ⟨densidad de comentarios deseada en el código presentado⟩.
+- Convenciones técnicas: ⟨hoja de convenciones del curso, si existe (ruta relativa); borrar si no aplica⟩.
 
 (Tiempo)
 - Cantidad de horas por encuentro: ⟨H⟩.

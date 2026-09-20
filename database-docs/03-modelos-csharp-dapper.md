@@ -1,6 +1,7 @@
 # Modelos C# para Dapper — hospital.db
 
 > **Nota para el curso**: Estos modelos van en `Program.cs` para mantener la restricción de un solo archivo. Se usan `record` (C# 9+) por inmutabilidad y simplicidad.
+> Tipos canónicos según `minimal-api-csharp/convenciones-tecnicas.md`: ids `long` para columnas INTEGER de SQLite; fechas `string` ("YYYY-MM-DD").
 
 ## Registros (Records)
 
@@ -9,15 +10,15 @@
 public record Province(string ProvinceId, string ProvinceName);
 
 // Médico
-public record Doctor(int DoctorId, string FirstName, string LastName, string Specialty);
+public record Doctor(long DoctorId, string FirstName, string LastName, string Specialty);
 
 // Paciente
 public record Patient(
-    int PatientId,
+    long PatientId,
     string FirstName,
     string LastName,
     string Gender,           // "M" o "F"
-    DateOnly BirthDate,      // Formato ISO en BD
+    string BirthDate,        // "YYYY-MM-DD" (TEXT en SQLite)
     string? City,
     string ProvinceId,
     string? Allergies,
@@ -27,20 +28,20 @@ public record Patient(
 
 // Ingreso hospitalario
 public record Admission(
-    int PatientId,
-    DateOnly AdmissionDate,
-    DateOnly? DischargeDate,
+    long PatientId,
+    string AdmissionDate,    // "YYYY-MM-DD" (TEXT en SQLite)
+    string? DischargeDate,
     string? Diagnosis,
-    int AttendingDoctorId
+    long AttendingDoctorId
 );
 
 // DTOs para consultas con JOINs
 public record PatientWithProvince(
-    int PatientId,
+    long PatientId,
     string FirstName,
     string LastName,
     string Gender,
-    DateOnly BirthDate,
+    string BirthDate,        // "YYYY-MM-DD" (TEXT en SQLite)
     string? City,
     string ProvinceName,
     string? Allergies,
@@ -49,8 +50,8 @@ public record PatientWithProvince(
 );
 
 public record AdmissionDetail(
-    DateOnly AdmissionDate,
-    DateOnly? DischargeDate,
+    string AdmissionDate,    // "YYYY-MM-DD" (TEXT en SQLite)
+    string? DischargeDate,
     string? Diagnosis,
     string PatientName,
     string DoctorName,
@@ -129,7 +130,7 @@ var monthly = connection.Query<MonthlyAdmissions>(@"
 ").ToList();
 
 // 6. Insertar nuevo paciente (ejemplo)
-int newId = connection.ExecuteScalar<int>(@"
+long newId = connection.ExecuteScalar<long>(@"
     INSERT INTO patients (first_name, last_name, gender, birth_date, city, province_id, allergies, height, weight)
     VALUES (@FirstName, @LastName, @Gender, @BirthDate, @City, @ProvinceId, @Allergies, @Height, @Weight);
     SELECT last_insert_rowid();
@@ -158,21 +159,23 @@ connection.Execute(@"
 });
 ```
 
-## Helpers para conversión de fechas
+## Fechas: convención del curso
 
 ```csharp
-// SQLite guarda fechas como TEXT 'YYYY-MM-DD'
-// Dapper mapea automáticamente a DateOnly si la propiedad es DateOnly
-// Si se usa string en el record, hacer conversión manual:
+// SQLite guarda fechas como TEXT 'YYYY-MM-DD'.
+// Los records exponen la fecha como string: mapeo 1:1 con la BD, sin conversión en el acceso a datos.
+// Convertir recién al presentar:
 
-public static DateOnly ParseDate(string iso) => DateOnly.Parse(iso);
-public static string FormatDate(DateOnly d) => d.ToString("yyyy-MM-dd");
+string nacimiento = "1990-05-15";                      // tal como sale de la BD
+var fecha = DateTime.Parse(nacimiento);                 // para operar o mostrar en otro formato
+string enFormatoLocal = fecha.ToString("dd/MM/yyyy");   // "15/05/1990"
 ```
 
 ## Patrones recomendados para el curso
 
 1. **Una conexión por request** (o using block)
 2. **Parámetros con objeto anónimo** para evitar inyección SQL
-3. **Query<T>** para SELECT, **Execute** para INSERT/UPDATE/DELETE
+3. **`Query<T>`** para SELECT, **Execute** para INSERT/UPDATE/DELETE
 4. **Records** para DTOs inmutables
-5. **Nombres de columnas en SQL** que coincidan con propiedades (o usar alias AS)
+5. **Fechas como `string`** en los records (TEXT de SQLite); convertir solo al presentar
+6. **Nombres de columnas en SQL** que coincidan con propiedades (o usar alias AS)
