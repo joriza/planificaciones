@@ -188,6 +188,8 @@ Consulte todo lo que considere necesario antes de comenzar a realizar.
 [Datos particulares] ← COMPLETAR EN CADA IMPLEMENTACIÓN — mantener estos campos juntos, no distribuirlos en otras secciones
 
 - Materia: cargar por referencia `@materias/minimal-api-csharp.md` (curso, stack y contenidos mínimos, tiempos e institución viven en ese archivo; su curso-data vigente es `materias/minimal-api-csharp.json`: validarlo y reutilizarlo, no re-redactarlo).
+- Carpeta del curso: `output/minimal-api-csharp/` (todos los documentos generados van dentro de `output/`, con una subcarpeta por materia).
+- Convenciones técnicas: `output/minimal-api-csharp/convenciones-tecnicas.md`.
 
 (Libro de aula)
 - Límite de caracteres: Tema del Día y Actividades, máximo 35 por celda (en la versión de 2 líneas, 35 por línea).
