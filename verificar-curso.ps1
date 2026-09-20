@@ -18,7 +18,7 @@
 #   7) Titulo de cierre uniforme '### Qué te llevás' en clase-*.md (alumno, sin anexos)
 #   8) Records de unidades con BD (u2 en adelante): ids long, fechas string
 #      (segun minimal-api-csharp\convenciones-tecnicas.md)
-#   9) Cobertura informativa contra la estructura fija de 36 (ver estructura-anual-36.md):
+#   9) Cobertura informativa contra la estructura fija de 36 (ver 0-prompt-plantilla-planificacion.md, seccion [Estructura del ciclo lectivo]):
 #      clases regulares, evaluaciones dedicadas y momentos especiales presentes/faltantes.
 #      No afecta el exit code: reporta avance, no validez formal.
 # Los incumplimientos en archivos con deuda conocida se reportan como PENDIENTE (no bloquean).
@@ -149,7 +149,7 @@ foreach ($course in $cursos) {
   $mdCurso = @(Get-ChildItem -LiteralPath $course -Filter '*.md' -Recurse | Where-Object { $_.Name -notlike '*anexo*' })
   $clasesPresentes = @($mdCurso | Where-Object { $_.Name -match '^clase-(\d+)-' } | ForEach-Object { [int]$Matches[1] } | Sort-Object -Unique)
   $evalsPresentes = @($mdCurso | Where-Object { $_.Name -match '^evaluacion-(u\d+)' } | ForEach-Object { $Matches[1].ToLowerInvariant() } | Sort-Object -Unique)
-  $especialesPresentes = @($mdCurso | Where-Object { $_.Name -like 'especiales-*.md' })
+  $especialesPresentes = @($mdCurso | Where-Object { $_.Name -like 'intensificaciones-*.md' })
   $regularesPresentes = @($clasesPresentes | Where-Object { $regularesEsperados -contains $_ })
   $faltanRegulares = @($regularesEsperados | Where-Object { $clasesPresentes -notcontains $_ })
   $faltanEvals = @($evaluacionesDedicadas.GetEnumerator() | Where-Object { $evalsPresentes -notcontains $_.Value } | ForEach-Object { "$($_.Value) (encuentro $($_.Key))" })
@@ -160,8 +160,8 @@ foreach ($course in $cursos) {
   $faltanEvalsTxt = if ($faltanEvals.Count -gt 0) { $faltanEvals -join ', ' } else { '(ninguna)' }
   Write-Output "  Evaluaciones dedicadas: presentes $evalsTxt | faltan $faltanEvalsTxt"
   $especialesTxt = if ($especialesPresentes.Count -gt 0) { ': ' + (($especialesPresentes | ForEach-Object { $_.Name }) -join ', ') } else { '' }
-  Write-Output "  Momentos especiales: $($especialesPresentes.Count)/$especialesMomentos documento(s)$especialesTxt"
-  Write-Output '  Instancias de ciclo (encuentros 1, 16, 33 y 36): sin patron de nombres definido en la plantilla; no se chequean.'
+  Write-Output "  Momentos de intensificacion: $($especialesPresentes.Count)/$especialesMomentos documento(s)$especialesTxt"
+  Write-Output '  Encuadre y cierres del ciclo (encuentros 1, 16, 33 y 36): sin patron de nombres definido en la plantilla; no se chequean.'
   Write-Output ''
 
   # 6) Mojibake: secuencias de doble codificacion en los .md del curso
