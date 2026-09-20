@@ -23,7 +23,7 @@
 
 - Por encuentro: `actividadesLibro1` (celda ≤35 del libro 1 línea), `actividadesLibro2` (array de 2 celdas ≤35 del libro 2 líneas — textos DISTINTOS, no un split), `actividadesAnual` (frase para la narrativa de Actividades del tramo, sin prefijo «encuentro N, »), `estructura` (`clase` | `cierre`).
 - `slots.unidades.uX` = `{denominacion, expectativas, transversales, nota, actividadesApertura, extension}` — todos verbatim del renglón del tramo en el CSV anual (expectativas unitarias; apertura y extensión para componer la columna Actividades).
-- Composición de la celda Contenidos del tramo de unidad: `join(contenido de los 5 encuentros, "; ") + ". " + transversales + (nota != "" ? "; " + nota : "")` — el último fragmento sin punto final propio.
+- Composición de la celda Contenidos del tramo de unidad (verificada 4/4): `join(contenido de los 5 encuentros, "; ") + ". " + transversales + (nota != "" ? "; " + nota + "." : ".")` — fragmentos, transversales y nota SIN punto final propio.
 - `plantillas/libro-filas-invariantes.json`: las filas de libro de los 16 encuentros invariantes (tema/actividades verbatim de ambos libros).
 
 ## Mapa de tareas
