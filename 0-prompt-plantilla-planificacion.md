@@ -3,9 +3,9 @@
 > **Cómo usar este archivo**
 > - Este prompt es el documento principal del encargo y es **autocontenido** en todo lo general: estructura fija del ciclo lectivo, momentos de intensificación y fortalecimiento, flujo de trabajo por fases y reglas fijas. No depende de documentos externos para esas cuestiones.
 > - Documentos compañeros, cargados por referencia: la estructura de clase (`@estructura-de-la-clase.md`) — el formato de cada encuentro, que depende del tipo de materia (teórica, práctica o balanceada) y del alumnado (adolescentes, adultos) — y el archivo de la materia (`@materias/<materia>/materia.md`), que concentra los datos centrales que cambian con cada materia.
-> - Entre implementaciones se editan tres cosas: el **archivo de materia** (curso, stack, contenidos mínimos, tiempos e institución), el **curso-data** de la materia (`materias/<materia>/curso-data.json`: la firma pedagógica de los encuentros de unidad, validada y versionada por el docente) y el bloque **[Datos particulares]** de este prompt (lo que cambia en cada pedido: libro de aula, continuidad, memoria y control de ejecución).
-> - Para un curso nuevo: crear `materias/<nombre-elegido>/materia.md` desde `plantillas/plantilla-materia.md`, completarla, y completar el bloque [Datos particulares] desde la «Versión en blanco» del final de este archivo.
-> - Estructura del repositorio: `materias/` concentra una subcarpeta por materia (identificador a elección del docente) con `materia.md`, `curso-data.json` y opcionalmente `nota-catedra.md`; `plantillas/` guarda los insumos deterministas compartidos (tramos invariantes con su banco de fraseos, esqueletos de unidad, filas de libro, `digest-codigo.md`); `tools/` guarda los scripts PowerShell de validación, render y verificación (`validar-curso-data.ps1`, `generar-administrativos.ps1`, `verificar-curso.ps1`, `lint-canon.ps1`). Cada curso se genera en su propia subcarpeta.
+> - Entre implementaciones se editan tres cosas, todas fuera de este prompt: el **archivo de materia** (curso, stack, contenidos mínimos, tiempos e institución), el **curso-data** de la materia (`materias/<materia>/curso-data.json`: la firma pedagógica de los encuentros de unidad, validada y versionada por el docente) y el **pedido** de la materia (`materias/<materia>/pedido.md`: lo que cambia en cada corrida — libro de aula, continuidad, memoria y control de ejecución).
+> - Para un curso nuevo: crear `materias/<nombre-elegido>/materia.md` desde `plantillas/plantilla-materia.md`, completarla, y crear `materias/<nombre-elegido>/pedido.md` desde `plantillas/plantilla-pedido.md`.
+> - Estructura del repositorio: `materias/` concentra una subcarpeta por materia (identificador a elección del docente) con `materia.md`, `curso-data.json`, `nota-catedra.md` (prosa libre, opcional) y `pedido.md` (datos particulares de corrida); `plantillas/` guarda los insumos deterministas compartidos (tramos invariantes con su banco de fraseos, esqueletos de unidad, filas de libro, `digest-codigo.md`); `tools/` guarda los scripts PowerShell de validación, render y verificación (`validar-curso-data.ps1`, `generar-administrativos.ps1`, `verificar-curso.ps1`, `lint-canon.ps1`). Cada curso se genera en su propia subcarpeta.
 > - Las evaluaciones de la asignatura son exclusivamente una por unidad didáctica y una por cada momento de intensificación y fortalecimiento. No existen evaluaciones cuatrimestrales ni de cierre: los encuentros de cierre (16, 33 y 36) son de síntesis, integración y metacognición.
 
 ## Prompt a enviar
@@ -185,44 +185,17 @@ Si tiene planificaciones anteriores en memoria, ignórelas; tome de la memoria �
 Siempre que pueda, ejecute en sub-agentes para preservar el contexto principal y acelerar el proceso de creación. Dieta de contexto de cada writer: recibe solo el slice de curso-data de sus encuentros (nunca el JSON completo), `plantillas/digest-codigo.md` si produce código, la hoja de convenciones técnicas declarada en el archivo de materia (leerla PRIMERO, es canon: toda divergencia es un defecto) y la referencia de `@estructura-de-la-clase.md`; nunca el canon completo. Reporte compacto obligatorio de cada subagente: máximo 15 líneas — archivos escritos, verificaciones ejecutadas (comando y resultado), desvíos del encargo y uso de tokens si lo conoce; sin prosa narrativa.
 Consulte todo lo que considere necesario antes de comenzar a realizar.
 
-[Datos particulares] ← COMPLETAR EN CADA IMPLEMENTACIÓN — mantener estos campos juntos, no distribuirlos en otras secciones
+[Datos particulares] ← carga por referencia — este prompt NO se edita por materia
 
-- Materia: cargar por referencia `@materias/LSO/materia.md` (curso, stack y contenidos mínimos, tiempos e institución viven en ese archivo; su curso-data vigente es `materias/LSO/curso-data.json`: validarlo y reutilizarlo, no re-redactarlo).
-- Carpeta del curso: `output/LSO/` (todos los documentos generados van dentro de `output/`, con una subcarpeta por materia).
-- Convenciones técnicas: `output/LSO/convenciones-tecnicas.md`.
-
-(Libro de aula)
-- Límite de caracteres: Tema del Día y Actividades, máximo 35 por celda (en la versión de 2 líneas, 35 por línea).
-
-(Continuidad pedagógica)
-- Cantidad y momentos: 4 documentos — el primero al inicio del curso (conocimientos previos) y uno tras la evaluación de cada una de las unidades 1 a 3 (encuentros 9, 15 y 26).
-
-(Qué tomar de memoria)
-- Únicamente las especificaciones de la base de datos (hospital.db).
-
-(Control de este pedido)
-- Frenar dentro de la Fase 2 al completar los encuentros de la unidad 1. Luego le pediré que continúe.
+El identificador de la materia —el nombre de su carpeta en `materias/`— se declara en la orden de ejecución (p. ej.: «genere la documentación de la materia LAP»). Todas las rutas se derivan de él, sin editar este archivo:
+- Ficha de la materia: `@materias/<materia>/materia.md` (curso, stack, contenidos mínimos, tiempos e institución).
+- Curso-data: `materias/<materia>/curso-data.json` (si existe y está vigente: validarlo y reutilizarlo, no re-redactarlo).
+- Pedido particular: `@materias/<materia>/pedido.md` — sus secciones (Libro de aula, Continuidad pedagógica, Qué tomar de memoria, Control de este pedido) SON el bloque [Datos particulares] de esta corrida y mandan sobre los valores por defecto. Si no existe, crearlo desde `plantillas/plantilla-pedido.md` junto al docente antes de continuar.
+- Carpeta del curso: `output/<materia>/`.
+- Convenciones técnicas: la ruta declarada en la ficha (materias con código); la Fase 0 la redacta y verifica con spike si no existe.
 
 ---
 
 ## Versión en blanco del bloque [Datos particulares]
 
-> Para un pedido nuevo: copiar este bloque, reemplazar el bloque cargado de arriba y completar cada ⟨marcador⟩.
-> Los datos centrales de la materia NO van acá: viven en `materias/<nombre-elegido>/materia.md` (usar `plantillas/plantilla-materia.md`).
-> Borrar los campos que no apliquen al curso. No agregar datos particulares fuera de este bloque.
-
-[Datos particulares] ← COMPLETAR EN CADA IMPLEMENTACIÓN — mantener estos campos juntos, no distribuirlos en otras secciones
-
-- Materia: cargar por referencia `@materias/<nombre-elegido>/materia.md`; si ya existe `materias/<nombre-elegido>/curso-data.json` vigente, la Fase 0 se limita a validarlo y reutilizarlo.
-
-(Libro de aula)
-- ⟨límite de caracteres por celda/línea de Tema del Día y Actividades⟩ (borrar si no hay límite).
-
-(Continuidad pedagógica)
-- ⟨cantidad y momentos de uso⟩ (borrar si no aplica).
-
-(Qué tomar de memoria)
-- ⟨temas cuyo contexto previo sí debe recuperarse de memoria; "nada" si no hay⟩.
-
-(Control de este pedido)
-- ⟨frenos dentro de una fase (p. ej. tras la unidad X) / generar todo — y qué se pedirá después⟩.
+La versión en blanco del pedido vive en plantillas/plantilla-pedido.md.

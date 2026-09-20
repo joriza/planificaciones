@@ -10,7 +10,7 @@
 | --- | --- |
 | [`0-prompt-plantilla-planificacion.md`](0-prompt-plantilla-planificacion.md) | El encargo madre: canon del flujo (cascada data-first Fase 0-4), estructura fija del ciclo lectivo, reglas de evaluación y frenos humanos. Punto de partida de cualquier corrida. |
 | [`estructura-de-la-clase.md`](estructura-de-la-clase.md) | Canon del formato de encuentro (BOPPPS + GRR): depende del tipo de materia y del alumnado. |
-| [`materias/`](materias/) | Una subcarpeta por materia (nombre a elección del docente = identificador): `<nombre>/materia.md` (ficha), `<nombre>/curso-data.json` (firma pedagógica, 20 encuentros + slots) y `<nombre>/nota-catedra.md` (prosa libre, opcional). |
+| [`materias/`](materias/) | Una subcarpeta por materia (nombre a elección del docente = identificador): `<nombre>/materia.md` (ficha), `<nombre>/curso-data.json` (firma pedagógica, 20 encuentros + slots) y `<nombre>/nota-catedra.md` (prosa libre, opcional) y `<nombre>/pedido.md` (datos particulares: libro, continuidad, memoria, frenos). |
 | [`plantillas/`](plantillas/) | Lo invariante entre materias: tramos del ciclo con banco de fraseos, esqueletos de composición, tabla de dominio para versiones equivalentes, digest de código y plantilla de README. |
 | [`tools/`](tools/) | Las aplicaciones deterministas (PowerShell 5.1, cero dependencias): ver la tabla siguiente. |
 | [`output/`](output/) | Una subcarpeta por curso (declarada en [Datos particulares] del prompt). Contiene los documentos generados, CSV administrativos y el README índice. |
@@ -36,7 +36,7 @@ Todas corren con Windows PowerShell 5.1 desde la raíz del repositorio.
 
 ## Crear un curso nuevo (modo corrida completa)
 
-1. Crear `materias/<nombre>/materia.md` desde `plantillas/plantilla-materia.md` y completarla. El nombre de la carpeta es el identificador de la materia.
+1. Crear `materias/<nombre>/materia.md` desde `plantillas/plantilla-materia.md`, y `materias/<nombre>/pedido.md` desde `plantillas/plantilla-pedido.md`, y completarlos. El nombre de la carpeta es el identificador de la materia.
 2. **Fase 0** (única autoría LLM de la firma pedagógica): redactar `materias/<nombre>/curso-data.json` — los 20 encuentros de unidad + slots — según `0-prompt-plantilla-planificacion.md`. **FRENO: el docente valida y edita**; desde ahí el JSON es del docente (versionado en git). Para materias con código, redactar también la hoja de convenciones técnicas del curso desde `plantillas/plantilla-convenciones-tecnicas.md`, con spike de verificación y el mismo FRENO (JSON + hoja).
 3. Validar: `tools\validar-curso-data.ps1 -Materia materias\<nombre>`.
 4. **Fase 1** (cero LLM): render de administrativos con `tools\generar-administrativos.ps1 -Materia materias\<nombre> -Salida output\<nombre>\01-planificacion`; opcionalmente el README derivado con `tools\generar-readme.ps1 -Materia materias\<nombre> -Curso output\<nombre>`.
