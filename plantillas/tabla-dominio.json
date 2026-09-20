@@ -1,0 +1,46 @@
+{
+  "descripcion": "Tabla de mapeo de dominio para generar versiones equivalentes (B/C/D) desde una versión A. La usa tools/generar-version-b.ps1. Los tokens A de cada grupo ocurren textualmente en las evaluaciones reales del corpus (evaluacion-u1-version-a.md y evaluacion-u2-version-a.md en adelante).",
+  "reglas": [
+    "Reemplazo de palabra completa (whole-word), insensible a mayúsculas, preservando el patrón de caja del token hallado: tickets -> BOOKS si el original era TICKETS, TicketId -> bookId si el original era ticketId.",
+    "La sustitución es una sola pasada sobre el texto base: un reemplazo nunca se vuelve a mapear (la alternancia evalúa de mayor a menor longitud: nextTicketId nunca es partido por ticketId).",
+    "Cada letra generada usa SU propia fila del grupo (B->B, C->C, D->D); las filas deben ser distintas entre sí y distintas de A. Si a una letra pedida le falta la fila de un token presente en la base, el generador corta con error (no recicla otra fila).",
+    "Un token del vocabulario presente en la base sin grupo en la tabla queda intacto y se informa como AVISO al docente.",
+    "La prosa natural y los datos de ejemplo (p. ej. «libro» o las descripciones de los tickets) se ajustan en la pasada de lectura natural del docente: el generador mapea solo los tokens canónicos del dominio."
+  ],
+  "notaExtension": "La tabla se organiza por instancia del curso: 'u1' (mini API en memoria, Unidad 1) y 'u2' (hospital.db, Unidades 2 en adelante); puede agregarse 'general' para tokens comunes o nuevas instancias bajo 'dominios'. Los tokens A deben ser únicos en TODA la tabla (entre instancias también). Para agregar una versión: agregue la clave de letra (B/C/D) en cada grupo del dominio. Para agregar un token: agregue un grupo con su fila A/B/C/D y, si quiere aviso al docente, la palabra en el vocabulario de la instancia.",
+  "dominios": {
+    "u1": {
+      "descripcion": "Unidad 1 — mini API en memoria (sin base de datos): A=tickets de soporte, B=biblioteca (books), C=cursos (courses), D=canciones (songs).",
+      "vocabulario": ["soporte", "contacto", "mensajes", "prioridad", "titulo", "Impresora"],
+      "grupos": [
+        { "A": "nextTicketId", "B": "nextBookId", "C": "nextCourseId", "D": "nextSongId" },
+        { "A": "ticketInput", "B": "bookInput", "C": "courseInput", "D": "songInput" },
+        { "A": "ticketId", "B": "bookId", "C": "courseId", "D": "songId" },
+        { "A": "tickets", "B": "books", "C": "courses", "D": "songs" },
+        { "A": "ticket", "B": "book", "C": "course", "D": "song" },
+        { "A": "priority", "B": "author", "C": "level", "D": "genre" },
+        { "A": "createdDate", "B": "publishedDate", "C": "startDate", "D": "releaseDate" }
+      ]
+    },
+    "u2": {
+      "descripcion": "Unidades 2 en adelante — hospital.db: A=doctors/admissions (médicos e ingresos), B=patients (pacientes, búsqueda por ciudad), C=clinics (clínicas, por provincia), D=nurses (enfermeras, por departamento). Las tablas admissions y hospital.db se comparten y no se mapean.",
+      "vocabulario": ["cardio"],
+      "grupos": [
+        { "A": "admissionOfDoctor", "B": "admissionOfPatient", "C": "admissionOfClinic", "D": "admissionOfNurse" },
+        { "A": "attending_doctor_id", "B": "attending_patient_id", "C": "attending_clinic_id", "D": "attending_nurse_id" },
+        { "A": "doctorInput", "B": "patientInput", "C": "clinicInput", "D": "nurseInput" },
+        { "A": "doctorName", "B": "patientName", "C": "clinicName", "D": "nurseName" },
+        { "A": "doctorId", "B": "patientId", "C": "clinicId", "D": "nurseId" },
+        { "A": "doctor_id", "B": "patient_id", "C": "clinic_id", "D": "nurse_id" },
+        { "A": "doctors", "B": "patients", "C": "clinics", "D": "nurses" },
+        { "A": "doctor", "B": "patient", "C": "clinic", "D": "nurse" },
+        { "A": "specialty", "B": "city", "C": "province", "D": "department" },
+        { "A": "especialidad", "B": "ciudad", "C": "provincia", "D": "departamento" },
+        { "A": "médicos", "B": "pacientes", "C": "clínicas", "D": "enfermeras" },
+        { "A": "médico", "B": "paciente", "C": "clínica", "D": "enfermera" },
+        { "A": "medicos", "B": "pacientes", "C": "clinicas", "D": "enfermeras" },
+        { "A": "medico", "B": "paciente", "C": "clinica", "D": "enfermera" }
+      ]
+    }
+  }
+}

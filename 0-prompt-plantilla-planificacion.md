@@ -70,7 +70,7 @@ Existen dos momentos adicionales de intensificación, **fuera de la estructura a
 
 El estándar de marzo es idéntico al de diciembre: no baja; cambia cuánto tiempo tuvo el alumno para prepararlo.
 
-**Evaluaciones de los momentos:** todos los momentos tienen su evaluación, en dos versiones equivalentes (A y B), en la carpeta de evaluaciones de los momentos del curso (ver README). Las evaluaciones de intensificación usan criterio **Apto / No apto aún por objetivo mínimo**; la del momento integrador (proyecto puente) usa rúbrica de 100 puntos. Las instancias de diciembre y marzo evalúan el camino mínimo completo del curso.
+**Evaluaciones de los momentos:** todos los momentos tienen su evaluación, en versiones equivalentes (A/B/C/D; mínimo dos según los grupos), en la carpeta de evaluaciones de los momentos del curso (ver README). Las evaluaciones de intensificación usan criterio **Apto / No apto aún por objetivo mínimo**; la del momento integrador (proyecto puente) usa rúbrica de 100 puntos. Las instancias de diciembre y marzo evalúan el camino mínimo completo del curso.
 
 **Formato de los documentos:** cada documento de momento contiene: metadatos (momento de uso, duración, destinatarios, requisitos, lugar de trabajo), el **acuerdo pedagógico**, el desarrollo de sus 2 encuentros (agenda con tiempos teóricos) y los criterios de logro.
 
@@ -151,7 +151,7 @@ Las evaluaciones de la asignatura son **exclusivamente**:
 1. **Una por cada unidad didáctica**, en su encuentro dedicado (9, 15, 26 y 32): la entrega del trabajo por GitHub y la defensa individual se realizan en ese encuentro, y el encuentro siguiente abre con su devolución.
 2. **Una por cada momento de intensificación y fortalecimiento** (incluidos diciembre y marzo, fuera de la planificación anual), con los criterios de la sección [Momentos de intensificación y fortalecimiento].
 No existen evaluaciones cuatrimestrales ni de cierre: los encuentros 16, 33 y 36 son cierres de síntesis, integración y metacognición, sin evaluación propia.
-Las versiones de una evaluación (por ejemplo, A y B) existen únicamente para esas evaluaciones; las clases regulares no tienen versiones.
+Las versiones de una evaluación (A/B/C/D; mínimo dos según los grupos) existen únicamente para esas evaluaciones; las clases regulares no tienen versiones.
 Las versiones deben ser equivalentes en dificultad: mismos objetivos y mismos requisitos, con distinto dominio o datos, y sin reglas que una tenga y la otra no. Esta igualdad rige para TODAS las evaluaciones (de unidad y de momentos), y su propósito es que la elección de versión no otorgue ventaja ni habilite la copia entre grupos.
 Cada versión debe ser un ejercicio pequeño que incluya el contenido de la unidad a evaluar; incorpore contenidos de unidades anteriores solo si es estrictamente necesario.
 Cada evaluación se genera en documento por separado de las clases.
