@@ -1,6 +1,6 @@
 # Plan de optimización de tiempos y tokens del proyecto
 
-> Estado: **EN APLICACIÓN desde 2026-09-20** (indicación del docente: continuar hasta el final sin detenciones parciales). Avance y evidencia: `odd/tasks/optimizacion-tiempo-tokens.md`. Ancla de modificaciones: este documento es la fuente de verdad de los acuerdos.
+> Estado: **APLICADO el 2026-09-20** (indicación del docente: continuar hasta el final sin detenciones parciales). Implementación, evidencia y pendientes de revisión: `odd/tasks/optimizacion-tiempo-tokens.md` (sección Cierre). Ancla de modificaciones: este documento es la fuente de verdad de los acuerdos.
 > Origen: análisis posterior a las corridas completas del curso `minimal-api-csharp` (corpus de 111 archivos + reestructuración +det21).
 > Debatedero: los puntos se discuten en orden de aparición (Diagnóstico → A → B → C → D → E → no-determinizables → estimaciones → orden → preguntas 1-4).
 

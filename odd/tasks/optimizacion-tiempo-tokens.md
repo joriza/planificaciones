@@ -52,6 +52,10 @@ Baseline del Diagnóstico del plan: cada writer releía ~900-1.000 líneas de ca
 | T4 | 2026-09-20 | sin instrumentar en runtime | worker: render byte-idéntico ×3 + idempotente; CSV oficiales = BOM+LF |
 | T5 | 2026-09-20 | — | orquestador + worker barrido refs; regen oficial no-op; verificar verde |
 | T6 | 2026-09-20 | sin instrumentar en runtime | worker: lint-canon.ps1; baseline abajo |
+| T8 | 2026-09-20 | sin instrumentar en runtime | worker cancelado a mitad; entregables completos verificados por orquestador; fix quirúk PS 5.1 (colisión param/var) en generar-version-b |
+| T8b | 2026-09-20 | sin instrumentar en runtime | worker: generar-readme + plantillas + nota de cátedra; 104/104 docs indexados, 0 links rotos |
+| T9 | 2026-09-20 | sin instrumentar en runtime | worker: impacto.ps1 + modo actualización; casos de prueba 1-4 verificados |
+| T10 | 2026-09-20 | — | orquestador: batería final (validar 0, generar 3× idéntica, verificar 0, lint 2=baseline, impacto 0) |
 
 ### Baseline del linter (T6, 2026-09-20) — 6 ERROR / 7 AVISO
 
@@ -62,7 +66,34 @@ Baseline del Diagnóstico del plan: cada writer releía ~900-1.000 líneas de ca
 
 ## Registro de commits
 
-Se completa por tarea (hash + tarea).
+| T | Commit | Mensaje |
+|---|---|---|
+| T1 | 121c2b0 | docs(odd): open optimizacion-tiempo-tokens feature map and instrumentation baseline |
+| T2 | 4df1232 | feat(data): add minimal-api-csharp curso-data.json (20 encuentros + slots) |
+| T3 | cfad597 | feat(plantillas): extract invariant tramos, phrase bank, unit scaffolds and libro rows |
+| T2/T3 | 59eb986 | docs(odd): fix composition rule after independent verification |
+| T4 | 1f7fa0a | feat(tools): add curso-data validator and byte-identical admin CSV generators; move verificar-curso to tools |
+| T5 | 00664b2 | feat(course): render admins deterministically from curso-data, retire md admin views |
+| T6 | 2074033 | feat(tools): add canon linter with documented baseline (6 errors, 7 notices) |
+| T7 | 5b06ad9 | docs(canon): align prompt template with data-first cascade and add lean code digest |
+| T8 | eabc868 | feat(tools): add class/eval scaffolds and equivalent-version generator; canon A/B/C/D wording |
+| T8b | 02b6563 | feat(tools): add derived README generator with template, description bank and manual chair note |
+| T9 | f2ee2ef | feat(tools): add canon-change impact analyzer and document update mode |
+| T10 | (este commit) | docs(odd): close optimizacion-tiempo-tokens feature |
+
+## Cierre (2026-09-20)
+
+**Estado: APLICADO.** Batería final: validar exit 0 · generar 3× byte-idéntica + idempotente · verificar exit 0 (TODO OK) · lint exit 2 (= baseline documentada de 6 ERROR / 7 AVISO, no regresión) · impacto exit 0. Regla de fidelidad cumplida: la regeneración oficial de los CSV fue diff vacío antes y después de toda la feature.
+
+**No aplicados por diseño del plan:** routing de modelos (E, fuera de etapa hasta tener números de instrumentación reales); generación masiva de versiones C/D del corpus (canon «mínimo dos según grupos» satisfecho con las A/B vigentes).
+
+**Pendientes de revisión docente (en orden sugerido):**
+1. `materias/minimal-api-csharp.json` — la firma pedagógica es ahora tuya (FRENO del Punto 3 diferido a esta revisión): 20 bloques + slots; foco en `expectativas` por encuentro (insumo de writers, prosa nueva) y en las extensiones de esquema documentadas arriba (sancionarlas o corregirlas).
+2. Baseline del linter (sección anterior): decidir regla para U4 sin tabla de tiempos (5 ERROR), convención de supresión para el snippet intencionalmente defectuoso (`int PatientId`, eval 34-35 v-A), y tolerar los 3 AVISO de blockquote de unidad (estructura intencional).
+3. `plantillas/tramos-invariantes.json` v2/v3 — 24 reescrituras nuevas no usadas (varianteFraseos=1): lectura de voz y registro.
+4. `plantillas/tabla-dominio.json` — filas D y conjunto de AVISOs: pasada de lectura natural.
+5. README oficial del curso — NO se regeneró (queda el curado); si querés adoptar el derivado: `tools/generar-readme.ps1 ... -Force` tras comparar.
+6. `z-perfiles-pi.md` y `z-rdd-pi.md` (untracked, notas personales creadas hoy) — decisión tuya, ajenos a esta feature.
 
 ## Mirror Engram
 
