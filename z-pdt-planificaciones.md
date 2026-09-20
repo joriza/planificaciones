@@ -304,6 +304,7 @@ mueva el archivo @verificar-curso.ps1 a la carpeta raiz, para que sirva para cua
 
 realiza las acciones indicadas en el documento @0-prompt-plantilla-planificacion.md
 todo lo necesario está en la ruta raiz del proyecto + la sub carpeta database-docs y sus subcarpetas que contiene la informacion de la base de datos, ignore las otras sub carpetas, son de otros proyectos que algunos son parecidos y pueden generar mucho ruido.
+Solo por esta ejecucion respete los frenos humanos indicados, le tengo fe a la ejecucion.
 A) Utilice sub agentes todo lo que sea posible, para preservar el contexto principal.
 B) Utilice sub agentes con el mismo modelo que el principal todo lo que sea posible, para mejorar los tiempos debido al procesamiento paralelo y para preservar el contexto principal.
 
@@ -316,4 +317,46 @@ Muesteme con un ejemplo de un documento existente la variante que resiste un rev
 
 Actualice el documento @z-analisis-pi-agent-glm53flash.md y el punto 5. **Observación honesta sobre el recorte efectivo del 50%.** Modifiquelo para que tenga un nombre tecnico acompañado de florituras en lenguaje pedagógico que indiquen un comportamiento politicamente correcto. (Es que me dá verguenza reconocer un engaño directo y además dejarlo documentado)
 Actualice el prompt plantilla y el readme del proyecto en todos los lugares donde sea necesario.
+
+## +det21
+
+Las evaluaciones son una por cada unidad didáctica, no recuerdo si lo he cambiado en algun lugar, pero son un error las evaluaciones que están en la carpeta instancias, ademas se contradice con la planificion anual. Pensandolo mejor, creo que instancias son las evaluaciones incluidas en la intensificacion. La carpeta instancias creo que tiene cosas mezcladas
+
+## Reestructuracion de documentos fuente.
+
+- Me parece que como humano, la subseccion denominada (Curso, stack y contenidos mínimos), de la seccion [Indicaciones finales — reglas fijas] debería estan en un archivo por separado, esto cambia con cada materia, que es el centro del armado de toda esta documentacion docente.
+- Y creo que la redundancia del armado de evaluaciones está justamente en la linea que dice: - Evaluación: en documento por separado, 2 versiones para cada instancia de evaluación.
+- La seccion (Tiempo) tambien deberia pertenecer a este nuevo archivo
+- La seccion (Institución), tambien deberia pertenecer a este nuevo archivo, aunque no es el mas adecuado, porque hay cuestiones particulares de cada escuela aun cuando la materia sea la misma, como son pocas especificaciones es el lugar mas parecido al correcto.
+ 
+- La carpeta denominada especiales, debería llamarse intensificaciones, porque contiene documentos y evaluaciones de intensificacion y fortalecimiento.
+
+Ahora el momento de juntar indicaciones, el contenido de @encuentros-especiales.md y @estructura-anual-36.md debería estar en el prompt principal, hacen mas a cuestiones generales que se realizan siempre, sin impotar para que materia son.
+
+el carchivo @estructura-de-la-clase.md debe permanecer por separado, depende el tipo de materia, porque ejemplo una materia netamente teorica es muy distinta a una materia netamente practica o una balanceada, cambian las formas de encararla. Tambien cambia si cambia el alumnado, no es lo mismo adolescentes y que adultos.
+
+Luego de validar y conciliar diferencias, actualice promp plantilla y readme.
+Realice todas las consultas que considere necesarias.
+
+## Estimacion superficial
+
+Estime muy superficial y rapidamente, cuanto tiempo en horas le lllevaría a un humano promedio leer toda la documentacion generada en este proyecto. Y cuanto tiempo le llevaria armar, estructutar y escribir el mismo proyecto desde cero con poca experiencia en el dictado de esa materia puntual.
+
+
+## Necesito optimizar los tiempos y consumos de token del proyecto
+
+arme un plan para analizar y debatir.
+con estrategias como:
+- generar apps deterministas para los pasos que sea posible.
+- re-organizar las carpetas o la cascada de procesos.
+- proponga otras alternativas posibles.
+luego de analizado y debatido el plan le indicaré cuando aplicarlo
+
+
+## Plan de ahorro de recursos.
+
+### 1
+- Derivados, concuerdo, anual y libros de aula puede cambiarse a generar solo archivos .csv
+- Derivados. Aun mejor, en la anual, lo que mas cambia son los 20 encuentros en los que se imparte contenido, los que pertenecen las las 4 unidades didacticas, si se redacta de forma genérica pero que suene bonito pedagogicamante los otros encuentros pueden ser siempre iguales, o tener algunas plantilla de ejemplo con contenido equivalente para ir alternando.
+- Las opciones B de las evaluaciones, si se elige con cuidado el contenido de la consigna A, reemplazar estrategicamente los datos de contexto sirve para otras opciones. Siendo mucho mas barato crear hasta opcion C o D con menos gasto que el actual.
 
