@@ -168,7 +168,7 @@ app.Run();
 // Los tipos (records) se declaran al final del archivo cuando el programa
 // usa instrucciones de nivel superior: es una regla de C#.
 // DTO minimo: solo las columnas que la busqueda necesita (record inmutable).
-record PatientCard(int PatientId, string FirstName, string LastName, string? City, string? Allergies);
+record PatientCard(long PatientId, string FirstName, string LastName, string? City, string? Allergies);
 ```
 
 ### Paso 5 — Levantar la API

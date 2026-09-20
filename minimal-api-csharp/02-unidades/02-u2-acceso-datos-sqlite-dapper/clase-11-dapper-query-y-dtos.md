@@ -229,7 +229,7 @@ Copiar la estructura de `/provincias` (es el endpoint más parecido: tabla chica
 
 ## 6. Cierre (20 min)
 
-### Qué nos llevamos
+### Qué te llevás
 
 - `dotnet add package` incorpora bibliotecas al proyecto; `using` en el tope de `Program.cs` habilita sus tipos.
 - La conexión es la puerta hacia el archivo: `"Data Source=hospital.db"` busca el `.db` junto al `.csproj`, y `using` la cierra sola al salir del handler.

@@ -27,8 +27,8 @@ Los endpoints se agregan al mismo `Program.cs` de la práctica guiada; los recor
 
 ```csharp
 // DTOs del recurso doctors (declaraciones al final del archivo, junto a los otros records).
-record Doctor(int DoctorId, string FirstName, string LastName, string Specialty);
-record PatientBrief(int PatientId, string FirstName, string LastName, string Gender);
+record Doctor(long DoctorId, string FirstName, string LastName, string Specialty);
+record PatientBrief(long PatientId, string FirstName, string LastName, string Gender);
 
 // 1) Listado de medicos: mismo patron que /patients, cambia la tabla.
 app.MapGet("/doctors", () =>

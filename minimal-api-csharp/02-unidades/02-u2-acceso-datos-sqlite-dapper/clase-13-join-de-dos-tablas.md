@@ -81,7 +81,7 @@ Por cada fila de `patients`, SQLite busca en `province_names` la fila con el mis
 
 ```csharp
 // Columnas de patients + la traduccion que vive en province_names.
-record PatientWithProvince(int PatientId, string FirstName, string LastName, string? City, string ProvinceName);
+record PatientWithProvince(long PatientId, string FirstName, string LastName, string? City, string ProvinceName);
 ```
 
 Decisión de diseño que el DTO refleja: el JSON expone la traducción (`ProvinceName`), no la clave interna (`province_id`). El endpoint decide qué muestra; la base guarda los códigos.
@@ -175,7 +175,7 @@ app.Run();
 // Los tipos (records) se declaran al final del archivo cuando el programa
 // usa instrucciones de nivel superior: es una regla de C#.
 // DTO combinado: propiedades de las dos tablas, en PascalCase gracias a los alias AS.
-record PatientWithProvince(int PatientId, string FirstName, string LastName, string? City, string ProvinceName);
+record PatientWithProvince(long PatientId, string FirstName, string LastName, string? City, string ProvinceName);
 ```
 
 ### Paso 5 — Levantar la API

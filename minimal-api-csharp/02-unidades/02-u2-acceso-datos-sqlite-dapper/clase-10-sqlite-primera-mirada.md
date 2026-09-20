@@ -185,7 +185,7 @@ Ninguna consulta nueva: todas salen de modificar las cuatro semillas del Paso 5 
 
 ## 6. Cierre (20 min)
 
-### Qué nos llevamos
+### Qué te llevás
 
 - Una base de datos resuelve la persistencia: los datos viven en el disco y sobreviven al programa, a diferencia de la `List<T>` en memoria.
 - SQLite es un motor sin servidor: la base entera es un archivo (`hospital.db`) que se copia, mueve y respalda como cualquier archivo.
