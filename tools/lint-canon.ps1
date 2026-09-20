@@ -38,12 +38,13 @@
 #
 # Exit codes: 0 = sin ERROR (los AVISO no bloquean) | 2 = hay hallazgos ERROR | 1 = error de uso/parseo.
 param(
-  [string]$Curso = ''
+  [string]$Curso = '',
+  [int]$HorasPorEncuentro = 4
 )
 $ErrorActionPreference = 'Stop'
 # El script vive en tools\; la deteccion de cursos queda anclada a la raiz del repositorio.
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
-$minPorEncuentro = 240
+$minPorEncuentro = $HorasPorEncuentro * 60
 
 function Test-EsCurso([string]$dir) {
   return (Test-Path -LiteralPath (Join-Path $dir '01-planificacion\planificacion-anual.csv'))
@@ -308,7 +309,7 @@ foreach ($course in $cursos) {
     }
     # Regla 4b: clase del alumno sin tabla de reparto de tiempos
     if ($esClase -and -not $hayTb) {
-      Add-Hallazgo $hallazgos 'ERROR' $rel 1 'tipo-estructura' 'clase sin seccion "Reparto de tiempos" (estructura fija del encuentro de 240 min; ver planificacion-anual.csv)'
+      Add-Hallazgo $hallazgos 'ERROR' $rel 1 'tipo-estructura' "clase sin seccion \"Reparto de tiempos\" (estructura fija del encuentro de $minPorEncuentro min; ver planificacion-anual.csv; use -HorasPorEncuentro si la materia no es de 4 h)"
     }
     # Regla 5b: clase del alumno sin preview
     if ($esClase -and -not $hayPrev -and $nClase -gt 0) {

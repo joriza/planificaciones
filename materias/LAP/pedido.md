@@ -12,4 +12,4 @@
 - Nada. Materia nueva, sin base de datos ni especificaciones previas.
 
 (Control de este pedido)
-- Frenos por defecto del prompt plantilla.
+- Frenos: ninguno. El docente los pedirá explícitamente si los necesita.

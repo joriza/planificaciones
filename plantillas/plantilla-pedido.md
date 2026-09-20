@@ -12,4 +12,4 @@
 - ⟨Únicamente lo declarado acá. P. ej. «nada» o «las especificaciones de la base de datos X»⟩.
 
 (Control de este pedido)
-- Frenos: ⟨frenos por defecto del prompt plantilla | corrida completa sin detenciones | freno adicional en: ...⟩.
+- Frenos: ⟨ninguno por defecto. Declarar explícitamente los deseados, p. ej. «frenar tras la Fase 0» o «frenar al cierre de cada unidad»⟩.

@@ -3,6 +3,7 @@
 #
 # Uso (desde la raíz del repositorio):
 #   powershell -File tools\generar-administrativos.ps1 -Materia materias\LSO -Salida <carpeta> [-Variante 1]
+#   powershell -File tools\generar-administrativos.ps1 -Materia materias\LSO -Salida <carpeta> -HorasPorEncuentro 2
 #
 # Parametros:
 #   -Materia   (obligatorio) carpeta de la materia (contiene curso-data.json).
@@ -11,6 +12,9 @@
 #                libro-de-aula-1-linea-por-encuentro.csv
 #                libro-de-aula-2-lineas-por-encuentro.csv
 #   -Variante  variante de fraseos 1-3 para los tramos invariantes (por defecto, la varianteFraseos del JSON).
+#   -HorasPorEncuentro  horas por encuentro de la materia (default 4): escala los repartos de
+#                minutos de los tramos invariantes a las horas de la materia (default 4);
+#                con 4 el texto queda intacto (fidelidad byte).
 #
 # Determinismo: sin azar ni dependencia del entorno; mismas entradas -> mismos bytes.
 # Formato: UTF-8 con BOM, todos los campos entre comillas dobles, separador ';' y lineas LF
@@ -20,7 +24,8 @@
 param(
   [string]$Materia,
   [string]$Salida,
-  [int]$Variante
+  [int]$Variante,
+  [double]$HorasPorEncuentro = 4
 )
 
 $ErrorActionPreference = 'Stop'
@@ -68,6 +73,38 @@ try {
 } catch {
   Write-Output "ERROR: JSON invalido: $($_.Exception.Message)"
   exit 1
+}
+
+# --- Escala por horas por encuentro (default 4: texto intacto, fidelidad byte) ---
+# Reemplaza cada "(NN min)" por su valor escalado al factor dado, redondeando al
+# multiplo de 5 mas cercano (minimo 5); preserva todo lo demas del texto.
+function Convert-EscalaMinutos([string]$texto, [double]$factor) {
+  $sb = New-Object System.Text.StringBuilder
+  $pos = 0
+  foreach ($m in [regex]::Matches($texto, '\((\d+) min\)')) {
+    [void]$sb.Append($texto.Substring($pos, $m.Index - $pos))
+    $escalado = [int]([Math]::Round(([double]$m.Groups[1].Value) * $factor / 5, [MidpointRounding]::AwayFromZero) * 5)
+    if ($escalado -lt 5) { $escalado = 5 }
+    [void]$sb.Append('(' + $escalado + ' min)')
+    $pos = $m.Index + $m.Length
+  }
+  [void]$sb.Append($texto.Substring($pos))
+  return $sb.ToString()
+}
+if ($HorasPorEncuentro -ne 4) {
+  if ($HorasPorEncuentro -le 0) {
+    Write-Output "ERROR: -HorasPorEncuentro $HorasPorEncuentro invalida (se esperaba un valor mayor que 0)"
+    exit 1
+  }
+  $factorHoras = $HorasPorEncuentro / 4
+  foreach ($propTramo in $tramos.PSObject.Properties) {
+    foreach ($propVariante in $propTramo.Value.PSObject.Properties) {
+      $propCampo = $propVariante.Value.PSObject.Properties['actividades']
+      if ($null -ne $propCampo -and $null -ne $propCampo.Value) {
+        $propCampo.Value = Convert-EscalaMinutos ([string]$propCampo.Value) $factorHoras
+      }
+    }
+  }
 }
 
 # --- Variante de fraseos ---

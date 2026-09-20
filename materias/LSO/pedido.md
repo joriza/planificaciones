@@ -12,4 +12,4 @@
 - Únicamente las especificaciones de la base de datos (hospital.db).
 
 (Control de este pedido)
-- Frenar dentro de la Fase 2 al completar los encuentros de la unidad 1. Luego continuar.
+- Frenos: ninguno. El docente los pedirá explícitamente si los necesita.
