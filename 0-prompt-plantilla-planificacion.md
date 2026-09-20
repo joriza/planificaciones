@@ -13,13 +13,16 @@
 Como docente me encuentro frecuentemente ante la necesidad de planificar las clases para todo el año.
 Necesito que me prepare las clases según la plantilla @estructura-de-la-clase.md
 
+[Canon de documentos — regla fija]
+Cada regla del encargo tiene un único documento canónico, y ese documento es la única fuente de verdad de su tema: la estructura del ciclo lectivo y sus instancias (cantidad y ordinal de encuentros, unidades, evaluaciones dedicadas, recuperación y profundización, cierres) viven en @estructura-anual-36.md; el formato de cada encuentro, en @estructura-de-la-clase.md; los encuentros especiales (momentos, ubicación, destinatarios, formato, evaluaciones y nombres), en @encuentros-especiales.md. Este prompt concentra únicamente el flujo de trabajo, los formatos administrativos y los datos de cada curso. Si un texto de este prompt repitiera o contradijera a un documento canónico, prevalece el documento canónico: corríjase la repetición en este prompt, nunca al revés.
+
 [Flujo de trabajo por fases — regla fija]
 Presentados los datos de la materia, trabaje en este orden exacto. Cada freno se denomina por su fase: al llegar a un FRENO de Fase, deténgase y espere mi confirmación antes de continuar:
 1. Consultas: antes de comenzar, realice todas las consultas que considere necesarias.
 2. Planificación anual (documento madre): con los datos de la materia de [Datos particulares] y la estructura de @estructura-anual-36.md, arme la planificación anual por tramos según la sección [Documentos administrativos]. Es la revisión previa al trabajo que más tiempo consume: todo lo demás se deriva de ella. FRENO de Fase 2.
 3. Libro de aula: derivado directo de la planificación anual (correlación exacta de encuentros, ejes y denominaciones), en sus dos versiones y sus CSV. FRENO de Fase 3.
 4. Documentos de clases: genere los encuentros de unidad y las evaluaciones de los encuentros dedicados, según las reglas de estructura y respetando los frenos de fase adicionales declarados en [Datos particulares].
-5. Instancias y encuentros especiales: los documentos de encuadre y cierres (encuentros 1, 16, 33 y 36) según la sección [Instancias del ciclo], y un documento por cada momento especial según el documento @encuentros-especiales.md, con sus evaluaciones en versiones A y B.
+5. Instancias y encuentros especiales: los documentos de encuadre y cierres definidos en @estructura-anual-36.md, según la sección [Instancias del ciclo], y un documento por cada momento especial según @encuentros-especiales.md, con sus evaluaciones en versiones A y B.
 6. Continuidad pedagógica: según la sección [Continuidad pedagógica] y lo declarado en [Datos particulares].
 7. Cierre del repositorio: genere los criterios de aprobación y el README índice. El README debe detallar, para esta materia, la diferencia entre unidades didácticas y ejes temáticos (cuáles ejes coinciden con una unidad y cuáles son organizadores transversales) y el **orden de creación de todos los documentos** de la materia. Debe incluir también una sección de **fundamentación pedagógica del enfoque** en registro docente formal: secuenciación de prerrequisitos antes de su primer uso, reducción de la carga cognitiva, práctica distribuida de los saberes transversales, progresión GRR dentro del encuentro, ancla motivadora previa a las herramientas de infraestructura, retroalimentación oportuna y evaluación auténtica, con una tabla que asocie cada decisión de diseño con su fundamento y su referencia (Sweller, Ausubel, Rosenshine, Pearson y Gallagher, Hattie y Timperley, Johnson y Johnson, Wiggins, entre otros que refuercen el enfoque).
 
@@ -28,12 +31,12 @@ La planificación anual es el documento madre: todos los demás documentos se de
 
 [Distribución del recurso tiempo — regla fija]
 Si se le pasan horas totales del curso, son solo un dato nominal.
-Los tiempos que realmente cuentan para la creación del material son las horas por encuentro y el tiempo efectivo disponible por encuentro, declarados en [Datos particulares]. La cantidad de encuentros totales (36) y su estructura son fijas y están definidas en @estructura-anual-36.md.
+Los tiempos que realmente cuentan para la creación del material son las horas por encuentro y el tiempo efectivo disponible por encuentro, declarados en [Datos particulares]. La cantidad de encuentros totales y su estructura son fijas y están definidas en @estructura-anual-36.md.
 En la planificación no debe quedar en evidencia ese porcentaje efectivo, pero sí debe ser tomado en cuenta para armar los contenidos. Por ello, elija una forma de rellenar los tiempos de modo que sumen el tiempo teórico: inflar el estimado de tiempos, agregar actividades complementarias explícitas, rotar integrantes en actividades grupales si el tiempo lo permite, o un mix de ellas alternando a lo largo del curso. Elija siempre la variante de apariencia más profesional y menos evidente.
 Exponga tiempos teóricos en cada documento generado; nunca exponga el recorte efectivo.
 
 [Estructura de la planificación — regla fija]
-Organice la planificación según la estructura rígida del ciclo lectivo definida en @estructura-anual-36.md: 36 encuentros (18 por cuatrimestre), cuatro unidades didácticas de 5 encuentros con encuentro dedicado de evaluación, instancias de recuperación y profundización, y cierres cuatrimestrales.
+Organice la planificación según la estructura rígida del ciclo lectivo definida en @estructura-anual-36.md, que es el único canon de esa estructura: no la restate ni la reenumere.
 Los encuentros del curso son las clases regulares: las únicas donde se imparte contenido nuevo a los alumnos.
 Yo le pasaré los contenidos mínimos.
 Todo el contenido debe generarse en una subcarpeta con un nombre acorde al curso.
@@ -77,22 +80,19 @@ Se organizarán por grupos. La matrícula y el parque informático varían duran
 Las versiones de una evaluación (por ejemplo, A y B) existen únicamente para las instancias de evaluación; las clases regulares no tienen versiones.
 Las versiones deben ser equivalentes en dificultad: mismos objetivos y mismos requisitos, con distinto dominio o datos, y sin reglas que una tenga y la otra no. Esta igualdad rige para TODAS las evaluaciones (de unidad, de momentos especiales y de las instancias fuera de la planificación anual), y su propósito es que la elección de versión no otorgue ventaja ni habilite la copia entre grupos.
 Cada versión debe ser un ejercicio pequeño que incluya el contenido de la unidad a evaluar; incorpore contenidos de unidades anteriores solo si es estrictamente necesario.
-Cada unidad tiene un encuentro dedicado de evaluación (9, 15, 26 y 32 en la estructura anual): la entrega del trabajo por GitHub y la defensa individual se realizan en ese encuentro, y el encuentro siguiente abre con su devolución.
-Todos los momentos especiales también tienen su evaluación, en dos versiones equivalentes (A y B). Las instancias de recuperación usan criterio Apto / No apto aún por objetivo mínimo; la instancia integradora usa rúbrica de 100 puntos; las instancias fuera de la planificación anual (diciembre y marzo) evalúan el camino mínimo completo del curso con el mismo estándar.
+Cada unidad tiene un encuentro dedicado de evaluación, en el encuentro que le asigna @estructura-anual-36.md: la entrega del trabajo por GitHub y la defensa individual se realizan en ese encuentro, y el encuentro siguiente abre con su devolución.
+Los momentos especiales también tienen su evaluación, en dos versiones equivalentes (A y B); sus momentos, destinatarios y criterios de calificación son los de @encuentros-especiales.md, único canon del tema.
 Genere también el documento de criterios de aprobación de la asignatura (mínimos por unidad, regla de entrega incompleta y capas de recuperación), pensado para alumnos, familias y dirección.
 
 [Encuentros especiales — regla fija]
-Además de las clases regulares existen encuentros especiales de recuperación pedagógica (intensificación) y profundización (fortalecimiento), según las especificaciones del documento @encuentros-especiales.md. No imparten contenido nuevo.
-Se genera UN documento por cada momento especial de la estructura anual (@estructura-anual-36.md): saberes previos (2-3), unidades 1 y 2 (17-18 primera instancia y 19-20 instancia integradora) y unidades 3 y 4 (34-35). Cada documento cubre los 2 encuentros del momento, con las pistas diferenciadas por condición y su tabla de acuerdo por grupo (o pista única, cuando el momento es para todo el curso).
-Los nombres de los documentos deben referenciar su momento y ordenarse alfabéticamente en orden de uso.
-Existen además DOS momentos de intensificación FUERA de la planificación anual (diciembre, al cierre de la cursada, y marzo, para quienes no alcanzaron en diciembre): 2 encuentros cada uno, solo recuperación, sin profundización.
+Además de las clases regulares existen encuentros especiales de recuperación pedagógica (intensificación) y profundización (fortalecimiento). @encuentros-especiales.md es el único canon del tema: qué momentos existen (dentro y fuera de la planificación anual), su ubicación en la estructura, destinatarios, formato, evaluaciones y regla de nombres. Generación: UN documento por cada momento especial, cubriendo los encuentros que ese documento define para el momento. No imparten contenido nuevo.
 
 [Instancias del ciclo — regla fija]
-Los encuentros de encuadre y cierres de la estructura anual (1, 16, 33 y 36) tienen documento propio, en carpeta separada del contenido de unidades: encuadre y diagnóstico (incluye seguridad e higiene y EPP si la institución es de modalidad técnica, dato de [Datos particulares]), cierres integradores cuatrimestrales y cierre integral de la asignatura. No imparten contenido nuevo.
+Los encuentros de encuadre y cierres definidos en @estructura-anual-36.md tienen documento propio, en carpeta separada del contenido de unidades: encuadre y diagnóstico (incluye seguridad e higiene y EPP si la institución es de modalidad técnica, dato de [Datos particulares]), cierres integradores cuatrimestrales y cierre integral de la asignatura. No imparten contenido nuevo.
 
 [Continuidad pedagógica — regla fija]
 Son actividades de repaso y fijación para que los alumnos trabajen en una clase sin presencia docente; los documentos se entregan a la administración para los casos de ausencia del docente.
-La primera se basa en conocimientos previos (aún no hay temas vistos); las siguientes repasan lo visto hasta su momento de uso. La cantidad y los momentos de uso se declaran en [Datos particulares], repartiendo el contenido equitativamente a lo largo del contenido anual (en la estructura anual: una al inicio y una tras cada evaluación de unidad).
+La primera se basa en conocimientos previos (aún no hay temas vistos); las siguientes repasan lo visto hasta su momento de uso. La cantidad y los momentos de uso se declaran en [Datos particulares], repartiendo el contenido equitativamente a lo largo del contenido anual y ubicándolos según la estructura de @estructura-anual-36.md.
 Cada documento debe contener: datos de referencia (curso, momento de uso, duración teórica, requisitos), objetivos, actividades puntuadas sobre 100 con tiempos que suman la duración teórica, autoevaluación para el alumno y anexo docente (soluciones y criterios de corrección) claramente separado.
 Todo documento de continuidad debe incluir esta nota, en registro académico: la resolución se realiza en forma habitual (por lo general, en grupo); las tareas de programación requieren el uso de la computadora (omitir esta parte si el documento no tiene tareas de programación); la presentación es individual y manuscrita, al inicio de la próxima clase, y constituye una actividad más de la asignatura que forma parte del proceso de evaluación.
 
