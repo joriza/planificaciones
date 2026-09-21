@@ -15,7 +15,7 @@
 #   powershell -File tools\impacto.ps1 -Materia output\LSO -Canon materias\otro-insumo.md
 #
 # Parametros:
-#   -Materia (obligatorio) ruta a la carpeta de la materia (contiene curso-data.json).
+#   -Materia (obligatorio) ruta a la carpeta del curso en output (contiene curso-data.json).
 #   -Curso   carpeta del corpus (por defecto, el nombre de la carpeta de la materia).
 #   -Desde   revision git de referencia (por defecto HEAD; el diff incluye cambios sin commitear).
 #   -Canon   rutas adicionales tratadas como canon (cambio canonico -> toda la prosa afectada).

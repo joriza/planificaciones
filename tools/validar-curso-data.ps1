@@ -23,7 +23,7 @@ param([string]$Materia = '')
 $ErrorActionPreference = 'Stop'
 
 if ($Materia -eq '') {
-  Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
+  Write-Output 'ERROR: falta -Materia <ruta a la carpeta del curso en output (contiene curso-data.json)>'
   exit 1
 }
 if (-not (Test-Path -LiteralPath $Materia -PathType Container)) {

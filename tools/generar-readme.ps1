@@ -1,12 +1,12 @@
 ﻿# generar-readme.ps1 — Render determinista del README índice de una materia
 # a partir del árbol del corpus + curso-data.json + plantillas (readme-plantilla.md,
-# readme-descripciones.json) + nota de la cátedra manual (materias/nota-catedra-<materia>.md, opcional).
+# readme-descripciones.json) + nota de la cátedra manual (materias/<materia>/nota-catedra.md, opcional).
 #
 # Uso (desde la raíz del repositorio):
 #   powershell -File tools\generar-readme.ps1 -Materia output\LSO -Curso output\LSO [-Salida <archivo>] [-Force]
 #
 # Parametros:
-#   -Materia (obligatorio) carpeta de la materia (contiene curso-data.json y opcionalmente nota-catedra.md).
+#   -Materia (obligatorio) carpeta del curso en output (contiene curso-data.json; p. ej. output\LSO).
 #   -Curso   (obligatorio) carpeta del corpus del curso (p. ej. output/LSO).
 #   -Salida  archivo de salida (por defecto <curso>\README.md; si existe y no se pasa -Force, aborta).
 #   -Force   permite sobrescribir el archivo de salida existente.
@@ -31,7 +31,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if ($Materia -eq '') {
-  Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
+  Write-Output 'ERROR: falta -Materia <ruta a la carpeta del curso en output (contiene curso-data.json)>'
   exit 1
 }
 if ($Curso -eq '') {
@@ -657,7 +657,7 @@ $ordenTxt = ($lo -join "`n").TrimEnd()
 
 # --- Nota de la cátedra (prosa manual por materia, fuera de toda plantilla) ---
 $notaTxt = ''
-$rutaNota = Join-Path $raiz ('materias\nota-catedra-' + $data.materia + '.md')
+$rutaNota = Join-Path $raiz ('materias\' + (Split-Path $Materia -Leaf) + '\nota-catedra.md')
 if (Test-Path -LiteralPath $rutaNota) {
   $notaTxt = '---' + "`n`n" + '## Nota de la cátedra' + "`n`n" + (Read-Texto $rutaNota).Trim() + "`n"
 }

@@ -7,7 +7,7 @@
 #   powershell -File tools\scaffold-evaluacion.ps1 -Materia output\LSO -Instancia u2 -Salida <carpeta> [-Force]
 #
 # Parametros:
-#   -Materia    (obligatorio) ruta a la carpeta de la materia (contiene curso-data.json).
+#   -Materia    (obligatorio) ruta a la carpeta del curso en output (contiene curso-data.json).
 #   -Instancia  (obligatorio) u1 | u2 | u3 | u4 | 02-03 | 17-18 | 19-20 | 34-35.
 #   -Salida     carpeta destino (se crea si no existe).
 #   -Force      permite sobrescribir archivos existentes.
@@ -28,7 +28,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if ($Materia -eq '') {
-  Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
+  Write-Output 'ERROR: falta -Materia <ruta a la carpeta del curso en output (contiene curso-data.json)>'
   exit 1
 }
 if ($Instancia -eq '') {

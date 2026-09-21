@@ -6,7 +6,7 @@
 #   powershell -File tools\scaffold-clase.ps1 -Materia output\LSO -Encuentro 5 -Salida <carpeta> [-Slug mi-slug] [-Force]
 #
 # Parametros:
-#   -Materia    (obligatorio) ruta a la carpeta de la materia (contiene curso-data.json).
+#   -Materia    (obligatorio) ruta a la carpeta del curso en output (contiene curso-data.json).
 #   -Encuentro  (obligatorio) ordinal del encuentro de unidad (debe existir en el JSON).
 #   -Salida     carpeta destino (se crea si no existe).
 #   -Slug       sufijo del nombre de archivo; por defecto se deriva del tema (minúsculas, sin tildes, con guiones).
@@ -30,7 +30,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if ($Materia -eq '') {
-  Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
+  Write-Output 'ERROR: falta -Materia <ruta a la carpeta del curso en output (contiene curso-data.json)>'
   exit 1
 }
 if ($Encuentro -le 0) {
