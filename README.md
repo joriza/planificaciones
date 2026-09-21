@@ -34,6 +34,27 @@ Todas corren con Windows PowerShell 5.1 desde la raíz del repositorio.
 | `impacto.ps1` | Análisis de impacto de un cambio de curso-data/canon: tres listas — (a) derivados a re-render (siempre todos, costo cero), (b) prosa afectada (la única que abre el LLM), (c) intocado. | `powershell -File tools\impacto.ps1 -Materia materias\<m> [-Desde <commit>] [-Json]` |
 | `verificar-curso.ps1` | Suite de integridad del curso: BOM, suma de Tiempo = encuentros, filas N/2N, celdas ≤35, links del README, anexos separados, mojibake, records y cobertura informativa. | `powershell -File tools\verificar-curso.ps1 [-Curso <curso>]` |
 
+## Orden de creación y fases del flujo
+
+Toda corrida genera el corpus en **cinco fases consecutivas** (cascada data-first: cada fase consume lo producido por la anterior). El orden de creación de los documentos es exactamente este:
+
+| # | Documento | Fase | Cómo se crea |
+|---|---|---|---|
+| 1 | `materias/<X>/materia.md` (ficha: stack, contenidos, tiempos, institución) | previo al flujo | Docente, desde `plantillas/plantilla-materia.md` |
+| 2 | `materias/<X>/pedido.md` (libro, continuidad, memoria, frenos) | previo al flujo | Docente, desde `plantillas/plantilla-pedido.md` |
+| 3 | `materias/<X>/curso-data.json` (firma pedagógica: 20 encuentros + slots) | **Fase 0** | Única autoría LLM de la firma; validador en verde y propiedad del docente; si existe vigente, solo se valida y reutiliza |
+| 4 | `output/<X>/convenciones-tecnicas.md` (solo materias con código) | **Fase 0** | LLM con **spike de verificación** (compilar y ejecutar casos límite contra la fuente de datos real) |
+| 5 | `output/<X>/01-planificacion/` — 3 CSV (anual + libro 1 y 2 líneas) | **Fase 1** | Render determinista, cero LLM (`generar-administrativos.ps1`) |
+| 6 | `output/<X>/02-unidades/` — clases y anexos de las 4 unidades (E4-8, 10-14, 21-25, 27-31) | **Fase 2** | Writers LLM por carpeta (solo su slice de curso-data + hoja + estructura de la clase) |
+| 7 | `output/<X>/03-encuadre-y-cierres/` (E1, 16, 33, 36) | **Fase 2** | Writers LLM por carpeta |
+| 8 | `output/<X>/04-intensificaciones/` — 6 momentos (2-3, 17-20, 34-35, diciembre, marzo) | **Fase 2** | Writers LLM por carpeta |
+| 9 | `output/<X>/05-continuidad/` — 4 documentos + anexos | **Fase 2** | Writers LLM por carpeta |
+| 10 | Evaluaciones: una por unidad (encuentros 9, 15, 26, 32) y una por momento, en versiones equivalentes A/B | **Fase 3** | Writers LLM (consigna maestra + versiones + anexos) |
+| 11 | `output/<X>/06-aprobacion/criterios-aprobacion.md` + README índice | **Fase 4** | LLM (criterios) + `generar-readme.ps1` (README derivado) |
+| 12 | Puerta de salida | **Fase 4** | `verificar-curso.ps1` y `lint-canon.ps1` en verde |
+
+Reglas transversales de la cascada: la Fase 0 es la única con autoría LLM de la firma (el curso-data queda propiedad del docente); la Fase 1 es determinista (cero LLM); los writers de las Fases 2-3 reciben solo su slice de curso-data, la hoja de convenciones (que es canon) y la estructura de la clase; los cambios posteriores entran por el modo **actualización** (nunca editando derivados).
+
 ## Crear un curso nuevo (modo corrida completa)
 
 1. Crear `materias/<nombre>/materia.md` desde `plantillas/plantilla-materia.md`, y `materias/<nombre>/pedido.md` desde `plantillas/plantilla-pedido.md`, y completarlos. El nombre de la carpeta es el identificador de la materia.
