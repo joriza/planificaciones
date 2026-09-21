@@ -1,6 +1,6 @@
 # Pedido — ⟨materia⟩
 
-> Datos particulares de la materia para `0-prompt-plantilla-planificacion.md`. Vive en `materias/<materia>/pedido.md`; la carpeta de la materia es su identificador. Completar cada sección y borrar las que no apliquen. Sus valores mandan sobre los por defecto del prompt plantilla.
+> Datos particulares de la materia para `prompt-plantilla-planificacion.md`. Vive en `input/materias/<materia>/pedido.md`; la carpeta de la materia es su identificador. Completar cada sección y borrar las que no apliquen. Sus valores mandan sobre los por defecto del prompt plantilla.
 
 (Libro de aula)
 - Límite de caracteres: ⟨p. ej. Tema del Día y Actividades, máximo 35 por celda; en la versión de 2 líneas, 35 por línea⟩.

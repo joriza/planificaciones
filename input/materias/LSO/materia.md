@@ -1,6 +1,6 @@
 # Materia — Minimal API con C# .NET 6
 
-> Archivo de datos centrales de la materia, referenciado por `0-prompt-plantilla-planificacion.md` en [Datos particulares].
+> Archivo de datos centrales de la materia, referenciado por `prompt-plantilla-planificacion.md` en [Datos particulares].
 > Acá viven JUNTOS todos los datos que cambian de una materia a otra: curso, stack, contenidos mínimos, tiempos e institución.
 > El formato y las reglas de las evaluaciones NO se declaran acá: los gobierna la sección [Evaluaciones — regla fija] del prompt principal (una evaluación por unidad didáctica y una por momento de intensificación y fortalecimiento, en versiones A y B).
 
@@ -16,7 +16,7 @@
 - Base de datos: tengo una pequeña base de datos en SQLite para utilizar en los ejemplos; se llama hospital.db.
 - Restricción de archivos: busque la forma de que se toque solo Program.cs; otros archivos solo si es estrictamente necesario, de esta forma se simplifica la cantidad de archivos que debe recordar el alumno.
 - Código de ejemplo: agregue una buena dosis de comentarios para que los estudiantes puedan comprender mejor las acciones del código presentado.
-- Convenciones técnicas: output/LSO/convenciones-tecnicas.md — fuente única de tipos, formatos y estructura de código de este curso; leerla antes de generar cualquier ejemplo.
+- Convenciones técnicas: input/materias/LSO/convenciones-tecnicas.md — fuente única de tipos, formatos y estructura de código de este curso; leerla antes de generar cualquier ejemplo.
 
 (Tiempo)
 - Cantidad de horas por encuentro: 4.

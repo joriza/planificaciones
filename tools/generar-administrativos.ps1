@@ -52,9 +52,9 @@ if (-not (Test-Path -LiteralPath $rutaJson)) {
 
 # La raiz del repositorio es la carpeta padre de tools\ (donde vive este script).
 $raiz = Split-Path -Parent $PSScriptRoot
-$rutaTramos = Join-Path $raiz 'plantillas\tramos-invariantes.json'
-$rutaFilasLibro = Join-Path $raiz 'plantillas\libro-filas-invariantes.json'
-$rutaEsqueletos = Join-Path $raiz 'plantillas\esqueletos-unidad.json'
+$rutaTramos = Join-Path $raiz 'input\plantillas\tramos-invariantes.json'
+$rutaFilasLibro = Join-Path $raiz 'input\plantillas\libro-filas-invariantes.json'
+$rutaEsqueletos = Join-Path $raiz 'input\plantillas\esqueletos-unidad.json'
 foreach ($ruta in @($rutaJson, $rutaTramos, $rutaFilasLibro, $rutaEsqueletos)) {
   if (-not (Test-Path -LiteralPath $ruta)) {
     Write-Output "ERROR: no se encontro el archivo requerido: $ruta"
@@ -129,7 +129,7 @@ if ($nVariante -lt 1 -or $nVariante -gt 3) {
 $claveVariante = "v$nVariante"
 
 # --- Sustitucion de slots ---
-# Mapa global: {{celular}} y {{tp.uX}} (la misma convencion de plantillas\tramos-invariantes.json).
+# Mapa global: {{celular}} y {{tp.uX}} (la misma convencion de input/plantillas/tramos-invariantes.json).
 $slotsGlobales = @{}
 $propCelular = $data.slots.PSObject.Properties['celular']
 if ($null -eq $propCelular -or $null -eq $propCelular.Value) {
@@ -213,7 +213,7 @@ foreach ($clave in $ordenTramos) {
     # --- Tramo de unidad: se compone desde curso-data + esqueletos ---
     $contexto = "tramo $clave"
     $propEsq = $esqueletos.PSObject.Properties[$clave]
-    if ($null -eq $propEsq) { throw "ESQUELETO AUSENTE: $clave en plantillas\esqueletos-unidad.json" }
+    if ($null -eq $propEsq) { throw "ESQUELETO AUSENTE: $clave en input/plantillas/esqueletos-unidad.json" }
     $esq = $propEsq.Value
     $propUni = $data.slots.unidades.PSObject.Properties[$clave]
     if ($null -eq $propUni) { throw "SLOT AUSENTE: slots.unidades.$clave en el curso-data" }
@@ -266,10 +266,10 @@ foreach ($clave in $ordenTramos) {
       $metodologia
     )
   } else {
-    # --- Tramo invariante: fila de plantillas\tramos-invariantes.json en la variante elegida ---
+    # --- Tramo invariante: fila de input/plantillas/tramos-invariantes.json en la variante elegida ---
     $contexto = "tramo $clave"
     $propTramo = $tramos.PSObject.Properties[$clave]
-    if ($null -eq $propTramo) { throw "TRAMO AUSENTE: $clave en plantillas\tramos-invariantes.json" }
+    if ($null -eq $propTramo) { throw "TRAMO AUSENTE: $clave en input/plantillas/tramos-invariantes.json" }
     $propFila = $propTramo.Value.PSObject.Properties[$claveVariante]
     if ($null -eq $propFila) { throw "VARIANTE AUSENTE: $claveVariante en el tramo $clave" }
     $fila = @()

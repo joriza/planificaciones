@@ -57,8 +57,8 @@ if (-not (Test-Path -LiteralPath $rutaCurso)) {
   exit 1
 }
 $rutaCursoAbs = (Resolve-Path -LiteralPath $rutaCurso).Path
-$rutaPlantilla = Join-Path $raiz 'plantillas\readme-plantilla.md'
-$rutaDescripciones = Join-Path $raiz 'plantillas\readme-descripciones.json'
+$rutaPlantilla = Join-Path $raiz 'input\plantillas\readme-plantilla.md'
+$rutaDescripciones = Join-Path $raiz 'input\plantillas\readme-descripciones.json'
 foreach ($ruta in @($rutaJson, $rutaPlantilla, $rutaDescripciones)) {
   if (-not (Test-Path -LiteralPath $ruta)) {
     Write-Output "ERROR: no se encontro el archivo requerido: $ruta"
@@ -177,7 +177,7 @@ function Get-EvalN([string]$u) {
 # --- Slots globales (curso-data + rutas canónicas) ---
 $slotsGlobales = @{}
 $slotsGlobales['denominacion'] = [string]$data.denominacion
-$slotsGlobales['materia'] = [string]$data.materia
+$slotsGlobales['materia'] = Split-Path $Materia -Leaf
 $propCelular = $data.slots.PSObject.Properties['celular']
 if ($null -eq $propCelular -or $null -eq $propCelular.Value) {
   Write-Output 'ERROR: slots.celular ausente en el curso-data'
@@ -194,7 +194,9 @@ foreach ($u in @('u1', 'u2', 'u3', 'u4')) {
   $slotsGlobales["unidad.$u"] = Get-DenominacionUnidad $u
 }
 $slotsGlobales['cargaHoraria'] = '36 encuentros de 4 horas reloj (240 minutos teóricos por encuentro): 144 horas anuales, 18 encuentros por cuatrimestre'
-$slotsGlobales['rutaData'] = 'materias/' + $data.materia + '.json'
+$materiaNorm = ($Materia -replace '\\', '/').TrimEnd('/')
+$slotsGlobales['rutaData'] = $materiaNorm + '/curso-data.json'
+$slotsGlobales['linkConvenciones'] = '../../' + $materiaNorm + '/convenciones-tecnicas.md'
 $slotsGlobales['rutaTool'] = 'tools/generar-administrativos.ps1'
 $slotsGlobales['rutaReadmeTool'] = 'tools/generar-readme.ps1'
 
@@ -299,6 +301,17 @@ function Get-Primero([string]$tipo) {
   return $null
 }
 
+# La hoja de convenciones vive con la materia (input/materias/<m>/), fuera del corpus
+# generado: si el arbol del curso no la clasifica pero existe en la carpeta de materia,
+# se indexa con link relativo al README del curso (../../input/materias/<m>/...).
+$rutaConvMateria = Join-Path $Materia 'convenciones-tecnicas.md'
+if ((-not $porTipo.ContainsKey('convenciones')) -and (Test-Path -LiteralPath $rutaConvMateria)) {
+  $relConv = '../../' + $materiaNorm + '/convenciones-tecnicas.md'
+  $porTipo['convenciones'] = New-Object System.Collections.Generic.List[object]
+  [void]$porTipo['convenciones'].Add(@{ tipo = 'convenciones'; rel = $relConv })
+  $totalIndexados = $totalIndexados + 1
+}
+
 # --- Sección 2: índice completo del corpus ---
 $li = New-Object System.Collections.Generic.List[string]
 $script:nSub = 0
@@ -321,9 +334,9 @@ Add-Indice ''
 # 2.x Raíz del corpus — canon técnico
 if (Get-Primero 'convenciones') {
   $c = Get-Primero 'convenciones'
-  Add-Subtitulo 'Raíz del corpus — canon técnico'
+  Add-Subtitulo 'Canon técnico — hoja de convenciones'
   $d = Expand-Plantilla (Get-DescripcionTipo 'convenciones' 'descripcion') $slotsGlobales "convenciones ($($c.rel))"
-  Add-Tabla2 @('| [' + $c.rel + '](' + $c.rel + ') | ' + $d + ' |')
+  Add-Tabla2 @('| [' + (Split-Path -Leaf $c.rel) + '](' + $c.rel + ') | ' + $d + ' |')
 }
 
 # 2.x Carpeta 01-planificacion — documentos administrativos (CSV derivados)
@@ -571,7 +584,7 @@ $lo.Add('')
 # 1) Canon técnico (y mapa maestro del encargo, fuera del corpus).
 $cConv = Get-Primero 'convenciones'
 if ($null -ne $cConv) {
-  Add-Orden ('**Mapa maestro del encargo** (fuera del corpus, en el repositorio de planificación) y hoja de canon técnico: ' + (Link-Md $cConv.rel $cConv.rel) + '.')
+  Add-Orden ('**Mapa maestro del encargo** (fuera del corpus, en el repositorio de planificación) y hoja de canon técnico: ' + (Link-Md (Split-Path -Leaf $cConv.rel) $cConv.rel) + '.')
 }
 # 2) Anual y libros de aula (renders deterministas de la firma pedagógica).
 $cAnual = Get-Primero 'anual'
@@ -657,13 +670,13 @@ $ordenTxt = ($lo -join "`n").TrimEnd()
 
 # --- Nota de la cátedra (prosa manual por materia, fuera de toda plantilla) ---
 $notaTxt = ''
-$rutaNota = Join-Path $raiz ('materias\' + (Split-Path $Materia -Leaf) + '\nota-catedra.md')
+$rutaNota = Join-Path $raiz ('input\materias\' + (Split-Path $Materia -Leaf) + '\nota-catedra.md')
 if (Test-Path -LiteralPath $rutaNota) {
   $notaTxt = '---' + "`n`n" + '## Nota de la cátedra' + "`n`n" + (Read-Texto $rutaNota).Trim() + "`n"
 }
 
 # --- Composición final ---
-$contenido = Expand-Plantilla $plantilla $slotsGlobales 'plantillas/readme-plantilla.md'
+$contenido = Expand-Plantilla $plantilla $slotsGlobales 'input/plantillas/readme-plantilla.md'
 $contenido = $contenido.Replace('{{INDICE}}', $indiceTxt)
 $contenido = $contenido.Replace('{{ORDEN}}', $ordenTxt)
 $contenido = $contenido.Replace('{{NOTA_CATEDRA}}', $notaTxt)

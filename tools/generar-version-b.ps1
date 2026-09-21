@@ -1,6 +1,6 @@
 ﻿# generar-version-b.ps1 — Genera versiones equivalentes (B/C/D) desde una versión A, por tabla de dominio
 #
-# ESTRUCTURA DE LA TABLA (plantillas\tabla-dominio.json):
+# ESTRUCTURA DE LA TABLA (input/plantillas/tabla-dominio.json):
 #   dominios.<instancia> — una entrada por instancia del curso: p. ej. "u1" para la mini API
 #   en memoria de la Unidad 1, "u2" para hospital.db de la Unidad 2 en adelante, "general"
 #   para tokens comunes a varias instancias. El generador consolida TODAS las instancias en
@@ -38,13 +38,13 @@
 #           silencio.
 #
 # Uso (desde la raíz del repositorio):
-#   powershell -File tools\generar-version-b.ps1 -Base <carpeta>\evaluacion-uN-version-a.md -Salida <carpeta> [-Letras B,C] [-Tabla plantillas\tabla-dominio.json]
+#   powershell -File tools\generar-version-b.ps1 -Base <carpeta>\evaluacion-uN-version-a.md -Salida <carpeta> [-Letras B,C] [-Tabla input\plantillas\tabla-dominio.json]
 #
 # Parametros:
 #   -Base    (obligatorio) ruta del documento versión A (fuente de la sustitución).
 #   -Salida  carpeta destino (se crea si no existe).
 #   -Letras  letras a generar: subset de B, C, D (por defecto B).
-#   -Tabla   ruta de la tabla de dominio (por defecto plantillas\tabla-dominio.json).
+#   -Tabla   ruta de la tabla de dominio (por defecto input/plantillas/tabla-dominio.json).
 #
 # Salida: <nombre-sin-extensión>-version-<letra>.md por cada letra (la extensión -version-a del
 # nombre se reemplaza; si no existe, se agrega el sufijo).
@@ -73,7 +73,7 @@ if (-not (Test-Path -LiteralPath $Base)) {
 
 # La raiz del repositorio es la carpeta padre de tools\ (donde vive este script).
 $raiz = Split-Path -Parent $PSScriptRoot
-if ($null -eq $Tabla -or $Tabla -eq '') { $Tabla = Join-Path $raiz 'plantillas\tabla-dominio.json' }
+if ($null -eq $Tabla -or $Tabla -eq '') { $Tabla = Join-Path $raiz 'input\plantillas\tabla-dominio.json' }
 if (-not (Test-Path -LiteralPath $Tabla)) {
   Write-Output "ERROR: no se encontro la tabla de dominio: $Tabla"
   exit 1

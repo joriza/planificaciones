@@ -1,5 +1,5 @@
 {
-  "_comentario": "Plantillas de descripción del README índice, por tipo de documento reconocido por tools/generar-readme.ps1. Los slots {{...}} se interpolan con datos del árbol del corpus y del curso-data (materias/<materia>.json). Registro docente formal; una sola línea por descripción.",
+  "_comentario": "Plantillas de descripción del README índice, por tipo de documento reconocido por tools/generar-readme.ps1. Los slots {{...}} se interpolan con datos del árbol del corpus y del curso-data (input/materias/<materia>/curso-data.json). Registro docente formal; una sola línea por descripción.",
   "secciones": {
     "indice": "Cada documento se presenta con una descripción de qué es y cuándo se usa. Los archivos con sufijo `-anexo-docente.md` son **anexos docentes: material de uso exclusivo del docente** (soluciones, criterios de corrección y guías de conducción); no se entregan a alumnos ni a administración.",
     "unidades": "Cada unidad reúne los documentos de clase dirigidos al alumno (con su anexo docente como material de uso exclusivo del docente) y el documento de evaluación de la unidad con sus versiones equivalentes.",
@@ -12,7 +12,7 @@
   },
   "tipos": {
     "convenciones": { "descripcion": "Canon del curso: fuente única de verdad de tipos, formatos y estructura de código. Se consulta ante cualquier duda técnica; toda divergencia con esta hoja es un defecto." },
-    "anual": { "descripcion": "Documento madre del curso: presentación y organización de los 16 tramos del ciclo anual (una fila por tramo), con ejes temáticos y correlación exacta. Es un render determinista de la firma pedagógica del curso (`materias/{{materia}}.json`) mediante `tools/generar-administrativos.ps1`. Versión planilla (separador `;`, UTF-8 con BOM) para la carga institucional." },
+    "anual": { "descripcion": "Documento madre del curso: presentación y organización de los 16 tramos del ciclo anual (una fila por tramo), con ejes temáticos y correlación exacta. Es un render determinista de la firma pedagógica del curso (`input/materias/{{materia}}/curso-data.json`) mediante `tools/generar-administrativos.ps1`. Versión planilla (separador `;`, UTF-8 con BOM) para la carga institucional." },
     "libro1": { "descripcion": "Síntesis del plan de clases con una línea por encuentro (36 filas), para completar el libro de aula. El docente completa manualmente Fecha y Material al dictar cada encuentro. Render determinista del mismo origen; UTF-8 con BOM." },
     "libro2": { "descripcion": "Versión del libro de aula con 2 líneas por encuentro (72 filas), para instituciones que solicitan mayor detalle. Render determinista del mismo origen; UTF-8 con BOM." },
     "clase": { "descripcion": "{{contenido}}." },

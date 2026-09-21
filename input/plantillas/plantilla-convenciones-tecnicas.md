@@ -1,7 +1,7 @@
 # Plantilla — Convenciones técnicas — ⟨nombre del curso⟩
 
-> Plantilla en blanco para la hoja de convenciones técnicas de una materia con código. El LLM la usa en la **Fase 0** de `0-prompt-plantilla-planificacion.md` para redactar `<curso>/convenciones-tecnicas.md`.
-> Insumos: el **archivo de materia** (`materias/<materia>.md`), la **documentación de la base** (`database-docs/`, si existe) y el **digest de código** (`plantillas/digest-codigo.md`), adaptándolo si el stack no es C#.
+> Plantilla en blanco para la hoja de convenciones técnicas de una materia con código. El LLM la usa en la **Fase 0** de `prompt-plantilla-planificacion.md` para redactar `<curso>/convenciones-tecnicas.md`.
+> Insumos: el **archivo de materia** (`input/materias/<materia>/materia.md`), la **documentación de la base** (`input/database-docs/`, si existe) y el **digest de código** (`input/plantillas/digest-codigo.md`), adaptándolo si el stack no es C#.
 > La hoja redactada entra en el **FRENO de Fase 0** junto con el curso-data: una vez validada y editada por el docente, es **canon** de la materia — ante conflicto manda la hoja.
 > Al completarla: llenar cada ⟨marcador⟩, conservar la estructura de 9 secciones y borrar las líneas de instrucción y esta nota. Hoja terminada de referencia: `minimal-api-csharp/convenciones-tecnicas.md`.
 
@@ -31,7 +31,7 @@ Título, blockquote de canon y tabla de identificación, con los datos de la mat
 | Curso | ⟨nombre del curso⟩ |
 | Registro | ⟨a quién va dirigida la hoja, p. ej. docente y alumnos⟩ |
 | Base de datos canónica | ⟨motor, archivo y tablas; borrar la fila si no hay base⟩ |
-| Referencias de apoyo | ⟨documentos de apoyo usados, p. ej. `database-docs/`⟩ |
+| Referencias de apoyo | ⟨documentos de apoyo usados, p. ej. `input/database-docs/`⟩ |
 
 ## 1. Propósito y alcance
 
@@ -40,7 +40,7 @@ Título, blockquote de canon y tabla de identificación, con los datos de la mat
 - Esta hoja define los **⟨tipos de datos, formatos y estructura del código⟩** de todo el curso: ⟨ejemplos de clase, anexos, evaluaciones y trabajos de alumnos⟩.
 - Ante cualquier duda técnica, **esta hoja decide**: el ajuste se hace primero acá y recién después se propaga a los documentos derivados. Nunca al revés.
 - **Alcance:** ⟨entorno y estructura del proyecto, estilo de código, tipos canónicos, acceso a datos, respuestas HTTP, control de versiones y prueba de la API⟩.
-- **Fuera de alcance:** ⟨el contenido de cada encuentro (lo fija la planificación anual) y el formato pedagógico de los documentos (lo fija `estructura-de-la-clase.md`)⟩.
+- **Fuera de alcance:** ⟨el contenido de cada encuentro (lo fija la planificación anual) y el formato pedagógico de los documentos (lo fija `input/estructura-de-la-clase.md`)⟩.
 
 ## 2. Entorno y estructura del proyecto
 
@@ -62,7 +62,7 @@ Título, blockquote de canon y tabla de identificación, con los datos de la mat
 
 ## 4. Tipos canónicos (BD ↔ lenguaje)
 
-> Derivar del esquema de `database-docs/` y del spike: cada fila se verifica contra la base real antes de escribirse.
+> Derivar del esquema de `input/database-docs/` y del spike: cada fila se verifica contra la base real antes de escribirse.
 
 Tipos únicos para todo el curso, tanto en ejemplos como en trabajos de alumnos:
 
@@ -136,4 +136,4 @@ Verificación rápida antes de cerrar cualquier ejemplo o trabajo:
 
 ---
 
-> Nota: `plantillas/digest-codigo.md` es de la familia C#/Minimal API. Para otro stack, adaptar el digest junto con esta hoja antes de la Fase 2, de modo que los writers reciban una dieta coherente.
+> Nota: `input/plantillas/digest-codigo.md` es de la familia C#/Minimal API. Para otro stack, adaptar el digest junto con esta hoja antes de la Fase 2, de modo que los writers reciban una dieta coherente.

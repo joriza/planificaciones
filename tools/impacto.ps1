@@ -10,19 +10,19 @@
 # Sin caches de hashes: la lista (b) sale del diff git del JSON (+ version de canon).
 #
 # Uso (desde la raiz del repositorio):
-#   powershell -File tools\impacto.ps1 -Materia output\LSO [-Curso output/LSO]
-#   powershell -File tools\impacto.ps1 -Materia output\LSO -Desde HEAD~1 [-Json]
-#   powershell -File tools\impacto.ps1 -Materia output\LSO -Canon materias\otro-insumo.md
+#   powershell -File tools\impacto.ps1 -Materia input\materias\LSO [-Curso output/LSO]
+#   powershell -File tools\impacto.ps1 -Materia input\materias\LSO -Desde HEAD~1 [-Json]
+#   powershell -File tools\impacto.ps1 -Materia input\materias\LSO -Canon input\materias\otro-insumo.md
 #
 # Parametros:
-#   -Materia (obligatorio) ruta a la carpeta del curso en output (contiene curso-data.json).
+#   -Materia (obligatorio) ruta a la carpeta de la materia en input/materias/ (contiene curso-data.json).
 #   -Curso   carpeta del corpus (por defecto, el nombre de la carpeta de la materia).
 #   -Desde   revision git de referencia (por defecto HEAD; el diff incluye cambios sin commitear).
 #   -Canon   rutas adicionales tratadas como canon (cambio canonico -> toda la prosa afectada).
 #   -Json    salida machine-parseable (en lugar del texto plano en espanol).
 #
 # Conjunto canonico diffeado siempre, ademas del JSON de la materia:
-#   plantillas/ + 0-prompt-plantilla-planificacion.md + estructura-de-la-clase.md
+#   input/plantillas/ + prompt-plantilla-planificacion.md + input/estructura-de-la-clase.md
 #
 # Heuristicas de mapeo (documentadas, auditable): el diff se toma con -U500 para que cada
 # hunk traiga sus anclas de estructura como contexto ("slots", "n": NN del encuentro, id de
@@ -30,9 +30,9 @@
 # tramos invariantes ~35 lineas por tramo, asi el contexto siempre cubre el archivo.
 #   encuentro n -> clase-NN-*.md del curso (+ su anexo, mismo patron de nombre)
 #   slots.unidades.uX o slots.tps.uX -> evaluacion-uX* + clases de la unidad + cierre del cuatrimestre
-#   tramo de plantillas/tramos-invariantes.json -> su documento y/o evaluaciones
+#   tramo de input/plantillas/tramos-invariantes.json -> su documento y/o evaluaciones
 #   varianteFraseos -> todos los documentos de tramos invariantes
-#   canon (prompt plantilla, estructura-de-la-clase, digest-codigo, -Canon) -> TODA la prosa
+#   canon (prompt plantilla, input/estructura-de-la-clase, digest-codigo, -Canon) -> TODA la prosa
 #   slots globales (celular/recursos/ejes) y campos de identificacion -> solo derivados (nota)
 # Exit codes: 0 OK; 1 error de uso o de git.
 
@@ -76,7 +76,7 @@ $modo = if ($LASTEXITCODE -eq 0) { 'actualizacion' } else { 'corrida-completa' }
 # Los avisos de git por stderr (p. ej. LF/CRLF) no deben ser terminantes en PS 5.1.
 $ErrorActionPreference = 'Continue'
 $jsonDiff = @(& git -C $root diff -U500 $Desde -- $materiaRel 2> $null)
-$canonPaths = @('plantillas/', '0-prompt-plantilla-planificacion.md', 'estructura-de-la-clase.md') + $Canon
+$canonPaths = @('input/plantillas/', 'prompt-plantilla-planificacion.md', 'input/estructura-de-la-clase.md') + $Canon
 $canonDiff = @(& git -C $root diff -U500 $Desde -- $canonPaths 2> $null)
 $ErrorActionPreference = 'Stop'
 
@@ -222,15 +222,15 @@ if ($modo -eq 'corrida-completa') {
     if ($line.Length -lt 2) { continue }
     $marker = $line.Substring(0, 1)
     $body = $line.Substring(1)
-    if ($curFile -like '*plantillas/tramos-invariantes.json') {
+    if ($curFile -like '*input/plantillas/tramos-invariantes.json') {
       if ($body -match '^\s{2}"([a-z0-9-]+)"\s*:\s*\{') { $curTramo = $Matches[1] }
       if ($body -match '"([A-Za-z0-9_-]+)"\s*:') { $lastKeyT = $Matches[1] }
       if ($marker -eq '+' -or $marker -eq '-') {
         if ($curTramo) {
           if (-not $tramosCanon.Contains($curTramo)) { $tramosCanon[$curTramo] = New-Object System.Collections.Generic.List[string] }
           if ($lastKeyT -and -not $tramosCanon[$curTramo].Contains($lastKeyT)) { $tramosCanon[$curTramo].Add($lastKeyT) }
-        } elseif (-not $canonOtros.Contains('plantillas/tramos-invariantes.json')) {
-          $canonOtros.Add('plantillas/tramos-invariantes.json')
+        } elseif (-not $canonOtros.Contains('input/plantillas/tramos-invariantes.json')) {
+          $canonOtros.Add('input/plantillas/tramos-invariantes.json')
         }
       }
     } elseif ($marker -eq '+' -or $marker -eq '-') {
@@ -241,7 +241,7 @@ if ($modo -eq 'corrida-completa') {
   foreach ($id in @($tramosCanon.Keys)) {
     $campos = $tramosCanon[$id] -join ', '
     if ($tramoGlobs.Contains($id)) {
-      Add-ProsaPorGlob $tramoGlobs[$id] "canon: plantillas/tramos-invariantes.json, tramo '$id' ($campos) cambio"
+      Add-ProsaPorGlob $tramoGlobs[$id] "canon: input/plantillas/tramos-invariantes.json, tramo '$id' ($campos) cambio"
     } else {
       Add-Nota "canon: tramo '$id' de tramos-invariantes.json sin mapeo a documentos del corpus"
     }
@@ -249,8 +249,8 @@ if ($modo -eq 'corrida-completa') {
 
   # Canon que alcanza a TODA la prosa vs canon que solo alimenta derivados.
   $canonNorm = @($Canon | ForEach-Object { $_ -replace '\\', '/' })
-  $canonTodaProsa = @('0-prompt-plantilla-planificacion.md', 'estructura-de-la-clase.md', 'plantillas/digest-codigo.md')
-  $canonSoloDerivados = @('plantillas/esqueletos-unidad.json', 'plantillas/libro-filas-invariantes.json', 'plantillas/tabla-dominio.json', 'plantillas/readme-plantilla.md', 'plantillas/readme-descripciones.json')
+  $canonTodaProsa = @('prompt-plantilla-planificacion.md', 'input/estructura-de-la-clase.md', 'input/plantillas/digest-codigo.md')
+  $canonSoloDerivados = @('input/plantillas/esqueletos-unidad.json', 'input/plantillas/libro-filas-invariantes.json', 'input/plantillas/tabla-dominio.json', 'input/plantillas/readme-plantilla.md', 'input/plantillas/readme-descripciones.json')
   $alcanzaToda = @($canonOtros | Where-Object { ($canonTodaProsa -contains $_) -or ($canonNorm -contains $_) })
   if ($alcanzaToda.Count -gt 0) {
     $lista = $alcanzaToda -join ', '

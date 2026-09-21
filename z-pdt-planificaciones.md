@@ -2,7 +2,7 @@
 
 [Datos generales]
 como docente me encuentro frecuentemente ante la necesidad de planificar las clases para todo el año.
-Necesito que me prepare las clases segun la plantilla ../estructura-de-la-clase.md (biblioteca de plantillas en z-planificaciones_en-General)
+Necesito que me prepare las clases segun la plantilla ../input/estructura-de-la-clase.md (biblioteca de plantillas en z-planificaciones_en-General)
 
 [Datos generales Distribucion de recurso tiempo]
 Si sele pasan las horas totales, solo es un dato nominal.
@@ -261,7 +261,7 @@ Relice todo lo que considere en subagentes, para preservar el contexto principal
 Fijo y General
 
 [Datos generales]
-@estructura-de-la-clase.md
+@input/estructura-de-la-clase.md
 [Flujo de trabajo por fases — regla fija]
 @estructura-anual-36.md
 @encuentros-especiales.md
@@ -302,8 +302,8 @@ mueva el archivo @verificar-curso.ps1 a la carpeta raiz, para que sirva para cua
 
 ## inicio desde cero sin historial.
 
-realiza las acciones indicadas en el documento @0-prompt-plantilla-planificacion.md
-todo lo necesario está en la ruta raiz del proyecto + la sub carpeta database-docs y sus subcarpetas que contiene la informacion de la base de datos, ignore las otras sub carpetas, son de otros proyectos que algunos son parecidos y pueden generar mucho ruido.
+realiza las acciones indicadas en el documento @prompt-plantilla-planificacion.md
+todo lo necesario está en la ruta raiz del proyecto + la sub carpeta input/database-docs y sus subcarpetas que contiene la informacion de la base de datos, ignore las otras sub carpetas, son de otros proyectos que algunos son parecidos y pueden generar mucho ruido.
 Solo por esta ejecucion respete los frenos humanos indicados, le tengo fe a la ejecucion.
 A) Utilice sub agentes todo lo que sea posible, para preservar el contexto principal.
 B) Utilice sub agentes con el mismo modelo que el principal todo lo que sea posible, para mejorar los tiempos debido al procesamiento paralelo y para preservar el contexto principal.
@@ -333,7 +333,7 @@ Las evaluaciones son una por cada unidad didáctica, no recuerdo si lo he cambia
 
 Ahora el momento de juntar indicaciones, el contenido de @encuentros-especiales.md y @estructura-anual-36.md debería estar en el prompt principal, hacen mas a cuestiones generales que se realizan siempre, sin impotar para que materia son.
 
-el carchivo @estructura-de-la-clase.md debe permanecer por separado, depende el tipo de materia, porque ejemplo una materia netamente teorica es muy distinta a una materia netamente practica o una balanceada, cambian las formas de encararla. Tambien cambia si cambia el alumnado, no es lo mismo adolescentes y que adultos.
+el carchivo @input/estructura-de-la-clase.md debe permanecer por separado, depende el tipo de materia, porque ejemplo una materia netamente teorica es muy distinta a una materia netamente practica o una balanceada, cambian las formas de encararla. Tambien cambia si cambia el alumnado, no es lo mismo adolescentes y que adultos.
 
 Luego de validar y conciliar diferencias, actualice promp plantilla y readme.
 Realice todas las consultas que considere necesarias.
@@ -368,7 +368,7 @@ luego de analizado y debatido el plan le indicaré cuando aplicarlo
 
 Antes de hacer lio pregunto.
 si elimino la carpeta minimal-api-csharp y ejecuto la orden:
-Regeneración completa del corpus de la materia ubicada en materias/minimal-api-csharp.md, según @0-prompt-plantilla-planificacion.md en modo CORRIDA COMPLETA. 
+Regeneración completa del corpus de la materia ubicada en input/materias/minimal-api-csharp.md, según @prompt-plantilla-planificacion.md en modo CORRIDA COMPLETA. 
 Va a funcionar, o hay un forma mas adecuada de simular la generacion de una materia por primera vez?
 Al menos en esta ejecucion necesito mas frenos que antes, hubo muchos cambios.
 
@@ -400,7 +400,7 @@ modificacion solicitada, cada materia debe estar contenida en una sub carpeta de
 
 ## +det23
 
-analice los 2 archivos dentro de la carpeta materias/LAP analice coherencia entre ambos, corrija prosa y consulte inconsitencias o faltantes de contenido basico.
+analice los 2 archivos dentro de la carpeta input/materias/LAP analice coherencia entre ambos, corrija prosa y consulte inconsitencias o faltantes de contenido basico.
 
 
 ## +det24
@@ -421,7 +421,7 @@ El repo remoto es https://github.com/joriza/planificaciones.git pushee todo all�
 
 
 ## +det28
-Genere la documentación de la materia LAP según @0-prompt-plantilla-planificacion.md sin consultar la memoria, como una materia nueva sin historial.
+Genere la documentación de la materia LAP según @prompt-plantilla-planificacion.md sin consultar la memoria, como una materia nueva sin historial.
 
 
 ## +det29

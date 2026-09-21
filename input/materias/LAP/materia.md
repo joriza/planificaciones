@@ -1,6 +1,6 @@
 # Materia — Programación en Python
 
-> Archivo de datos centrales de la materia, referenciado por `0-prompt-plantilla-planificacion.md` en [Datos particulares].
+> Archivo de datos centrales de la materia, referenciado por `prompt-plantilla-planificacion.md` en [Datos particulares].
 > Acá viven JUNTOS todos los datos que cambian de una materia a otra: curso, stack, contenidos mínimos, tiempos e institución.
 > El formato y las reglas de las evaluaciones NO se declaran acá: los gobierna la sección [Evaluaciones — regla fija] del prompt principal (una evaluación por unidad didáctica y una por momento de intensificación y fortalecimiento, en versiones A y B).
 
@@ -30,7 +30,7 @@
 - Base de datos: no se trata este tema; ninguna, de ningún tipo.
 - Restricción de archivos: resolver cada trabajo en un solo archivo .py, sin dividir en módulos propios, salvo cuando no haya alternativa posible. Esto simplifica la cantidad de archivos que debe recordar el alumno. Los ejemplos rara vez superarán las 150 líneas.
 - Código de ejemplo: agregue una buena dosis de comentarios para que los estudiantes puedan comprender mejor las acciones del código presentado.
-- Convenciones técnicas: output/LAP/convenciones-tecnicas.md — fuente única de tipos, formatos y estructura de código de este curso; leerla antes de generar cualquier ejemplo.
+- Convenciones técnicas: input/materias/LAP/convenciones-tecnicas.md — fuente única de tipos, formatos y estructura de código de este curso; leerla antes de generar cualquier ejemplo.
 
 (Tiempo)
 - Cantidad de horas por encuentro: 2.

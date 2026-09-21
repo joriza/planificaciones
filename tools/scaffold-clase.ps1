@@ -13,7 +13,7 @@
 #   -Force      permite sobrescribir archivos existentes.
 #
 # Escribe dos archivos: clase-NN-<slug>.md y clase-NN-<slug>-anexo-docente.md.
-# Secuencia de tiempos fija (canon de estructura-de-la-clase.md y del corpus):
+# Secuencia de tiempos fija (canon de input/estructura-de-la-clase.md y del corpus):
 #   clase : apertura y puente 20 / teoría mínima 40 / práctica guiada 70 / ejercicio independiente 50 /
 #           extensión y consolidación 45 / cierre 15  (total 240)
 #   cierre: apertura 15 / consolidación 75 / trabajo del TP 90 / ciclo de entrega 45 / cierre 15  (total 240)

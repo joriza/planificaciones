@@ -1,6 +1,6 @@
 # Pedido — LSO (Minimal API con C# .NET 6)
 
-> Datos particulares de LSO para `0-prompt-plantilla-planificacion.md`. Identificador de la materia: LSO.
+> Datos particulares de LSO para `prompt-plantilla-planificacion.md`. Identificador de la materia: LSO.
 
 (Libro de aula)
 - Límite de caracteres: Tema del Día y Actividades, máximo 35 por celda (en la versión de 2 líneas, 35 por línea).

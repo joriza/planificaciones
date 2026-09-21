@@ -1,6 +1,6 @@
 # Minimal API con C# .NET 6 — Índice del curso
 
-> Documento índice del corpus de la asignatura **Minimal API con C# .NET 6**, redactado en registro docente formal. Presenta el curso, organiza el corpus completo mediante vínculos a cada documento, documenta el orden de creación de los materiales y la fundamentación pedagógica del enfoque. Es un documento derivado: se genera con `tools/generar-readme.ps1` a partir del árbol del corpus y de la firma pedagógica del curso (`materias/Minimal API con C# .NET 6.json`).
+> Documento índice del corpus de la asignatura **Minimal API con C# .NET 6**, redactado en registro docente formal. Presenta el curso, organiza el corpus completo mediante vínculos a cada documento, documenta el orden de creación de los materiales y la fundamentación pedagógica del enfoque. Es un documento derivado: se genera con `tools/generar-readme.ps1` a partir del árbol del corpus y de la firma pedagógica del curso (`input/materias/LSO/curso-data.json`).
 
 ---
 
@@ -21,17 +21,17 @@ El ciclo lectivo sigue una estructura fija de 36 encuentros organizados en 16 tr
 
 Cada documento se presenta con una descripción de qué es y cuándo se usa. Los archivos con sufijo `-anexo-docente.md` son **anexos docentes: material de uso exclusivo del docente** (soluciones, criterios de corrección y guías de conducción); no se entregan a alumnos ni a administración.
 
-### 2.1 Raíz del corpus — canon técnico
+### 2.1 Canon técnico — hoja de convenciones
 
 | Documento | Qué es y cuándo se usa |
 | --- | --- |
-| [convenciones-tecnicas.md](convenciones-tecnicas.md) | Canon del curso: fuente única de verdad de tipos, formatos y estructura de código. Se consulta ante cualquier duda técnica; toda divergencia con esta hoja es un defecto. |
+| [convenciones-tecnicas.md](../../input/materias/LSO/convenciones-tecnicas.md) | Canon del curso: fuente única de verdad de tipos, formatos y estructura de código. Se consulta ante cualquier duda técnica; toda divergencia con esta hoja es un defecto. |
 
 ### 2.2 Carpeta `01-planificacion/` — documentos administrativos
 
 | Documento | Qué es y cuándo se usa |
 | --- | --- |
-| [01-planificacion/planificacion-anual.csv](01-planificacion/planificacion-anual.csv) | Documento madre del curso: presentación y organización de los 16 tramos del ciclo anual (una fila por tramo), con ejes temáticos y correlación exacta. Es un render determinista de la firma pedagógica del curso (`materias/Minimal API con C# .NET 6.json`) mediante `tools/generar-administrativos.ps1`. Versión planilla (separador `;`, UTF-8 con BOM) para la carga institucional. |
+| [01-planificacion/planificacion-anual.csv](01-planificacion/planificacion-anual.csv) | Documento madre del curso: presentación y organización de los 16 tramos del ciclo anual (una fila por tramo), con ejes temáticos y correlación exacta. Es un render determinista de la firma pedagógica del curso (`input/materias/LSO/curso-data.json`) mediante `tools/generar-administrativos.ps1`. Versión planilla (separador `;`, UTF-8 con BOM) para la carga institucional. |
 | [01-planificacion/libro-de-aula-1-linea-por-encuentro.csv](01-planificacion/libro-de-aula-1-linea-por-encuentro.csv) | Síntesis del plan de clases con una línea por encuentro (36 filas), para completar el libro de aula. El docente completa manualmente Fecha y Material al dictar cada encuentro. Render determinista del mismo origen; UTF-8 con BOM. |
 | [01-planificacion/libro-de-aula-2-lineas-por-encuentro.csv](01-planificacion/libro-de-aula-2-lineas-por-encuentro.csv) | Versión del libro de aula con 2 líneas por encuentro (72 filas), para instituciones que solicitan mayor detalle. Render determinista del mismo origen; UTF-8 con BOM. |
 
@@ -130,14 +130,22 @@ Actividades de repaso y fijación para que los alumnos trabajen sin presencia do
 | --- | --- |
 | [06-aprobacion/criterios-aprobacion.md](06-aprobacion/criterios-aprobacion.md) | Documento institucional dirigido a alumnos, familias y dirección: qué se evalúa en cada unidad, mínimos exigibles, regla de entrega incompleta y capas de recuperación. Se informa a los alumnos al inicio de la cursada y se consulta en cada instancia de evaluación y recuperación. |
 
+### 2.8 Otros documentos
+
+Documentos presentes en el corpus que el generador no clasificó según las convenciones de nombres: revisarlos y clasificarlos o incorporarlos a las convenciones antes de la próxima regeneración.
+
+| Documento | Qué es y cuándo se usa |
+| --- | --- |
+| [.gitignore](.gitignore) | Documento presente en el corpus sin tipo reconocido por las convenciones de nombres del generador; clasificarlo o incorporarlo a las convenciones antes de la próxima regeneración. |
+
 ---
 
 ## 3. Orden de creación de los documentos
 
 El corpus se genera en cascada, en el siguiente orden: cada documento deriva del anterior y mantiene con él correlación exacta. Cualquier creación futura de material para esta materia debe respetar esta misma secuencia.
 
-1. **Mapa maestro del encargo** (fuera del corpus, en el repositorio de planificación) y hoja de canon técnico: [convenciones-tecnicas.md](convenciones-tecnicas.md).
-2. **Planificación anual**, documento madre (render determinista de la firma pedagógica `materias/Minimal API con C# .NET 6.json` mediante `tools/generar-administrativos.ps1`): [01-planificacion/planificacion-anual.csv](01-planificacion/planificacion-anual.csv); y **libro de aula**, derivado directo de la anual: [01-planificacion/libro-de-aula-1-linea-por-encuentro.csv](01-planificacion/libro-de-aula-1-linea-por-encuentro.csv), [01-planificacion/libro-de-aula-2-lineas-por-encuentro.csv](01-planificacion/libro-de-aula-2-lineas-por-encuentro.csv).
+1. **Mapa maestro del encargo** (fuera del corpus, en el repositorio de planificación) y hoja de canon técnico: [convenciones-tecnicas.md](../../input/materias/LSO/convenciones-tecnicas.md).
+2. **Planificación anual**, documento madre (render determinista de la firma pedagógica `input/materias/LSO/curso-data.json` mediante `tools/generar-administrativos.ps1`): [01-planificacion/planificacion-anual.csv](01-planificacion/planificacion-anual.csv); y **libro de aula**, derivado directo de la anual: [01-planificacion/libro-de-aula-1-linea-por-encuentro.csv](01-planificacion/libro-de-aula-1-linea-por-encuentro.csv), [01-planificacion/libro-de-aula-2-lineas-por-encuentro.csv](01-planificacion/libro-de-aula-2-lineas-por-encuentro.csv).
 3. **Encuadre del ciclo**: [encuadre-01-diagnostico.md](03-encuadre-y-cierres/encuadre-01-diagnostico.md).
 4. **Saberes previos** (momento de intensificación previo a las unidades): [intensificaciones-02-03-saberes-previos.md](04-intensificaciones/intensificaciones-02-03-saberes-previos.md), con su evaluación en `04-intensificaciones/evaluaciones/`.
 5. **Fundamentos de C# y Minimal API** (encuentros 4 a 8), cada clase con su anexo docente: [clase-04](02-unidades/01-u1-fundamentos-de-csharp-y-minimal-api/clase-04-introduccion-a-net-y-csharp.md), [clase-05](02-unidades/01-u1-fundamentos-de-csharp-y-minimal-api/clase-05-estructuras-de-control-y-metodos.md), [clase-06](02-unidades/01-u1-fundamentos-de-csharp-y-minimal-api/clase-06-minimal-api-y-endpoint-get.md), [clase-07](02-unidades/01-u1-fundamentos-de-csharp-y-minimal-api/clase-07-parametros-y-rutas-en-get.md), [clase-08](02-unidades/01-u1-fundamentos-de-csharp-y-minimal-api/clase-08-cierre-u1-repaso-y-tp.md).
@@ -149,7 +157,7 @@ El corpus se genera en cascada, en el siguiente orden: cada documento deriva del
 11. **Momentos de intensificación y fortalecimiento** del ciclo y de diciembre y marzo (cada uno con su evaluación —base, versiones equivalentes y anexos docentes— en `04-intensificaciones/evaluaciones/`): [intensificaciones-17-18-unidades-1-y-2.md](04-intensificaciones/intensificaciones-17-18-unidades-1-y-2.md), [intensificaciones-19-20-integradora-1-y-2.md](04-intensificaciones/intensificaciones-19-20-integradora-1-y-2.md), [intensificaciones-34-35-unidades-3-y-4.md](04-intensificaciones/intensificaciones-34-35-unidades-3-y-4.md), [intensificaciones-diciembre-intensificacion.md](04-intensificaciones/intensificaciones-diciembre-intensificacion.md), [intensificaciones-marzo-intensificacion.md](04-intensificaciones/intensificaciones-marzo-intensificacion.md).
 12. **Continuidad pedagógica** (con anexos docentes): [continuidad-01-saberes-previos.md](05-continuidad/continuidad-01-saberes-previos.md), [continuidad-02-tras-evaluacion-u1.md](05-continuidad/continuidad-02-tras-evaluacion-u1.md), [continuidad-03-tras-evaluacion-u2.md](05-continuidad/continuidad-03-tras-evaluacion-u2.md), [continuidad-04-tras-evaluacion-u3.md](05-continuidad/continuidad-04-tras-evaluacion-u3.md).
 13. **Criterios de aprobación**: [06-aprobacion/criterios-aprobacion.md](06-aprobacion/criterios-aprobacion.md).
-14. **README índice**: este documento, generado con `tools/generar-readme.ps1` a partir del árbol del corpus y de la firma pedagógica (`materias/Minimal API con C# .NET 6.json`).
+14. **README índice**: este documento, generado con `tools/generar-readme.ps1` a partir del árbol del corpus y de la firma pedagógica (`input/materias/LSO/curso-data.json`).
 
 ---
 
@@ -183,4 +191,14 @@ El diseño de la asignatura no es una suma de temas ordenados cronológicamente:
 
 ## 5. Nota de correlación
 
-La planificación anual ([`01-planificacion/planificacion-anual.csv`](01-planificacion/planificacion-anual.csv), render determinista de la firma pedagógica del curso `materias/Minimal API con C# .NET 6.json`) es el **documento madre** del curso: el libro de aula, las unidades didácticas y sus clases, las evaluaciones, el encuadre y los cierres del ciclo, los momentos de intensificación y fortalecimiento, la continuidad pedagógica y los criterios de aprobación derivan de ella con correlación exacta de numeración de encuentros, denominaciones de tramos, ejes, tiempos y momentos de evaluación y recuperación. Todo cambio futuro se ajusta **primero** en `materias/Minimal API con C# .NET 6.json`, se re-renderizan los administrativos con `tools/generar-administrativos.ps1` y este índice con `tools/generar-readme.ps1`, y se propaga **en cascada** a los documentos derivados; nunca se dejan documentos desalineados. Ante cualquier duda técnica de contenido, decide la hoja de [convenciones-tecnicas.md](convenciones-tecnicas.md).
+La planificación anual ([`01-planificacion/planificacion-anual.csv`](01-planificacion/planificacion-anual.csv), render determinista de la firma pedagógica del curso `input/materias/LSO/curso-data.json`) es el **documento madre** del curso: el libro de aula, las unidades didácticas y sus clases, las evaluaciones, el encuadre y los cierres del ciclo, los momentos de intensificación y fortalecimiento, la continuidad pedagógica y los criterios de aprobación derivan de ella con correlación exacta de numeración de encuentros, denominaciones de tramos, ejes, tiempos y momentos de evaluación y recuperación. Todo cambio futuro se ajusta **primero** en `input/materias/LSO/curso-data.json`, se re-renderizan los administrativos con `tools/generar-administrativos.ps1` y este índice con `tools/generar-readme.ps1`, y se propaga **en cascada** a los documentos derivados; nunca se dejan documentos desalineados. Ante cualquier duda técnica de contenido, decide la hoja de [convenciones-tecnicas.md](../../input/materias/LSO/convenciones-tecnicas.md).
+
+---
+
+## Nota de la cátedra
+
+Este curso propone un primer acercamiento al desarrollo de APIs web construyendo desde cero una Minimal API de .NET 6: un único archivo `Program.cs`, sin abstracciones intermedias —sin patrón repositorio ni inyección de dependencias—, con cada pieza explicada antes de usarse y todo el resultado verificable en el navegador.
+
+Elegimos ese formato por carga cognitiva: para estudiantes del nivel secundario que se inician en C# y en el desarrollo web, cada archivo, cada abstracción y cada herramienta no comprendida es carga que no aporta. Preferimos un programa corto que se entiende completo a una arquitectura correcta que se copia sin entender; lo que el alumno no puede explicar, no lo damos por aprendido.
+
+El repositorio se lee en cascada: la planificación anual (`01-planificacion/`) define el recorrido del año; cada unidad (`02-unidades/`) desarrolla sus encuentros con clases y evaluaciones; los momentos de intensificación, la continuidad pedagógica y los criterios de aprobación completan el ciclo. La hoja de convenciones técnicas es la referencia obligada ante cualquier duda de código.
