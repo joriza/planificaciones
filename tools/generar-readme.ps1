@@ -3,10 +3,10 @@
 # readme-descripciones.json) + nota de la cátedra manual (materias/<materia>/nota-catedra.md, opcional).
 #
 # Uso (desde la raíz del repositorio):
-#   powershell -File tools\generar-readme.ps1 -Materia output\LSO -Curso output\LSO [-Salida <archivo>] [-Force]
+#   powershell -File tools\generar-readme.ps1 -Materia input\materias\LSO -Curso output\LSO [-Salida <archivo>] [-Force]
 #
 # Parametros:
-#   -Materia (obligatorio) carpeta del curso en output (contiene curso-data.json; p. ej. output\LSO).
+#   -Materia (obligatorio) carpeta de la materia (contiene curso-data.json; p. ej. input\materias\LSO).
 #   -Curso   (obligatorio) carpeta del corpus del curso (p. ej. output/LSO).
 #   -Salida  archivo de salida (por defecto <curso>\README.md; si existe y no se pasa -Force, aborta).
 #   -Force   permite sobrescribir el archivo de salida existente.
@@ -31,7 +31,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if ($Materia -eq '') {
-  Write-Output 'ERROR: falta -Materia <ruta a la carpeta del curso en output (contiene curso-data.json)>'
+  Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
   exit 1
 }
 if ($Curso -eq '') {

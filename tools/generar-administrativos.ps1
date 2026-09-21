@@ -2,11 +2,11 @@
 # a partir de curso-data.json + plantillas (tramos invariantes, filas de libro y esqueletos de unidad).
 #
 # Uso (desde la raíz del repositorio):
-#   powershell -File tools\generar-administrativos.ps1 -Materia output\LSO -Salida <carpeta> [-Variante 1]
-#   powershell -File tools\generar-administrativos.ps1 -Materia output\LSO -Salida <carpeta> -HorasPorEncuentro 2
+#   powershell -File tools\generar-administrativos.ps1 -Materia input\materias\LSO -Salida <carpeta> [-Variante 1]
+#   powershell -File tools\generar-administrativos.ps1 -Materia input\materias\LSO -Salida <carpeta> -HorasPorEncuentro 2
 #
 # Parametros:
-#   -Materia   (obligatorio) carpeta del curso en output (contiene curso-data.json; p. ej. output\LSO).
+#   -Materia   (obligatorio) carpeta de la materia (contiene curso-data.json; p. ej. input\materias\LSO).
 #   -Salida    carpeta destino (por defecto, la carpeta actual; se crea si no existe). Escribe:
 #                planificacion-anual.csv
 #                libro-de-aula-1-linea-por-encuentro.csv
@@ -36,7 +36,7 @@ if ($null -eq $Salida -or $Salida -eq '') { $Salida = '.' }
 if ($null -eq $Variante) { $Variante = 0 }
 
 if ($Materia -eq '') {
-  Write-Output 'ERROR: falta -Materia <ruta a la carpeta del curso en output (contiene curso-data.json)>'
+  Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
   exit 1
 }
 if (-not (Test-Path -LiteralPath $Materia -PathType Container)) {
