@@ -55,6 +55,16 @@ Toda corrida genera el corpus en **cinco fases consecutivas** (cascada data-firs
 
 Reglas transversales de la cascada: la Fase 0 es la única con autoría LLM de la firma (el curso-data queda propiedad del docente); la Fase 1 es determinista (cero LLM); los writers de las Fases 2-3 reciben solo su slice de curso-data, la hoja de convenciones (que es canon) y la estructura de la clase; los cambios posteriores entran por el modo **actualización** (nunca editando derivados).
 
+## Modo de ejecución (derivado del estado del repositorio)
+
+| Estado detectado | Modo | Freno por defecto |
+| --- | --- | --- |
+| Sin `input/materias/<m>/curso-data.json` | Materia nueva (Fase 0 desde cero) | Pausa tras el curso-data validado |
+| Con curso-data, sin `output/<m>/` | Regeneración completa (reusa firma y hoja) | Continua |
+| Con curso-data y `output/<m>/` vigente | Actualización (solo lo afectado) | Continua |
+
+Una declaración explícita en la orden pisa el modo derivado y los frenos por defecto.
+
 ## Crear un curso nuevo (modo corrida completa)
 
 1. Crear `input/materias/<nombre>/materia.md` desde `input/plantillas/plantilla-materia.md`, y `input/materias/<nombre>/pedido.md` desde `input/plantillas/plantilla-pedido.md`, y completarlos. El nombre de la carpeta es el identificador de la materia.
