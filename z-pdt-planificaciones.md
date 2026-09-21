@@ -6,6 +6,22 @@
 > - Si encontrás una **discrepancia** entre estos apuntes y el estado actual del repositorio, podés consultarme antes de actuar.
 > - Es muy probable que sean **notas viejas** y que por eso no coincidan con las opciones actuales del sistema (rutas, nombres, convenciones o decisiones ya cambiadas).
 
+## Indicaciones de ejecucion
+
+> Esta sección es la **orden de ejecución vigente**: manda sobre el resto de este archivo (apuntes no vinculantes) y nunca sobre el canon (`prompt-plantilla-planificacion.md`), cuyas fases y reglas sigue tal cual.
+
+**Orden vigente:** ejecutar el prompt plantilla para la materia **LAP**, modo **corrida completa — materia nueva**.
+
+- **Fase 0 desde cero**: redactar el curso-data sin reutilizar versiones previas. La ficha y el pedido vigentes de `input/materias/LAP/` son los [Datos particulares].
+- **Sin memoria**: no consultar memoria del proyecto ni historiales de sesiones; actuar como primera vez.
+- **Autonomía — resolver y registrar** (mínimo/mecánico): typos, links, rutas, formato, fallas de herramienta de causa clara.
+- **Consultar antes de tocar**: contenido pedagógico (tiempos, temas, evaluaciones, TPs, criterios) y cualquier error con más de una solución posible.
+- **Frenos**: ninguno salvo declaración explícita en esta sección. **Freno declarado para esta corrida (prueba): pausar tras el curso-data validado** — apenas `curso-data.json` pasa `tools/validar-curso-data.ps1`; el docente lo revisa y define cómo continuar (la hoja de convenciones y la cascada quedan para después de la pausa).
+- **Reporte final**: toda modificación hecha fuera del flujo canónico, con su motivo.
+
+Próximas corridas: ningún freno por defecto (corrida continua); para pruebas, declarar explícitamente el punto de pausa (p. ej. «frenar tras el curso-data validado» o «frenar tras la Fase 0 completa»).
+
+
 # Flujo completo de planificacion anual con todos los documentos necesarios para ejecutar en agente de codificacion.
 
 [Datos generales]
