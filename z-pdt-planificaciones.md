@@ -360,3 +360,78 @@ luego de analizado y debatido el plan le indicaré cuando aplicarlo
 - Derivados. Aun mejor, en la anual, lo que mas cambia son los 20 encuentros en los que se imparte contenido, los que pertenecen las las 4 unidades didacticas, si se redacta de forma genérica pero que suene bonito pedagogicamante los otros encuentros pueden ser siempre iguales, o tener algunas plantilla de ejemplo con contenido equivalente para ir alternando.
 - Las opciones B de las evaluaciones, si se elige con cuidado el contenido de la consigna A, reemplazar estrategicamente los datos de contexto sirve para otras opciones. Siendo mucho mas barato crear hasta opcion C o D con menos gasto que el actual.
 
+## Error en el nuevo flujo a solucionar
+
+@convenciones-tecnicas.md no es un archivo generado manualmente por mi, no es un archivo facil de crear, necesito solucionar eso, es distinto para cada materia, está muy acoplado a la materia.
+
+## Nueva instruccion
+
+Antes de hacer lio pregunto.
+si elimino la carpeta minimal-api-csharp y ejecuto la orden:
+Regeneración completa del corpus de la materia ubicada en materias/minimal-api-csharp.md, según @0-prompt-plantilla-planificacion.md en modo CORRIDA COMPLETA. 
+Va a funcionar, o hay un forma mas adecuada de simular la generacion de una materia por primera vez?
+Al menos en esta ejecucion necesito mas frenos que antes, hubo muchos cambios.
+
+
+## +det22
+
+Tiene alguna skill para que muestre en el cuadro de estatus algunos datos adicionales como como los tokens consumidos y el modelo que está utilizando?
+
+
+## Datos de la primera ejecucion mixta de inicio a fin
+
+Algunas cosas para pulir.
+
+Todos los documentos y carpetas generados deben ir dentro de la subcarpeta output, asi los docuementos de todas las materia queden en una carpeta comun.
+
+- Planificacion
+En la planificacion, acotar un poco la cantidad de texto, mas que nada en las columnas contenido y actividades, es mucho para el espacio que dispongo.
+En actividades: quitar algo que se repite mucho al comienzo de cada actividad "Encuentro de 240 minutos: " para cada uno de los encuentros no colocar la palabra "encuentro", solo colocar los numeros entre parentesis.
+
+- Libro de temas
+El primer eje temático debe ser presentación y diagnóstico. (o 2 palabras pedagógicas para ello)
+Los otros ejes que digan "Diagnóstico, integración y metacognición" deben decir "Intensificación y Fortalecimiento"
+
+
+## Modificaciones luego de ejecucion completa de version mixta.
+
+modificacion solicitada, cada materia debe estar contenida en una sub carpeta de la ruta actual. El nombre de la carpeta la elijo yo y es la que me va a servir para indicar al prompt plantilla la materia que debe renerar la documentacion. consulta. cual es la diferencia de contenido del archivo @nota-catedra-minimal-api-csharp.md y de minimal-api-csharp.md. Generalizar el nombre para que sirva para cualquier materia. Adecuar segun eston cambios en todos los documentos que sea necesario.   
+
+
+## +det23
+
+analice los 2 archivos dentro de la carpeta materias/LAP analice coherencia entre ambos, corrija prosa y consulte inconsitencias o faltantes de contenido basico.
+
+
+## +det24
+adecue el promp principal para la materia LAP. Que es la siguiente materia a generar documentacion. Analice y proponga la posibilidad de externalizar ese dato / parámetro, es uno variable para cada materia y no es correcto tanto acoplamiento.
+
+
+## +det25
+Tener en cuenta que no todas las materias tienen la misma cantidad de horas por encuentro. Eso debe contemplarse.
+
+
+## +det26
+quite los frenos por defecto, el proyecto va tomando forma, le pediré explicitamente si necesito que aplique frenos.
+consulta. como se trabaja ahora en el pedido sobre la materia a generar los documentos?
+
+
+## +det27
+El repo remoto es https://github.com/joriza/planificaciones.git pushee todo allí.
+
+
+## +det28
+Genere la documentación de la materia LAP según @0-prompt-plantilla-planificacion.md sin consultar la memoria, como una materia nueva sin historial.
+
+
+## +det29
+Indique en el archivo LAP/materia.md que el manejo de archivos de texto plano debe impartirse luego del encuentro 27.
+Que no se imparte Menú con persistencia, tampoco csv ni json
+Tampoco se imparte Comparar formatos y migrar
+
+---
+
+## +det30
+Indique en el readme de la raiz del proyecto. como es el orden de creacion y como como estan conformadas las fases.
+
+
