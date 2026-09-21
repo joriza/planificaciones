@@ -108,34 +108,34 @@
     "v1": {
       "unidadTematica": "Evaluación de la Unidad 2",
       "tiempo": "1",
-      "contenidos": "Instancia dedicada de evaluación de la Unidad 2: verificación de la entrega del {{tp.u2}} por GitHub; defensa individual sobre los endpoints con consultas a hospital.db; prueba práctica individual en versiones A y B equivalentes.",
+      "contenidos": "Instancia dedicada de evaluación de la Unidad 2: verificación de la entrega del {{tp.u2}} por GitHub; defensa individual sobre el trabajo práctico; prueba práctica individual en versiones A y B equivalentes.",
       "expectativas": "1) Completar la entrega del {{tp.u2}} con commits y push. 2) Explicar las consultas SQL con Dapper y las decisiones de diseño de los endpoints. 3) Resolver una consigna práctica individual sobre los núcleos de la Unidad 2.",
       "actividades": "Encuentro con la secuencia de evaluación de unidad: entrega y verificación del {{tp.u2}} por GitHub (30 min); defensas individuales con registro (90 min); prueba práctica individual en versiones A y B (90 min); cierre con acuerdos (30 min). {{celular}}.",
       "tp": "{{tp.u2}} (instancia de evaluación de la Unidad 2)",
       "tecnicas": "Comunicación técnica, resolución de problemas, uso de TIC.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
       "metodologia": "Evaluación sumativa mediante verificación de la entrega por GitHub, defensa individual y prueba práctica A/B; registro de resultados; devolución al inicio del encuentro 16."
     },
     "v2": {
       "unidadTematica": "Evaluación de la Unidad 2",
       "tiempo": "1",
-      "contenidos": "Instancia propia de evaluación de la Unidad 2: verificación por GitHub de la entrega del {{tp.u2}}; defensa individual de los endpoints con consultas a hospital.db; prueba práctica individual con versiones A y B equivalentes.",
+      "contenidos": "Instancia propia de evaluación de la Unidad 2: verificación por GitHub de la entrega del {{tp.u2}}; defensa individual del trabajo práctico; prueba práctica individual con versiones A y B equivalentes.",
       "expectativas": "1) Completar la entrega del {{tp.u2}}, con commits y push. 2) Explicar las consultas SQL con Dapper y las decisiones tomadas en el diseño de los endpoints. 3) Resolver una consigna práctica individual sobre los núcleos de la Unidad 2.",
       "actividades": "Encuentro con la secuencia de evaluación de unidad: entrega y verificación por GitHub del {{tp.u2}} (30 min); defensas individuales con registro (90 min); prueba práctica individual en versiones A y B (90 min); cierre con acuerdos (30 min). {{celular}}.",
       "tp": "{{tp.u2}} (instancia de evaluación de la Unidad 2)",
       "tecnicas": "Resolución de problemas, comunicación técnica, uso de TIC.",
-      "recursos": "Aula-taller, VS Code, PC por grupo, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, VS Code, PC por grupo, terminal, navegador, GitHub, proyector.",
       "metodologia": "Evaluación sumativa mediante la verificación de la entrega por GitHub, la defensa individual y la prueba práctica A/B; registro de resultados; devolución al inicio del encuentro 16."
     },
     "v3": {
       "unidadTematica": "Evaluación de la Unidad 2",
       "tiempo": "1",
-      "contenidos": "Encuentro reservado para la evaluación de la Unidad 2: constatación de la entrega del {{tp.u2}} por GitHub; defensa individual sobre los endpoints que consultan hospital.db; prueba práctica individual con dos versiones A y B equivalentes.",
+      "contenidos": "Encuentro reservado para la evaluación de la Unidad 2: constatación de la entrega del {{tp.u2}} por GitHub; defensa individual sobre el trabajo práctico; prueba práctica individual con dos versiones A y B equivalentes.",
       "expectativas": "1) Dejar completa la entrega del {{tp.u2}} con commits y push. 2) Sustentar las consultas SQL con Dapper y las decisiones de diseño de los endpoints. 3) Resolver de manera individual una consigna práctica sobre los núcleos de la Unidad 2.",
       "actividades": "Encuentro con la secuencia de evaluación de unidad: entrega y verificación del {{tp.u2}} mediante GitHub (30 min); defensas individuales con registro (90 min); prueba práctica individual con versiones A y B (90 min); cierre con acuerdos (30 min). {{celular}}.",
       "tp": "{{tp.u2}} (instancia de evaluación de la Unidad 2)",
       "tecnicas": "Comunicación técnica, uso de TIC, resolución de problemas.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, GitHub, navegador, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, GitHub, navegador, proyector.",
       "metodologia": "Evaluación sumativa con verificación de la entrega por GitHub, defensa individual y prueba práctica A/B; registro de resultados; devolución al comenzar el encuentro 16."
     }
   },
@@ -148,7 +148,7 @@
       "actividades": "apertura y devolución de la evaluación de la Unidad 2 (60 min); síntesis e integración de los núcleos de las Unidades 1 y 2 a partir del repositorio del grupo (75 min); plenaria de metacognición del cuatrimestre (75 min); cierre (30 min). {{celular}}.",
       "tp": "—",
       "tecnicas": "Resolución de problemas, metacognición, uso de TIC.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
       "metodologia": "Sin evaluación propia; devolución de la evaluación de la Unidad 2; autoevaluación y coevaluación en la instancia de metacognición; registro de proceso."
     },
     "v2": {
@@ -159,7 +159,7 @@
       "actividades": "apertura con la devolución de la evaluación de la Unidad 2 (60 min); síntesis e integración de los núcleos de las Unidades 1 y 2 sobre la base del repositorio del grupo (75 min); plenaria de metacognición del cuatrimestre (75 min); cierre (30 min). {{celular}}.",
       "tp": "—",
       "tecnicas": "Metacognición, resolución de problemas, uso de TIC.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, GitHub, navegador, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, GitHub, navegador, proyector.",
       "metodologia": "Sin evaluación propia; devolución de la evaluación de la Unidad 2; autoevaluación y coevaluación durante la metacognición; registro de proceso."
     },
     "v3": {
@@ -170,7 +170,7 @@
       "actividades": "apertura y devolución de la evaluación de la Unidad 2 (60 min); integración de los núcleos de las Unidades 1 y 2 en una síntesis apoyada en el repositorio del grupo (75 min); plenaria de metacognición del cuatrimestre (75 min); cierre (30 min). {{celular}}.",
       "tp": "—",
       "tecnicas": "Resolución de problemas, uso de TIC, metacognición.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, hospital.db, terminal, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
       "metodologia": "Sin evaluación propia; devolución de la evaluación de la Unidad 2; coevaluación y autoevaluación en la instancia de metacognición; registro del proceso."
     }
   },
@@ -183,7 +183,7 @@
       "actividades": "Dos encuentros con la estructura del momento de intensificación y fortalecimiento: plenaria de apertura (20 min), bloque 1 (90 min), bloque 2 (90 min) y plenaria de cierre (40 min). Pistas diferenciadas: quienes recuperan trabajan guías de refuerzo sobre los núcleos pendientes; quienes profundizan resuelven desafíos de extensión. El segundo encuentro continúa con la misma estructura y cierra con la evaluación del momento. Rotación de integrantes en el trabajo según presentes y equipos disponibles. {{celular}}.",
       "tp": "— (evaluación del momento en versiones A y B)",
       "tecnicas": "Resolución de problemas, trabajo colaborativo, metacognición, uso de TIC.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
       "metodologia": "Evaluación del momento en versiones A y B con verificación por criterios; resultado aún provisorio de Apto o No apto; seguimiento de proceso con acompañamiento docente."
     },
     "v2": {
@@ -194,7 +194,7 @@
       "actividades": "Dos encuentros con la estructura del momento de intensificación y fortalecimiento: plenaria de apertura (20 min), bloque 1 (90 min), bloque 2 (90 min) y plenaria de cierre (40 min). Pistas diferenciadas: quienes recuperan trabajan con guías de refuerzo sobre los núcleos pendientes; quienes profundizan resuelven desafíos de extensión. El segundo encuentro sigue la misma estructura y cierra con la evaluación del momento. Rotación de integrantes en el trabajo según los presentes y los equipos disponibles. {{celular}}.",
       "tp": "— (evaluación del momento en versiones A y B)",
       "tecnicas": "Trabajo colaborativo, resolución de problemas, metacognición, uso de TIC.",
-      "recursos": "Aula-taller, VS Code, PC por grupo, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, VS Code, PC por grupo, terminal, navegador, GitHub, proyector.",
       "metodologia": "Evaluación del momento en versiones A y B con verificación por criterios; resultado todavía provisorio de Apto o No apto; seguimiento del proceso con acompañamiento docente."
     },
     "v3": {
@@ -205,7 +205,7 @@
       "actividades": "Dos encuentros con la estructura del momento de intensificación y fortalecimiento: plenaria de apertura (20 min), bloque 1 (90 min), bloque 2 (90 min) y plenaria de cierre (40 min). Pistas diferenciadas: quienes recuperan trabajan con guías de refuerzo sobre los núcleos pendientes; quienes profundizan afrontan desafíos de extensión. El segundo encuentro mantiene la estructura y cierra con la evaluación del momento. Los integrantes rotan en el trabajo según presentes y equipos disponibles. {{celular}}.",
       "tp": "— (evaluación del momento en versiones A y B)",
       "tecnicas": "Resolución de problemas, trabajo colaborativo, uso de TIC, metacognición.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, GitHub, navegador, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, GitHub, navegador, proyector.",
       "metodologia": "Evaluación del momento con versiones A y B y verificación por criterios; resultado aún provisorio de Apto o No apto; acompañamiento docente y registro del proceso."
     }
   },
@@ -213,34 +213,34 @@
     "v1": {
       "unidadTematica": "Instancia integradora de las Unidades 1 y 2",
       "tiempo": "2",
-      "contenidos": "Proyecto puente que integra las Unidades 1 y 2: API con CRUD en memoria y consultas a hospital.db, rutas y parámetros, verbos HTTP, códigos de estado y consultas SQL con Dapper; consigna única para todo el curso desarrollada en dos encuentros; cierre con rúbrica de 100 puntos. Sin contenidos nuevos.",
+      "contenidos": "Proyecto puente que integra las Unidades 1 y 2: API con CRUD en memoria y acceso a datos, rutas y parámetros, verbos HTTP, códigos de estado y consultas SQL con Dapper; consigna única para todo el curso desarrollada en dos encuentros; cierre con rúbrica de 100 puntos. Sin contenidos nuevos.",
       "expectativas": "1) Integrar los fundamentos de Minimal API con el acceso a datos en una API coherente y funcional. 2) Gestionar el desarrollo del proyecto en el repositorio del grupo con commits y push. 3) Comunicar las decisiones técnicas del proyecto y autoevaluar el propio desempeño.",
       "actividades": "Dos encuentros con la estructura del momento de intensificación y fortalecimiento: plenaria de apertura (20 min), bloque 1 (90 min), bloque 2 (90 min) y plenaria de cierre (40 min). (19): presentación de la consigna única del proyecto puente, planificación grupal y desarrollo de la primera parte con avance registrado en el repositorio. (20): finalización del proyecto, puesta en común y cierre con aplicación de la rúbrica de 100 puntos. Rotación de integrantes en el trabajo grupal según presentes y equipos disponibles. Quienes completan los requisitos base avanzan con actividades de extensión. {{celular}}.",
       "tp": "— (proyecto puente con rúbrica de 100 puntos)",
       "tecnicas": "Trabajo colaborativo, resolución de problemas, comunicación técnica, uso de TIC.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
       "metodologia": "Evaluación sumativa con rúbrica de 100 puntos sobre el proyecto puente; seguimiento del proceso por grupo con revisión del repositorio; retroalimentación en la plenaria de cierre."
     },
     "v2": {
       "unidadTematica": "Instancia integradora de las Unidades 1 y 2",
       "tiempo": "2",
-      "contenidos": "Proyecto puente que articula las Unidades 1 y 2: API con CRUD en memoria y consultas a hospital.db, rutas y parámetros, verbos HTTP, códigos de estado y consultas SQL con Dapper; una única consigna para todo el curso, desarrollada en dos encuentros; cierre con rúbrica de 100 puntos. Sin contenidos nuevos.",
+      "contenidos": "Proyecto puente que articula las Unidades 1 y 2: API con CRUD en memoria y acceso a datos, rutas y parámetros, verbos HTTP, códigos de estado y consultas SQL con Dapper; una única consigna para todo el curso, desarrollada en dos encuentros; cierre con rúbrica de 100 puntos. Sin contenidos nuevos.",
       "expectativas": "1) Articular los fundamentos de Minimal API con el acceso a datos en una API funcional y coherente. 2) Conducir el desarrollo del proyecto en el repositorio del grupo mediante commits y push. 3) Comunicar las decisiones técnicas y autoevaluar el desempeño propio.",
       "actividades": "Dos encuentros con la estructura del momento de intensificación y fortalecimiento: plenaria de apertura (20 min), bloque 1 (90 min), bloque 2 (90 min) y plenaria de cierre (40 min). (19): presentación de la consigna única del proyecto puente, planificación grupal y desarrollo inicial, con el avance registrado en el repositorio. (20): finalización del proyecto, puesta en común y cierre con la rúbrica de 100 puntos. Rotación de integrantes en el trabajo grupal según presentes y equipos disponibles. Quienes terminan los requisitos base avanzan con actividades de extensión. {{celular}}.",
       "tp": "— (proyecto puente con rúbrica de 100 puntos)",
       "tecnicas": "Trabajo colaborativo, comunicación técnica, resolución de problemas, uso de TIC.",
-      "recursos": "Aula-taller, VS Code, PC por grupo, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, VS Code, PC por grupo, terminal, navegador, GitHub, proyector.",
       "metodologia": "Evaluación sumativa del proyecto puente con rúbrica de 100 puntos; seguimiento por grupo del proceso con revisión del repositorio; retroalimentación en la plenaria de cierre."
     },
     "v3": {
       "unidadTematica": "Instancia integradora de las Unidades 1 y 2",
       "tiempo": "2",
-      "contenidos": "Proyecto puente entre las Unidades 1 y 2: API con CRUD en memoria y consultas a hospital.db, rutas y parámetros, verbos HTTP, códigos de estado y consultas SQL con Dapper; consigna única para todo el curso, trabajada en dos encuentros; cierre con rúbrica de 100 puntos. Sin contenidos nuevos.",
+      "contenidos": "Proyecto puente entre las Unidades 1 y 2: API con CRUD en memoria y acceso a datos, rutas y parámetros, verbos HTTP, códigos de estado y consultas SQL con Dapper; consigna única para todo el curso, trabajada en dos encuentros; cierre con rúbrica de 100 puntos. Sin contenidos nuevos.",
       "expectativas": "1) Combinar los fundamentos de Minimal API con el acceso a datos en una API coherente y funcional. 2) Administrar el desarrollo del proyecto en el repositorio del grupo con commits y push. 3) Explicitar las decisiones técnicas del proyecto y autoevaluar el desempeño propio.",
       "actividades": "Dos encuentros con la estructura del momento de intensificación y fortalecimiento: plenaria de apertura (20 min), bloque 1 (90 min), bloque 2 (90 min) y plenaria de cierre (40 min). (19): presentación de la consigna única del proyecto puente, plan grupal y primera etapa de desarrollo con avance asentado en el repositorio. (20): terminación del proyecto, puesta en común y cierre con aplicación de la rúbrica de 100 puntos. Rotación de integrantes en el trabajo grupal según presentes y equipos disponibles. Quienes completan los requisitos base avanzan con actividades de extensión. {{celular}}.",
       "tp": "— (proyecto puente con rúbrica de 100 puntos)",
       "tecnicas": "Trabajo colaborativo, resolución de problemas, uso de TIC, comunicación técnica.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, GitHub, navegador, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, GitHub, navegador, proyector.",
       "metodologia": "Evaluación sumativa con rúbrica de 100 puntos aplicada al proyecto puente; revisión del repositorio como seguimiento del proceso por grupo; retroalimentación en la plenaria de cierre."
     }
   },
@@ -248,34 +248,34 @@
     "v1": {
       "unidadTematica": "Evaluación de la Unidad 3",
       "tiempo": "1",
-      "contenidos": "Instancia dedicada de evaluación de la Unidad 3: verificación de la entrega del {{tp.u3}} por GitHub; defensa individual sobre la API con consultas integradas a hospital.db; prueba práctica individual en versiones A y B equivalentes.",
+      "contenidos": "Instancia dedicada de evaluación de la Unidad 3: verificación de la entrega del {{tp.u3}} por GitHub; defensa individual sobre el trabajo práctico; prueba práctica individual en versiones A y B equivalentes.",
       "expectativas": "1) Completar la entrega del {{tp.u3}} con commits y push. 2) Explicar consultas con JOIN de tres tablas, agregaciones y subconsultas. 3) Resolver una consigna práctica individual sobre los núcleos de la Unidad 3.",
       "actividades": "Encuentro con la secuencia de evaluación de unidad: entrega y verificación del {{tp.u3}} por GitHub (30 min); defensas individuales con registro (90 min); prueba práctica individual en versiones A y B (90 min); cierre con acuerdos (30 min). {{celular}}.",
       "tp": "{{tp.u3}} (instancia de evaluación de la Unidad 3)",
       "tecnicas": "Comunicación técnica, resolución de problemas, uso de TIC.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
       "metodologia": "Evaluación sumativa mediante verificación de la entrega por GitHub, defensa individual y prueba práctica A/B; registro de resultados; devolución al inicio del encuentro 27."
     },
     "v2": {
       "unidadTematica": "Evaluación de la Unidad 3",
       "tiempo": "1",
-      "contenidos": "Instancia propia de evaluación de la Unidad 3: verificación por GitHub de la entrega del {{tp.u3}}; defensa individual de la API con consultas integradas a hospital.db; prueba práctica individual con versiones A y B equivalentes.",
+      "contenidos": "Instancia propia de evaluación de la Unidad 3: verificación por GitHub de la entrega del {{tp.u3}}; defensa individual del trabajo práctico; prueba práctica individual con versiones A y B equivalentes.",
       "expectativas": "1) Completar la entrega del {{tp.u3}}, con commits y push. 2) Explicar consultas con JOIN de tres tablas, con agregaciones y con subconsultas. 3) Resolver una consigna práctica individual sobre los núcleos de la Unidad 3.",
       "actividades": "Encuentro con la secuencia de evaluación de unidad: entrega y verificación por GitHub del {{tp.u3}} (30 min); defensas individuales con registro (90 min); prueba práctica individual en versiones A y B (90 min); cierre con acuerdos (30 min). {{celular}}.",
       "tp": "{{tp.u3}} (instancia de evaluación de la Unidad 3)",
       "tecnicas": "Resolución de problemas, comunicación técnica, uso de TIC.",
-      "recursos": "Aula-taller, VS Code, PC por grupo, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, VS Code, PC por grupo, terminal, navegador, GitHub, proyector.",
       "metodologia": "Evaluación sumativa mediante la verificación de la entrega por GitHub, la defensa individual y la prueba práctica A/B; registro de resultados; devolución al inicio del encuentro 27."
     },
     "v3": {
       "unidadTematica": "Evaluación de la Unidad 3",
       "tiempo": "1",
-      "contenidos": "Encuentro reservado para la evaluación de la Unidad 3: constatación de la entrega del {{tp.u3}} por GitHub; defensa individual sobre la API que integra consultas a hospital.db; prueba práctica individual con dos versiones A y B equivalentes.",
+      "contenidos": "Encuentro reservado para la evaluación de la Unidad 3: constatación de la entrega del {{tp.u3}} por GitHub; defensa individual sobre el trabajo práctico; prueba práctica individual con dos versiones A y B equivalentes.",
       "expectativas": "1) Dejar completa la entrega del {{tp.u3}} con commits y push. 2) Sustentar consultas con JOIN de tres tablas, agregaciones y subconsultas. 3) Resolver de manera individual una consigna práctica sobre los núcleos de la Unidad 3.",
       "actividades": "Encuentro con la secuencia de evaluación de unidad: entrega y verificación del {{tp.u3}} mediante GitHub (30 min); defensas individuales con registro (90 min); prueba práctica individual con versiones A y B (90 min); cierre con acuerdos (30 min). {{celular}}.",
       "tp": "{{tp.u3}} (instancia de evaluación de la Unidad 3)",
       "tecnicas": "Comunicación técnica, uso de TIC, resolución de problemas.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, GitHub, navegador, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, GitHub, navegador, proyector.",
       "metodologia": "Evaluación sumativa con verificación de la entrega por GitHub, defensa individual y prueba práctica A/B; registro de resultados; devolución al comenzar el encuentro 27."
     }
   },
@@ -284,33 +284,33 @@
       "unidadTematica": "Evaluación de la Unidad 4",
       "tiempo": "1",
       "contenidos": "Instancia dedicada de evaluación de la Unidad 4: verificación de la entrega del {{tp.u4}} por GitHub y defensa individual del trabajo integrador; revisión del flujo profesional del repositorio (README, issues, ramas por feature, pull requests y main protegida).",
-      "expectativas": "1) Completar la entrega del {{tp.u4}} con el flujo profesional de ramas y pull requests. 2) Defender individualmente las decisiones técnicas y la participación propia en el proyecto. 3) Evidenciar el funcionamiento integral de la API con consultas y estadísticas sobre hospital.db.",
+      "expectativas": "1) Completar la entrega del {{tp.u4}} con el flujo profesional de ramas y pull requests. 2) Defender individualmente las decisiones técnicas y la participación propia en el proyecto. 3) Evidenciar el funcionamiento integral del trabajo integrador.",
       "actividades": "Encuentro con la secuencia de evaluación de unidad: entrega y verificación del {{tp.u4}} por GitHub, con revisión del historial de issues y pull requests (30 min); defensas individuales del trabajo integrador (90 min); verificación práctica individual en versiones A y B (90 min); cierre (30 min). {{celular}}.",
       "tp": "{{tp.u4}} (instancia de evaluación de la Unidad 4)",
       "tecnicas": "Comunicación técnica, trabajo colaborativo, uso de TIC.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
       "metodologia": "Evaluación sumativa mediante entrega por GitHub, defensa individual y verificación práctica A/B con rúbrica; registro de resultados; devolución al inicio del encuentro 33."
     },
     "v2": {
       "unidadTematica": "Evaluación de la Unidad 4",
       "tiempo": "1",
       "contenidos": "Instancia propia de evaluación de la Unidad 4: verificación por GitHub de la entrega del {{tp.u4}} y defensa individual del trabajo integrador; revisión del flujo profesional del repositorio (README, issues, ramas por feature, pull requests y main protegida).",
-      "expectativas": "1) Completar la entrega del {{tp.u4}} siguiendo el flujo profesional de ramas y pull requests. 2) Defender en lo individual las decisiones técnicas y la participación de cada uno en el proyecto. 3) Evidenciar el funcionamiento integral de la API con sus consultas y estadísticas sobre hospital.db.",
+      "expectativas": "1) Completar la entrega del {{tp.u4}} siguiendo el flujo profesional de ramas y pull requests. 2) Defender en lo individual las decisiones técnicas y la participación de cada uno en el proyecto. 3) Evidenciar el funcionamiento integral del trabajo integrador.",
       "actividades": "Encuentro con la secuencia de evaluación de unidad: entrega y verificación por GitHub del {{tp.u4}}, con revisión del historial de issues y pull requests (30 min); defensas individuales del trabajo integrador (90 min); verificación práctica individual en versiones A y B (90 min); cierre (30 min). {{celular}}.",
       "tp": "{{tp.u4}} (instancia de evaluación de la Unidad 4)",
       "tecnicas": "Comunicación técnica, uso de TIC, trabajo colaborativo.",
-      "recursos": "Aula-taller, VS Code, PC por grupo, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, VS Code, PC por grupo, terminal, navegador, GitHub, proyector.",
       "metodologia": "Evaluación sumativa mediante la entrega por GitHub, la defensa individual y la verificación práctica A/B con rúbrica; registro de resultados; devolución al inicio del encuentro 33."
     },
     "v3": {
       "unidadTematica": "Evaluación de la Unidad 4",
       "tiempo": "1",
       "contenidos": "Encuentro reservado para la evaluación de la Unidad 4: constatación de la entrega del {{tp.u4}} por GitHub y defensa individual del trabajo integrador; revisión del flujo profesional del repositorio (README, issues, ramas por feature, pull requests y main protegida).",
-      "expectativas": "1) Dejar completa la entrega del {{tp.u4}} con el flujo profesional de ramas y pull requests. 2) Sustentar individualmente las decisiones técnicas y la participación propia en el proyecto. 3) Demostrar el funcionamiento integral de la API con consultas y estadísticas sobre hospital.db.",
+      "expectativas": "1) Dejar completa la entrega del {{tp.u4}} con el flujo profesional de ramas y pull requests. 2) Sustentar individualmente las decisiones técnicas y la participación propia en el proyecto. 3) Demostrar el funcionamiento integral del trabajo integrador.",
       "actividades": "Encuentro con la secuencia de evaluación de unidad: entrega y verificación del {{tp.u4}} mediante GitHub, con revisión del historial de issues y pull requests (30 min); defensas individuales del trabajo integrador (90 min); verificación práctica individual con versiones A y B (90 min); cierre (30 min). {{celular}}.",
       "tp": "{{tp.u4}} (instancia de evaluación de la Unidad 4)",
       "tecnicas": "Trabajo colaborativo, comunicación técnica, uso de TIC.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, GitHub, navegador, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, GitHub, navegador, proyector.",
       "metodologia": "Evaluación sumativa con entrega por GitHub, defensa individual y verificación práctica A/B con rúbrica; registro de resultados; devolución al comenzar el encuentro 33."
     }
   },
@@ -323,7 +323,7 @@
       "actividades": "apertura y devolución de la evaluación de la Unidad 4 (60 min); síntesis e integración anual de los núcleos de las Unidades 3 y 4 a partir del repositorio del grupo (75 min); plenaria de metacognición anual (75 min); cierre (30 min). {{celular}}.",
       "tp": "—",
       "tecnicas": "Resolución de problemas, metacognición, uso de TIC.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
       "metodologia": "Sin evaluación propia; devolución de la evaluación de la Unidad 4; autoevaluación y coevaluación en la instancia de metacognición; registro de proceso."
     },
     "v2": {
@@ -334,7 +334,7 @@
       "actividades": "apertura con la devolución de la evaluación de la Unidad 4 (60 min); síntesis e integración anual de los núcleos de las Unidades 3 y 4 sobre la base del repositorio del grupo (75 min); plenaria de metacognición anual (75 min); cierre (30 min). {{celular}}.",
       "tp": "—",
       "tecnicas": "Metacognición, resolución de problemas, uso de TIC.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, GitHub, navegador, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, GitHub, navegador, proyector.",
       "metodologia": "Sin evaluación propia; devolución de la evaluación de la Unidad 4; autoevaluación y coevaluación durante la metacognición; registro de proceso."
     },
     "v3": {
@@ -345,7 +345,7 @@
       "actividades": "apertura y devolución de la evaluación de la Unidad 4 (60 min); integración anual de los núcleos de las Unidades 3 y 4 en una síntesis apoyada en el repositorio del grupo (75 min); plenaria de metacognición anual (75 min); cierre (30 min). {{celular}}.",
       "tp": "—",
       "tecnicas": "Resolución de problemas, uso de TIC, metacognición.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, hospital.db, terminal, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
       "metodologia": "Sin evaluación propia; devolución de la evaluación de la Unidad 4; coevaluación y autoevaluación en la instancia de metacognición; registro del proceso."
     }
   },
@@ -358,7 +358,7 @@
       "actividades": "Dos encuentros con la estructura del momento de intensificación y fortalecimiento: plenaria de apertura (20 min), bloque 1 (90 min), bloque 2 (90 min) y plenaria de cierre (40 min). Pistas diferenciadas: quienes recuperan trabajan guías de refuerzo sobre los núcleos pendientes; quienes profundizan resuelven desafíos de extensión; quienes deban completar el trabajo final lo mejoran con nuevos commits y push. El segundo encuentro continúa con la misma estructura y cierra con la evaluación del momento. Rotación de integrantes en el trabajo según presentes y equipos disponibles. {{celular}}.",
       "tp": "— (evaluación del momento en versiones A y B)",
       "tecnicas": "Resolución de problemas, trabajo colaborativo, metacognición, uso de TIC.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
       "metodologia": "Evaluación del momento en versiones A y B con verificación por criterios; resultado aún provisorio de Apto o No apto; acompañamiento docente y registro de proceso."
     },
     "v2": {
@@ -369,7 +369,7 @@
       "actividades": "Dos encuentros con la estructura del momento de intensificación y fortalecimiento: plenaria de apertura (20 min), bloque 1 (90 min), bloque 2 (90 min) y plenaria de cierre (40 min). Pistas diferenciadas: quienes recuperan trabajan con guías de refuerzo sobre los núcleos pendientes; quienes profundizan resuelven desafíos de extensión; quienes deban completar el trabajo final lo mejoran con nuevos commits y push. El segundo encuentro sigue la misma estructura y cierra con la evaluación del momento. Rotación de integrantes en el trabajo según los presentes y los equipos disponibles. {{celular}}.",
       "tp": "— (evaluación del momento en versiones A y B)",
       "tecnicas": "Trabajo colaborativo, resolución de problemas, metacognición, uso de TIC.",
-      "recursos": "Aula-taller, VS Code, PC por grupo, terminal, hospital.db, navegador, GitHub, proyector.",
+      "recursos": "Aula-taller, VS Code, PC por grupo, terminal, navegador, GitHub, proyector.",
       "metodologia": "Evaluación del momento en versiones A y B con verificación por criterios; resultado todavía provisorio de Apto o No apto; acompañamiento docente con registro del proceso."
     },
     "v3": {
@@ -380,7 +380,7 @@
       "actividades": "Dos encuentros con la estructura del momento de intensificación y fortalecimiento: plenaria de apertura (20 min), bloque 1 (90 min), bloque 2 (90 min) y plenaria de cierre (40 min). Pistas diferenciadas: quienes recuperan trabajan con guías de refuerzo sobre los núcleos pendientes; quienes profundizan afrontan desafíos de extensión; quienes deban completar el trabajo final lo optimizan con nuevos commits y push. El segundo encuentro mantiene la estructura y cierra con la evaluación del momento. Los integrantes rotan en el trabajo según presentes y equipos disponibles. {{celular}}.",
       "tp": "— (evaluación del momento en versiones A y B)",
       "tecnicas": "Resolución de problemas, trabajo colaborativo, uso de TIC, metacognición.",
-      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, GitHub, navegador, proyector.",
+      "recursos": "Aula-taller, PC por grupo, VS Code, terminal, GitHub, navegador, proyector.",
       "metodologia": "Evaluación del momento con versiones A y B y verificación por criterios; resultado aún provisorio de Apto o No apto; registro del proceso con acompañamiento docente."
     }
   },

@@ -22,7 +22,7 @@
     "unidad": "u2",
     "clases": [10, 11, 12, 13],
     "cierre": 14,
-    "secuenciaFija": "Encuentros 10 a 13, de 240 minutos cada uno, con la secuencia teórica fija (apertura y puente 20 min, teoría mínima 40 min, práctica guiada 70 min, ejercicio independiente 50 min, extensión y consolidación 45 min, cierre 15 min): ",
+    "secuenciaFija": "Encuentros 10 a 13 con la secuencia teórica fija (apertura y puente 20 min, teoría mínima 40 min, práctica guiada 70 min, ejercicio independiente 50 min, extensión y consolidación 45 min, cierre 15 min): ",
     "formatoItem": "encuentro {n}, {actividadesAnual}",
     "separadorItems": "; ",
     "formatoCierre": "Encuentro {cierre}, cierre de unidad: {actividadesAnual}.",
@@ -33,14 +33,14 @@
       "A diferencia de U1, la secuencia fija va con la lista de cajas de tiempo entre paréntesis y sin «(» por caja."
     ],
     "tecnicas": "Resolución de problemas, pensamiento computacional, trabajo colaborativo, uso de TIC.",
-    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
-    "metodologia": "Evaluación formativa de proceso con revisiones parciales de consultas y endpoints y seguimiento del repositorio (carpeta nueva, commits, push); evaluación sumativa del {{tp.u2}} en el encuentro 15 mediante entrega por GitHub y defensa individual; devolución al inicio del encuentro 16."
+    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
+    "metodologia": "Evaluación formativa de proceso con revisiones parciales de los ejercicios de la materia y seguimiento del repositorio (carpeta nueva, commits, push); evaluación sumativa del {{tp.u2}} en el encuentro 15 mediante entrega por GitHub y defensa individual; devolución al inicio del encuentro 16."
   },
   "u3": {
     "unidad": "u3",
     "clases": [21, 22, 23, 24],
     "cierre": 25,
-    "secuenciaFija": "Encuentros 21 a 24, de 240 minutos cada uno, con la secuencia teórica fija (apertura y puente 20 min, teoría mínima 40 min, práctica guiada 70 min, ejercicio independiente 50 min, extensión y consolidación 45 min, cierre 15 min): ",
+    "secuenciaFija": "Encuentros 21 a 24 con la secuencia teórica fija (apertura y puente 20 min, teoría mínima 40 min, práctica guiada 70 min, ejercicio independiente 50 min, extensión y consolidación 45 min, cierre 15 min): ",
     "formatoItem": "encuentro {n}, {actividadesAnual}",
     "separadorItems": "; ",
     "formatoCierre": "Encuentro {cierre}, cierre de unidad: {actividadesAnual}.",
@@ -51,14 +51,14 @@
       "Mismo estilo de secuencia fija que U2."
     ],
     "tecnicas": "Resolución de problemas, pensamiento computacional, trabajo colaborativo, uso de TIC.",
-    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
+    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
     "metodologia": "Evaluación formativa de proceso con revisiones parciales y seguimiento del repositorio; evaluación sumativa del {{tp.u3}} en el encuentro 26 mediante entrega por GitHub y defensa individual; devolución al inicio del encuentro 27."
   },
   "u4": {
     "unidad": "u4",
     "clases": [28, 29, 30],
     "cierre": 31,
-    "secuenciaFija": "Encuentros 28 a 30, de 240 minutos cada uno, con la secuencia teórica fija (apertura y puente 20 min, teoría mínima 40 min, práctica guiada 70 min, ejercicio independiente 50 min, extensión y consolidación 45 min, cierre 15 min): ",
+    "secuenciaFija": "Encuentros 28 a 30 con la secuencia teórica fija (apertura y puente 20 min, teoría mínima 40 min, práctica guiada 70 min, ejercicio independiente 50 min, extensión y consolidación 45 min, cierre 15 min): ",
     "formatoItem": "encuentro {n}, {actividadesAnual}",
     "separadorItems": "; ",
     "formatoCierre": "Encuentro {cierre}, cierre de unidad: {actividadesAnual}.",
@@ -70,7 +70,7 @@
       "La rotación de U4 menciona «redistribución de responsabilidades por issue»."
     ],
     "tecnicas": "Trabajo colaborativo, resolución de problemas, comunicación técnica, uso de TIC.",
-    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, hospital.db, navegador, GitHub, proyector.",
+    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
     "metodologia": "Evaluación formativa de proceso mediante seguimiento de issues, ramas y pull requests, con la revisión entre pares como instancia formativa; evaluación sumativa del {{tp.u4}} en el encuentro 32 mediante entrega por GitHub y defensa individual; devolución al inicio del encuentro 33."
   }
 }

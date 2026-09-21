@@ -76,16 +76,20 @@ try {
 }
 
 # --- Escala por horas por encuentro (default 4: texto intacto, fidelidad byte) ---
-# Reemplaza cada "(NN min)" por su valor escalado al factor dado, redondeando al
-# multiplo de 5 mas cercano (minimo 5); preserva todo lo demas del texto.
+# Reemplaza cada "(NN min)", cada "NN minutos" y cada "NN min" sin parentesis por su
+# valor escalado al factor dado, redondeando al multiplo de 5 mas cercano (minimo 5);
+# preserva todo lo demas del texto.
 function Convert-EscalaMinutos([string]$texto, [double]$factor) {
   $sb = New-Object System.Text.StringBuilder
   $pos = 0
-  foreach ($m in [regex]::Matches($texto, '\((\d+) min\)')) {
+  foreach ($m in [regex]::Matches($texto, '\((\d+) min\)|\b(\d+) minutos\b|\b(\d+) min\b')) {
     [void]$sb.Append($texto.Substring($pos, $m.Index - $pos))
-    $escalado = [int]([Math]::Round(([double]$m.Groups[1].Value) * $factor / 5, [MidpointRounding]::AwayFromZero) * 5)
+    $esCaja = $m.Groups[1].Success
+    $esMinutos = $m.Groups[2].Success
+    $valor = if ($esCaja) { $m.Groups[1].Value } elseif ($esMinutos) { $m.Groups[2].Value } else { $m.Groups[3].Value }
+    $escalado = [int]([Math]::Round(([double]$valor) * $factor / 5, [MidpointRounding]::AwayFromZero) * 5)
     if ($escalado -lt 5) { $escalado = 5 }
-    [void]$sb.Append('(' + $escalado + ' min)')
+    if ($esCaja) { [void]$sb.Append('(' + $escalado + ' min)') } elseif ($esMinutos) { [void]$sb.Append([string]$escalado + ' minutos') } else { [void]$sb.Append([string]$escalado + ' min') }
     $pos = $m.Index + $m.Length
   }
   [void]$sb.Append($texto.Substring($pos))
@@ -103,6 +107,14 @@ if ($HorasPorEncuentro -ne 4) {
       if ($null -ne $propCampo -and $null -ne $propCampo.Value) {
         $propCampo.Value = Convert-EscalaMinutos ([string]$propCampo.Value) $factorHoras
       }
+    }
+  }
+  # La secuencia fija de cada esqueleto de unidad tambien lleva cajas de minutos:
+  # escalarla con el mismo factor para que la expansion de esqueletos pase por aca.
+  foreach ($propEsqueleto in $esqueletos.PSObject.Properties) {
+    $propSecuencia = $propEsqueleto.Value.PSObject.Properties['secuenciaFija']
+    if ($null -ne $propSecuencia -and $null -ne $propSecuencia.Value) {
+      $propSecuencia.Value = Convert-EscalaMinutos ([string]$propSecuencia.Value) $factorHoras
     }
   }
 }
