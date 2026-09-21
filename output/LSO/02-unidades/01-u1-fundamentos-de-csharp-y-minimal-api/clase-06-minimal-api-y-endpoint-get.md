@@ -164,11 +164,16 @@ Respuesta JSON esperada:
 { "total": 3 }
 ```
 
-## Cierre
+### Qué te llevás
 
-**Qué te llevás:** una Minimal API expone datos a través de endpoints HTTP. `MapGet` asocia una ruta a una función. `Results.Ok` serializa como JSON con código 200. Los records van siempre después de `app.Run()`.
+- Una Minimal API expone datos a través de endpoints HTTP.
+- `MapGet` asocia una ruta a una función.
+- `Results.Ok` serializa como JSON con código 200.
+- Los records van siempre después de `app.Run()`.
 
-**Lo que viene:** en el próximo encuentro vamos a filtrar la lista: un endpoint que devuelva un solo paciente por ID y otro que filtre por género usando parámetros de ruta y query string.
+### Lo que viene
+
+En el Encuentro 7 se filtra la lista: un endpoint que devuelve un solo paciente por ID y otro que filtra por género, usando parámetros de ruta y query string.
 
 ## Errores comunes y trampas
 

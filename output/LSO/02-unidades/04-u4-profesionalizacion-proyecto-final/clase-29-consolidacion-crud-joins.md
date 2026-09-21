@@ -204,13 +204,14 @@ WHERE d.doctor_id = @id
 
 ---
 
-## Cierre
+### Qué te llevás
 
-**Qué te llevás:** el CRUD con JOINs es la operación más común en APIs reales. Poder combinar datos de varias tablas, contarlos y devolverlos en un mismo endpoint es lo que distingue una API funcional de un asistente de base de datos.
+- El CRUD con JOINs es la operación más común en APIs reales.
+- Combinar datos de varias tablas, contarlos y devolverlos en un mismo endpoint es lo que distingue una API funcional de un asistente de base de datos.
 
-**Lo que viene:** en el encuentro 30 dedicaremos todo el tiempo al avance del trabajo final. Cada grupo debe llegar con los endpoints de este encuentro integrados y funcionando.
+### Lo que viene
 
----
+En el Encuentro 30 todo el tiempo se dedica al avance del trabajo final: cada grupo llega con los endpoints de este encuentro integrados y funcionando.
 
 ## Errores comunes y trampas
 

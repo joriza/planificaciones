@@ -154,9 +154,7 @@ Crea un endpoint POST para la tabla `admissions`. Columnas: `admission_id` (auto
 - La validacion debe verificar `PatientId > 0` y que `AdmissionDate` no este vacia.
 - La respuesta incluye la URL `/admissions/{newId}`.
 
-## Cierre
-
-### Que te llevas
+### Qué te llevás
 
 - POST es el verbo HTTP para **crear** recursos.
 - `ExecuteScalar<long>` con `last_insert_rowid()` recupera el ID generado por SQLite.
@@ -165,7 +163,7 @@ Crea un endpoint POST para la tabla `admissions`. Columnas: `admission_id` (auto
 
 ### Lo que viene
 
-En el proximo encuentro vas a borrar pacientes con DELETE, otro verbo de escritura que responde con `204`.
+En el Encuentro 22 vas a borrar pacientes con DELETE, otro verbo de escritura que responde con `204`.
 
 ## Errores comunes y trampas
 

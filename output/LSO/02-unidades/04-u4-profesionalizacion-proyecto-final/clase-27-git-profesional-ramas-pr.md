@@ -162,13 +162,14 @@ app.MapGet("/patients/count-by-province", () =>
 
 ---
 
-## Cierre
+### Qué te llevás
 
-**Qué te llevás:** el flujo profesional de Git (issues, ramas feature, PR, revisión y main protegida) protocoliza el trabajo en equipo y evita conflictos. Cada cambio queda registrado con un issue que lo originó y una revisión que lo aprobó.
+- El flujo profesional de Git (issues, ramas feature, PR, revisión y main protegida) protocoliza el trabajo en equipo y evita conflictos.
+- Cada cambio queda registrado con el issue que lo originó y la revisión que lo aprobó.
 
-**Lo que viene:** en el próximo encuentro completaremos el README de portada, configuraremos la protección de `main` en GitHub y dejaremos el repositorio listo para la entrega final.
+### Lo que viene
 
----
+En el Encuentro 28 se completa el README de portada, se configura la protección de `main` en GitHub y el repositorio queda listo para la entrega final.
 
 ## Errores comunes y trampas
 

@@ -163,13 +163,14 @@ app.MapGet("/patients", (string? search) =>
 
 ---
 
-## Cierre
+### Qué te llevás
 
-**Qué te llevás:** el trabajo final es la integración de todo lo aprendido: una API REST completa con cuatro tablas, CRUD, JOINs y flujo Git profesional. En este encuentro se consolidan las funcionalidades y se deja todo listo para la defensa.
+- El trabajo final es la integración de todo lo aprendido: una API REST completa con cuatro tablas, CRUD, JOINs y flujo Git profesional.
+- En este encuentro se consolidan las funcionalidades y se deja todo listo para la entrega.
 
-**Lo que viene:** en el encuentro 31 es la entrega y defensa final. Cada integrante presenta su trabajo individualmente y responde preguntas. El README debe estar completo y el repositorio profesional.
+### Lo que viene
 
----
+En el Encuentro 31, cierre de la Unidad 4: entrega del trabajo final. Cada integrante presenta su trabajo individualmente y responde preguntas; el README debe estar completo y el repositorio, profesional.
 
 ## Errores comunes y trampas
 

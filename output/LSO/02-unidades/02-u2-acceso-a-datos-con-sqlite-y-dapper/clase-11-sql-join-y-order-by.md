@@ -183,13 +183,16 @@ Probar en `http://localhost:5000/doctors-with-admissions`. El médico con más i
 
 ---
 
-## Cierre
+### Qué te llevás
 
-**Qué te llevás:** JOIN combina dos tablas vinculadas por una clave común. ORDER BY ordena los resultados. GROUP BY + COUNT permite hacer resúmenes. Todo esto se ejecuta desde C# con el mismo patrón de conexión que ya conocen.
+- JOIN combina dos tablas vinculadas por una clave común.
+- ORDER BY ordena los resultados.
+- GROUP BY + COUNT permite hacer resúmenes.
+- Todo esto se ejecuta desde C# con el mismo patrón de conexión que ya conocen.
 
-**Lo que viene:** En la próxima clase van a instalar Dapper, un "asistente" que automatiza la lectura de datos y evita escribir todo el loop de `ExecuteReader` manualmente.
+### Lo que viene
 
----
+En el Encuentro 12 entra Dapper, un asistente que automatiza la lectura de datos y evita escribir todo el loop de `ExecuteReader` a mano.
 
 ## Errores comunes y trampas
 

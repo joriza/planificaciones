@@ -167,13 +167,16 @@ app.MapGet("/doctors", () =>
 
 ---
 
-## Cierre
+### Qué te llevás
 
-**Qué te llevás:** Dapper elimina el código repetitivo de lectura de datos. Los records posicionales definen la estructura. Los alias AS enlazan las columnas snake_case con las propiedades PascalCase. `Query<T>` devuelve una lista ya mapeada.
+- Dapper elimina el código repetitivo de lectura de datos.
+- Los records posicionales definen la estructura.
+- Los alias AS enlazan las columnas snake_case con las propiedades PascalCase.
+- `Query<T>` devuelve una lista ya mapeada.
 
-**Lo que viene:** En la próxima clase van a filtrar datos con parametros y LIKE, usando `@` y objetos anónimos.
+### Lo que viene
 
----
+En el Encuentro 13 se filtran datos con parámetros y `LIKE`, usando `@` y objetos anónimos.
 
 ## Errores comunes y trampas
 

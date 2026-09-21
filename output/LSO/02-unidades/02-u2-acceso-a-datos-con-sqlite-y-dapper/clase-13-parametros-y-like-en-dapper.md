@@ -193,13 +193,15 @@ Probar `http://localhost:5000/patients/by-province/ON` (muchos), `BC` (pocos), `
 
 ---
 
-## Cierre
+### Qué te llevás
 
-**Qué te llevás:** Los parámetros con `@` y objetos anónimos eliminan la concatenación de SQL, previniendo inyección y errores de sintaxis. `LIKE` con `%` permite busquedas parciales de texto. El valor del comodín se incluye en el objeto anónimo, no en el SQL.
+- Los parámetros con `@` y objetos anónimos eliminan la concatenación de SQL, previniendo inyección y errores de sintaxis.
+- `LIKE` con `%` permite búsquedas parciales de texto.
+- El valor del comodín se incluye en el objeto anónimo, no en el SQL.
 
-**Lo que viene:** En la próxima clase van a repasar todos los conceptos de la Unidad 2 y entregar el TP-U2: SQLite y Dapper básico.
+### Lo que viene
 
----
+En el Encuentro 14 se cierra la Unidad 2: repaso de todos los conceptos y entrega del TP-U2 (SQLite y Dapper básico).
 
 ## Errores comunes y trampas
 

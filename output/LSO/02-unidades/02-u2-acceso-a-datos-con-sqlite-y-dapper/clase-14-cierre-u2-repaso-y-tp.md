@@ -190,13 +190,17 @@ git push -u origin main
 
 ---
 
-## Cierre
+### Qué te llevás
 
-**Qué te llevás de la Unidad 2:** SQLite es un archivo de base de datos que se consulta desde C#. Dapper mapea automaticamente filas a objetos. Los alias AS enlazan snake_case con PascalCase. Los parámetros `@` con objetos anónimos evitan inyección SQL. `LIKE` con `%` busca texto parcial.
+- SQLite es un archivo de base de datos que se consulta desde C#.
+- Dapper mapea automáticamente filas a objetos.
+- Los alias AS enlazan snake_case con PascalCase.
+- Los parámetros `@` con objetos anónimos evitan inyección SQL.
+- `LIKE` con `%` busca texto parcial.
 
-**Lo que viene en la Unidad 3:** CRUD completo: van a crear, actualizar y borrar datos en la base usando POST, PUT y DELETE con Dapper.
+### Lo que viene
 
----
+En el Encuentro 15, evaluación de la Unidad 2: defensa oral y prueba A/B. Después, en la Unidad 3, CRUD completo: crear, actualizar y borrar datos en la base usando POST, PUT y DELETE con Dapper.
 
 ## Errores comunes y trampas
 

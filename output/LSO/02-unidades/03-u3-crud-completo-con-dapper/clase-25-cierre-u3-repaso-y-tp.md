@@ -116,22 +116,15 @@ Crear una API en `Program.cs` que implemente CRUD completo sobre dos tablas rela
 - Para el JOIN triple de admissions, usa el record `AdmissionDetail` del encuentro 24.
 - La validacion de cada POST y PUT debe verificar que `FirstName` no sea vacio o nulo.
 
-## Cierre de la unidad
-
-### Que te llevas de la Unidad 3
+### Qué te llevás
 
 - POST crea recursos y devuelve `201 Created`.
 - DELETE elimina recursos y devuelve `204 No Content`.
 - PUT actualiza recursos existentes y devuelve `204 No Content`.
 - JOIN triple cruza tres tablas usando alias en las columnas.
 - `ExecuteScalar<long>` para INSERT con retorno de ID, `Execute` para UPDATE y DELETE.
-- Record de entrada separado del record completo para evitar que el cliente envie IDs.
-
-### Lo que viene
-
-En la Unidad 4 vas a profesionalizar el repositorio: README, ramas por feature, pull requests, main protegida, y el trabajo final integrador.
-
-### Entrega
+- Record de entrada separado del record completo para evitar que el cliente envíe IDs.
+- Entrega del TP-U3 por GitHub, dentro de `tp-u3/`:
 
 ```bash
 # Desde la carpeta del repositorio grupal
@@ -141,6 +134,10 @@ git add .
 git commit -m "tp-u3: CRUD completo con Dapper"
 git push
 ```
+
+### Lo que viene
+
+En el Encuentro 26, evaluación de la Unidad 3: defensa oral y prueba A/B. Después, en la Unidad 4, vas a profesionalizar el repositorio: README, ramas por feature, pull requests, main protegida y el trabajo final integrador.
 
 ## Errores comunes y trampas
 

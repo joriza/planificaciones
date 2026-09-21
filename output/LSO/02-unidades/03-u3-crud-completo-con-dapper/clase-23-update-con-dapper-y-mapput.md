@@ -161,18 +161,16 @@ Crea un endpoint PUT para `admissions`. Pero en lugar de enviar todos los campos
 
 **Pista:** podes armar el SQL dinamicamente concatenando solo los campos que no son `null`. Usa `Execute` con parametros adaptados al SQL armado.
 
-## Cierre
-
-### Que te llevas
+### Qué te llevás
 
 - PUT reemplaza el recurso completo. Se usa con `MapPut` y recibe ID por ruta + cuerpo JSON.
 - Siempre verificar existencia antes de actualizar.
-- `Execute` es el metodo de Dapper para UPDATE, igual que para DELETE.
-- La respuesta canonica para PUT sobre BD es `204 No Content`.
+- `Execute` es el método de Dapper para UPDATE, igual que para DELETE.
+- La respuesta canónica para PUT sobre BD es `204 No Content`.
 
 ### Lo que viene
 
-En el proximo encuentro vas a unir todo: CRUD completo sobre una tabla + un endpoint con JOIN triple que combina `admissions`, `doctors` y `patients`.
+En el Encuentro 24 vas a unir todo: CRUD completo sobre una tabla + un endpoint con JOIN triple que combina `admissions`, `doctors` y `patients`.
 
 ## Errores comunes y trampas
 

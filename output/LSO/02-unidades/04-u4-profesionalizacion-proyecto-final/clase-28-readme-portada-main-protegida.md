@@ -196,13 +196,14 @@ curl -X POST http://localhost:5000/patients \
 
 ---
 
-## Cierre
+### Qué te llevás
 
-**Qué te llevás:** el README profesional es la tarjeta de presentación del proyecto. La protección de `main` fuerza que todo cambio pase por revisión, manteniendo la rama principal siempre estable.
+- El README profesional es la tarjeta de presentación del proyecto.
+- La protección de `main` fuerza que todo cambio pase por revisión, manteniendo la rama principal siempre estable.
 
-**Lo que viene:** en el encuentro 29 consolidaremos el CRUD completo con JOINs y agregaremos un endpoint de conteo avanzado. El trabajo final empieza a tomar forma definitiva.
+### Lo que viene
 
----
+En el Encuentro 29 se consolida el CRUD completo con JOINs y se agrega un endpoint de conteo avanzado: el trabajo final empieza a tomar forma definitiva.
 
 ## Errores comunes y trampas
 

@@ -160,9 +160,7 @@ Crea un endpoint GET que busque pacientes por nombre (o apellido) usando `LIKE` 
 
 **Pista:** `SELECT p.patient_id AS PatientId, p.first_name AS FirstName, ..., pr.province_name AS ProvinceName FROM patients p JOIN province_names pr ON p.province_id = pr.province_id WHERE p.first_name LIKE @search`. El parametro debe ser `"%texto%"`.
 
-## Cierre
-
-### Que te llevas
+### Qué te llevás
 
 - Un JOIN triple combina tres tablas con dos `JOIN` consecutivos.
 - Cuando dos tablas tienen columnas con el mismo nombre, los alias del SELECT son obligatorios.
@@ -171,7 +169,7 @@ Crea un endpoint GET que busque pacientes por nombre (o apellido) usando `LIKE` 
 
 ### Lo que viene
 
-En el proximo encuentro cerramos la Unidad 3 con un repaso general y la entrega del TP-U3: una API que implementa CRUD completo sobre dos tablas relacionadas.
+En el Encuentro 25 cerramos la Unidad 3: repaso general y entrega del TP-U3, una API que implementa CRUD completo sobre dos tablas relacionadas.
 
 ## Errores comunes y trampas
 

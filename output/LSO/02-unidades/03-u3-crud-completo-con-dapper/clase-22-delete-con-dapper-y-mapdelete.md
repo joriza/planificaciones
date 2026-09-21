@@ -130,18 +130,16 @@ Crea un endpoint DELETE para `admissions`. Agrega validacion de que el ID sea po
 
 **Pista:** la tabla `admissions` tiene `admission_id` como clave primaria. No hay restricciones adicionales que considerar.
 
-## Cierre
-
-### Que te llevas
+### Qué te llevás
 
 - DELETE es el verbo HTTP para **eliminar** recursos.
-- `Execute` devuelve filas afectadas; si es `0`, el recurso no existia.
-- La respuesta canonica para DELETE exitoso es `204 No Content`.
+- `Execute` devuelve filas afectadas; si es `0`, el recurso no existía.
+- La respuesta canónica para DELETE exitoso es `204 No Content`.
 - Conviene validar el ID antes de ejecutar la consulta.
 
 ### Lo que viene
 
-En el proximo encuentro vas a modificar recursos existentes con PUT y `MapPut`, completando el trio de escritura junto con POST y DELETE.
+En el Encuentro 23 vas a modificar recursos existentes con UPDATE y `MapPut`, completando el trío de escritura junto con POST y DELETE.
 
 ## Errores comunes y trampas
 

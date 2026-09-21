@@ -128,11 +128,15 @@ Console.WriteLine($"Peso: {weight} kg");
 Console.WriteLine($"Alergias: {allergies}");
 ```
 
-## Cierre
+### Qué te llevás
 
-**Qué te llevás:** .NET ejecuta programas escritos en C#. Toda variable tiene un tipo fijo. `string` para texto, `long` para números enteros. La consola muestra resultados con `Console.WriteLine`.
+- .NET ejecuta programas escritos en C#.
+- Toda variable tiene un tipo fijo: `string` para texto, `long` para números enteros.
+- La consola muestra resultados con `Console.WriteLine`.
 
-**Lo que viene:** en el próximo encuentro vamos a agregar lógica condicional y bucles para manejar varios pacientes, y vamos a escribir nuestras primeras funciones.
+### Lo que viene
+
+En el Encuentro 5 el programa gana estructuras de control —condicionales y bucles para manejar varios pacientes— y los primeros métodos.
 
 ## Errores comunes y trampas
 

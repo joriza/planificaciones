@@ -147,11 +147,15 @@ Pruebas:
 - `http://localhost:5000/patients?gender=M` → solo Luis.
 - `http://localhost:5000/patients` (sin query) → los tres.
 
-## Cierre
+### Qué te llevás
 
-**Qué te llevás:** los parámetros de ruta (`/patients/{id:long}`) identifican un recurso específico. `FirstOrDefault` busca en la lista y `is null` verifica existencia. El query string permite filtros opcionales sin cambiar la ruta.
+- Los parámetros de ruta (`/patients/{id:long}`) identifican un recurso específico.
+- `FirstOrDefault` busca en la lista y `is null` verifica existencia.
+- El query string permite filtros opcionales sin cambiar la ruta.
 
-**Lo que viene:** en el próximo encuentro cerramos la Unidad 1 con un repaso general y la entrega del TP-U1: una Minimal API con endpoints GET que integre todo lo aprendido.
+### Lo que viene
+
+En el Encuentro 8 se cierra la Unidad 1: repaso general y entrega del TP-U1, una Minimal API con endpoints GET que integra todo lo aprendido.
 
 ## Errores comunes y trampas
 

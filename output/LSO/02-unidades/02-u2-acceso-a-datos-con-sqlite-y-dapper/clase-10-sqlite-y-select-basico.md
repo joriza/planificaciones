@@ -169,13 +169,16 @@ app.MapGet("/patients-from/{provinceId}", (string provinceId) =>
 
 ---
 
-## Cierre
+### Qué te llevás
 
-**Qué te llevás:** SQLite es un archivo, no un servidor. `Microsoft.Data.Sqlite` permite enviar SQL desde C#. SELECT con WHERE filtra filas. Cada columna se lee con el método Get que corresponde a su tipo.
+- SQLite es un archivo, no un servidor.
+- `Microsoft.Data.Sqlite` permite enviar SQL desde C#.
+- SELECT con WHERE filtra filas.
+- Cada columna se lee con el método Get que corresponde a su tipo.
 
-**Lo que viene:** En la próxima clase van a combinar datos de dos tablas con JOIN y ordenar resultados con ORDER BY.
+### Lo que viene
 
----
+En el Encuentro 11 se combinan datos de dos tablas con JOIN y se ordenan los resultados con ORDER BY.
 
 ## Errores comunes y trampas
 

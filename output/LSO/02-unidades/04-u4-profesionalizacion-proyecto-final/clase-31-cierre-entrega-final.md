@@ -104,11 +104,16 @@ Luego de las presentaciones, el docente comparte una devolución general:
 
 ---
 
-## Cierre de unidad y entrega de notas (60 min)
+### Qué te llevás
 
-### Checklist de entrega final
+El recorrido completo del curso, unidad por unidad:
 
-Cada grupo verifica que su repositorio tenga:
+1. **Unidad 1:** Fundamentos de C# y primera Minimal API con GET.
+2. **Unidad 2:** SQLite, Dapper y consultas parametrizadas.
+3. **Unidad 3:** CRUD completo con POST, PUT y DELETE.
+4. **Unidad 4:** Profesionalización con Git, README, trabajo final integrador y defensa.
+
+Checklist de entrega final — cada grupo verifica que su repositorio tenga:
 
 - [ ] Carpeta `trabajo-final/` con `Program.cs` funcional.
 - [ ] `hospital.db` junto al `.csproj`.
@@ -118,18 +123,11 @@ Cada grupo verifica que su repositorio tenga:
 - [ ] Al menos 2 Pull Requests mergeados en la unidad.
 - [ ] Carpetas `tp-u1/`, `tp-u2/`, `tp-u3/` con los trabajos anteriores.
 
-### Recorrido completo del curso
+Al cierre del encuentro, el docente entrega la nota final a cada alumno, con comentarios personalizados sobre su desempeño en la defensa y el trabajo final.
 
-El docente cierra el curso destacando:
+### Lo que viene
 
-1. **Unidad 1:** Fundamentos de C# y primera Minimal API con GET.
-2. **Unidad 2:** SQLite, Dapper y consultas parametrizadas.
-3. **Unidad 3:** CRUD completo con POST, PUT, DELETE.
-4. **Unidad 4:** Profesionalización con Git, README, trabajo final integrador y defensa.
-
-### Entrega de notas y devolución individual
-
-El docente entrega la nota final a cada alumno, con comentarios personalizados sobre su desempeño en la defensa y el trabajo final.
+En el Encuentro 32, defensa del integrador: cada integrante presenta y defiende individualmente el trabajo final, respondiendo preguntas sobre la API y el flujo Git profesional.
 
 ---
 

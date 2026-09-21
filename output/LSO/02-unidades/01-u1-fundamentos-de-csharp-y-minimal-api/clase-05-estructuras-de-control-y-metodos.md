@@ -160,11 +160,16 @@ La salida entonces será:
 ID: 1 | Ana Lopez (Femenino) | Nac: 1990-05-15 | Edad: 35 anios
 ```
 
-## Cierre
+### Qué te llevás
 
-**Qué te llevás:** los métodos agrupan código que se repite. `if` y `else` eligen un camino según una condición. `foreach` recorre una lista. Los records posicionales van siempre al final del archivo.
+- Los métodos agrupan código que se repite.
+- `if` y `else` eligen un camino según una condición.
+- `foreach` recorre una lista.
+- Los records posicionales van siempre al final del archivo.
 
-**Lo que viene:** en el próximo encuentro vamos a convertir este programa de consola en una API web. Los datos de los pacientes dejarán la consola y viajarán por HTTP como JSON.
+### Lo que viene
+
+En el Encuentro 6 este programa de consola se convierte en una Minimal API: los datos de los pacientes dejan la consola y viajan por HTTP como JSON desde el primer endpoint GET.
 
 ## Errores comunes y trampas
 

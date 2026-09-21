@@ -154,16 +154,17 @@ git push
 
 > **Importante:** un commit por encuentro. El mensaje va en español, sin tildes, después de los dos puntos.
 
-## Cierre de la Unidad 1
+### Qué te llevás
 
-**Qué te llevás de la U1:**
 - .NET ejecuta código C# compilado.
 - `string` para texto, `long` para números enteros.
 - Métodos, `if`, `foreach` y records posicionales.
 - Una Minimal API expone datos por HTTP con `MapGet`.
 - Los parámetros de ruta y query string permiten filtrar.
 
-**Lo que viene (Unidad 2):** vamos a conectar la API a una base de datos SQLite real (`hospital.db`). Aprenderemos a escribir consultas SELECT con JOIN y a mapear los resultados con Dapper y records posicionales. Los datos dejarán de ser literales en el código.
+### Lo que viene
+
+En el Encuentro 9, evaluación de la Unidad 1: defensa oral y prueba A/B. Después, en la Unidad 2, la API se conecta a una base de datos SQLite real (`hospital.db`): consultas SELECT con JOIN y resultados mapeados con Dapper y records posicionales. Los datos dejan de ser literales en el código.
 
 ## Errores comunes y trampas (repaso general)
 
