@@ -3,7 +3,7 @@
 # readme-descripciones.json) + nota de la cátedra manual (materias/nota-catedra-<materia>.md, opcional).
 #
 # Uso (desde la raíz del repositorio):
-#   powershell -File tools\generar-readme.ps1 -Materia materias\LSO -Curso output\LSO [-Salida <archivo>] [-Force]
+#   powershell -File tools\generar-readme.ps1 -Materia output\LSO -Curso output\LSO [-Salida <archivo>] [-Force]
 #
 # Parametros:
 #   -Materia (obligatorio) carpeta de la materia (contiene curso-data.json y opcionalmente nota-catedra.md).

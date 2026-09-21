@@ -2,8 +2,8 @@
 # a partir de curso-data.json + plantillas (tramos invariantes, filas de libro y esqueletos de unidad).
 #
 # Uso (desde la raíz del repositorio):
-#   powershell -File tools\generar-administrativos.ps1 -Materia materias\LSO -Salida <carpeta> [-Variante 1]
-#   powershell -File tools\generar-administrativos.ps1 -Materia materias\LSO -Salida <carpeta> -HorasPorEncuentro 2
+#   powershell -File tools\generar-administrativos.ps1 -Materia output\LSO -Salida <carpeta> [-Variante 1]
+#   powershell -File tools\generar-administrativos.ps1 -Materia output\LSO -Salida <carpeta> -HorasPorEncuentro 2
 #
 # Parametros:
 #   -Materia   (obligatorio) carpeta de la materia (contiene curso-data.json).

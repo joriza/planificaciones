@@ -3,7 +3,7 @@
 # sin prosa: solo estructura, metadatos del curso-data y placeholders <!-- prose: ... -->.
 #
 # Uso (desde la raíz del repositorio):
-#   powershell -File tools\scaffold-clase.ps1 -Materia materias\LSO -Encuentro 5 -Salida <carpeta> [-Slug mi-slug] [-Force]
+#   powershell -File tools\scaffold-clase.ps1 -Materia output\LSO -Encuentro 5 -Salida <carpeta> [-Slug mi-slug] [-Force]
 #
 # Parametros:
 #   -Materia    (obligatorio) ruta a la carpeta de la materia (contiene curso-data.json).

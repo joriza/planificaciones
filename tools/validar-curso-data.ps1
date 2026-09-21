@@ -1,7 +1,7 @@
 ﻿# validar-curso-data.ps1 — Validación del curso-data.json de una materia antes de renderizar administrativos.
 #
 # Uso (desde la raíz del repositorio):
-#   powershell -File tools\validar-curso-data.ps1 -Materia materias\LSO
+#   powershell -File tools\validar-curso-data.ps1 -Materia output\LSO
 #
 # Comportamiento: si todo valida, imprime un resumen OK y sale con 0; si hay incumplimientos,
 # los lista TODOS y sale con 1.

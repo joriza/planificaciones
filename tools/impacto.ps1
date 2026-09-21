@@ -10,9 +10,9 @@
 # Sin caches de hashes: la lista (b) sale del diff git del JSON (+ version de canon).
 #
 # Uso (desde la raiz del repositorio):
-#   powershell -File tools\impacto.ps1 -Materia materias\LSO [-Curso output/LSO]
-#   powershell -File tools\impacto.ps1 -Materia materias\LSO -Desde HEAD~1 [-Json]
-#   powershell -File tools\impacto.ps1 -Materia materias\LSO -Canon materias\otro-insumo.md
+#   powershell -File tools\impacto.ps1 -Materia output\LSO [-Curso output/LSO]
+#   powershell -File tools\impacto.ps1 -Materia output\LSO -Desde HEAD~1 [-Json]
+#   powershell -File tools\impacto.ps1 -Materia output\LSO -Canon materias\otro-insumo.md
 #
 # Parametros:
 #   -Materia (obligatorio) ruta a la carpeta de la materia (contiene curso-data.json).
