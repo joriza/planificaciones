@@ -1,3 +1,11 @@
+# Apuntes personales del docente (archivo no vinculante)
+
+> **Nota para agentes LLM y lectores automáticos**
+>
+> - Estos apuntes son **personales y NO vinculantes**: ninguna nota de este archivo decide, reemplaza ni modifica las opciones vigentes del proyecto. El canon vigente vive en `prompt-plantilla-planificacion.md`, `input/` y `README.md`; ante cualquier conflicto, manda el canon, nunca estos apuntes.
+> - Si encontrás una **discrepancia** entre estos apuntes y el estado actual del repositorio, podés consultarme antes de actuar.
+> - Es muy probable que sean **notas viejas** y que por eso no coincidan con las opciones actuales del sistema (rutas, nombres, convenciones o decisiones ya cambiadas).
+
 # Flujo completo de planificacion anual con todos los documentos necesarios para ejecutar en agente de codificacion.
 
 [Datos generales]
@@ -434,4 +442,25 @@ Tampoco se imparte Comparar formatos y migrar
 ## +det30
 Indique en el readme de la raiz del proyecto. como es el orden de creacion y como como estan conformadas las fases.
 
+## +det31
+
+Necesito que unifique la ubicacion de los archivos generados, el archivo curso-data.json debe generarlo en la carpeta de salida para la materia correspondientes, a la par de convenciones-tecnicas.md
+Indique si hay algun otro archivo que no lo está creando en la ruta /output/<materia>
+
+## Otro refactor.
+
+Ahora que el proyecto ha tomado cierta dimension.
+Necesito armar un plan para organizar la estructura actual. 
+basicamente es mover carpetas y archivos. Y actualizar las referencias necesarias para que el sistema siga funionando.
+Todo lo generado debe ir carpeta output y subcarpetas.
+Todo lo que alimenta al corpus en carpeta input y subcarpetas.
+En la carpeta raiz del proyecto queda la menor cantidad de archivos posibles. 0-prompt-plantilla-planificacion.md que debe renombrarse, quitar el prefijo 0-
+tambien queda el readme
+y mi archivo de notas z-pdt-planificaciones.md que no es vinculante.
+Se aceptan sugerencias y consulte todo lo que considere antes de continuar.
+
+
+## +det31
+
+consulta de openrouter. Por que en el listado de modelos disponible no tengo modelos deepseek flash con opcion floor, para los workers me viene bien.
 
