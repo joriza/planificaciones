@@ -7,12 +7,13 @@ de estudiantes. Luego: actualizar README y pushear lo pendiente.
 
 ## Tareas
 
-- [ ] T1: modo `-SoloAnexos` en tools/convertir-a-pdf.ps1 (un PDF
+- [x] T1: modo `-SoloAnexos` en tools/convertir-a-pdf.ps1 (un PDF
       `<carpeta>-anexo-docente.pdf` por carpeta con anexos; unidades + 03-06).
-- [ ] T2: README.md — documentar el modo nuevo en la sección del script.
-- [ ] T3: correr el modo para LAP y verificar PDFs generados.
-- [ ] T4: commit (Convención del repo) + push de lo pendiente. NO incluir
-      z-pdt-planificaciones.md (edición del docente, dispuesta sin commitear).
+- [x] T2: README.md — documentar el modo nuevo en la sección del script.
+- [x] T3: correr el modo para LAP y verificar PDFs generados
+      (5 PDFs: 4 unidades + 05-continuidad; encuadre/intensificaciones sin anexos).
+- [x] T4: commits + push de lo pendiente. z-pdt-planificaciones.md quedó
+      fuera (edición del docente, dispuesta sin commitear).
 
 ## Decisiones
 
@@ -22,4 +23,7 @@ de estudiantes. Luego: actualizar README y pushear lo pendiente.
 
 ## Evidencia
 
-- (pendiente)
+- 9a89ec4 feat(pdf): symmetric 15mm margins and default print.css stylesheet
+- 2a87a84 feat(pdf): add -SoloAnexos mode for teacher annex PDFs (README + feature doc)
+- Push: a5f2875..2a87a84 → origin/feature/lap-completo
+- README worker: task muc68zif-1-qo9b (verificación grep SoloAnexos = 1)
