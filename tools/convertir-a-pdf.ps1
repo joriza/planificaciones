@@ -64,6 +64,8 @@ $baseCmd = 'pandoc'
 $cssArg = if ($Css -ne '') { @('--css', (Resolve-Path -LiteralPath $Css).Path) } else { @() }
 $engineArg = @('--pdf-engine', $pdfEngine)
 
+$marginOpts = if ($pdfEngine -eq 'wkhtmltopdf') { @('--pdf-engine-opt=--margin-top', '--pdf-engine-opt=8mm', '--pdf-engine-opt=--margin-bottom', '--pdf-engine-opt=8mm', '--pdf-engine-opt=--margin-left', '--pdf-engine-opt=8mm', '--pdf-engine-opt=--margin-right', '--pdf-engine-opt=8mm') } else { @() }
+
 function Invoke-Pandoc([string[]]$inputFiles, [string]$outFile) {
   $absInputs = $inputFiles | ForEach-Object { (Resolve-Path -LiteralPath $_).Path }
   $outPath = Join-Path $Salida $outFile
@@ -71,7 +73,7 @@ function Invoke-Pandoc([string[]]$inputFiles, [string]$outFile) {
     Write-Output "  Omitido (ya existe, use -Force para sobrescribir): $outFile"
     return
   }
-  $pandocArgs = $absInputs + @('-f', 'markdown', '-t', 'pdf') + $cssArg + $engineArg + @('-o', $outPath)
+  $pandocArgs = $absInputs + $marginOpts + @('-f', 'markdown', '-t', 'pdf') + $cssArg + $engineArg + @('-o', $outPath)
   Write-Output "Generando: $outFile ($($absInputs.Count) archivos)"
   & $baseCmd @pandocArgs 2>$null
   if ($LASTEXITCODE -eq 0) {

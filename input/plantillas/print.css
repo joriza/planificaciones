@@ -10,7 +10,7 @@
 /* ---- Página ---- */
 @page {
     size: A4;
-    margin: 18mm 16mm 20mm 16mm;
+    margin: 0;
 }
 
 /* ---- Tipografía base ---- */
