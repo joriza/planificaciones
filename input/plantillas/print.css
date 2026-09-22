@@ -128,15 +128,20 @@ pre code {
 }
 
 /* Numeros de linea (clase numberLines de pandoc): color fijo verde de comentario
-   de editor, alineados a la derecha en el gutero; fuera del resaltado de sintaxis.
-   Especificidad >= a la de la plantilla embebida de pandoc, que subraya este mismo
-   pseudo-elemento en media screen (wkhtmltopdf renderiza en screen). */
-pre.sourceCode > code.sourceCode > span > a:first-child::before {
+   de editor, en el gutero izquierdo; fuera del resaltado y fuera del flujo, para
+   no desplazar el codigo ni su fondo. Especificidad >= a la de la plantilla
+   embebida de pandoc, que subraya este mismo pseudo-elemento en media screen
+   (wkhtmltopdf renderiza en screen). Solo aplica a pre.numberSource. */
+pre.numberSource {
+    position: relative;
+    padding-left: 3.4em;   /* gutero para los numeros; el fondo queda cuadrado con el codigo */
+}
+pre.numberSource > code.sourceCode > span > a:first-child::before {
     content: attr(aria-label);
-    display: inline-block;
+    position: absolute;
+    left: 0.6em;
     width: 1.8em;
     text-align: right;
-    margin-right: 0.6em;
     color: #2e7d32;
     text-decoration: none;
 }
