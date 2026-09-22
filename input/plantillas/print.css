@@ -1,7 +1,10 @@
 /*
  * print.css — estilos base para PDFs de material didáctico de planificaciones.
- * Refactorizado con márgenes espejo para anillar, saltos de página entre clases,
- * tablas con encabezado con fondo, código numerado y separadores entre documentos.
+ * Densidad optimizada para minimizar hojas impresas sin perder claridad:
+ * interlineado de código propio (1.35), prosa 1.40, cuerpo 11pt, encabezados y
+ * espaciados compactos. Con el motor wkhtmltopdf los márgenes los fija el
+ * conversor (-V margin-*); si algún día se usa LaTeX (xelatex), valen los
+ * @page :left/:right de más abajo (espejo para anillar).
  *
  * Editá este archivo libremente. Es solo un punto de partida.
  */
@@ -21,13 +24,13 @@
 /* ---- Tipografía base ---- */
 body {
     font-family: "Arial", "Helvetica", sans-serif;
-    font-size: 12pt;
-    line-height: 1.70;
+    font-size: 11pt;
+    line-height: 1.40;
     color: #1a1a1a;
 }
 
 p {
-    margin: 0.6em 0;
+    margin: 0.45em 0;
     text-align: justify;
 }
 
@@ -40,9 +43,9 @@ h1, h2, h3, h4 {
 }
 
 h1 {
-    font-size: 20pt;
+    font-size: 17pt;
     border-bottom: 2px solid #1a4d8f;
-    padding-bottom: 4px;
+    padding-bottom: 3px;
     margin-top: 0;
     page-break-before: always;
 }
@@ -53,36 +56,36 @@ h1:first-of-type {
 }
 
 h2 {
-    font-size: 15pt;
+    font-size: 13.5pt;
     color: #2a6db0;
-    margin-top: 1.4em;
+    margin-top: 1.0em;
     border-bottom: 1px solid #c5d4e3;
     padding-bottom: 2px;
 }
 
 h3 {
-    font-size: 12.5pt;
+    font-size: 11.5pt;
     color: #3a7fb8;
-    margin-top: 1.2em;
+    margin-top: 0.9em;
 }
 
 h4 {
-    font-size: 11pt;
+    font-size: 10.5pt;
     color: #555;
-    margin-top: 1em;
+    margin-top: 0.8em;
 }
 
 /* ---- Tablas ---- */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 0.8em 0;
-    font-size: 10.5pt;
+    margin: 0.6em 0;
+    font-size: 10pt;
 }
 
 th, td {
     border: 1px solid #ccc;
-    padding: 4px 6px;
+    padding: 3px 5px;
     text-align: left;
     vertical-align: top;
 }
@@ -107,8 +110,9 @@ pre, code {
 }
 
 pre {
-    padding: 8px 10px;
-    margin: 0.6em 0;
+    padding: 5px 7px;
+    margin: 0.45em 0;
+    line-height: 1.35;
     white-space: pre-wrap;
     page-break-inside: avoid;
 }
@@ -135,8 +139,8 @@ li {
 
 /* ---- Blockquotes ---- */
 blockquote {
-    margin: 0.6em 0;
-    padding: 6px 12px;
+    margin: 0.45em 0;
+    padding: 4px 10px;
     border-left: 4px solid #1a4d8f;
     background-color: #f0f5fa;
     color: #333;

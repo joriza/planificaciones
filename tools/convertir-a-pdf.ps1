@@ -75,7 +75,7 @@ $engineArg = @('--pdf-engine', $pdfEngine)
 # wkhtmltopdf no soporta @page :left/:right (sin espejo posible); 15mm a cada lado
 # deja lugar de lomo tanto a una cara como a doble. Los markdown nunca llevan LaTeX:
 # el docente los renderiza con una herramienta que se rompe con LaTeX.
-$marginOpts = if ($pdfEngine -eq 'wkhtmltopdf') { @('-V', 'margin-top=20', '-V', 'margin-bottom=20', '-V', 'margin-left=15', '-V', 'margin-right=15') } else { @() }
+$marginOpts = if ($pdfEngine -eq 'wkhtmltopdf') { @('-V', 'margin-top=16', '-V', 'margin-bottom=20', '-V', 'margin-left=15', '-V', 'margin-right=15') } else { @() }
 
 function Invoke-Pandoc([string[]]$inputFiles, [string]$outFile) {
   $absInputs = $inputFiles | ForEach-Object { (Resolve-Path -LiteralPath $_).Path }
