@@ -134,7 +134,8 @@ app.MapDelete("/patients", (string? provinceId = null, string? gender = null) =>
 
     int filasAfectadas = connection.Execute(sql, parameters);
 
-    return Results.Ok(new { eliminados = filasAfectadas });
+    // Canon de la hoja de convenciones: el borrado responde 204 sin cuerpo.
+    return Results.NoContent();
 });
 ```
 
@@ -143,10 +144,7 @@ app.MapDelete("/patients", (string? provinceId = null, string? gender = null) =>
 ```
 > curl -X DELETE "http://localhost:5000/patients?provinceId=BC"
 
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{ "eliminados": 12 }
+HTTP/1.1 204 No Content
 ```
 
 ## 3. Respuesta esperada del ejercicio
@@ -156,8 +154,8 @@ Content-Type: application/json
 | DELETE /patients/259 (existe) | Sin body, header Location no aplica | 204 |
 | DELETE /patients/9999 (no existe) | `{ "mensaje": "Paciente no encontrado" }` | 404 |
 | DELETE /patients/1 (tiene ingresos) | Sin body | 409 (con Actividad 1) |
-| DELETE /patients?provinceId=BC | `{ "eliminados": N }` donde N es la cantidad de pacientes de BC | 200 (con Actividad 2) |
-| DELETE /patients sin filtros | Borra todos los pacientes | 200 (con Actividad 2) |
+| DELETE /patients?provinceId=BC | Sin body | 204 (con Actividad 2) |
+| DELETE /patients sin filtros | Borra todos los pacientes | 204 (con Actividad 2) |
 
 ## 4. Criterios de corrección (lista de verificación)
 

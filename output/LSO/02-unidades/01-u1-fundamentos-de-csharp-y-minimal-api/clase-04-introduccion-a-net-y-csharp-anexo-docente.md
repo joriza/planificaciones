@@ -64,17 +64,15 @@ app.MapGet("/", () => "Bienvenido a la API");
 // GET /saludo — respuesta con objeto anonimo
 app.MapGet("/saludo", () => new { mensaje = "Hola, mundo!" });
 
-// POST /saludo — recibe un nombre y devuelve un saludo personalizado
-app.MapPost("/saludo", (string nombre) =>
-    new { mensaje = $"Hola, {nombre}!" });
+// POST /saludo — alta de un saludo: responde 201 Created con la URL del recurso
+app.MapPost("/saludo", (string nombre) => Results.Created($"/saludo/1", new { mensaje = $"Hola, {nombre}!" }));
 
 // PUT /saludo/{id} — actualiza un saludo por id
 app.MapPut("/saludo/{id:long}", (long id, string nombre) =>
     new { id, mensaje = $"Saludo actualizado para {nombre}" });
 
-// DELETE /saludo/{id} — elimina un saludo por id
-app.MapDelete("/saludo/{id:long}", (long id) =>
-    Results.Ok(new { mensaje = $"Saludo {id} eliminado" }));
+// DELETE /saludo/{id} — elimina un saludo por id: responde 204 sin cuerpo
+app.MapDelete("/saludo/{id:long}", (long id) => Results.NoContent());
 
 app.Run();
 ```
@@ -82,7 +80,7 @@ app.Run();
 **Salida esperada al probar en el navegador:**
 - `GET /` → `Bienvenido a la API`
 - `GET /saludo` → `{"mensaje":"Hola, mundo!"}`
-- Los otros verbos requieren herramientas como Thunder Client o `curl` para enviar la petición.
+- Los otros verbos requieren herramientas como Thunder Client o `curl`: `POST /saludo` responde **201 Created** con el saludo en el cuerpo; `DELETE /saludo/1` responde **204 No Content** (sin cuerpo), como fija la hoja de convenciones para alta y borrado.
 
 ## 3. Respuesta esperada del ejercicio
 
