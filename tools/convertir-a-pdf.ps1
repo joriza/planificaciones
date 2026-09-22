@@ -6,12 +6,15 @@
 #   powershell -File tools\convertir-a-pdf.ps1 -Materia LAP
 #   powershell -File tools\convertir-a-pdf.ps1 -Materia LAP -Combinado
 #   powershell -File tools\convertir-a-pdf.ps1 -Materia LAP -Combinado -Unidad 1
+#   powershell -File tools\convertir-a-pdf.ps1 -Materia LAP -SoloAnexos
 #   powershell -File tools\convertir-a-pdf.ps1 -Materia LAP -Css mi-plantilla.css
 #
 # Parametros:
 #   -Materia   (obligatorio) nombre de la carpeta en output/ (ej. LAP, LSO).
 #   -Css       ruta a una plantilla CSS (por defecto: input/plantillas/print.css).
 #   -Combinado  (switch) genera UN PDF por subcarpeta (unidad, encuadre, etc.) en vez de uno por archivo.
+#   -SoloAnexos (switch) genera UN PDF de anexos docente por carpeta (<carpeta>-anexo-docente.pdf).
+#               Los anexos docente son material privado: nunca se mezclan con los PDFs de estudiantes.
 #   -Unidad    (opcional, solo con -Combinado) limita la conversión a una unidad numerada (1, 2, 3, 4, etc.).
 #   -Salida    carpeta destino (por defecto: output/<Materia>/pdf/).
 
@@ -19,6 +22,7 @@ param(
   [string]$Materia = '',
   [string]$Css = '',
   [switch]$Combinado,
+  [switch]$SoloAnexos,
   [switch]$Force,
   [string]$Unidad = '',
   [string]$Salida = ''
@@ -116,7 +120,16 @@ function Get-MarkdownFiles([string]$dir) {
 
 $rutaUnidades = Join-Path $rutaMateria '02-unidades'
 
-if ($Combinado) {
+if ($SoloAnexos) {
+  # Un PDF de anexos docente por carpeta (unidades + toplevel 03-06), sin mezclar con material de estudiantes
+  if ($Unidad -ne '') { Write-Output 'AVISO: -Unidad no aplica con -SoloAnexos; se procesan todas las carpetas.' }
+  $carpetas = @(Get-ChildItem -LiteralPath $rutaUnidades -Directory) + @(Get-ChildItem -LiteralPath $rutaMateria -Directory | Where-Object { $_.Name -match '^0[3-6]' })
+  foreach ($sub in ($carpetas | Sort-Object Name)) {
+    $mds = @(Get-ChildItem -LiteralPath $sub.FullName -Filter '*.md' -Recurse | Where-Object { $_.Name -like '*-anexo-docente.md' } | Sort-Object Name)
+    if ($mds.Count -eq 0) { continue }
+    Invoke-Pandoc ($mds.FullName) ($sub.Name + '-anexo-docente.pdf')
+  }
+} elseif ($Combinado) {
   # Si se especifica -Unidad, buscar dentro de 02-unidades/
   if ($Unidad -ne '') {
     $uniSubs = @(Get-ChildItem -LiteralPath $rutaUnidades -Directory | Where-Object { $_.Name -match "^0*$Unidad-" -or $_.Name -match "^0*$Unidad$" })
