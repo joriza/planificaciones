@@ -6,3 +6,6 @@
 
 # Python bytecode
 __pycache__/
+
+# PDFs generados manualmente (accion manual del docente, regenerables)
+output/*/pdf/
