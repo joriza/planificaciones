@@ -1,25 +1,394 @@
-# Continuidad pedagógica — Anexo docente: Repaso tras evaluación de la Unidad 2
-
-> Documento exclusivo para el docente. Soluciones y criterios de corrección.
-> No se entrega a los alumnos ni a la administración.
-
----
+# Anexo docente — Continuidad pedagógica 03: Tras evaluación de U2
 
 ## Soluciones
 
-### Actividad 1 — Conexión y SELECT simple (20 ptos.)
+### Actividad 1 — Repaso tipos y control de flujo de U1 (10 puntos)
 
-**Código esperado:**
+**Solución:**
+
+```csharp
+// Clasificar paciente segun IMC aproximado
+string ClassifyPatient(long? height, long? weight)
+{
+    // Verificar si faltan datos
+    if (!height.HasValue || !weight.HasValue)
+    {
+        return "Datos incompletos";
+    }
+
+    // Verificar si los datos son validos
+    if (height <= 0 || weight <= 0)
+    {
+        return "Datos invalidos";
+    }
+
+    // Calcular IMC aproximado: peso(gramos) / altura(cm)^2 * 10000
+    long imcTimes1000 = weight * 10000 / (height * height);
+
+    // Clasificar segun el IMC
+    if (imcTimes1000 < 18500) // IMC < 18.5
+    {
+        return "Bajo peso";
+    }
+    else if (imcTimes1000 < 25000) // IMC < 25
+    {
+        return "Normal";
+    }
+    else if (imcTimes1000 < 30000) // IMC < 30
+    {
+        return "Sobrepeso";
+    }
+    else
+    {
+        return "Obesidad";
+    }
+}
+```
+
+**Pruebas:**
+a) height = 175, weight = 75000 → `75000 * 10000 / (175 * 175)` = `750000000 / 30625` = `24489` → 24.489 → `"Normal"` ✓
+b) height = null → `"Datos incompletos"` ✓
+c) height = 160, weight = 95000 → `95000 * 10000 / (160 * 160)` = `950000000 / 25600` = `37109` → 37.109 → `"Obesidad"` ✓
+
+**Criterios de corrección:**
+- Método correcto con todas las ramas de validación: 4 puntos.
+- Clasificación correcta del IMC: 3 puntos.
+- Pruebas con los tres conjuntos de datos: 3 puntos.
+
+---
+
+### Actividad 2 — Repaso métodos y endpoint GET de U1 (10 puntos)
+
+**Solución:**
 
 ```csharp
 using Dapper;
 using Microsoft.Data.Sqlite;
 
+var connectionString = "Data Source=hospital.db";
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-var connectionString = "Data Source=hospital.db";
+// GET /doctors — lista completa de medicos
+app.MapGet("/doctors", () =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var doctors = connection.Query<Doctor>(@"
+        SELECT doctor_id AS DoctorId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               specialty AS Specialty
+        FROM doctors").ToList();
 
+    return Results.Ok(doctors);
+});
+
+// GET /doctors/{id:long} — un medico por ID
+app.MapGet("/doctors/{id:long}", (long id) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var doctor = connection.QueryFirstOrDefault<Doctor>(@"
+        SELECT doctor_id AS DoctorId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               specialty AS Specialty
+        FROM doctors
+        WHERE doctor_id = @id", new { id });
+
+    return doctor is null
+        ? Results.NotFound(new { mensaje = "Medico no encontrado" })
+        : Results.Ok(doctor);
+});
+
+app.Run();
+
+// Record posicional despues de app.Run()
+record Doctor(
+    long DoctorId,
+    string FirstName,
+    string LastName,
+    string Specialty);
+```
+
+**Criterios de corrección:**
+- Endpoint `/doctors` con `Query<Doctor>` y alias `AS`: 3 puntos.
+- Endpoint `/doctors/{id:long}` con `QueryFirstOrDefault<Doctor>` y `Results.NotFound`: 3 puntos.
+- Record `Doctor` después de `app.Run()`, tipos canónicos: 2 puntos.
+- Código compila y sigue convenciones: 2 puntos.
+
+---
+
+### Actividad 3 — SQL básico: SELECT, WHERE, ORDER BY (20 puntos)
+
+**a) Solución:**
+
+```sql
+SELECT first_name, last_name, city
+FROM patients
+WHERE city = 'Buenos Aires'
+ORDER BY last_name ASC;
+```
+
+Resultado esperado: lista de pacientes de Buenos Aires ordenados por apellido.
+
+**b) Solución:**
+
+```sql
+SELECT first_name, last_name, birth_date
+FROM patients
+WHERE birth_date >= '1990-01-01'
+ORDER BY birth_date DESC;
+```
+
+Resultado esperado: pacientes nacidos a partir de 1990, del más joven al más viejo.
+
+**c) Diferencia entre `=` y `LIKE`:**
+
+`WHERE city = 'Buenos Aires'` es una comparación de igualdad exacta. Solo coincide con filas donde la ciudad es exactamente `'Buenos Aires'`.
+
+`WHERE city LIKE 'Buenos Aires'` también es una comparación exacta cuando no hay comodines. `LIKE` se vuelve útil cuando se usan caracteres comodín como `%` (cualquier cadena) o `_` (un carácter). Se usaría `LIKE` cuando se necesita búsqueda parcial o patrones.
+
+**d) Solución:**
+
+```sql
+SELECT city, COUNT(*) AS patient_count
+FROM patients
+GROUP BY city
+ORDER BY patient_count DESC;
+```
+
+Con Dapper, se puede usar `Query<dynamic>` o un record auxiliar:
+
+```csharp
+var result = connection.Query(@"
+    SELECT city, COUNT(*) AS patient_count
+    FROM patients
+    GROUP BY city
+    ORDER BY patient_count DESC");
+```
+
+O con un record tipado (después de `app.Run()`):
+
+```csharp
+record CityCount(string City, long PatientCount);
+var result = connection.Query<CityCount>(@"
+    SELECT city AS City, COUNT(*) AS PatientCount
+    FROM patients
+    GROUP BY city
+    ORDER BY PatientCount DESC").ToList();
+```
+
+**Criterios de corrección:**
+- Consulta a) correcta: 4 puntos.
+- Consulta b) correcta: 4 puntos.
+- Explicación correcta de `=` vs `LIKE`: 4 puntos.
+- Consulta d) correcta con GROUP BY y ORDER BY: 4 puntos.
+- Uso de `ExecuteScalar<long>` o `Query` apropiado: 4 puntos.
+
+---
+
+### Actividad 4 — Dapper: Query<T> con alias AS y parámetros (25 puntos)
+
+**Solución:**
+
+```csharp
+// GET /patients/search — buscar pacientes con filtros opcionales
+app.MapGet("/patients/search", (string? city, long? minHeight) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+
+    // Construir la consulta SQL dinamicamente segun los parametros recibidos
+    var sql = @"
+        SELECT patient_id AS PatientId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               gender AS Gender,
+               birth_date AS BirthDate,
+               city AS City,
+               province_id AS ProvinceId,
+               allergies AS Allergies,
+               height AS Height,
+               weight AS Weight
+        FROM patients
+        WHERE 1 = 1";
+
+    var parameters = new {};
+
+    // Agregar filtro por ciudad si se proporciona
+    if (!string.IsNullOrEmpty(city))
+    {
+        sql += " AND city LIKE @city";
+        parameters = new { city = $"%{city}%" };
+    }
+
+    // Agregar filtro por altura minima si se proporciona
+    if (minHeight.HasValue)
+    {
+        sql += " AND height >= @minHeight";
+        // Nota: si ya tenemos parametros de city, necesitamos combinarlos
+        // La forma correcta es construir un objeto con todos los parametros
+    }
+
+    var patients = connection.Query<Patient>(sql, parameters).ToList();
+    return Results.Ok(patients);
+});
+```
+
+**Solución correcta con parámetros combinados:**
+
+```csharp
+app.MapGet("/patients/search", (string? city, long? minHeight) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+
+    var sql = @"
+        SELECT patient_id AS PatientId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               gender AS Gender,
+               birth_date AS BirthDate,
+               city AS City,
+               province_id AS ProvinceId,
+               allergies AS Allergies,
+               height AS Height,
+               weight AS Weight
+        FROM patients
+        WHERE 1 = 1";
+
+    // Construir el objeto de parametros dinamicamente
+    var parameters = new Dictionary<string, object>();
+
+    if (!string.IsNullOrEmpty(city))
+    {
+        sql += " AND city LIKE @city";
+        parameters.Add("@city", $"%{city}%");
+    }
+
+    if (minHeight.HasValue)
+    {
+        sql += " AND height >= @minHeight";
+        parameters.Add("@minHeight", minHeight.Value);
+    }
+
+    var patients = connection.Query<Patient>(sql, parameters).ToList();
+    return Results.Ok(patients);
+});
+```
+
+**Criterios de corrección:**
+- Endpoint `/patients/search` con parámetros opcionales: 5 puntos.
+- Filtro por `city` con `LIKE @city` y `%valor%`: 5 puntos.
+- Filtro por `minHeight` con `height >= @minHeight`: 5 puntos.
+- Consulta parametrizada (sin concatenación de strings): 5 puntos.
+- Record `Patient` después de `app.Run()` y tipos canónicos: 5 puntos.
+
+---
+
+### Actividad 5 — LIKE y consultas con parámetros (15 puntos)
+
+**a) Solución:**
+
+```csharp
+using var connection = new SqliteConnection(connectionString);
+var patients = connection.Query<Patient>(@"
+    SELECT patient_id AS PatientId,
+           first_name AS FirstName,
+           last_name AS LastName,
+           gender AS Gender,
+           birth_date AS BirthDate,
+           city AS City,
+           province_id AS ProvinceId,
+           allergies AS Allergies,
+           height AS Height,
+           weight AS Weight
+    FROM patients
+    WHERE first_name LIKE @name", new { name = "M%" }).ToList();
+```
+
+Resultado: pacientes cuyo primer nombre comienza con 'M'.
+
+**b) Solución:**
+
+```csharp
+// Buscar pacientes cuya ciudad contenga 'san'
+var patients = connection.Query<Patient>(@"
+    SELECT patient_id AS PatientId,
+           first_name AS FirstName,
+           last_name AS LastName,
+           gender AS Gender,
+           birth_date AS BirthDate,
+           city AS City,
+           province_id AS ProvinceId,
+           allergies AS Allergies,
+           height AS Height,
+           weight AS Weight
+    FROM patients
+    WHERE city LIKE @city", new { city = "%san%" }).ToList();
+```
+
+**Problema de mayúsculas/minúsculas:** SQLite por defecto es case-sensitive para `LIKE`. La cadena `'%san%'` no coincidirá con `'San Martín'` ni `'SAN JUAN'`.
+
+**Solución:** Usar `LOWER()` en la consulta y en el parámetro:
+
+```csharp
+WHERE LOWER(city) LIKE @city
+```
+
+Con `new { city = "%san%" }`. Esto convierte la ciudad a minúsculas antes de comparar, pero el patrón también debe estar en minúsculas. Alternativamente, se puede usar `COLLATE NOCASE`:
+
+```sql
+WHERE city LIKE @city COLLATE NOCASE
+```
+
+Con `new { city = "%san%" }`.
+
+**c) Solución:**
+
+```csharp
+app.MapGet("/patients/bycity/{city}", (string city) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var patients = connection.Query<Patient>(@"
+        SELECT patient_id AS PatientId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               gender AS Gender,
+               birth_date AS BirthDate,
+               city AS City,
+               province_id AS ProvinceId,
+               allergies AS Allergies,
+               height AS Height,
+               weight AS Weight
+        FROM patients
+        WHERE city LIKE @city", new { city = $"%{city}%" }).ToList();
+
+    return patients.Count == 0
+        ? Results.NotFound(new { mensaje = "No se encontraron pacientes en esa ciudad" })
+        : Results.Ok(patients);
+});
+```
+
+**Criterios de corrección:**
+- Consulta a) correcta con `M%`: 3 puntos.
+- Consulta b) correcta con solución para case-sensitivity: 5 puntos.
+- Endpoint c) correcto con `LIKE` y `Results.NotFound`: 4 puntos.
+- Uso de parámetros (no concatenación): 3 puntos.
+
+---
+
+### Actividad 6 — Integración: endpoint GET con Dapper y filtrado (20 puntos)
+
+**Solución completa:**
+
+```csharp
+using Dapper;
+using Microsoft.Data.Sqlite;
+
+var connectionString = "Data Source=hospital.db";
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// GET /patients — lista completa de pacientes
 app.MapGet("/patients", () =>
 {
     using var connection = new SqliteConnection(connectionString);
@@ -39,30 +408,21 @@ app.MapGet("/patients", () =>
     return Results.Ok(patients);
 });
 
-app.Run();
-
-record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate,
-               string? City, long ProvinceId, string? Allergies, long? Height, long? Weight);
-```
-
-- Conexión (5 ptos.): `var connectionString = ...` fuera del endpoint (4 ptos.) o dentro (5 ptos.). Sin `using` en la conexión → 0 ptos.
-- SELECT con alias (6 ptos.): debe tener alias AS para todas las columnas. Si omite una sola, descuento 1 pto. cada una. Si escribe `SELECT *` sin alias, descuento 6 ptos.
-- Record (6 ptos.): cada tipo incorrecto descuenta 1 pto. (por ejemplo, `int PatientId` en lugar de `long` son -2 ptos.; `DateTime BirthDate` en lugar de `string` son -2 ptos.).
-- `Results.Ok` (3 ptos.): debe estar presente; si falta se asignan 0 ptos.
-
-### Actividad 2 — Filtro WHERE con parámetro (20 ptos.)
-
-**Código esperado:**
-
-```csharp
+// GET /patients/{id:long} — un paciente por ID o 404
 app.MapGet("/patients/{id:long}", (long id) =>
 {
     using var connection = new SqliteConnection(connectionString);
     var patient = connection.QueryFirstOrDefault<Patient>(@"
-        SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName,
-               gender AS Gender, birth_date AS BirthDate, city AS City,
-               province_id AS ProvinceId, allergies AS Allergies,
-               height AS Height, weight AS Weight
+        SELECT patient_id AS PatientId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               gender AS Gender,
+               birth_date AS BirthDate,
+               city AS City,
+               province_id AS ProvinceId,
+               allergies AS Allergies,
+               height AS Height,
+               weight AS Weight
         FROM patients
         WHERE patient_id = @id", new { id });
 
@@ -70,119 +430,76 @@ app.MapGet("/patients/{id:long}", (long id) =>
         ? Results.NotFound(new { mensaje = "Paciente no encontrado" })
         : Results.Ok(patient);
 });
-```
 
-Se acepta que el SELECT sea más corto (solo las columnas necesarias siempre que mantenga los alias).
-
-- Ruta `{id:long}` (6 ptos.): si usa `{id:int}` son -4 ptos. por violar la convención del curso.
-- Consulta parametrizada (6 ptos.): debe usar `@id` y `new { id }`. Si concatena `$"WHERE patient_id = {id}"` son 0 ptos. en este ítem.
-- `Results.NotFound` (4 ptos.): acepta cualquier mensaje en español; si el mensaje está en inglés se descuentan 2 ptos.
-- Mensaje en español (4 ptos.): asignado solo si está presente.
-
-### Actividad 3 — JOIN entre dos tablas (20 ptos.)
-
-**Código esperado:**
-
-```csharp
-app.MapGet("/doctors", () =>
+// GET /patients/search — filtrado combinado por ciudad y altura minima
+app.MapGet("/patients/search", (string? city, long? minHeight) =>
 {
     using var connection = new SqliteConnection(connectionString);
-    var doctors = connection.Query<Doctor>(@"
-        SELECT doctor_id AS DoctorId, first_name AS FirstName,
-               last_name AS LastName, specialty AS Specialty
-        FROM doctors").ToList();
-    return Results.Ok(doctors);
-});
 
-app.MapGet("/doctors/{id:long}", (long id) =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var doctor = connection.QueryFirstOrDefault<Doctor>(@"
-        SELECT doctor_id AS DoctorId, first_name AS FirstName,
-               last_name AS LastName, specialty AS Specialty
-        FROM doctors
-        WHERE doctor_id = @id", new { id });
+    var sql = @"
+        SELECT patient_id AS PatientId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               gender AS Gender,
+               birth_date AS BirthDate,
+               city AS City,
+               province_id AS ProvinceId,
+               allergies AS Allergies,
+               height AS Height,
+               weight AS Weight
+        FROM patients
+        WHERE 1 = 1";
 
-    return doctor is null
-        ? Results.NotFound(new { mensaje = "Médico no encontrado" })
-        : Results.Ok(doctor);
+    var parameters = new Dictionary<string, object>();
+
+    if (!string.IsNullOrEmpty(city))
+    {
+        sql += " AND city LIKE @city";
+        parameters.Add("@city", $"%{city}%");
+    }
+
+    if (minHeight.HasValue)
+    {
+        sql += " AND height >= @minHeight";
+        parameters.Add("@minHeight", minHeight.Value);
+    }
+
+    var patients = connection.Query<Patient>(sql, parameters).ToList();
+    return Results.Ok(patients);
 });
 
 app.Run();
 
-record Doctor(long DoctorId, string FirstName, string LastName, string Specialty);
+// Record posicional despues de app.Run()
+record Patient(
+    long PatientId,
+    string FirstName,
+    string LastName,
+    string Gender,
+    string BirthDate,
+    string? City,
+    long ProvinceId,
+    string? Allergies,
+    long? Height,
+    long? Weight);
 ```
 
-- Endpoint GET /doctors (8 ptos.): SELECT completo con alias, devolución con `Results.Ok`.
-- Endpoint GET /doctors/{id:long} (8 ptos.): filtro parametrizado, manejo de 404.
-- Record (4 ptos.): `long DoctorId` (no `int`), `string` en las tres propiedades restantes.
-
-### Actividad 4 — LIKE con parámetro (20 ptos.)
-
-**Código esperado:**
-
-```csharp
-app.MapGet("/patients/search", (HttpContext context) =>
-{
-    var term = context.Request.Query["term"];
-
-    using var connection = new SqliteConnection(connectionString);
-    var patients = connection.Query<Patient>(@"
-        SELECT patient_id AS PatientId, first_name AS FirstName,
-               last_name AS LastName, gender AS Gender,
-               birth_date AS BirthDate, city AS City,
-               province_id AS ProvinceId, allergies AS Allergies,
-               height AS Height, weight AS Weight
-        FROM patients
-        WHERE last_name LIKE '%' || @term || '%'", new { term }).ToList();
-
-    return Results.Ok(patients);
-});
-```
-
-- Lectura de `term` (6 ptos.): puede usar `context.Request.Query["term"]` o recibir `string term` como parámetro directo en el lambda (ASP.NET lo vincula desde la query string automáticamente). Cualquiera de las dos es válida.
-- LIKE parametrizado (8 ptos.): debe usar `@term` como parámetro. Si el LIKE se escribe como `$"LIKE '%{term}%'"` concatenando, es 0 ptos. en este ítem (riesgo de inyección SQL además de violar la regla del curso).
-- Devolución (6 ptos.): `Results.Ok(patients)`. Si devuelve la lista sin envolver, descuento 3 ptos.
-
-**Nota:** el uso de concatenación con `||` es específico de SQLite y es seguro porque `term` llega como parámetro, no como texto literal.
-
-### Actividad 5 — Repaso integrador Unidad 1 (20 ptos.)
-
-**Código esperado:**
-
-```csharp
-app.MapGet("/resumen", () =>
-{
-    var unidades = new List<string>
-    {
-        "U1: Fundamentos de C# y Minimal API",
-        "U2: Acceso a datos con SQLite y Dapper"
-    };
-
-    int total = 0;
-    for (int i = 0; i < 4; i++)
-        total++;
-
-    return Results.Ok(new
-    {
-        materia = "Minimal API con C# .NET 6",
-        unidadesVistas = unidades,
-        totalEndpointsCreados = total
-    });
-});
-```
-
-- Objeto JSON (8 ptos.): tres propiedades exactas. Si el nombre de una propiedad está mal escrito (por ejemplo, `total_endpoints` en lugar de `totalEndpointsCreados`), descuento 2 ptos. cada una.
-- Bucle `for` (8 ptos.): debe usar `for` con un contador. Si el resultado no es 4 (por ejemplo, `i < 3` en lugar de `i < 4`), descuento 4 ptos.
-- `Results.Ok` (4 ptos.): si falta o devuelve otro tipo, 0 ptos.
+**Criterios de corrección:**
+- Los tres endpoints funcionan correctamente: 8 puntos.
+- Todos los SQL usan alias `AS` y parámetros `@`: 5 puntos.
+- Record `Patient` después de `app.Run()`, tipos canónicos: 3 puntos.
+- Códigos de respuesta correctos (200, 404): 2 puntos.
+- Comentarios en español y código limpio: 2 puntos.
 
 ---
 
-## Criterios generales de corrección
+## Criterios de corrección generales
 
-- **Puntaje total:** 100 puntos.
-- **Presentación:** descuento de hasta 5 ptos. si no es manuscrita.
-- **Aprobación del repaso:** 60 ptos. o más.
-- **Verificación de ejecución:** se espera que el alumno anote al menos un resultado de una prueba (p. ej., «Probé con curl y devolvió la lista de pacientes»). Sin eso, se descuenta 1 pto. por actividad.
-- **Grupo:** se permite trabajo grupal; entrega individual manuscrita. Textos idénticos entre alumnos se verifican con defensa oral.
-- **Uso de computadora obligatorio para las actividades 1 a 4.** Si el alumno no tiene acceso, se acuerda una resolución asistida en el próximo encuentro. La Actividad 5 puede resolverse en papel (solo código, sin ejecución).
+| Criterio | Ponderación |
+|----------|-------------|
+| Soluciones de código correctas y compilables | 45% |
+| Explicaciones técnicas precisas (SQL, LIKE, Dapper) | 25% |
+| Cumplimiento de convenciones del curso (tipos, alias, parametrización) | 20% |
+| Presentación ordenada y legible | 10% |
+
+La presentación es individual y manuscrita. Los fragmentos de código deben estar transcritos a mano con la misma estructura y comentarios que la solución oficial. Se penaliza la entrega de código que no compile, que omita alias `AS` en consultas Dapper, o que concatene valores en consultas SQL.

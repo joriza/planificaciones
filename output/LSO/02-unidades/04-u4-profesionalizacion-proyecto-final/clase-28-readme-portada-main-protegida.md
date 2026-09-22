@@ -1,216 +1,167 @@
-# Encuentro 28 — README de portada y main protegida
+# Encuentro 28 — README de portada y más
 
-**Unidad 4:** Profesionalización y proyecto final
-**Carácter:** Procedimental
-**Duración:** 240 minutos
+> Profesionalización y proyecto final
 
----
+## 1. Metadatos de bloque
 
-## Objetivos de aprendizaje
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 28 de 36 |
+| Unidad | 4 — Profesionalización y proyecto final |
+| Eje temático | 6 — Profesionalización y control de versiones |
+| Carácter/Objetivo | Procedimental |
+| Estructura | clase |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Concepto nuevo | README de portada y más |
+| Requisitos previos | Encuentro 27: flujo de ramas y PRs configurado en el repositorio del grupo |
+| Uso de celular | No permitido |
+| Organización del trabajo | Grupos de trabajo (presentes ÷ equipos disponibles); cada grupo opera su propio repositorio |
 
-- Redactar un README.md profesional con secciones completas.
-- Configurar reglas de protección de la rama `main` en GitHub.
-- Integrar el README al repositorio grupal mediante Pull Request.
-- Verificar que el `.gitignore` excluye `bin/` y `obj/`.
+### Reparto de tiempos teóricos
 
----
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-## Reparto de tiempos (240 minutos)
+## 2. Objetivos de aprendizaje
 
-| Bloque | Minutos |
-|---|---|
-| Apertura y motivación | 20 |
-| Desarrollo teórico-práctico | 120 |
-| Consolidación y cierre | 20 |
-| Actividad complementaria / trabajo final | 80 |
-| **Total** | **240** |
+1. Escribir un README de portada que comunique el proyecto de forma clara y profesional.
+2. Crear issues de GitHub para organizar el trabajo del proyecto final.
+3. Verificar que la rama `main` permanezca protegida durante todo el flujo.
+4. Documentar el proyecto con el mismo cuidado con el que se escribe código.
 
----
+## 3. Apertura y motivación (20 min)
 
-## Teoría mínima
+### Charla rápida
 
-### README como portada del proyecto
+Un README de portada es como la fachada de un local comercial: si está limpia, ordenada y explica lo que se ofrece, la gente entra con confianza. Si está vacía o confusa, la gente se va y no vuelve. En el mundo del software, el README es la primera impresión que tiene cualquier persona que llega al repositorio — incluyendo el docente que va a evaluar el trabajo final.
 
-El README.md es la primera página que ve cualquier persona al entrar al repositorio. Un README profesional de un proyecto académico contiene:
+### Puente desde el trabajo anterior
 
-1. **Nombre del proyecto** y descripción breve (una línea).
-2. **Tabla de contenidos** (opcional en proyectos pequeños).
-3. **Requisitos previos:** SDK .NET 6, SQLite, Git.
-4. **Instalación:** clonar, restaurar paquetes, ejecutar.
-5. **Estructura del repositorio:** qué hay en cada carpeta.
-6. **Tecnologías usadas:** .NET 6, Dapper, SQLite.
-7. **Integrantes del grupo.**
-8. **Licencia** (opcional, pueden usar MIT).
+En el encuentro anterior, cada grupo configuró su flujo profesional con ramas de feature, PRs revisados y `main` protegida. Ahora falta un paso clave: documentar el proyecto. Un repositorio profesional no solo tiene código que funciona, sino que alguien que llega por primera vez entiende qué es el proyecto, cómo ejecutarlo y qué hace. Hoy van a armar el README de portada y van a organizar el trabajo con issues de GitHub.
 
-### Protección de main en GitHub
+## 4. Desarrollo teórico-práctico (120 min)
 
-La rama `main` se protege desde GitHub:
+### 4.1 — README de portada del repositorio (40 min)
 
-1. Ir a Settings > Branches > Add branch protection rule.
-2. En "Branch name pattern": `main`.
-3. Marcar "Require a pull request before merging".
-4. Marcar "Require approvals" (al menos 1).
-5. Marcar "Dismiss stale pull request approvals when new commits are pushed".
-6. Marcar "Do not allow bypassing the above settings".
-7. Guardar.
+Un README de portada debe contener como mínimo:
 
-Desde ese momento, ningún integrante puede pushear directamente a `main`. Todo cambio debe entrar por PR con al menos una aprobación.
+1. **Nombre del proyecto** — claro y descriptivo.
+2. **Descripción breve** — qué hace la API, en una o dos oraciones.
+3. **Tecnologías utilizadas** — C# .NET 6, Minimal API, Dapper, SQLite.
+4. **Cómo ejecutar el proyecto** — pasos para clonar, restaurar paquetes y ejecutar.
+5. **Endpoints disponibles** — lista de rutas con método HTTP y descripción breve.
+6. **Estructura del repositorio** — carpeta `trabajo-final/` con `Program.cs` y `hospital.db`.
 
-### Gitignore verificado
+**Práctica guiada:**
 
-El archivo `.gitignore` en la raíz del repositorio debe contener al menos:
+El docente muestra un ejemplo de README bien escrito en pantalla y analiza cada sección. Luego, cada grupo empieza a redactar el suyo propio.
 
-```
-bin/
-obj/
-```
-
-Si algún grupo omitió este archivo en los primeros commits, se agrega ahora y se eliminan `bin/` y `obj/` del tracking con:
-
-```bash
-git rm -r --cached bin/ obj/
-git add .gitignore
-git commit -m "gitignore: excluir bin y obj del repositorio"
-```
-
----
-
-## Práctica guiada
-
-### Paso 1: Redactar el README.md
-
-Cada grupo, desde su rama `feature/readme-portada` (creada en el encuentro 27), completa el README.md con el siguiente esquema:
-
-```markdown
-# Nombre del proyecto
-
-Breve descripción del proyecto (un párrafo).
-
-## Requisitos previos
-
-- SDK .NET 6 o superior
-- SQLite3
-- Git
-
-## Instalacion
-
-1. Clonar el repositorio:
-   ```bash
-   git clone <url-del-repo>
-   cd <nombre-del-repo>
-   ```
-2. Ejecutar la API:
-   ```bash
-   dotnet run
-   ```
-
-## Estructura del repositorio
+**Ejemplo de sección de endpoints:**
 
 ```
-tp-u1/          — Minimal API GET
-tp-u2/          — SQLite y Dapper basico
-tp-u3/          — CRUD completo
-trabajo-final/  — Trabajo final integrador
+## Endpoints
+
+| Método | Ruta | Descripción |
+| --- | --- | --- |
+| GET | /patients | Listar todos los pacientes |
+| GET | /patients/{id:long} | Obtener un paciente por ID |
+| POST | /patients | Crear un nuevo paciente |
+| PUT | /patients/{id:long} | Actualizar un paciente existente |
+| DELETE | /patients/{id:long} | Eliminar un paciente |
 ```
 
-## Tecnologias
+**Ejercicio independiente:**
 
-- .NET 6 + Minimal API
-- Dapper (micro-ORM)
-- SQLite
-- Git + GitHub
+Cada grupo redacta las secciones del README de portada en un archivo `README.md` en la raíz de su repositorio. El README debe estar en español y cubrir al menos los 6 puntos de la lista.
 
-## Integrantes
+### 4.2 — Issues para organizar el trabajo (40 min)
 
-- [Nombre Apellido]
-- [Nombre Apellido]
-- [Nombre Apellido]
-```
+Los issues de GitHub son la forma de rastrear tareas, errores y mejoras en un proyecto. En el contexto del trabajo final, cada grupo debe crear issues que descompongan el trabajo en partes manejables.
 
-### Paso 2: Configurar la proteccion de main
+**Ejemplos de issues para el trabajo final:**
 
-El docente proyecta la configuración y cada grupo la replica en su repositorio:
+- `feature/endpoint-pacientes` — Implementar CRUD completo de pacientes.
+- `feature/endpoint-doctorados` — Agregar endpoints para doctores con JOINs.
+- `feature/endpoint-pacientes-con-admisiones` — Endpoint que muestre pacientes con sus admisiones usando JOIN.
+- `docs/readme-portada` — README de portada del repositorio.
+- `test/integracion-basica` — Tests de integración básicos con la API.
 
-1. GitHub > Settings > Branches > Add rule.
-2. Branch name pattern: `main`.
-3. Habilitar "Require a pull request before merging".
-4. "Required approvals": 1.
-5. Guardar.
+**Práctica guiada:**
 
-### Paso 3: Verificar que main esta protegida
+El docente muestra cómo:
+1. Crear un issue desde GitHub (botón "New issue").
+2. Usar labels para categorizar (feature, docs, test, bug).
+3. Asignar el issue a un integrante del grupo.
+4. Vincular un issue a un PR con `Closes #N`.
 
-Cada grupo intenta pushear un cambio mínimo directo a `main`:
+**Ejercicio independiente:**
 
-```bash
-git checkout main
-echo "# Prueba" >> README.md
-git add README.md
-git commit -m "main: prueba de proteccion"
-git push origin main
-```
+Cada grupo crea al menos 3 issues que descompongan el trabajo final en tareas concretas. Cada issue tiene un título descriptivo y una breve descripción de lo que implica.
 
-El push debe fallar con un mensaje similar a:
+### 4.3 — Main protegida: verificación y mantenimiento (40 min)
 
-```
-remote: error: GH006: Protected branch update failed for refs/heads/main.
-```
+La rama `main` protegida configurada en el encuentro anterior debe mantenerse así durante todo el desarrollo. Hoy se verifica que el flujo funciona correctamente y se refuerza la disciplina.
 
-Esa es la confirmación de que la protección funciona.
+**Práctica guiada:**
 
-### Paso 4: Subir cambios por PR
+Cada grupo:
+1. Verifica que `main` está protegida (Settings → Branches).
+2. Intenta hacer push directo a `main` y confirma que GitHub lo bloquea.
+3. Abre un PR desde una rama de feature existente hacia `main`.
+4. Asigna revisión a un compañero y espera la aprobación.
 
-Los cambios reales del README se suben desde `feature/readme-portada`:
+**Ejercicio independiente:**
 
-```bash
-git checkout feature/readme-portada
-# completar el README.md con el contenido del Paso 1
-git add README.md
-git commit -m "readme: portada completa del repositorio"
-git push origin feature/readme-portada
-```
+Cada grupo completa al menos un ciclo completo de rama → PR → revisión → merge → borrar rama, verificando que `main` no recibe cambios directos.
 
-Se abre un Pull Request hacia `main`, se asigna revisor, se aprueba y se mergea.
+## 5. Consolidación y cierre (20 min)
 
----
+Revisión rápida de lo trabajado:
 
-## Ejercicio independiente
+- ¿Cada grupo tiene un README de portada con al menos las 6 secciones?
+- ¿Se crearon issues para organizar el trabajo final?
+- ¿`main` está protegida y los PRs se están fusionando por la vía correcta?
 
-Continuando con el trabajo final en `trabajo-final/`:
+El docente verifica en pantalla los repositorios de cada grupo y da retroalimentación inmediata sobre el README y los issues.
 
-1. Verificar que el repositorio tenga `.gitignore` con `bin/` y `obj/`. Si no, agregarlo y eliminar del tracking.
-2. Redactar una sección adicional en el README: "Instrucciones para probar la API con Thunder Client", con ejemplos de endpoints GET, POST, PUT y DELETE.
-3. Abrir una rama `feature/reader-testing`, commitear el README actualizado y abrir un PR.
-4. Solicitar revisión y mergear.
+## 6. Actividad complementaria (80 min)
 
-**Pista:** la sección de prueba puede incluir comandos curl como:
+### Trabajo en grupo: README + Issues + Flujo de PRs
 
-```
-curl http://localhost:5000/patients
+Cada grupo completa las siguientes tareas:
 
-curl -X POST http://localhost:5000/patients \
-  -H "Content-Type: application/json" \
-  -d '{"firstName":"Juan","lastName":"Perez","gender":"M","birthDate":"1990-05-15"}'
-```
+1. **Finalizar el README de portada** (20 min): completar todas las secciones pendientes, incluyendo la lista de endpoints y la estructura del repositorio.
+2. **Crear y organizar issues** (15 min): al menos 3 issues con labels y asignación a integrantes.
+3. **Completar un ciclo de PR completo** (25 min): crear una rama de feature, hacer un cambio documentado en el README o en código, abrir PR, revisar con compañero, fusionar y borrar rama.
+4. **Verificar que `main` está limpia** (10 min): confirmar que no hay commits directos a `main` y que todas las fusiones pasaron por PR.
+5. **Preparar la estructura del trabajo final** (10 min): asegurar que la carpeta `trabajo-final/` existe en el repositorio con `Program.cs` y `hospital.db` listos para el próximo encuentro.
 
-**Solución esperada:** README completo con sección de pruebas, PR mergeado y main protegida verificada.
+La actividad de extensión incluye que los grupos que terminan temprano agreguen una sección de "Contribución" al README con las instrucciones para que otros grupos puedan clonar y ejecutar su API.
 
----
+## 7. Cierre (15 min)
 
 ### Qué te llevás
 
-- El README profesional es la tarjeta de presentación del proyecto.
-- La protección de `main` fuerza que todo cambio pase por revisión, manteniendo la rama principal siempre estable.
+- Un README de portada es la carta de presentación del proyecto: debe ser claro, completo y profesional.
+- Los issues organizan el trabajo en tareas concretas y permiten跟踪 el progreso del equipo.
+- La rama `main` protegida se mantiene como barrera de seguridad durante todo el desarrollo.
+- El flujo de PRs con revisión interna del grupo es la práctica estándar en equipos profesionales.
 
-### Lo que viene
+## Lo que viene
 
-En el Encuentro 29 se consolida el CRUD completo con JOINs y se agrega un endpoint de conteo avanzado: el trabajo final empieza a tomar forma definitiva.
+Encuentro 29: Consolidación CRUD con JOINs — van a consolidar el CRUD completo sobre `hospital.db` y a agregar endpoints que usen JOINs para relacionar tablas.
 
-## Errores comunes y trampas
+## 8. Errores comunes y trampas
 
-| Error | Causa | Solución |
-|---|---|---|
-| README vacío o con solo el nombre | Se escribió lo mínimo para cumplir | Seguir la plantilla del paso 1; completar integrantes, requisitos y estructura. |
-| Push directo a main no falla | No se configuró la protección en GitHub | Verificar Settings > Branches > Add rule; la regla debe estar activa. |
-| `.gitignore` no funciona en archivos ya trackeados | Git ya tiene `bin/` y `obj/` bajo control de versiones | Usar `git rm --cached` para dejar de trackearlos sin borrarlos del disco. |
-| PR sin descripción concreta | Se mergea rápido sin documentar qué cambia | Agregar descripción breve al PR, vinculando el issue si existe. |
-| Markdown del README no se renderiza | Error de sintaxis (espacios, tildes en identificadores) | Usar https://markdownlivepreview.com para verificar antes de pushear. |
+| ✔ | Error | Causa probable | Intervención |
+| --- | --- | --- | --- |
+| ☐ | README vacío o con solo el nombre del proyecto | No dedicar tiempo a documentar | Recordar que el README es la primera impresión del repositorio y debe cubrir al menos 6 secciones |
+| ☐ | Issues sin descripción o con títulos vagos | No entender que el issue es una tarea concreta | Orientar a que cada issue tenga un título descriptivo y una breve descripción de lo que implica |
+| ☐ | Hacer push directo a `main` después de configurar la protección | Confusión sobre el flujo de trabajo | Verificar que el grupo entiende que todo cambio pasa por una rama de feature y un PR |
+| ☐ | PR fusionado sin revisión del grupo | Prisa por terminar | Recordar que la revisión entre pares es obligatoria antes de fusionar |
+| ☐ | README en inglés | Convención del curso exige español en textos visibles | Los textos visibles al usuario y la documentación deben estar en español |

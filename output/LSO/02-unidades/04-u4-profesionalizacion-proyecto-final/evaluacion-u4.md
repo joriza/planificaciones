@@ -1,93 +1,62 @@
-# Evaluación de la Unidad 4 — Profesionalización y proyecto final
+# Evaluación de la Unidad 4 — Encuentro 32
 
-## Metadatos
+> Evaluación de la instancia «Evaluación de la Unidad 4 — Encuentro 32» · Curso: Minimal API con C# .NET 6. Documento de **metadatos y acuerdos de la instancia**, en registro docente formal. El material del alumno es la versión `evaluacion-u4-version-a` y sus versiones equivalentes generadas; sus soluciones y criterios de corrección van en el anexo docente separado (`evaluacion-u4-version-a-anexo-docente.md`).
 
-| Campo | Valor |
-|---|---|
-| Asignatura | Minimal API con C# .NET 6 |
-| Unidad | U4: Profesionalización y proyecto final |
-| Encuentro de evaluación | 32 (dedicado) |
-| Tipo | Trabajo final integrador con defensa individual |
-| Modalidad | Grupal (2-3 integrantes), defensa individual |
-| Duración del encuentro | 240 minutos |
-| Duración de la defensa | Hasta 10 minutos por integrante |
-| Criterio de aprobación | 60/100 en el trabajo final + defensa satisfactoria |
+## 1. Identificación
 
-## Objetivos de evaluación
+| Campo | Detalle |
+| --- | --- |
+| Instancia | Evaluación de la Unidad 4 — Encuentro 32 |
+| Unidad evaluada | 4 — Profesionalización y proyecto final |
+| Eje temático | Defensa del trabajo final + profesionalización del flujo Git |
+| Carácter/Objetivo | Evaluación de la defensa del trabajo final (API con Dapper) y del ejercicio breve de profesionalización (flujo de ramas, PR, main protegida). |
+| Destinatarios | Todo el curso |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Uso de celular | No permitido |
+| Documentos de la instancia | `evaluacion-u4.md` · `evaluacion-u4-version-a.md` · `evaluacion-u4-version-a-anexo-docente.md` (más las versiones equivalentes B/C/D generadas desde la A) |
 
-- Integrar todo el contenido del curso en una API completa: CRUD, JOIN, Dapper, tipos canónicos y respuestas HTTP.
-- Aplicar flujo Git profesional: issues, ramas por feature, pull requests, main protegida.
-- Redactar un README profesional con instrucciones de instalación, endpoints y tecnologías.
-- Presentar y defender individualmente el trabajo final ante el docente.
-- Demostrar comprensión conceptual de las decisiones técnicas tomadas.
+## 2. Estructura del encuentro (240 min)
 
-## Formato de entrega
+| Momento | Tiempo | Qué ocurre |
+| --- | --- | --- |
+| Defensa del trabajo final | 90 min | Cada alumno presenta su proyecto final (API con Dapper) al docente y al grupo; el docente evalúa la funcionalidad de la API y la calidad de la documentación. |
+| Ejercicio breve de profesionalización | 60 min | Ejercicio práctico sobre flujo de ramas por feature, apertura de PR, revisión de PR y protección de main. |
+| Devolución y retroalimentación | 60 min | El docente devuelve la evaluación con comentarios individuales; se registran los puntos de mejora en la planilla. |
+| Cierre y registro | 30 min | Se consolidan las notas de la defensa y el ejercicio en la planilla de evaluación. |
+| **Total** | **240 min** | |
 
-1. **Antes del encuentro 32:** cada grupo debe tener el repositorio finalizado con la carpeta `trabajo-final/`, README.md, main protegida, y al menos 2 PR mergeados durante la unidad.
-2. **Defensa individual (encuentro 32):** cada integrante pasa al frente, muestra el repositorio en GitHub, ejecuta la API, prueba dos endpoints, explica un fragmento de código asignado por el docente y responde preguntas conceptuales.
-3. **Devolución:** el encuentro siguiente (encuentro 34, intensificación de U3-U4) abre con devolución y entrega de notas.
+## 3. Regla canónica de la instancia
 
-## Rúbrica de evaluación (100 puntos)
+La defensa del trabajo final se realiza en este encuentro (E32). El ejercicio de profesionalización se realiza de forma práctica durante el encuentro. La devolución de evaluaciones abre el encuentro siguiente. Si la defensa está incompleta, el alumno presenta solo lo entregado y recibe devolución condicionada; la parte pendiente se resuelve en el encuentro de recuperación programado.
 
-### Funcionalidad técnica (30 puntos)
+## 4. Defensa individual del TP (modalidad)
 
-| Criterio | Puntos | Descripción |
-|---|---|---|
-| GET (lista) sobre tabla principal | 3 | Devuelve todos los registros |
-| GET /{id} sobre tabla principal | 3 | 200 si existe, 404 si no |
-| GET con JOIN (dos tablas) | 4 | Cruza dos tablas con alias AS |
-| GET con JOIN y agregación | 4 | LEFT JOIN + COUNT + GROUP BY |
-| POST con validación | 5 | Crea registro, valida campo obligatorio, 201 |
-| PUT con verificación de existencia | 4 | Actualiza, 204, 404 si no existe |
-| DELETE con verificación de existencia | 4 | Elimina, 204, 404 si no existe |
-| GET /{id} sobre segunda tabla | 3 | Endpoint adicional de lectura |
+El alumno presenta su proyecto final funcionando. El docente pregunta: (1) cómo se estructura la API (endpoints, records, convenciones), (2) cómo se conecta a la base de datos con Dapper, (3) cómo se manejan los errores (404, 400), (4) cómo se organizaron las ramas y PR durante el desarrollo, (5) qué contiene el README de portada, (6) cómo se protegió main. Se registra por objetivo: funcionalidad de la API (0-30), calidad de la documentación (0-20), flujo Git profesional (0-25), defensa oral (0-15), entrega Git (0-10).
 
-### Calidad del código (20 puntos)
+## 5. Alcance
 
-| Criterio | Puntos | Descripción |
-|---|---|---|
-| Tipos canónicos correctos | 5 | `long` para IDs, `string` para fechas, `?` para nulables |
-| Alias `AS` en todos los SELECT | 4 | Snake_case → PascalCase |
-| Conexiones con `using` | 4 | Cada endpoint abre y cierra conexión |
-| `Results.*` en todas las respuestas | 4 | Ok, Created, NoContent, NotFound, BadRequest |
-| Records después de `app.Run()` | 3 | Sin tipos antes del código ejecutable |
+Núcleos incluidos: defensa del trabajo final (API completa con Dapper y hospital.db), ejercicio breve de profesionalización (flujo de ramas por feature, apertura de PR, revisión de PR, protección de main con reglas), README de portada, issues, convenciones de commits. No incluye: evaluación de la funcionalidad de U1-U3 (eso corresponde a las evaluaciones de cada unidad).
 
-### Git profesional (20 puntos)
+## 6. Prueba práctica individual (versiones equivalentes)
 
-| Criterio | Puntos | Descripción |
-|---|---|---|
-| Issues creados y cerrados | 5 | Al menos 2 issues en el repositorio |
-| Ramas feature con nombre correcto | 5 | `feature/nombre-descripcion` |
-| Pull requests con revisión entre pares | 5 | Al menos 2 PR mergeados con comentarios |
-| Rama `main` protegida | 5 | Branch protection activa, requiere PR para merge |
+Cada alumno recibe una versión equivalente (A o B) al azar. La prueba dura 90 minutos, es individual, con computadora, sin celular. El alumno debe completar el ejercicio breve de profesionalización provisto en la versión recibida. La prueba evalúa los objetivos de la unidad con distinto dominio para evitar copia.
 
-### README profesional (10 puntos)
+## 7. Criterios de calificación
 
-| Criterio | Puntos | Descripción |
-|---|---|---|
-| Nombre y descripción del proyecto | 2 | Título y párrafo de qué hace |
-| Requisitos e instalación | 2 | SDK, paquetes, cómo clonar y ejecutar |
-| Estructura del repositorio | 2 | Carpetas y su propósito |
-| Tecnologías utilizadas | 2 | .NET 6, Dapper, SQLite |
-| Integrantes del grupo | 2 | Listado de integrantes con nombre completo |
+Se evalúan: funcionalidad de la API final (30 puntos), calidad de la documentación (README, issues) (20 puntos), flujo Git profesional (ramas, PR, main protegida) (25 puntos), defensa oral y explicación de decisiones (15 puntos), entrega Git con .gitignore y commits (10 puntos). La nota mínima para aprobar es 60 puntos.
 
-### Defensa individual (20 puntos)
+## 8. Condiciones de resolución de la prueba
 
-| Criterio | Puntos | Descripción |
-|---|---|---|
-| Claridad al exponer | 4 | Explica de forma clara y estructurada |
-| Demostración técnica | 4 | Ejecuta y prueba endpoints sin problemas |
-| Explicación de código | 4 | Explica con precisión el bloque asignado |
-| Preguntas conceptuales | 4 | Responde correctamente 2-3 preguntas |
-| Git profesional | 4 | Muestra PRs, ramas y main protegida |
+Resolución individual para la defensa. El ejercicio de profesionalización se realiza de forma práctica en el encuentro. Se permite el uso de la hoja de convenciones técnicas (`convenciones-tecnicas.md`) como material consultable. No se permite consultar soluciones de compañeros ni usar IA generativa durante la defensa. El alumno debe presentar su repositorio GitHub y demostrar la API funcionando.
 
-## Criterio de aprobación
+## 9. Regla de equivalencia entre versiones
 
-- **Nota del trabajo final:** puntaje sobre 100 según rúbrica.
-- **Aprobación:** 60 puntos o más **y** defensa individual satisfactoria.
-- **Trabajo incompleto:** si faltan endpoints obligatorios (POST, PUT, DELETE, JOIN), el puntaje máximo es 50.
-- **Recuperación:** instancias de intensificación de U3-U4 (encuentros 34-35, diciembre y marzo).
+Las versiones A y B tienen los mismos objetivos y los mismos requisitos, con distinto dominio y datos. Ninguna versión tiene reglas que la otra no tenga. Ambas versiones evalúan lo mismo: defensa del trabajo final y ejercicio de profesionalización con flujo Git.
 
-## Cierre de la evaluación
+## 10. Mecánica de asignación de versiones
 
-La Unidad 4 es el trabajo final integrador del curso. Una vez aprobada, el alumno acredita la materia completa. Para quienes no alcancen los 60 puntos o la defensa satisfactoria, las instancias de intensificación evalúan el camino mínimo completo del curso.
+Se asigna una versión (A o B) a cada alumno al azar en el momento de la prueba. El docente registra la versión asignada en la planilla de evaluación junto al nombre del alumno. Los alumnos no pueden cambiar de versión una vez asignada.
+
+## 11. Devolución
+
+La devolución se realiza en el encuentro siguiente. Se devuelve la evaluación con los puntos obtenidos por cada criterio y los comentarios del docente. Si un alumno no alcanza el objetivo mínimo (60 puntos), se le asigna la versión alternativa (B) para recuperación. Se registra la nota en la planilla con los comentarios del docente.

@@ -1,85 +1,134 @@
 # Anexo docente — Encuentro 5: Estructuras de control y métodos
 
-## Encuadre
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
-Segundo encuentro de la Unidad 1. Los estudiantes ya conocen variables básicas y salida por consola. Ahora incorporan métodos, condicionales, bucles y records. El ejercicio sigue siendo de consola, sin API ni base de datos. La progresión del ejercicio único agrega una lista de pacientes, un método de impresión con formato, cálculo de edad condicional y un record posicional.
+## 1. Solución del ejercicio independiente
 
-## Qué observar durante la clase
-
-- Dificultad para distinguir entre definir un método (`void Nombre(...)`) y llamarlo (`Nombre(...);`).
-- Tendencia a declarar el record después de `app.Run()` aun en consola: reforzar que los records van SIEMPRE al final.
-- Errores en el cálculo de edad: resta de años sin ajuste por mes, uso de `int` donde deberían usar `long`.
-- Confusión en el `foreach`: algunos escriben `foreach var p in patients` sin paréntesis.
-
-## Solución completa del ejercicio independiente
+### Calculadora de notas — solución completa
 
 ```csharp
-// Definir la lista de pacientes con datos fijos
-var patients = new List<Patient>
-{
-    new Patient(1, "Ana", "Lopez", "F", "1990-05-15"),
-    new Patient(2, "Luis", "Martinez", "M", "1985-08-22"),
-    new Patient(3, "Elena", "Garcia", "F", "1978-12-03")
-};
+// Program.cs — calculadora de notas con estructuras de control y metodos
+// No usa base de datos; ejercicio de logica en consola
 
-// Metodo para mostrar un paciente con edad calculada
-void PrintPatient(long id, string firstName, string lastName, string gender, string birthDate)
+var notas = new int[] { 6, 8, 5, 9, 4 };
+int aprobadas = 0;
+int desaprobadas = 0;
+
+foreach (var nota in notas)
 {
-    Console.Write($"ID: {id} | {firstName} {lastName} ");
-    if (gender == "F")
+    string estado = ClasificarNota(nota);
+    Console.WriteLine($"Nota {nota}: {estado}");
+
+    if (estado == "Aprobado")
     {
-        Console.Write("(Femenino)");
+        aprobadas++;
     }
     else
     {
-        Console.Write("(Masculino)");
+        desaprobadas++;
     }
-
-    var fechaNac = DateTime.Parse(birthDate);
-    int edad = DateTime.Today.Year - fechaNac.Year;
-    if (DateTime.Today < fechaNac.AddYears(edad))
-    {
-        edad--;
-    }
-
-    Console.Write($" | Nac: {birthDate}");
-    Console.WriteLine($" | Edad: {edad} anios");
 }
 
-// Recorrer la lista y mostrar cada paciente
-Console.WriteLine("=== Lista de pacientes ===");
-foreach (var p in patients)
+Console.WriteLine($"\nTotal aprobadas: {aprobadas}");
+Console.WriteLine($"Total desaprobadas: {desaprobadas}");
+
+string ClasificarNota(int nota)
 {
-    PrintPatient(p.PatientId, p.FirstName, p.LastName, p.Gender, p.BirthDate);
+    return nota >= 7 ? "Aprobado" : "Desaprobado";
 }
-
-// Record al final del archivo
-record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate);
 ```
 
-## Errores previsibles
+**Salida verificada:**
+```
+Nota 6: Desaprobado
+Nota 8: Aprobado
+Nota 5: Desaprobado
+Nota 9: Aprobado
+Nota 4: Desaprobado
 
-1. **Nombre duplicado de método:** si definen dos métodos con el mismo nombre y distinta firma, C# lo permite (overloading), pero confunde a los estudiantes principiantes.
-2. **Variable del `foreach` como `string` en lugar de `Patient`:** usar `var` resuelve el tipo; explicar que `var` no es "sin tipo" sino "inferido del contenedor".
-3. **Calcular edad con fecha actual fija:** si escriben `DateTime.Parse("2025-01-01")` en lugar de `DateTime.Today`, el resultado queda estático.
-4. **Olvidar el ajuste por cumpleaños:** restan años sin verificar si el cumpleaños ya pasó, dando una edad incorrecta.
-5. **Usar `Console.WriteLine` cuando quieren `Console.Write`:** la línea del género se corta prematuramente.
+Total aprobadas: 2
+Total desaprobadas: 3
+```
 
-## Criterios de logro (4-8)
+## 2. Solución de la actividad de extensión
 
-| Nivel | Descripción |
-|---|---|
-| 4 | Define el método pero no logra llamarlo dentro del bucle. |
-| 5 | Muestra la lista con el método, sin cálculo de edad. |
-| 6 | El cálculo de edad compila pero da un año de más o de menos. |
-| 7 | Edad exacta, formato correcto, record al final del archivo. |
-| 8 | Explica por qué el record va al final y distingue `Console.Write` de `WriteLine`. |
+### Ejercicio extendido: promedio de aprobadas
 
-## Agrupamiento
+Extensión del ejercicio anterior: calcular el promedio de las notas aprobadas y mostrarlo con dos decimales.
 
-Individual (parejas si hay máquinas insuficientes). Cada estudiante modifica su proyecto propio del encuentro anterior.
+```csharp
+var notas = new int[] { 6, 8, 5, 9, 4 };
+int aprobadas = 0;
+int sumaAprobadas = 0;
 
-## Ajustes para la siguiente edición
+foreach (var nota in notas)
+{
+    if (nota >= 7)
+    {
+        aprobadas++;
+        sumaAprobadas += nota;
+    }
+}
 
-- Si la mayoría escribe el record al inicio, agregar una advertencia visual en la pizarra durante la práctica guiada.
-- Si el cálculo de edad insume más de 15 minutos, simplificar a solo mostrar el año de nacimiento y diferir el cálculo exacto a actividad complementaria.
+double promedio = aprobadas > 0 ? (double)sumaAprobadas / aprobadas : 0;
+
+Console.WriteLine($"Cantidad de aprobadas: {aprobadas}");
+Console.WriteLine($"Promedio de aprobadas: {promedio:F2}");
+```
+
+**Salida esperada:**
+```
+Cantidad de aprobadas: 2
+Promedio de aprobadas: 8.50
+```
+
+**Pista para el docente:** La conversión `(double)` es necesaria porque la división de dos `int` en C# hace división entera y trunca el resultado decimal.
+
+## 3. Respuesta esperada del ejercicio
+
+| Pregunta | Respuesta esperada |
+| --- | --- |
+| ¿Qué hace `if (nota >= 7)`? | Evalúa si la variable `nota` es mayor o igual a 7. Si es verdadero, ejecuta el bloque de código dentro de las llaves. |
+| ¿Cuál es la diferencia entre `for` y `foreach`? | `for` se usa cuando se conoce el número de iteraciones y se controla con un índice. `foreach` se usa para recorrer cada elemento de una colección sin manejar un índice manualmente. |
+| ¿Qué hace `return` dentro de un método? | Sale del método y entrega el valor especificado al código que llamó al método. |
+| ¿Qué es un método `void`? | Un método que no devuelve ningún valor. Solo ejecuta las instrucciones dentro de su bloque. |
+| ¿Por qué se usa `aprobadas++`? | Es una forma abreviada de `aprobadas = aprobadas + 1`. Incrementa el contador en 1 cada vez que se encuentra una nota aprobada. |
+| ¿Qué pasa si se olvida `i++` en un bucle `for`? | El bucle se ejecuta infinitamente porque la condición de salida nunca se cumple. |
+
+## 4. Criterios de corrección (lista de verificación)
+
+- [ ] El alumno define un arreglo de notas con al menos 5 elementos.
+- [ ] Usa un bucle `foreach` para recorrer el arreglo.
+- [ ] Usa un condicional `if`/`else` para clasificar cada nota.
+- [ ] Define el método `ClasificarNota(int nota)` con tipo de retorno `string`.
+- [ ] El método devuelve `"Aprobado"` cuando `nota >= 7` y `"Desaprobado"` en caso contrario.
+- [ ] Muestra el conteo final de aprobadas y desaprobadas.
+- [ ] El código compila y la salida coincide con la esperada.
+- [ ] Los comentarios en el código están en español y no llevan tildes ni eñes.
+- [ ] El grupo hizo commit y push al final del encuentro.
+
+## 5. Errores esperados y cómo intervenir
+
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| `if (nota = 7)` en lugar de `if (nota == 7)` | Confundir asignación (`=`) con comparación (`==`) | Señalar que un solo `=` asigna un valor y `==` compara. El compilador puede dar error si se asigna dentro de un `if` con una constante. |
+| El método `ClasificarNota` no devuelve nada | Usar `Console.WriteLine` dentro del método en lugar de `return` | Recordar que un método con tipo de retorno `string` debe tener un `return` con un valor de tipo `string`. |
+| Bucle infinito al usar `while` | Olvidar modificar la variable de control dentro del bucle | Verificar que la variable que controla la condición cambie en cada iteración. |
+| Las llaves `{}` faltan en el `if` y solo se ejecuta la primera línea | No entender que sin llaves solo la primera línea pertenece al bloque | Mostrar el ejemplo con y sin llaves para que vean la diferencia en la ejecución. |
+| `promedio` da un resultado entero sin decimales | Dividir dos `int` sin conversión previa | Explicar que C# hace división entera con operandos enteros. Usar `(double)` para forzar la conversión. |
+| No declaran el método `ClasificarNota` antes de llamarlo | En top-level statements, los métodos locales deben definirse antes de ser invocados | Recordar que en C# con top-level statements, los métodos locales deben estar definidos antes de su primer uso en el flujo del programa. |
+
+## 6. Registro de la clase
+
+| Grupo | Presentes | Participación en apertura | Uso correcto de if/else | Uso correcto de bucles | Definición de método | Commit en GitHub | Observaciones |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Grupo 1 | — | — | — | — | — | — | — |
+| Grupo 2 | — | — | — | — | — | — | — |
+| Grupo 3 | — | — | — | — | — | — | — |
+| Grupo 4 | — | — | — | — | — | — | — |
+
+**Notas para evaluación de proceso:**
+- Verificar que cada grupo tenga al menos un commit en GitHub al final del encuentro.
+- Observar si los grupos pueden ejecutar el programa y obtener la salida correcta.
+- Registrar qué grupos lograron la extensión (promedio de aprobadas) sin ayuda.
+- Anotar errores frecuentes para abordarlos en el encuentro siguiente.

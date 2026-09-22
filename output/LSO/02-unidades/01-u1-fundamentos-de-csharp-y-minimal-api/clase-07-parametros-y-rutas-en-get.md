@@ -1,168 +1,343 @@
-# Encuentro 7: Parámetros y rutas en GET
+# Encuentro 7 — Parámetros y rutas en GET
 
-## Datos del encuentro
+> Unidad 1 — Fundamentos de C# y Minimal API
 
-| Campo | Valor |
-|---|---|
-| Unidad | U1: Fundamentos de C# y Minimal API |
-| Encuentro | 7 de 8 |
-| Duración | 240 minutos |
-| Carácter | Procedimental |
+## 1. Metadatos de bloque
 
-## Objetivos de aprendizaje
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 7 de 36 |
+| Unidad | 1 — Fundamentos de C# y Minimal API |
+| Eje temático | 2 — Minimal API y endpoints HTTP |
+| Carácter/Objetivo | Procedimental |
+| Estructura | clase |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Uso de celular | No permitido |
+| Concepto nuevo | Parámetros y rutas en GET |
+| Requisitos previos | Encuentro 6: Minimal API y endpoint GET |
+| Organización del trabajo | Grupos de 3-4 personas; un repositorio compartido por grupo para todo el curso |
 
-- Agregar un parámetro de ruta `{id:long}` a un endpoint GET.
-- Filtrar la lista de pacientes por ID y devolver 404 si no existe.
-- Recibir parámetros opcionales por query string (`?gender=M`).
-- Usar `QueryFirstOrDefault` con una lista en memoria con `FirstOrDefault`.
+### Reparto de tiempos teóricos
 
-## Reparto de tiempos (240 minutos)
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-| Bloque | Minutos |
-|---|---|
-| Apertura y motivación | 20 |
-| Desarrollo teórico-práctico | 120 |
-| Consolidación y cierre | 20 |
-| Actividad complementaria | 80 |
+## 2. Objetivos de aprendizaje
 
-## Charla rápida
+1. Definir parámetros de ruta en un endpoint GET usando la sintaxis `{parametro:tipo}`.
+2. Diferenciar entre parámetros de ruta y parámetros de query string.
+3. Filtrar datos en un endpoint usando valores de query string.
+4. Construir una API GET con múltiples parámetros opcionales y obligatorios.
+5. Probar endpoints con diferentes combinaciones de parámetros en el navegador y `curl`.
 
-En el encuentro anterior teníamos un restaurant con una ventanilla única: siempre daba la lista completa de pacientes. Pero si un médico quiere ver los datos de un solo paciente, necesita pasarle el número de historia clínica. Ese número viaja en la ruta misma: `/patients/2` es como decir "quiero el paciente número 2". Si ese número no existe, el restaurant responde "paciente no encontrado". También podemos pasar filtros opcionales después de un signo de pregunta: `/patients?gender=F` significa "solo los pacientes de género femenino".
+## 3. Apertura y motivación (20 min)
 
-## Teoría mínima
+### Charla rápida: ¿Cómo busca un bibliotecario un libro?
 
-### Parámetro de ruta
+Un bibliotecario busca un libro por título, por autor o por ambos. Si le das solo el título, busca por título. Si le das el título y el autor, filtra más. En una API, los parámetros de ruta son como decir "el libro número 5" y los parámetros de query string son como decir "quiero libros de autor X". Hoy vamos a aprender ambos.
 
-Se escribe entre llaves con el tipo después de dos puntos:
+### Diagnóstico rápido
 
-```csharp
-app.MapGet("/patients/{id:long}", (long id) =>
-{
-    // id contiene el valor de la URL, ej: /patients/2 -> id = 2
-});
-```
+- Si la URL es `/productos/3`, ¿qué es `3`? ¿Un parámetro de ruta o de query string?
+- ¿Cuál es la diferencia entre `/productos?id=3` y `/productos/3`?
+- ¿Pueden pensar una URL de un buscador que use query strings? (Ejemplo: `google.com/search?q=algo`)
 
-El tipo debe ser `long` (Int64) porque las claves primarias en la base de datos serán `long`. El constraint `:long` rechaza valores no numéricos.
+Se toman 3 minutos para discutir en grupos de a 2.
 
-### Filtrar con `FirstOrDefault`
+## 4. Desarrollo teórico-práctico (120 min)
 
-Para buscar un elemento en una lista por una propiedad:
+### 4.1 Parámetros de ruta (25 min)
 
-```csharp
-var patient = patients.FirstOrDefault(p => p.PatientId == id);
-```
-
-Si no encuentra ninguno, devuelve `null`. Eso se verifica con:
-
-```csharp
-if (patient is null)
-{
-    return Results.NotFound(new { mensaje = "Paciente no encontrado" });
-}
-return Results.Ok(patient);
-```
-
-### Query string
-
-Los parámetros opcionales se reciben como argumentos del lambda:
+Los parámetros de ruta se definen entre llaves en la URL del endpoint.
 
 ```csharp
-app.MapGet("/patients", (string? gender) =>
-{
-    // gender es null si no se envio ?gender=...
-});
-```
-
-## Práctica guiada: endpoint por ID
-
-Partimos del proyecto `hospital-api` del encuentro anterior.
-
-**Paso 1:** editar `Program.cs` para agregar el endpoint de paciente por ID:
-
-```csharp
-var patients = new List<Patient>
-{
-    new Patient(1, "Ana", "Lopez", "F", "1990-05-15"),
-    new Patient(2, "Luis", "Martinez", "M", "1985-08-22"),
-    new Patient(3, "Elena", "Garcia", "F", "1978-12-03")
-};
-
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-// GET /patients — devolver la lista completa
-app.MapGet("/patients", () =>
+// Un solo parametro de ruta
+// URL: http://localhost:5000/producto/3
+app.MapGet("/producto/{id:long}", (long id) =>
+    new { id, mensaje = $"Producto con ID {id}" });
+
+// Dos parametros de ruta
+// URL: http://localhost:5000/categoria/2/producto/15
+app.MapGet("/categoria/{categoriaId:long}/producto/{productoId:long}",
+    (long categoriaId, long productoId) =>
+    new { categoriaId, productoId });
+
+app.Run();
+```
+
+**Salida esperada:**
+- `GET /producto/3` → `{"id":3,"mensaje":"Producto con ID 3"}`
+- `GET /categoria/2/producto/15` → `{"categoriaId":2,"productoId":15}`
+
+### 4.2 Parámetros de query string (25 min)
+
+Los parámetros de query string vienen después del `?` en la URL y se declaran como parámetros del método.
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// Endpoint que acepta un parametro de query string opcional
+// URL: http://localhost:5000/buscar?nombre=Laptop
+app.MapGet("/buscar", (string? nombre) =>
 {
-    return Results.Ok(patients);
+    if (string.IsNullOrEmpty(nombre))
+    {
+        return Results.BadRequest(new { mensaje = "El parametro nombre es obligatorio" });
+    }
+
+    return Results.Ok(new { resultado = $"Buscando: {nombre}" });
 });
 
-// GET /patients/{id:long} — buscar un paciente por ID
-app.MapGet("/patients/{id:long}", (long id) =>
+// Endpoint con parametro de query string con valor por defecto
+// URL: http://localhost:5000/paginar?pagina=2
+app.MapGet("/paginar", (int pagina = 1, int tamano = 10) =>
+    new { pagina, tamano, totalElementos = pagina * tamano });
+
+app.Run();
+```
+
+**Salida esperada:**
+- `GET /buscar?nombre=Laptop` → `{"resultado":"Buscando: Laptop"}`
+- `GET /buscar` → `{"mensaje":"El parametro nombre es obligatorio"}` (400)
+- `GET /paginar?pagina=2` → `{"pagina":2,"tamano":10,"totalElementos":20}`
+- `GET /paginar` → `{"pagina":1,"tamano":10,"totalElementos":10}` (usa valores por defecto)
+
+### 4.3 Combinar ruta y query string (25 min)
+
+Se pueden usar ambos tipos de parámetros en el mismo endpoint.
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// Ruta: /productos/{categoriaId} con query string ?minPrecio y ?maxPrecio
+app.MapGet("/productos/{categoriaId:long}", (long categoriaId, double? minPrecio, double? maxPrecio) =>
 {
-    var patient = patients.FirstOrDefault(p => p.PatientId == id);
-    return patient is null
-        ? Results.NotFound(new { mensaje = "Paciente no encontrado" })
-        : Results.Ok(patient);
+    // Simular una lista de productos (sin base de datos)
+    var productos = new[]
+    {
+        new { id = 1L, nombre = "Laptop", categoriaId = 1L, precio = 999.99 },
+        new { id = 2L, nombre = "Mouse", categoriaId = 1L, precio = 29.99 },
+        new { id = 3L, nombre = "Monitor", categoriaId = 2L, precio = 299.99 },
+        new { id = 4L, nombre = "Teclado", categoriaId = 1L, precio = 59.99 },
+        new { id = 5L, nombre = "Impresora", categoriaId = 2L, precio = 199.99 }
+    };
+
+    // Filtrar por categoria
+    var filtrados = productos.Where(p => p.categoriaId == categoriaId);
+
+    // Filtrar por precio minimo si se proporciona
+    if (minPrecio.HasValue)
+    {
+        filtrados = filtrados.Where(p => p.precio >= minPrecio.Value);
+    }
+
+    // Filtrar por precio maximo si se proporciona
+    if (maxPrecio.HasValue)
+    {
+        filtrados = filtrados.Where(p => p.precio <= maxPrecio.Value);
+    }
+
+    return Results.Ok(filtrados);
 });
 
 app.Run();
-
-record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate);
 ```
 
-**Paso 2:** ejecutar y probar:
+**Salida esperada:**
+- `GET /productos/1` → lista de productos con `categoriaId == 1`
+- `GET /productos/1?minPrecio=50` → productos de categoría 1 con precio >= 50
+- `GET /productos/2?maxPrecio=250` → productos de categoría 2 con precio <= 250
 
-```bash
-dotnet run
-```
+### 4.4 Parámetros opcionales en la ruta (25 min)
 
-- `http://localhost:5000/patients/1` → devuelve el paciente 1.
-- `http://localhost:5000/patients/99` → `{ "mensaje": "Paciente no encontrado" }` con código 404.
-
-## Ejercicio independiente: filtrar por género
-
-Agregar filtro opcional por género al endpoint `GET /patients` existente. Si se pasa `?gender=M`, devolver solo los pacientes con ese género. Si no se pasa, devolver la lista completa.
-
-**Pista:** modificar la firma del `MapGet` existente a `(string? gender)`. Dentro del lambda, preguntar `if (gender is not null)` y filtrar con `patients.Where(p => p.Gender == gender).ToList()`; si es null, devolver la lista completa.
-
-**Solución esperada:**
-
-Reemplazar el `MapGet("/patients", ...)` existente por:
+Se pueden hacer parámetros de ruta opcionales usando `?` al final del nombre.
 
 ```csharp
-// GET /patients — lista completa o filtrada por genero
-app.MapGet("/patients", (string? gender) =>
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// Parametro de ruta opcional
+// URL: http://localhost:5000/usuario/5
+// URL: http://localhost:5000/usuario (sin id)
+app.MapGet("/usuario/{id:long?}", (long? id) =>
 {
-    if (gender is not null)
+    if (id.HasValue)
     {
-        var filtered = patients.Where(p => p.Gender == gender).ToList();
-        return Results.Ok(filtered);
+        return Results.Ok(new { id, mensaje = $"Usuario con ID {id}" });
     }
-    return Results.Ok(patients);
+
+    return Results.Ok(new { mensaje = "Lista de todos los usuarios" });
 });
+
+app.Run();
 ```
 
-Pruebas:
-- `http://localhost:5000/patients?gender=F` → solo Ana y Elena.
-- `http://localhost:5000/patients?gender=M` → solo Luis.
-- `http://localhost:5000/patients` (sin query) → los tres.
+**Salida esperada:**
+- `GET /usuario/5` → `{"id":5,"mensaje":"Usuario con ID 5"}`
+- `GET /usuario` → `{"mensaje":"Lista de todos los usuarios"}`
+
+### 4.5 Ejercicio guiado: API de filtrado de estudiantes (30 min)
+
+Crear un endpoint `/estudiantes` que acepte parámetros de query string para filtrar por nombre y por nota mínima.
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+app.MapGet("/estudiantes", (string? nombre, double? notaMinima) =>
+{
+    var estudiantes = new[]
+    {
+        new { nombre = "Ana", nota = 8.5 },
+        new { nombre = "Luis", nota = 6.0 },
+        new { nombre = "Maria", nota = 9.0 },
+        new { nombre = "Carlos", nota = 4.5 }
+    };
+
+    var resultado = estudiantes.AsEnumerable();
+
+    if (!string.IsNullOrEmpty(nombre))
+    {
+        resultado = resultado.Where(e => e.nombre.Contains(nombre, StringComparison.OrdinalIgnoreCase));
+    }
+
+    if (notaMinima.HasValue)
+    {
+        resultado = resultado.Where(e => e.nota >= notaMinima.Value);
+    }
+
+    return Results.Ok(resultado);
+});
+
+app.Run();
+```
+
+**Salida esperada:**
+- `GET /estudiantes` → lista completa de 4 estudiantes
+- `GET /estudiantes?nombre=an` → Ana y Maria (búsqueda insensible a mayúsculas)
+- `GET /estudiantes?notaMinima=7` → Ana (8.5) y Maria (9.0)
+- `GET /estudiantes?nombre=carlos&notaMinima=4` → Carlos (4.5)
+
+## 5. Consolidación y cierre (20 min)
+
+- Cada grupo prueba su endpoint con al menos dos combinaciones de parámetros.
+- Preguntas de verificación:
+  - ¿Qué es un parámetro de ruta y qué es un parámetro de query string?
+  - ¿Cómo se declara un parámetro de ruta como opcional?
+  - ¿Qué hace `StringComparison.OrdinalIgnoreCase`?
+- Se cierra con un commit del trabajo realizado.
+
+## 6. Actividad complementaria (80 min)
+
+### Ejercicio independiente: API de búsqueda de películas
+
+Crear una Minimal API con los siguientes endpoints:
+
+1. `GET /peliculas` — devuelve una lista de 4 películas (título, año, género).
+2. `GET /peliculas/{id:long}` — devuelve una película por ID.
+3. `GET /peliculas/buscar?genero={genero}` — filtra por género.
+4. `GET /peliculas/buscar?anioMin={anio}&anioMax={anio}` — filtra por rango de años.
+
+**Pista:** Para el endpoint 2, si el ID no existe, devolver `Results.NotFound(new { mensaje = "Pelicula no encontrada" })`.
+
+### Solución esperada
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+var peliculas = new[]
+{
+    new { id = 1L, titulo = "El Señor de los Anillos", anio = 2001, genero = "Fantasia" },
+    new { id = 2L, titulo = "Inception", anio = 2010, genero = "Ciencia Ficcion" },
+    new { id = 3L, titulo = "El Padrino", anio = 1972, genero = "Drama" },
+    new { id = 4L, titulo = "Interstellar", anio = 2014, genero = "Ciencia Ficcion" }
+};
+
+// GET /peliculas — listar todas
+app.MapGet("/peliculas", () => Results.Ok(peliculas));
+
+// GET /peliculas/{id} — obtener por id
+app.MapGet("/peliculas/{id:long}", (long id) =>
+{
+    var pelicula = peliculas.FirstOrDefault(p => p.id == id);
+    return pelicula is null
+        ? Results.NotFound(new { mensaje = "Pelicula no encontrada" })
+        : Results.Ok(pelicula);
+});
+
+// GET /peliculas/buscar?genero=... — filtrar por genero
+app.MapGet("/peliculas/buscar", (string? genero) =>
+{
+    if (string.IsNullOrEmpty(genero))
+    {
+        return Results.BadRequest(new { mensaje = "El parametro genero es obligatorio" });
+    }
+
+    var filtradas = peliculas.Where(p =>
+        p.genero.Equals(genero, StringComparison.OrdinalIgnoreCase));
+    return Results.Ok(filtradas);
+});
+
+// GET /peliculas/buscar?anioMin=...&anioMax=... — filtrar por rango de anios
+app.MapGet("/peliculas/buscar", (int? anioMin, int? anioMax) =>
+{
+    if (!anioMin.HasValue || !anioMax.HasValue)
+    {
+        return Results.BadRequest(new { mensaje = "Los parametros anioMin y anioMax son obligatorios" });
+    }
+
+    var filtradas = peliculas.Where(p => p.anio >= anioMin.Value && p.anio <= anioMax.Value);
+    return Results.Ok(filtradas);
+});
+
+app.Run();
+```
+
+**Salida esperada:**
+- `GET /peliculas` → lista completa de 4 películas
+- `GET /peliculas/1` → El Señor de los Anillos
+- `GET /peliculas/99` → `{"mensaje":"Pelicula no encontrada"}` (404)
+- `GET /peliculas/buscar?genero=Ciencia%20Ficcion` → Inception e Interstellar
+- `GET /peliculas/buscar?anioMin=2000&anioMax=2015` → El Señor de los Anillos, Inception, Interstellar
+
+### Entrega del commit
+
+```bash
+git add .
+git commit -m "tp-u1: parametros de ruta y query string en endpoints GET"
+git push
+```
+
+## 7. Cierre (15 min)
 
 ### Qué te llevás
 
-- Los parámetros de ruta (`/patients/{id:long}`) identifican un recurso específico.
-- `FirstOrDefault` busca en la lista y `is null` verifica existencia.
-- El query string permite filtros opcionales sin cambiar la ruta.
+- Los parámetros de ruta se definen entre llaves en la URL: `/recurso/{id:long}`.
+- Los parámetros de query string van después del `?` en la URL y se declaran como parámetros del método.
+- Se puede combinar rutas con query strings en el mismo endpoint.
+- Los parámetros de ruta opcionales usan `?` después del nombre: `{id:long?}`.
+- Los tipos canónicos para parámetros numéricos son `long` para IDs y `double` para decimales.
 
 ### Lo que viene
 
-En el Encuentro 8 se cierra la Unidad 1: repaso general y entrega del TP-U1, una Minimal API con endpoints GET que integra todo lo aprendido.
+**Encuentro 8: Cierre U1: repaso y TP** — Repasaremos todos los conceptos de la unidad y entregaremos el TP-U1 en GitHub.
 
-## Errores comunes y trampas
+## 8. Errores comunes y trampas
 
-| Error | Causa | Solución |
-|---|---|---|
-| Parámetro `int` en lugar de `long` | La ruta usa `{id:long}` pero el lambda recibe `int id`. | Usar `long id`. |
-| Olvidar el `?` en `string? gender` | Sin el signo, el parámetro es obligatorio y la ruta no coincide sin query string. | Declarar `string?` para parámetros opcionales. |
-| `FirstOrDefault` sin `using System.Linq` | `List<T>` necesita `using System.Linq;` para `FirstOrDefault` y `Where`. | El proyecto `dotnet new web` lo incluye implícitamente con top-level statements. |
-| Error de ruta `/patients/{id:long}/` con barra al final | La barra final no coincide con el patrón. | No agregar barra al final de la ruta. |
-| Comparación con `==` en lugar de `is null` | `== null` funciona igual, pero `is null` es más legible y seguro con tipos nullable. | Preferir `is null`. |
+1. **Tipo de parámetro de ruta incompatible** — Usar `int` en el método cuando la ruta tiene `{id:long}` genera un error de enrutamiento. Siempre usar `long` para parámetros de ruta numéricos.
+2. **Falta de `?` en tipos nullable** — Si un parámetro de query string es opcional, declararlo como `string?` o `double?`. Sin el `?`, el parámetro es obligatorio y dará error si no se proporciona.
+3. **Orden de parámetros en la URL** — Los parámetros de query string se pasan en cualquier orden después del `?`, separados por `&`: `?nombre=Ana&notaMin=7`.
+4. **No manejar el caso null** — Cuando un parámetro de query string es opcional y no se pasa, su valor es `null`. No verificar `null` antes de usarlo genera errores en tiempo de ejecución.
+5. **Comillas en la URL** — Los espacios en los valores de query string se codifican como `%20` o se reemplazan por `+`. Escribir `?nombre=Hola Mundo` en la URL puede no funcionar; usar `?nombre=Hola%20Mundo` o `?nombre=Hola+Mundo`.
+6. **Confundir parámetros de ruta con parámetros de query string** — `/productos/5` tiene `5` como parámetro de ruta. `/productos?id=5` tiene `id=5` como parámetro de query string. Son diferentes y se declaran diferente en el código.

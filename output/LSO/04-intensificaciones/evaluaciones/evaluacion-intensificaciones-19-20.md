@@ -1,52 +1,67 @@
-# Evaluación — Momento integrador de las Unidades 1 y 2 (Encuentros 19–20)
+# Evaluación del momento de intensificación y fortalecimiento 19-20
 
-## Metadatos
+> Evaluación de la instancia «Evaluación del momento de intensificación y fortalecimiento 19-20» · Curso: Minimal API con C# .NET 6. Documento de **metadatos y acuerdos de la instancia**, en registro docente formal. El material del alumno es la versión `evaluacion-intensificaciones-19-20-version-a` y sus versiones equivalentes generadas; sus soluciones y criterios de corrección van en el anexo docente separado (`evaluacion-intensificaciones-19-20-version-a-anexo-docente.md`).
 
-| Campo | Valor |
-|---|---|
-| Momento | Proyecto puente integrador de las Unidades 1 y 2 |
-| Encuentros | 19 y 20 |
-| Duración | 120 min (evaluación + defensa) |
-| Tipo de evaluación | Rúbrica de 100 puntos |
-| Cantidad de versiones | 2 (A y B) |
-| Destinatarios | Totalidad del curso (una sola pista) |
-| Requisitos | Haber participado de los encuentros 19 y 20; contar con proyecto funcional con endpoints GET, JOIN y Dapper |
-| Lugar | Aula de informática con VS Code, SDK .NET 6, SQLite, Thunder Client y GitHub |
+## 1. Identificación
 
-## Descripción general
+| Campo | Detalle |
+| --- | --- |
+| Instancia | Evaluación del momento de intensificación y fortalecimiento 19-20 |
+| Momento | Intensificación y fortalecimiento — encuentros 19-20 |
+| Carácter/Objetivo | Proyecto puente integrador U1+U2: única pista para todo el curso. Rúbrica de 100 puntos. Criterio de evaluación: Apto (≥60 pts) / No apto (<60 pts). |
+| Destinatarios | Todo el curso |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Uso de celular | No permitido |
+| Documentos de la instancia | `evaluacion-intensificaciones-19-20.md` · `evaluacion-intensificaciones-19-20-version-a.md` · `evaluacion-intensificaciones-19-20-version-a-anexo-docente.md` (más las versiones equivalentes B/C/D generadas desde la A) |
 
-Esta evaluación integradora verifica que cada estudiante puede construir una API de consulta completa sobre `hospital.db` combinando endpoints GET, JOIN con Dapper, consultas parametrizadas, mapeo a records y entrega profesional en GitHub. Se evalúa con rúbrica de 100 puntos.
+## 2. Estructura del encuentro (240 min)
 
-Cada estudiante recibe la versión A o la versión B (mismos criterios, distinta tabla principal: `Patients`/`Doctors` y sus relaciones).
+| Momento | Tiempo | Qué ocurre |
+| --- | --- | --- |
+| Momento | Tiempo | Qué ocurre |
+| --- | --- | --- |
+| Apertura y presentación del proyecto | 15 min | El docente presenta el proyecto puente, la rúbrica de 100 puntos y el alcance. |
+| Bloque 1: Consigna y planificación | 55 min | Lectura colectiva de la consigna, planificación en parejas (records, endpoints, consultas SQL), puesta en común y definición de la estructura de datos. |
+| Bloque 2: Implementación de endpoints | 115 min | Implementar endpoints GET con JOIN, verificar tipos canónicos, probar con curl/Thunder Client. |
+| Cierre con defensa | 55 min | Defensa oral individual (2-3 min), registro de puntajes en la rúbrica de 100 puntos, commit final y push. |
+| **Total** | **240 min** | |
 
-## Rúbrica de evaluación (100 puntos)
+## 3. Acuerdo pedagógico por grupo de condición
 
-| Dimensión | Puntaje máximo | Indicadores de logro |
-|---|---|---|
-| Endpoints GET base | 30 pts | Endpoint de lista (`/patients` o `/doctors`) y endpoint por ID (`/{id}`) funcionan con JSON correcto y manejan `404` con `Results.NotFound`. |
-| Consultas Dapper con JOIN | 25 pts | Endpoint con JOIN de 2 tablas que devuelve datos combinados; mapeo a record con alias `AS` en SQL; resultados verificables en Thunder Client. |
-| Parámetros y filtros | 20 pts | Al menos un endpoint con parámetro de query string usando `@{param}` y `new { ... }` en Dapper. |
-| Calidad del código | 15 pts | Consultas parametrizadas sin concatenación SQL; `using` correctos; nombres de endpoints en inglés y plural; registros posicionales después de `app.Run()`. |
-| Entrega y defensa | 10 pts | Repositorio GitHub actualizado; commit con el proyecto completo; durante la defensa explica al menos un endpoint y muestra qué devuelve cuando el recurso no existe. |
+**Única pista para todo el curso:** Construcción progresiva de un proyecto Minimal API completa que consulta `hospital.db` con Dapper. Se articula U1 (endpoints GET, tipos C#, respuestas HTTP) y U2 (conexión SQLite, consultas Dapper parametrizadas, JOIN con alias `AS`). El docente modela cada operación en vivo y acompaña individualmente.
 
-### Escala de aprobación
+**Recursos:** VS Code, terminal, `hospital.db` copiado al lado del `.csproj`, repo grupal clonado, consigna del proyecto puente impresa con rúbrica de 100 puntos, ejemplos resueltos de U1 y U2, convenciones técnicas del curso a la mano.
 
-| Rango | Resultado |
-|---|---|
-| 60 – 100 | Apto |
-| 0 – 59 | No apto aún por objetivo mínimo (se detallan las dimensiones no alcanzadas) |
+## 4. Desarrollo de los encuentros del momento
 
-## Guía de corrección (docente)
+**Encuentro 19 (240 min):**
 
-**Versión A — tabla Patients.**
-**Versión B — tabla Doctors (con Admissions como tabla de relación).**
+| Momento | Tiempo | Qué ocurre |
+| --- | --- | --- |
+| Apertura y presentación del proyecto | 15 min | El docente presenta el proyecto puente, la rúbrica de 100 puntos y el alcance.
+| Bloque 1: Consigna y planificación | 55 min | Lectura colectiva de la consigna, planificación en parejas (records, endpoints, consultas SQL), puesta en común y definición de la estructura de datos.
+| Bloque 2: Endpoint GET con ruta y JOIN | 55 min | Implementar `GET /patients/{id:long}` con JOIN a provinces, `GET /patients/search?name=...` con LIKE, probar con curl/Thunder Client.
+| Cierre | 15 min | Puesta en común, verificación de commits, anticipación del E20.
 
-Verificar en el código fuente:
-1. Los endpoints usan `app.MapGet`, `app.MapPost`, etc. según corresponda. La versión integradora solo exige GET, pero si el estudiante incluyó POST/PUT/DELETE no se descuenta.
-2. El JOIN usa `INNER JOIN` (o `LEFT JOIN` si corresponde al dominio) con alias en cada columna del SELECT.
-3. El record de mapeo tiene propiedades en el orden y con los tipos exactos del constructor.
-4. La consulta con query string usa `WHERE columna = @param` o `LIKE @param`.
-5. No hay cadenas SQL armadas con `+` ni interpolación de variables en el SQL.
-6. Los records están después de `app.Run()`.
+**Encuentro 20 (240 min):**
 
-Puntaje por dimensión: evaluar cada indicador de forma binaria (cumple = puntaje completo, no cumple = 0 en ese indicador). Si un indicador se cumple parcialmente, asignar la mitad del puntaje de esa dimensión y anotar el motivo.
+| Momento | Tiempo | Qué ocurre |
+| --- | --- | --- |
+| Apertura y repaso | 15 min | Repaso de lo creado en el E19, presentación de los endpoints faltantes.
+| Bloque 3: Endpoint de admisiones con triple JOIN | 55 min | Implementar `GET /admissions/{id:long}` con triple JOIN, verificar tipos canónicos, probar con curl/Thunder Client.
+| Bloque 4: Pulido, README y entrega | 55 min | Pulido del código, creación de README de portada, commit final y push.
+| Cierre con defensa | 15 min | Defensa oral individual (2-3 min), registro de puntajes en la rúbrica de 100 puntos.
+
+**Pistas en paralelo:** no aplica — única pista para todo el curso.
+
+## 9. Regla de equivalencia entre versiones
+
+Las versiones equivalentes son A/B/C/D (mínimo dos según los grupos). Misma estructura, mismos objetivos y requisitos, distinto dominio o datos. La versión A usa el dominio de tickets (sistema de soporte). Las versiones B/C/D usan el mismo dominio con datos equivalentes pero distintos (biblioteca/books, cursos/courses, canciones/songs).
+
+## 10. Mecánica de asignación de versiones
+
+El docente asigna la versión al inicio del encuentro y la registra en la planilla de evaluación. Las versiones se distribuyen equitativamente entre los grupos. Se anota la letra de la versión y el nombre del archivo en la planilla correspondiente.
+
+## 11. Devolución
+
+La devolución se realiza al final del E20. Se devuelve con nota numérica según la rúbrica de 100 puntos: Apto (≥60 pts) o No apto (<60 pts). Si el objetivo mínimo queda pendiente, se ofrece la instancia de intensificación de los encuentros 34-35 como primera capa de recuperación y la de diciembre como segunda capa.

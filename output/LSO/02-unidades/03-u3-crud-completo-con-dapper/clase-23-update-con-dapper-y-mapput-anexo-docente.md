@@ -1,214 +1,234 @@
-# Encuentro 23 — Anexo docente: UPDATE con Dapper y MapPut
+# Anexo docente — Encuentro 23: UPDATE con Dapper y MapPut
 
-## Resumen de la clase
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
-| Bloque | Duracion | Actividad |
-|---|---|---|
-| Apertura y motivacion | 20 min | Analogia del paciente que actualiza sus datos. Repasar DELETE del encuentro anterior. |
-| Teoria minima con ejemplo completo | 50 min | Explicar `MapPut`, verificacion con `QueryFirstOrDefault`, UPDATE con `Execute`, `Results.NoContent`. Codificar `PUT /patients/{id:long}`. |
-| Ejercicio progresivo | 120 min | Etapa 1: PUT /doctors (guiada, 40 min). Etapa 2: PUT /provinces (semiguiada, 40 min). Etapa 3: PUT /admissions con UPDATE condicional (independiente, 40 min). |
-| Puesta en comun y correccion de errores | 30 min | Revisar soluciones, especialmente el armado condicional de Etapa 3. |
-| Cierre | 20 min | Takeaway y preview del proximo encuentro (CRUD completo + JOIN triple). |
+## 1. Solución del ejercicio independiente
 
-## Solucion completa del ejemplo
-
-`PUT /patients/{id:long}` completo:
+La solución de referencia es el endpoint PUT completo con validación de existencia y devolución del recurso actualizado (Paso 1 del desarrollo teórico-práctico).
 
 ```csharp
-using Dapper;
-using Microsoft.Data.Sqlite;
-
-var connectionString = "Data Source=hospital.db";
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-
-// GET /patients — listar
-app.MapGet("/patients", () =>
+app.MapPut("/patients/{id:long}", (long id, Patient pacienteActualizado) =>
 {
     using var connection = new SqliteConnection(connectionString);
-    var patients = connection.Query<Patient>(@"
-        SELECT patient_id AS PatientId, first_name AS FirstName,
-               last_name AS LastName, gender AS Gender, birth_date AS BirthDate,
-               city AS City, province_id AS ProvinceId,
-               allergies AS Allergies, height AS Height, weight AS Weight
-        FROM patients").ToList();
+
+    var existente = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName,
+               gender AS Gender, birth_date AS BirthDate, city AS City,
+               province_id AS ProvinceId, allergies AS Allergies, height AS Height, weight AS Weight
+        FROM patients
+        WHERE patient_id = @id", new { id });
+
+    if (existente is null)
+    {
+        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
+
+    connection.Execute(@"
+        UPDATE patients
+        SET first_name = @FirstName,
+            last_name = @LastName,
+            gender = @Gender,
+            city = @City,
+            province_id = @ProvinceId,
+            allergies = @Allergies,
+            height = @Height,
+            weight = @Weight
+        WHERE patient_id = @id",
+        new
+        {
+            pacienteActualizado.FirstName,
+            pacienteActualizado.LastName,
+            pacienteActualizado.Gender,
+            pacienteActualizado.City,
+            pacienteActualizado.ProvinceId,
+            pacienteActualizado.Allergies,
+            pacienteActualizado.Height,
+            pacienteActualizado.Weight,
+            id
+        });
+
+    var pacienteActualizadoConId = pacienteActualizado with { PatientId = id };
+    return Results.Ok(pacienteActualizadoConId);
+});
+```
+
+**Salida esperada con hospital.db real** (paciente 259 existe tras el INSERT del encuentro 21):
+
+```
+> curl -X PUT http://localhost:5000/patients/259 \
+    -H "Content-Type: application/json" \
+    -d '{"firstName":"Carlos","lastName":"Gomez","gender":"M","birthDate":"1985-03-15","city":"Buenos Aires","provinceId":"BA","allergies":"Penicillin","height":178,"weight":82}'
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "patientId": 259,
+  "firstName": "Carlos",
+  "lastName": "Gomez",
+  "gender": "M",
+  "birthDate": "1985-03-15",
+  "city": "Buenos Aires",
+  "provinceId": "BA",
+  "allergies": "Penicillin",
+  "height": 178,
+  "weight": 82
+}
+```
+
+**Salida esperada para ID inexistente** (código 404):
+
+```
+> curl -X PUT http://localhost:5000/patients/9999 \
+    -H "Content-Type: application/json" \
+    -d '{"firstName":"Juan","lastName":"Perez","gender":"M","birthDate":"1990-01-01","provinceId":"ON"}'
+
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+
+{ "mensaje": "Paciente no encontrado" }
+```
+
+**Salida esperada con variante `Results.NoContent()`** (código 204, sin body):
+
+```
+> curl -X PUT http://localhost:5000/patients/259 \
+    -H "Content-Type: application/json" \
+    -d '{"firstName":"Carlos","lastName":"Gomez","gender":"M","birthDate":"1985-03-15","city":"Buenos Aires","provinceId":"BA","allergies":"Penicillin","height":178,"weight":82}' \
+    -v
+
+> PATCH /patients/259 HTTP/1.1
+< HTTP/1.1 204 No Content
+```
+
+## 2. Solución de la actividad de extensión
+
+### Actividad 1 — PUT parcial: solo actualizar la ciudad
+
+La solución completa está en la Actividad 1 del encuentro. La salida esperada:
+
+```
+> curl -X PUT http://localhost:5000/patients/259/city \
+    -H "Content-Type: application/json" \
+    -d '"Rosario"'
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "patientId": 259,
+  "firstName": "Carlos",
+  "lastName": "Gomez",
+  "gender": "M",
+  "birthDate": "1985-03-15",
+  "city": "Rosario",
+  "provinceId": "BA",
+  "allergies": "Penicillin",
+  "height": 178,
+  "weight": 82
+}
+```
+
+### Actividad 2 — Paginación con filtros combinados
+
+```csharp
+app.MapGet("/patients", (string? provinceId = null, string? gender = null, string? city = null, int page = 1, int pageSize = 10) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+
+    var sql = new System.Text.StringBuilder(@"
+        SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName,
+               gender AS Gender, birth_date AS BirthDate, city AS City,
+               province_id AS ProvinceId, allergies AS Allergies, height AS Height, weight AS Weight
+        FROM patients
+        WHERE 1 = 1");
+
+    var parameters = new System.Collections.Generic.Dictionary<string, object>();
+
+    if (!string.IsNullOrWhiteSpace(provinceId))
+    {
+        sql.Append(" AND province_id = @provinceId");
+        parameters.Add("provinceId", provinceId);
+    }
+
+    if (!string.IsNullOrWhiteSpace(gender))
+    {
+        sql.Append(" AND gender = @gender");
+        parameters.Add("gender", gender);
+    }
+
+    if (!string.IsNullOrWhiteSpace(city))
+    {
+        sql.Append(" AND city = @city");
+        parameters.Add("city", city);
+    }
+
+    sql.Append(" ORDER BY patient_id OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY");
+    parameters.Add("Offset", (page - 1) * pageSize);
+    parameters.Add("PageSize", pageSize);
+
+    var patients = connection.Query<Patient>(sql.ToString(), parameters).ToList();
+
     return Results.Ok(patients);
 });
-
-// POST /patients — crear
-app.MapPost("/patients", (PatientInput input) =>
-{
-    if (string.IsNullOrWhiteSpace(input.FirstName))
-        return Results.BadRequest(new { mensaje = "El nombre es obligatorio" });
-    using var connection = new SqliteConnection(connectionString);
-    var newId = connection.ExecuteScalar<long>(@"
-        INSERT INTO patients (first_name, last_name, gender, birth_date, city, province_id, allergies, height, weight)
-        VALUES (@FirstName, @LastName, @Gender, @BirthDate, @City, @ProvinceId, @Allergies, @Height, @Weight);
-        SELECT last_insert_rowid() AS NewId;", input);
-    var patient = connection.QueryFirstOrDefault<Patient>(@"
-        SELECT patient_id AS PatientId, first_name AS FirstName,
-               last_name AS LastName, gender AS Gender, birth_date AS BirthDate,
-               city AS City, province_id AS ProvinceId,
-               allergies AS Allergies, height AS Height, weight AS Weight
-        FROM patients WHERE patient_id = @id", new { id = newId });
-    return Results.Created($"/patients/{newId}", patient);
-});
-
-// DELETE /patients/{id:long}
-app.MapDelete("/patients/{id:long}", (long id) =>
-{
-    if (id <= 0)
-        return Results.BadRequest(new { mensaje = "El ID debe ser un numero positivo" });
-    using var connection = new SqliteConnection(connectionString);
-    int filas = connection.Execute("DELETE FROM patients WHERE patient_id = @id", new { id });
-    if (filas == 0)
-        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
-    return Results.NoContent();
-});
-
-// PUT /patients/{id:long}
-app.MapPut("/patients/{id:long}", (long id, PatientInput input) =>
-{
-    if (string.IsNullOrWhiteSpace(input.FirstName))
-        return Results.BadRequest(new { mensaje = "El nombre es obligatorio" });
-
-    using var connection = new SqliteConnection(connectionString);
-    var existente = connection.QueryFirstOrDefault<Patient>(@"
-        SELECT patient_id AS PatientId, first_name AS FirstName,
-               last_name AS LastName, gender AS Gender, birth_date AS BirthDate,
-               city AS City, province_id AS ProvinceId,
-               allergies AS Allergies, height AS Height, weight AS Weight
-        FROM patients WHERE patient_id = @id", new { id });
-
-    if (existente is null)
-        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
-
-    connection.Execute(@"
-        UPDATE patients SET first_name = @FirstName, last_name = @LastName,
-            gender = @Gender, birth_date = @BirthDate, city = @City,
-            province_id = @ProvinceId, allergies = @Allergies,
-            height = @Height, weight = @Weight
-        WHERE patient_id = @Id", new
-    {
-        input.FirstName, input.LastName, input.Gender, input.BirthDate,
-        input.City, input.ProvinceId, input.Allergies, input.Height, input.Weight,
-        Id = id
-    });
-
-    return Results.NoContent();
-});
-
-app.Run();
-
-// --- records al final ---
-record PatientInput(string FirstName, string? LastName, string Gender, string BirthDate,
-                    string? City, long? ProvinceId, string? Allergies, long? Height, long? Weight);
-record Patient(long PatientId, string FirstName, string? LastName, string Gender,
-               string BirthDate, string? City, long? ProvinceId, string? Allergies,
-               long? Height, long? Weight);
 ```
 
-## Soluciones del ejercicio progresivo
+**Salida esperada** (filtrar pacientes de ON con paginación):
 
-### Etapa 1 — PUT /doctors/{id:long}
+```
+> curl "http://localhost:5000/patients?provinceId=ON&page=1&pageSize=2"
 
-```csharp
-app.MapPut("/doctors/{id:long}", (long id, DoctorInput input) =>
-{
-    if (string.IsNullOrWhiteSpace(input.FirstName))
-        return Results.BadRequest(new { mensaje = "El nombre es obligatorio" });
+HTTP/1.1 200 OK
+Content-Type: application/json
 
-    using var connection = new SqliteConnection(connectionString);
-    var existente = connection.QueryFirstOrDefault<Doctor>(@"
-        SELECT doctor_id AS DoctorId, first_name AS FirstName,
-               last_name AS LastName, specialty AS Specialty,
-               phone AS Phone, email AS Email
-        FROM doctors WHERE doctor_id = @id", new { id });
-
-    if (existente is null)
-        return Results.NotFound(new { mensaje = "Doctor no encontrado" });
-
-    connection.Execute(@"
-        UPDATE doctors SET first_name = @FirstName, last_name = @LastName,
-            specialty = @Specialty, phone = @Phone, email = @Email
-        WHERE doctor_id = @Id", new
-    {
-        input.FirstName, input.LastName, input.Specialty, input.Phone, input.Email,
-        Id = id
-    });
-
-    return Results.NoContent();
-});
+[
+  { "patientId": 1, "firstName": "Donald", "lastName": "Waterfield", ... },
+  { "patientId": 2, "firstName": "Mickey", "lastName": "Baasha", ... }
+]
 ```
 
-### Etapa 2 — PUT /provinces/{id:long}
+## 3. Respuesta esperada del ejercicio
 
-```csharp
-app.MapPut("/provinces/{id:long}", (long id, ProvinceInput input) =>
-{
-    if (string.IsNullOrWhiteSpace(input.ProvinceName))
-        return Results.BadRequest(new { mensaje = "El nombre de provincia es obligatorio" });
+| Pedido | Respuesta esperada | Código |
+| --- | --- | --- |
+| PUT /patients/259 con datos válidos | Paciente actualizado con `patientId` = 259 | 200 |
+| PUT /patients/259 variante `NoContent` | Sin body | 204 |
+| PUT /patients/9999 (no existe) | `{ "mensaje": "Paciente no encontrado" }` | 404 |
+| PUT /patients/259/city con ciudad vacía | `{ "mensaje": "La ciudad es obligatoria" }` | 400 |
+| GET /patients?provinceId=ON&page=1&pageSize=2 | Array de 2 pacientes de ON | 200 |
 
-    using var connection = new SqliteConnection(connectionString);
-    var existente = connection.QueryFirstOrDefault<Province>(@"
-        SELECT province_id AS ProvinceId, province_name AS ProvinceName
-        FROM province_names WHERE province_id = @id", new { id });
+## 4. Criterios de corrección (lista de verificación)
 
-    if (existente is null)
-        return Results.NotFound(new { mensaje = "Provincia no encontrada" });
+- [ ] El endpoint usa `MapPut` (no `MapGet` ni `MapPost`)
+- [ ] Se valida la existencia del recurso antes de actualizar
+- [ ] Si el recurso no existe, se devuelve `Results.NotFound` con `mensaje` en español
+- [ ] La respuesta exitosa usa `Results.Ok(dato)` con código 200 o `Results.NoContent()` con código 204
+- [ ] El SQL de UPDATE usa `SET campo = @Campo` para cada columna
+- [ ] El objeto de parámetros del UPDATE incluye `id` para el `WHERE`
+- [ ] No se incluye `id` en el `SET` (solo en el `WHERE`)
+- [ ] El SQL siempre usa parámetros (`@FirstName`, `@LastName`, etc.) y nunca concatenación
+- [ ] Se usa `using var connection = new SqliteConnection(connectionString)`
+- [ ] Los comentarios en el código están en español y no llevan tildes ni eñes dentro del código fuente
+- [ ] El record está después de `app.Run()` en el archivo final
 
-    connection.Execute(@"
-        UPDATE province_names SET province_name = @ProvinceName
-        WHERE province_id = @Id", new { input.ProvinceName, Id = id });
+## 5. Errores esperados y cómo intervenir
 
-    return Results.NoContent();
-});
-```
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| `patientId` es 0 en la respuesta | Se devolvió el objeto del body sin asignarle el `id` de la ruta. | Usar `pacienteActualizado with { PatientId = id }` para incluir el ID. |
+| `UPDATE` no modifica ningún campo | Se incluyó `id` en el objeto del `SET` y Dapper lo usó para el `SET` en vez del `WHERE`. | El objeto del `SET` no debe tener `id`; `id` solo va en el `WHERE`. |
+| `0` filas afectadas sin `404` | No se verificó la existencia previa y el UPDATE no encontró coincidencias. | Agregar `QueryFirstOrDefault` antes del UPDATE o verificar `filasAfectadas == 0` después. |
+| `InvalidOperationException` al materializar | El SELECT previo no tiene alias `AS` correctos. | Verificar que el SELECT use `AS PatientId`, `AS FirstName`, etc. |
+| `Results.NoContent()` devuelve `200` | Se confundió `Results.NoContent()` con `Results.Ok()`. | `Results.NoContent()` = `204`. `Results.Ok()` = `200`. Probar con `curl -v`. |
+| Error de sintaxis en el UPDATE | Se olvidó una coma entre campos en el `SET` o se usó `=` en vez de `,`. | Revisar la sintaxis: `SET col1 = @val1, col2 = @val2, ...`. |
 
-### Etapa 3 — PUT /admissions/{id:long} con UPDATE condicional
+## 6. Registro de la clase
 
-```csharp
-app.MapPut("/admissions/{id:long}", (long id, AdmissionInput input) =>
-{
-    if (input.PatientId <= 0)
-        return Results.BadRequest(new { mensaje = "El ID del paciente es obligatorio" });
-    if (string.IsNullOrWhiteSpace(input.AdmissionDate))
-        return Results.BadRequest(new { mensaje = "La fecha de admision es obligatoria" });
+| Grupo | Entendió la diferencia 200 vs 204 | Implementó la validación de existencia | Devolvió el recurso actualizado en la respuesta | Probo con PUT parcial (solo city) | Observaciones |
+| --- | --- | --- | --- | --- | --- |
+| Grupo 1 | Sí | Sí | Sí | Sí | |
+| Grupo 2 | No, confundía 200 con 204 | Sí | No, devolvía 204 siempre | Sí | Requiere refuerzo en códigos de respuesta |
+| Grupo 3 | Sí | No, no validó existencia | Sí | No | Requiere refuerzo en validación previa |
+| Grupo 4 | Sí | Sí | Sí | No | |
 
-    using var connection = new SqliteConnection(connectionString);
-    var existente = connection.QueryFirstOrDefault<Admission>(@"
-        SELECT admission_id AS AdmissionId, patient_id AS PatientId,
-               doctor_id AS DoctorId, admission_date AS AdmissionDate,
-               diagnosis AS Diagnosis, discharge_date AS DischargeDate
-        FROM admissions WHERE admission_id = @id", new { id });
-
-    if (existente is null)
-        return Results.NotFound(new { mensaje = "Admision no encontrada" });
-
-    // Armar UPDATE condicional: solo los campos que no sean null en input
-    var sql = "UPDATE admissions SET patient_id = @PatientId, admission_date = @AdmissionDate";
-    if (input.DoctorId.HasValue) sql += ", doctor_id = @DoctorId";
-    if (input.Diagnosis != null) sql += ", diagnosis = @Diagnosis";
-    if (input.DischargeDate != null) sql += ", discharge_date = @DischargeDate";
-    sql += " WHERE admission_id = @Id";
-
-    connection.Execute(sql, new
-    {
-        input.PatientId, input.DoctorId, input.AdmissionDate,
-        input.Diagnosis, input.DischargeDate, Id = id
-    });
-
-    return Results.NoContent();
-});
-```
-
-## Errores anticipados y correccion
-
-| Error esperado | Donde aparece | Correccion en clase |
-|---|---|---|
-| Olvidar `Id = id` en el objeto anonimo | Cualquier PUT | Mostrar que sin `Id`, el UPDATE se ejecuta sin WHERE y afecta todas las filas. |
-| No verificar existencia con `QueryFirstOrDefault` | PUT sin `if (existente is null)` | El UPDATE se ejecuta igual y no avisa que el recurso no existe. |
-| Devolver `Results.Ok` con el recurso actualizado | PUT sobre BD | El canon dice `204` para operaciones de escritura sobre BD. |
-| `int` en vez de `long` en DoctorId / PatientId | Records de entrada | Recordar la tabla de tipos canonicos: INTEGER siempre es `long`. |
-| No incluir `?` en campos opcionales | `string?` en campos nulables | Si la columna acepta NULL, el record debe declarar `string?`. |
-| Poner `new { id }` en lugar de `new { input.xxx, Id = id }` | Objeto anonimo del UPDATE | El objeto debe incluir tanto los campos del input como el ID con su propio nombre. |
+**Notas para la evaluación de proceso:** verificar que cada grupo pueda explicar cuándo usar `Results.Ok` (200) y cuándo `Results.NoContent` (204) en un PUT. Evaluar si el grupo entiende por qué se incluye `id` en el objeto de parámetros del `WHERE` pero no en el `SET`. Registrar qué grupos confundieron los códigos 200 y 204.

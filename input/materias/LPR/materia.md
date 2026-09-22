@@ -30,7 +30,7 @@
 - Base de datos: no se trata este tema; ninguna, de ningún tipo.
 - Restricción de archivos: resolver cada trabajo en un solo archivo .py, sin dividir en módulos propios, salvo cuando no haya alternativa posible. Esto simplifica la cantidad de archivos que debe recordar el alumno. Los ejemplos rara vez superarán las 150 líneas.
 - Código de ejemplo: agregue una buena dosis de comentarios para que los estudiantes puedan comprender mejor las acciones del código presentado.
-- Convenciones técnicas: input/materias/LAP/convenciones-tecnicas.md — fuente única de tipos, formatos y estructura de código de este curso; leerla antes de generar cualquier ejemplo.
+- Convenciones técnicas: input/materias/LPR/convenciones-tecnicas.md — fuente única de tipos, formatos y estructura de código de este curso; leerla antes de generar cualquier ejemplo.
 
 (Tiempo)
 - Cantidad de horas por encuentro: 2.

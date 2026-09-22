@@ -1,182 +1,298 @@
-# Encuentro 5: Estructuras de control y métodos
+# Encuentro 5 — Estructuras de control y métodos
 
-## Datos del encuentro
+> Unidad 1 — Fundamentos de C# y Minimal API
 
-| Campo | Valor |
-|---|---|
-| Unidad | U1: Fundamentos de C# y Minimal API |
-| Encuentro | 5 de 8 |
-| Duración | 240 minutos |
-| Carácter | Procedimental |
+## 1. Metadatos de bloque
 
-## Objetivos de aprendizaje
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 5 de 36 |
+| Unidad | 1 — Fundamentos de C# y Minimal API |
+| Eje temático | 1 — Introducción a C# y .NET 6 |
+| Carácter/Objetivo | Procedimental |
+| Estructura | clase |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Uso de celular | No permitido |
+| Concepto nuevo | Estructuras de control y métodos |
+| Requisitos previos | Encuentro 4: tipos de datos, variables, estructura de Program.cs |
+| Organización del trabajo | Grupos de 3-4 personas; un repositorio compartido por grupo para todo el curso |
 
-- Escribir funciones con `void` y parámetros nombrados.
-- Usar `if` para mostrar información condicional según el valor de una variable.
-- Recorrer una lista de pacientes con un bucle `foreach`.
-- Declarar una lista de registros usando un tipo `record`.
+### Reparto de tiempos teóricos
 
-## Reparto de tiempos (240 minutos)
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-| Bloque | Minutos |
-|---|---|
-| Apertura y motivación | 20 |
-| Desarrollo teórico-práctico | 120 |
-| Consolidación y cierre | 20 |
-| Actividad complementaria | 80 |
+## 2. Objetivos de aprendizaje
 
-## Charla rápida
+1. Usar condicionales (`if`, `else if`, `else`) para tomar decisiones en un programa C#.
+2. Implementar bucles (`for`, `foreach`, `while`) para repetir acciones sobre colecciones.
+3. Definir métodos con parámetros y tipo de retorno para organizar el código en bloques reutilizables.
+4. Distinguir entre un método que devuelve un valor (`return`) y uno que no devuelve nada (`void`).
+5. Aplicar estructuras de control y métodos para resolver un problema simple de lógica.
 
-En el encuentro anterior escribimos datos fijos para un solo paciente. Ahora vamos a necesitar atender a varios pacientes en la sala de espera. Un método es como una receta que se escribe una vez y se aplica a cada persona que llega. Un `if` es como un cartel que dice "solo mujeres a la izquierda, solo varones a la derecha". Un bucle `foreach` es el asistente que repite la misma acción para cada paciente de la lista.
+## 3. Apertura y motivación (20 min)
 
-## Teoría mínima
+### Charla rápida: ¿Por qué repetir código es una mala idea?
 
-### Métodos (funciones)
+Si tienen que escribir `Console.WriteLine("Hola")` 100 veces, ¿lo hacen 100 veces? No. Usan un bucle. La programación se trata de encontrar patrones y automatizarlos. Hoy vamos a aprender las herramientas que nos permiten tomar decisiones y repetir acciones sin escribir lo mismo muchas veces.
 
-Un método agrupa una secuencia de instrucciones que se pueden reutilizar:
+### Diagnóstico rápido
+
+- Si `edad = 18`, ¿qué pasaría si escribimos `if (edad >= 18) Console.WriteLine("Mayor de edad");`? ¿Qué se imprime?
+- ¿Cuántas veces se ejecuta `for (int i = 0; i < 5; i++)`?
+- ¿Qué es un método y para qué sirve?
+
+Cada grupo responde en una hoja. Se comparan las respuestas en plenario.
+
+## 4. Desarrollo teórico-práctico (120 min)
+
+### 4.1 Condicionales: `if`, `else if`, `else` (25 min)
+
+Los condicionales permiten que el programa tome decisiones según una condición booleana.
 
 ```csharp
-void MostrarPaciente(long id, string nombre, string apellido)
+int nota = 7;
+
+// Si la nota es mayor o igual a 7, aprobo
+if (nota >= 7)
 {
-    Console.WriteLine($"ID: {id} - {nombre} {apellido}");
+    Console.WriteLine("Aprobado");
+}
+// Si no, pero es mayor o igual a 4, promociona sin final
+else if (nota >= 4)
+{
+    Console.WriteLine("Promocionado sin final");
+}
+// Si no cumple ninguna condicion anterior, reprueba
+else
+{
+    Console.WriteLine("Reprobado");
 }
 ```
 
-Se llama por su nombre: `MostrarPaciente(1, "Ana", "Lopez");`.
+**Salida esperada:** `Aprobado`
 
-### Condicional `if`
+**Ejercicio guiado:** Cambiar el valor de `nota` a 5 y verificar que la salida sea `Promocionado sin final`. Luego cambiar a 2 y verificar `Reprobado`.
 
-Ejecuta un bloque solo si una condición es verdadera:
+### 4.2 Bucles `for` y `foreach` (25 min)
+
+El bucle `for` repite una acción un número conocido de veces. El bucle `foreach` recorre cada elemento de una colección.
 
 ```csharp
-if (gender == "F")
+// Bucle for: contar del 1 al 5
+for (int i = 1; i <= 5; i++)
 {
-    Console.WriteLine("Genero: Femenino");
+    Console.WriteLine($"Numero {i}");
+}
+
+// Bucle foreach: recorrer una lista de nombres
+var nombres = new string[] { "Ana", "Luis", "Maria" };
+
+foreach (var nombre in nombres)
+{
+    Console.WriteLine($"Hola, {nombre}");
 }
 ```
 
-Operadores de comparación: `==` (igual), `!=` (distinto).
+**Salida esperada:**
+```
+Numero 1
+Numero 2
+Numero 3
+Numero 4
+Numero 5
+Hola, Ana
+Hola, Luis
+Hola, Maria
+```
 
-### Bucle `foreach`
+### 4.3 Bucles `while` (15 min)
 
-Recorre todos los elementos de una lista:
+El bucle `while` repite mientras una condición sea verdadera. Es útil cuando no se sabe de antemano cuántas veces se va a repetir.
 
 ```csharp
-foreach (var p in patients)
+// Contar hacia atras desde 5 hasta 1
+int contador = 5;
+
+while (contador > 0)
 {
-    MostrarPaciente(p.PatientId, p.FirstName, p.LastName);
+    Console.WriteLine(contador);
+    contador--;
 }
+
+Console.WriteLine("Despegue!");
 ```
 
-### Record posicional
-
-Un tipo que agrupa varios valores en una misma estructura. Se declara SIEMPRE al final del archivo, después de `app.Run()` (cuando haya API). Por ahora con `dotnet new console` los records van al final del archivo igual:
-
-```csharp
-record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate);
+**Salida esperada:**
+```
+5
+4
+3
+2
+1
+Despegue!
 ```
 
-## Práctica guiada: método y condicional
+### 4.4 Métodos: declarar y llamar (30 min)
 
-Partimos del proyecto `hospital-app` del encuentro anterior. Convertimos los datos sueltos en una lista de pacientes y escribimos un método para mostrar cada uno.
-
-**Paso 1:** reemplazar `Program.cs` con:
+Un método es un bloque de código con nombre que se puede llamar desde otro lugar. Puede recibir parámetros y devolver un valor.
 
 ```csharp
-// Definir la lista de pacientes con datos fijos (sin BD)
-var patients = new List<Patient>
+// Metodo que recibe dos numeros y devuelve su suma
+int Sumar(int a, int b)
 {
-    new Patient(1, "Ana", "Lopez", "F", "1990-05-15"),
-    new Patient(2, "Luis", "Martinez", "M", "1985-08-22"),
-    new Patient(3, "Elena", "Garcia", "F", "1978-12-03")
-};
+    int resultado = a + b;
+    return resultado;
+}
 
-// Metodo para mostrar un paciente en consola
-void PrintPatient(long id, string firstName, string lastName, string gender, string birthDate)
+// Metodo que no devuelve nada (void) y solo muestra un mensaje
+void Saludar(string nombre)
 {
-    Console.Write($"ID: {id} | {firstName} {lastName} ");
-    if (gender == "F")
+    Console.WriteLine($"Hola, {nombre}! Bienvenido.");
+}
+
+// Llamar a los metodos desde el programa principal
+int suma = Sumar(3, 5);
+Console.WriteLine($"La suma es: {suma}");
+
+Saludar("Carlos");
+```
+
+**Salida esperada:**
+```
+La suma es: 8
+Hola, Carlos! Bienvenido.
+```
+
+**Punto clave:** Los métodos se definen después de `app.Run()` en `Program.cs` cuando se usa top-level statements, o dentro de una clase en proyectos con estructura tradicional. En este curso, para ejemplos simples, se pueden definir como métodos locales dentro del flujo principal.
+
+### 4.5 Combinación de estructuras: resolver un problema (25 min)
+
+Ejemplo completo: un programa que reciba una lista de notas y muestre cuántas son aprobatorias (>= 7) y cuántas desaprobatorias.
+
+```csharp
+var notas = new int[] { 8, 4, 6, 9, 5, 7, 3, 10 };
+int aprobadas = 0;
+int desaprobadas = 0;
+
+foreach (var nota in notas)
+{
+    if (nota >= 7)
     {
-        Console.Write("(Femenino)");
+        aprobadas++;
     }
     else
     {
-        Console.Write("(Masculino)");
+        desaprobadas++;
     }
-    Console.WriteLine($" | Nac: {birthDate}");
 }
 
-// Recorrer la lista y mostrar cada paciente
-Console.WriteLine("=== Lista de pacientes ===");
-foreach (var p in patients)
-{
-    PrintPatient(p.PatientId, p.FirstName, p.LastName, p.Gender, p.BirthDate);
-}
-
-// Definir el record al final del archivo
-record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate);
+Console.WriteLine($"Aprobadas: {aprobadas}");
+Console.WriteLine($"Desaprobadas: {desaprobadas}");
 ```
 
-**Paso 2:** ejecutar:
-
-```bash
-dotnet run
+**Salida esperada:**
+```
+Aprobadas: 4
+Desaprobadas: 4
 ```
 
-Salida esperada:
+## 5. Consolidación y cierre (20 min)
 
-```
-=== Lista de pacientes ===
-ID: 1 | Ana Lopez (Femenino) | Nac: 1990-05-15
-ID: 2 | Luis Martinez (Masculino) | Nac: 1985-08-22
-ID: 3 | Elena Garcia (Femenino) | Nac: 1978-12-03
-```
+- Cada grupo escribe en una hoja: 2 condicionales que usaron, 1 bucle y 1 método que definieron.
+- Se comparten las hojas en plenario.
+- El docente verifica que todos los grupos puedan explicar qué hace cada estructura.
 
-> **Nota:** `Console.Write` (sin `Line`) no agrega un salto de línea al final, permitiendo acumular texto en el mismo renglón.
+## 6. Actividad complementaria (80 min)
 
-## Ejercicio independiente: agregar columna de edad
+### Ejercicio independiente: calculadora de notas
 
-Calcular la edad aproximada con `DateTime.Parse` y mostrar el texto `"Edad: NN anios"` al final del método `PrintPatient`.
+Crear un programa en `Program.cs` que:
 
-**Pista:** usar `DateTime.Parse(birthDate)` para obtener la fecha, luego `DateTime.Today.Year - fecha.Year` para los años. Restar un año si el cumpleaños aún no ocurrió este año.
+1. Defina un arreglo de 5 notas enteras (valores entre 1 y 10).
+2. Use un bucle `foreach` para recorrer las notas.
+3. Use un condicional `if` para clasificar cada nota como aprobada (>= 7) o desaprobada.
+4. Defina un método `string ClasificarNota(int nota)` que devuelva `"Aprobado"` o `"Desaprobado"`.
+5. Muestre el conteo final de aprobadas y desaprobadas.
 
-**Solución esperada:**
+**Pista:** El método `ClasificarNota` recibe un `int` y devuelve un `string`. Use `return` dentro del método.
 
-Agregar al método `PrintPatient`, antes de cerrar la línea:
+### Solución esperada del docente
 
 ```csharp
-var fechaNac = DateTime.Parse(birthDate);
-int edad = DateTime.Today.Year - fechaNac.Year;
-if (DateTime.Today < fechaNac.AddYears(edad))
+var notas = new int[] { 6, 8, 5, 9, 4 };
+int aprobadas = 0;
+int desaprobadas = 0;
+
+foreach (var nota in notas)
 {
-    edad--;
+    string estado = ClasificarNota(nota);
+    Console.WriteLine($"Nota {nota}: {estado}");
+
+    if (estado == "Aprobado")
+    {
+        aprobadas++;
+    }
+    else
+    {
+        desaprobadas++;
+    }
 }
-Console.Write($" | Edad: {edad} anios");
+
+Console.WriteLine($"\nTotal aprobadas: {aprobadas}");
+Console.WriteLine($"Total desaprobadas: {desaprobadas}");
+
+string ClasificarNota(int nota)
+{
+    return nota >= 7 ? "Aprobado" : "Desaprobado";
+}
 ```
 
-La salida entonces será:
+**Salida esperada:**
+```
+Nota 6: Desaprobado
+Nota 8: Aprobado
+Nota 5: Desaprobado
+Nota 9: Aprobado
+Nota 4: Desaprobado
 
+Total aprobadas: 2
+Total desaprobadas: 3
 ```
-ID: 1 | Ana Lopez (Femenino) | Nac: 1990-05-15 | Edad: 35 anios
+
+### Entrega del commit
+
+Al finalizar, cada grupo debe hacer commit de los avances:
+
+```bash
+git add .
+git commit -m "tp-u1: estructuras de control y metodos agregados"
+git push
 ```
+
+## 7. Cierre (15 min)
 
 ### Qué te llevás
 
-- Los métodos agrupan código que se repite.
-- `if` y `else` eligen un camino según una condición.
-- `foreach` recorre una lista.
-- Los records posicionales van siempre al final del archivo.
+- Los condicionales (`if`/`else if`/`else`) permiten tomar decisiones según el valor de una expresión booleana.
+- Los bucles (`for`, `foreach`, `while`) repiten acciones sin escribir el mismo código muchas veces.
+- Los métodos organizan el código en bloques reutilizables: pueden recibir parámetros y devolver valores con `return`.
+- Un método con tipo de retorno `void` no devuelve nada; solo ejecuta una acción.
 
 ### Lo que viene
 
-En el Encuentro 6 este programa de consola se convierte en una Minimal API: los datos de los pacientes dejan la consola y viajan por HTTP como JSON desde el primer endpoint GET.
+**Encuentro 6: Minimal API y endpoint GET** — Vamos a crear nuestro primer endpoint web con `MapGet` y probarlo en el navegador.
 
-## Errores comunes y trampas
+## 8. Errores comunes y trampas
 
-| Error | Causa | Solución |
-|---|---|---|
-| Record al inicio del archivo | C# exige que las top-level statements precedan a las declaraciones de tipos. | Escribir el record al final, después de todo el código ejecutable. |
-| Olvidar `new` en `new List<Patient>` | La lista debe instanciarse con `new`. | Escribir `new List<Patient> { ... }`. |
-| Confundir `=` con `==` | `=` asigna, `==` compara. | En `if` usar `==`. |
-| Paréntesis de más o de menos en `if` | La condición va entre paréntesis: `if (x == 1)`. | Revisar que no falten ni sobren paréntesis. |
-| Fecha sin `DateTime.Parse` | Comparar strings directamente no da la diferencia de años. | Convertir con `DateTime.Parse` antes de calcular la edad. |
+1. **Usar `=` en lugar de `==` en un condicional** — `if (nota = 7)` asigna 7 a `nota` en lugar de comparar. El compilador puede dar un error o un comportamiento inesperado. Siempre usar `==` para comparar.
+2. **Olvidar las llaves `{}` en un `if`/`else`** — Si no se usan llaves, solo la primera línea después del condicional pertenece al bloque. Esto genera errores lógicos difíciles de detectar.
+3. **Bucle infinito con `while`** — Si la condición nunca se vuelve falsa, el bucle no termina y la app se cuelga. Siempre asegurarse de que la variable de control cambie dentro del bucle.
+4. **Definir un método antes de `app.Run()` sin contexto adecuado** — En top-level statements, los métodos locales deben definirse antes de ser llamados, o como métodos de nivel de archivo después de `app.Run()`.
+5. **Confundir `return` con `Console.WriteLine`** — `return` sale del método y entrega un valor; `Console.WriteLine` solo muestra texto en consola pero no sale del método.
+6. **No incrementar el contador en el bucle `for`** — Olvidar `i++` hace que el bucle se ejecute infinitamente.

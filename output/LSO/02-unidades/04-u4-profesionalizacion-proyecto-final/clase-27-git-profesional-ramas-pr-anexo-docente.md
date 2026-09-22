@@ -1,90 +1,82 @@
 # Anexo docente — Encuentro 27: Git profesional: ramas y PR
 
----
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
-## Preguntas guía para la apertura
+## 1. Solución del ejercicio independiente
 
-1. "¿Cómo organizaron el código hasta ahora? ¿Todo en main, cada uno en su propia rama sin revisión?"
-2. "¿Alguna vez perdieron trabajo por un merge conflictivo o por sobrescribir el archivo de otro?"
-3. "¿Qué beneficios imaginan que trae revisar el código de un compañero antes de integrarlo?"
+### Ejercicio: Crear rama de feature y abrir PR
 
----
+**Solución paso a paso:**
 
-## Resumen teórico para el pizarrón
+1. Desde la terminal, en la carpeta del repositorio del grupo:
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout -b feature/crud-completo
+   ```
+2. Realizar un cambio en `Program.cs` (por ejemplo, agregar un nuevo endpoint o mejorar uno existente).
+3. Commitear:
+   ```bash
+   git add .
+   git commit -m "trabajo-final: agregar endpoint de pacientes"
+   git push origin feature/crud-completo
+   ```
+4. Desde GitHub, abrir un PR de `feature/crud-completo` a `main`.
+5. Asignar como revisor a otro integrante del grupo.
 
-- Repositorio único del grupo con carpetas: `tp-u1/`, `tp-u2/`, `tp-u3/`, `trabajo-final/`.
-- Issue → feature branch → trabajo local → PR → revisión → merge → borrar rama.
-- Main protegida: nadie pushea directo, todo código pasa por revisión.
-- Nomenclatura: `feature/<tema>` (inglés, guiones).
+**Resultado esperado:** La rama `feature/crud-completo` existe en el repositorio remoto, el PR está abierto con al menos un revisor asignado, y `main` no recibió cambios directos.
 
----
+## 2. Solución de la actividad de extensión
 
-## Ejemplo de código completo para la práctica guiada
+### Flujo profesional completo
 
-El ejemplo de la práctica guiada se centra en Git, no en código C#. Si algún grupo termina rápido y quiere ver el endpoint de conteo funcionando, puede usar este fragmento completo (basado en la base `hospital.db`):
+**Pasos esperados para cada grupo:**
 
-```csharp
-using Dapper;
-using Microsoft.Data.Sqlite;
+1. `main` protegida configurada (Settings → Branches → Branch protection rules → `main` → Require pull request, Require 1 approval).
+2. Rama `feature/readme-portada` creada, README de portada preparado y commiteado.
+3. Rama `feature/issues` creada, issues del repositorio llenados con las tareas del trabajo final.
+4. Rama `feature/crud-completo` creada, CRUD completo verificado contra `hospital.db`.
+5. Tres PRs abiertos (uno por feature), cada uno con al menos una revisión aprobada por un compañero.
+6. PRs fusionados en orden lógico (readme primero, luego issues, luego crud).
+7. Ramas de feature borradas después de fusionar.
 
-var connectionString = "Data Source=hospital.db";
+**Criterio de éxito:** `main` tiene los tres merges, no hay commits directos a `main`, y cada PR tiene evidencia de revisión.
 
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+## 3. Respuesta esperada del ejercicio
 
-app.MapGet("/patients/count-by-province", () =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var result = connection.Query(@"
-        SELECT p.province_id AS ProvinceId,
-               p.province_name AS ProvinceName,
-               COUNT(pa.patient_id) AS PatientCount
-        FROM province_names p
-        LEFT JOIN patients pa ON pa.province_id = p.province_id
-        GROUP BY p.province_id, p.province_name
-    ").ToList();
-    return Results.Ok(result);
-});
+| Pregunta de consolidación | Respuesta esperada |
+| --- | --- |
+| ¿Qué es una rama de feature? | Una copia aislada de `main` donde se desarrolla una funcionalidad sin afectar al resto del equipo |
+| ¿Por qué `main` está protegida? | Para evitar que cambios sin revisar se integren directamente en la línea principal |
+| ¿Quién revisa un PR? | Otro integrante del mismo grupo (revisión entre pares) |
+| ¿Qué mensaje de commit se espera? | En español, minúsculas después de los dos puntos, sin tildes, con el prefijo de la carpeta |
 
-app.Run();
-```
+## 4. Criterios de corrección (lista de verificación)
 
-El record no es necesario para `Query()` sin tipo genérico; si se desea tipar, el record sería:
+- ☐ Cada grupo tiene al menos una rama de feature creada y push al remoto.
+- ☐ Al menos un PR está abierto desde una rama de feature hacia `main`.
+- ☐ El PR tiene al menos un revisor asignado del mismo grupo.
+- ☐ `main` está protegida (no se puede hacer push directo).
+- ☐ Los mensajes de commit siguen la convención del curso (español, sin tildes, minúsculas tras los dos puntos).
+- ☐ No hay commits directos a `main` durante el encuentro.
 
-```csharp
-record PatientCountByProvince(long ProvinceId, string ProvinceName, long PatientCount);
-```
+## 5. Errores esperados y cómo intervenir
 
----
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| Push directo a `main` rechazado | Branch protection no configurada o mal configurada | Verificar que la regla de protección esté activa y que "Require a pull request" esté marcado |
+| PR sin revisor asignado | No se asignó revisor al abrir el PR | Indicar que el PR debe tener al menos un revisor del mismo grupo antes de fusionar |
+| Commit con tildes o en inglés | No se siguió la convención del curso | Recordar que los mensajes deben estar en español, sin tildes, con minúsculas después de los dos puntos |
+| Cambios en `main` en lugar de en rama de feature | No se creó la rama antes de empezar a codear | Orientar al grupo a crear `git checkout -b feature/<nombre>` antes de cualquier cambio |
+| PR fusionado sin revisión | Se saltearon el paso de revisión | Recordar que el flujo requiere al menos una aprobación antes de merge |
 
-## Rúbrica de evaluación del ejercicio independiente
+## 6. Registro de la clase
 
-| Criterio | Logrado (2 pts) | En desarrollo (1 pt) | No logrado (0 pts) |
-|---|---|---|---|
-| Issue creado con título y cuerpo descriptivo | Issue completo, describe la tarea | Issue creado sin cuerpo | No hay issue |
-| Rama feature creada desde `main` | Rama con nombre `feature/...` creada y subida | Rama creada pero sin push | No hay rama |
-| Pull Request abierto y vinculado al issue | PR con referencia al issue y descripción | PR abierto sin descripción ni vínculo | No hay PR |
-| Revisión completada y merge | PR aprobado, mergeado y rama eliminada | PR mergeado sin revisión formal | PR sin merge |
+| Grupo | Ramas creadas | PRs abiertos | PRs revisados | Main protegida | Observaciones |
+| --- | --- | --- | --- | --- | --- |
+| Grupo 1 | | | | | |
+| Grupo 2 | | | | | |
+| Grupo 3 | | | | | |
+| Grupo 4 | | | | | |
 
----
-
-## Solución del ejercicio independiente
-
-El resultado esperado es un Pull Request en el repositorio del grupo que:
-
-1. Partió de un issue con título y cuerpo.
-2. Se implementó en rama `feature/pacientes-por-provincia`.
-3. Se abrió el PR vinculado al issue.
-4. Un compañero revisó y aprobó.
-5. Se mergeó a `main` y se eliminó la rama remota.
-
-El código del endpoint puede variar; lo importante es que el flujo Git se haya completado.
-
----
-
-## Notas para el docente
-
-- Es probable que algunos grupos tengan dudas con los merge conflicts. Si ocurren, proyecte la resolución en el pizarrón: `git merge main` en la rama feature, resolver conflictos, `git add` y continuar.
-- Enfatizar que la protección de `main` se configura en GitHub Settings > Branches > Add rule. Se hará en el encuentro 28, pero puede mostrarse hoy si algún grupo pregunta.
-- El ejercicio independiente es el primero que apunta directamente al trabajo final. Asegurarse de que todos los grupos tengan al menos un endpoint funcionando en `main` al final de la clase.
-- Registrar qué grupos completaron el flujo completo (issue → PR mergeado) para dar seguimiento en los encuentros siguientes.
+**Notas para evaluación de proceso:** verificar que cada grupo tenga al menos un PR con revisión aprobada y que `main` esté protegida. Registrar qué grupos completaron el flujo completo y cuáles necesitan acompañamiento adicional.

@@ -1,120 +1,145 @@
-# Continuidad pedagógica — Saberes previos
+# Continuidad pedagógica 01 — Saberes previos
 
-**Curso:** Minimal API con C# .NET 6
-**Momento de uso:** Antes del inicio de la Unidad 1 (encuentros 1–3)
-**Duración teórica:** 240 minutos
-**Requisitos:** Ninguno. No se requiere instalación de software ni conocimientos previos de C#. Se valora la participación y el razonamiento lógico.
+## Datos de referencia
+
+| Campo | Valor |
+|-------|-------|
+| Curso | Minimal API con C# .NET 6 |
+| Momento de uso | Inicio del curso (antes del encuentro 1) |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Requisitos | Lápiz, papel, cuaderno. No se requiere computadora. |
+
+## Objetivos de aprendizaje
+
+1. Revisar y consolidar los conocimientos de lógica proposicional y tablas de verdad como base para el razonamiento algorítmico.
+2. Practicar el seguimiento de instrucciones y la trazabilidad de variables en secuencias de pasos.
+3. Desarrollar capacidad de abstracción mediante la escritura de pseudocódigo para algoritmos conceptuales.
+4. Identificar patrones y secuencias lógicas como base para el pensamiento computacional.
+
+## Actividades puntuadas (sobre 100)
+
+### Actividad 1 — Lógica proposicional y tablas de verdad (20 puntos / 45 minutos)
+
+**Consigna:** Construí la tabla de verdad completa para cada una de las siguientes expresiones lógicas. Luego indicá si cada una es tautología, contradicción o contingencia.
+
+a) `(p ∧ q) → p`
+b) `p ∨ (¬p ∧ q)`
+c) `(p → q) ↔ (¬q → ¬p)`
+
+**Pistas:** Recordá que una implicación `p → q` es falsa únicamente cuando `p` es verdadero y `q` es falso. La bicondicional `p ↔ q` es verdadera cuando ambos operandos tienen el mismo valor de verdad.
+
+**Puntos:** 20
 
 ---
 
-## Objetivos
+### Actividad 2 — Seguimiento de instrucciones y flujo de control (25 puntos / 50 minutos)
 
-- Reconocer los fundamentos del pensamiento computacional: secuencia, selección e iteración.
-- Identificar la estructura general de un programa: entrada, procesamiento y salida.
-- Distinguir entre tipos de datos básicos (números enteros, decimales, texto y valor lógico).
-- Aplicar la resolución de problemas mediante pseudocódigo y diagramas de flujo.
-- Relacionar los conceptos de algoritmo y programa con situaciones cotidianas.
+**Consigna:** Tenés el siguiente conjunto de instrucciones. Indicá el valor final de cada variable al terminar la ejecución.
+
+```
+Inicio
+  x ← 10
+  y ← 5
+  z ← 0
+
+  Si x > y entonces
+    z ← x + y
+  Sino
+    z ← x - y
+  Fin Si
+
+  x ← z - 3
+  y ← z + 2
+  z ← x * y
+
+Fin
+```
+
+**Preguntas:**
+a) ¿Cuál es el valor final de `x`?
+b) ¿Cuál es el valor final de `y`?
+c) ¿Cuál es el valor final de `z`?
+d) ¿Qué rama del si se ejecutó? Justificá.
+
+**Puntos:** 25
 
 ---
 
-## Actividades (100 puntos — 240 minutos)
+### Actividad 3 — Pseudocódigo: algoritmo de ordenamiento conceptual (20 puntos / 50 minutos)
 
-### Actividad 1 — ¿Qué es un algoritmo? (20 puntos — 40 minutos)
+**Consigna:** Escribí un algoritmo en pseudocódigo que reciba tres números enteros y los ordene de menor a mayor. Usá solo estructuras de control vistas en clase (condicionales y asignaciones). No se permite usar funciones de ordenamiento predefinidas.
 
-Redactá, en no más de diez líneas, una definición de *algoritmo* con tus propias palabras. Luego describí un algoritmo cotidiano que no involucre una computadora (por ejemplo, preparar mate, cambiar una rueda o seguir una receta). Identificá en ese algoritmo las tres partes: **entrada**, **procesamiento** y **salida**.
+**Requisitos:**
+- El algoritmo debe recibir tres variables: `a`, `b`, `c`.
+- Al finalizar, las tres variables deben estar ordenadas: `a ≤ b ≤ c`.
+- Incluí comentarios en cada paso que expliquen qué hace esa asignación.
 
-| Criterio | Puntaje |
-| --- | --- |
-| Definición clara y correcta de *algoritmo* | 8 ptos. |
-| Ejemplo cotidiano pertinente | 6 ptos. |
-| Identificación correcta de entrada, procesamiento y salida | 6 ptos. |
+**Puntos:** 20
 
-### Actividad 2 — Secuencia de instrucciones (20 puntos — 50 minutos)
+---
 
-Escribí, en pseudocódigo (pasos numerados en lenguaje natural), un algoritmo que resuelva este problema:
+### Actividad 4 — Trazado de variables y cambios de estado (20 puntos / 50 minutos)
 
-> Una persona necesita saber si puede pasar por debajo de un puente peatonal. El puente tiene una altura de 2,10 m. La persona ingresa su altura en metros y el programa responde «Podés pasar» si la altura es menor o igual a la del puente, o «No podés pasar» en caso contrario.
+**Consigna:** Considerá el siguiente bloque de instrucciones. Completá la tabla de trazado con el valor de cada variable en cada paso.
 
-Incluí: una instrucción de **entrada**, una **decisión** (si-entonces-sino) y una instrucción de **salida**.
+```
+Inicio
+  a ← 3
+  b ← 7
+  c ← a + b
+  a ← c - a
+  b ← c - b
+  c ← a + b
+Fin
+```
 
-| Criterio | Puntaje |
-| --- | --- |
-| Estructura de secuencia correcta (inicio, pasos, fin) | 6 ptos. |
-| Uso correcto de una decisión (si-entonces-sino) | 6 ptos. |
-| Entrada y salida claramente identificadas | 8 ptos. |
+**Tabla de trazado:**
 
-### Actividad 3 — Tipos de datos (20 puntos — 50 minutos)
+| Paso | a | b | c |
+|------|---|---|---|
+| Inicio | — | — | — |
+| 1: a ← 3 | | | |
+| 2: b ← 7 | | | |
+| 3: c ← a + b | | | |
+| 4: a ← c - a | | | |
+| 5: b ← c - b | | | |
+| 6: c ← a + b | | | |
 
-Para cada valor de la siguiente lista, indicá qué tipo de dato es (entero, decimal, texto / cadena, valor lógico) y justificá tu elección en una línea:
+**Pregunta extra (5 puntos adicionales):** ¿Qué operación matemática realiza este algoritmo sobre los valores iniciales de `a` y `b`? Explicá brevemente.
 
-| Valor | Tipo | Justificación (ejemplo) |
-| --- | --- | --- |
-| `25` | | |
-| `3.1416` | | |
-| `"Hola mundo"` | | |
-| `verdadero` | | |
-| `0` | | |
-| `"45"` | | |
+**Puntos:** 20 (incluye 5 puntos extra)
 
-**Atención:** distingüí entre el número `25` y la cadena `"45"`.
+---
 
-| Criterio | Puntaje |
-| --- | --- |
-| Cada tipo correcto (6 valores × 2 ptos.) | 12 ptos. |
-| Justificaciones pertinentes (6 × 1 pto. aprox., máx.) | 8 ptos. |
+### Actividad 5 — Identificación de patrones y secuencias lógicas (15 puntos / 45 minutos)
 
-### Actividad 4 — Diagrama de flujo (20 puntos — 50 minutos)
+**Consigna:** Observá las siguientes secuencias. Identificá el patrón, escribí los dos próximos elementos y explicá la regla que genera la secuencia.
 
-Dibujá (en papel, con lápiz y regla) el diagrama de flujo correspondiente al algoritmo de la Actividad 2. Usá las figuras estándar:
+a) 2, 6, 12, 20, 30, __, __
+b) 1, 1, 2, 3, 5, 8, __, __
+c) A, C, F, J, __, __
 
-- **Óvalo** para inicio y fin.
-- **Paralelogramo** para entrada y salida.
-- **Rombo** para la decisión.
-- **Rectángulo** para asignaciones o procesos.
+**Para cada secuencia indicá:**
+- La regla de generación (en palabras).
+- Los dos próximos elementos.
+- Si la secuencia es finita o infinita y por qué.
 
-| Criterio | Puntaje |
-| --- | --- |
-| Figuras correctas para cada bloque | 8 ptos. |
-| Flujo de conexión coherente (flechas) | 6 ptos. |
-| Correspondencia exacta con el pseudocódigo de la Actividad 2 | 6 ptos. |
-
-### Actividad 5 — Variables y operaciones lógicas (20 puntos — 50 minutos)
-
-Dadas dos variables **A** y **B** con valores desconocidos (podrían ser `verdadero` o `falso`), completá la siguiente tabla de verdad para las operaciones **Y lógica** (AND, ambos verdaderos) y **O lógica** (OR, al menos uno verdadero):
-
-| A | B | A Y B | A O B |
-| --- | --- | --- | --- |
-| V | V | | |
-| V | F | | |
-| F | V | | |
-| F | F | | |
-
-Luego, explicá con un ejemplo cotidiano qué significaría «A Y B» en una frase como «Si **está lloviendo** Y **no tengo paraguas**, entonces me mojo».
-
-| Criterio | Puntaje |
-| --- | --- |
-| Tabla de verdad completa y correcta (4 filas × 3 ptos.) | 12 ptos. |
-| Explicación del ejemplo cotidiano pertinente y correcta | 8 ptos. |
+**Puntos:** 15
 
 ---
 
 ## Autoevaluación para el alumno
 
-Marcá con una ✗ la opción que mejor refleje tu trabajo:
+Antes de la próxima clase, respondé con honestidad las siguientes preguntas. No hay puntos en juego; es una herramienta para que identifiques qué repasar.
 
-| Afirmación | Lo logré | Lo logré parcialmente | No lo logré |
-| --- | --- | --- | --- |
-| Puedo definir *algoritmo* con mis palabras. | ☐ | ☐ | ☐ |
-| Identifico entrada, procesamiento y salida en un proceso cotidiano. | ☐ | ☐ | ☐ |
-| Escribo pasos numerados en pseudocódigo con decisiones. | ☐ | ☐ | ☐ |
-| Distingo tipos de datos básicos (entero, decimal, texto, lógico). | ☐ | ☐ | ☐ |
-| Dibujo un diagrama de flujo con las figuras estándar. | ☐ | ☐ | ☐ |
-| Completo una tabla de verdad de AND y OR. | ☐ | ☐ | ☐ |
+- ¿Puedo construir una tabla de verdad completa para una expresión con dos o tres conectivos lógicos?
+- ¿Soy capaz de seguir un algoritmo paso a paso y registrar el valor de cada variable en cada iteración?
+- ¿Puedo escribir pseudocódigo que use condicionales y asignaciones para resolver un problema simple?
+- ¿Identifico patrones en secuencias numéricas y alfabéticas y puedo formular la regla que las genera?
+- ¿Me siento seguro/a para comenzar el curso con estos conocimientos previos?
 
-**Tiempo real que me llevó:** ________ minutos.
+Si respondiste "no" a alguna de estas preguntas, repasá la actividad correspondiente antes del próximo encuentro.
 
----
+## Nota de registro académico
 
-## Nota académica obligatoria
-
-La resolución de estas actividades se realiza en forma habitual, por lo general en grupo. Las tareas que requieren escritura o dibujo se hacen en papel; no se necesita computadora para esta guía. La presentación es **individual y manuscrita**, al inicio de la próxima clase, y constituye una actividad más de la asignatura que forma parte del proceso de evaluación.
+la resolución se realiza en forma habitual (por lo general, en grupo); la presentación es individual y manuscrita, al inicio de la próxima clase, y constituye una actividad más de la asignatura que forma parte del proceso de evaluación.

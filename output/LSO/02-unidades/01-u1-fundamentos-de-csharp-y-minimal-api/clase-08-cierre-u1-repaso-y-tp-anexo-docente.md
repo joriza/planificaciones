@@ -1,104 +1,196 @@
-# Anexo docente — Encuentro 8: Cierre U1 — repaso y TP
+# Anexo docente — Encuentro 8: Cierre U1: repaso y TP
 
-## Encuadre
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
-Quinto y último encuentro de la Unidad 1. Los estudiantes integran todo lo aprendido en un trabajo práctico que deben entregar por GitHub. El TP-U1 es una Minimal API con endpoints GET que lista pacientes, los filtra por ID, género y edad, y devuelve conteos. Es el primer hito evaluable de la cursada. A partir de acá comienza el control de versiones formal con commits por encuentro.
+## 1. Solución del ejercicio independiente
 
-La modalidad es "actitudinal": se evalúa la entrega completa y la correcta publicación en GitHub, no solo el código.
-
-## Qué observar durante la clase
-
-- Dificultad para organizar la carpeta `tp-u1/` dentro del repositorio grupal (no confundir con el proyecto `hospital-api` de los encuentros anteriores).
-- Errores de sintaxis que ya habían aparecido en encuentros anteriores: record antes de `app.Run()`, falta de `Results.Ok`, ID como `int`.
-- Duda sobre el mensaje del commit: algunos escriben "Entrega TP" con mayúscula o tildes, o no usan el prefijo de carpeta.
-- Confusión sobre cómo publicar: `git push` sin haber hecho `git add`/`git commit` primero, o push sin remote configurado.
-
-## Solución completa del TP-U1 (ejercicio independiente)
-
-El `Program.cs` completo con el endpoint adicional `older-than`:
+### TP-U1: Minimal API GET — solución completa
 
 ```csharp
-// Lista de pacientes (personalizada por el grupo)
-var patients = new List<Patient>
-{
-    new Patient(1, "Maria", "Gomez", "F", "1988-03-21"),
-    new Patient(2, "Pedro", "Ramirez", "M", "1992-11-14"),
-    new Patient(3, "Laura", "Fernandez", "F", "1975-06-07"),
-    new Patient(4, "Diego", "Torres", "M", "2001-09-30"),
-    new Patient(5, "Valentina", "Acosta", "F", "1999-02-18")
-};
+// Program.cs — TP-U1: Minimal API con endpoints GET
+// No usa base de datos; ejercicio de entrega de la unidad 1
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-// GET /patients — lista completa (con filtro opcional por genero)
-app.MapGet("/patients", (string? gender) =>
+// GET / — endpoint raiz
+app.MapGet("/", () => new { mensaje = "API de la unidad 1" });
+
+// GET /saludo/{nombre} — saluda al nombre recibido en la ruta
+app.MapGet("/saludo/{nombre}", (string nombre) =>
+    new { saludo = $"Hola, {nombre}!" });
+
+// GET /suma/{a}/{b} — suma dos numeros recibidos como parametros de ruta
+app.MapGet("/suma/{a:double}/{b:double}", (double a, double b) =>
+    new { resultado = a + b });
+
+// GET /productos — lista de productos de ejemplo
+app.MapGet("/productos", () =>
 {
-    if (gender is not null)
+    var productos = new[]
     {
-        var filtered = patients.Where(p => p.Gender == gender).ToList();
-        return Results.Ok(filtered);
-    }
-    return Results.Ok(patients);
+        new { id = 1L, nombre = "Laptop", precio = 999.99 },
+        new { id = 2L, nombre = "Mouse", precio = 29.99 },
+        new { id = 3L, nombre = "Teclado", precio = 59.99 }
+    };
+
+    return Results.Ok(productos);
 });
 
-// GET /patients/count — total de pacientes
-app.MapGet("/patients/count", () =>
+// GET /productos/{id} — obtener un producto por id
+app.MapGet("/productos/{id:long}", (long id) =>
 {
-    return Results.Ok(new { total = patients.Count });
-});
-
-// GET /patients/older-than?age=30 — filtrar por edad minima
-app.MapGet("/patients/older-than", (int age) =>
-{
-    var older = patients.Where(p =>
+    var productos = new[]
     {
-        var birth = DateTime.Parse(p.BirthDate);
-        int edad = DateTime.Today.Year - birth.Year;
-        if (DateTime.Today < birth.AddYears(edad)) edad--;
-        return edad > age;
-    }).ToList();
+        new { id = 1L, nombre = "Laptop", precio = 999.99 },
+        new { id = 2L, nombre = "Mouse", precio = 29.99 },
+        new { id = 3L, nombre = "Teclado", precio = 59.99 }
+    };
 
-    return Results.Ok(older);
-});
-
-// GET /patients/{id:long} — buscar por ID
-app.MapGet("/patients/{id:long}", (long id) =>
-{
-    var patient = patients.FirstOrDefault(p => p.PatientId == id);
-    return patient is null
-        ? Results.NotFound(new { mensaje = "Paciente no encontrado" })
-        : Results.Ok(patient);
+    var producto = productos.FirstOrDefault(p => p.id == id);
+    return producto is null
+        ? Results.NotFound(new { mensaje = "Producto no encontrado" })
+        : Results.Ok(producto);
 });
 
 app.Run();
-
-record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate);
 ```
 
-## Errores previsibles
+**Salida verificada:**
 
-1. **`git remote -v` no configurado:** el grupo creó el repo local pero no vinculó el remoto de GitHub. Verificar con `git remote -v` antes del push.
-2. **Conflictos de merge:** si dos integrantes del grupo hicieron commit por separado sin pull, el push falla. En Unidad 1 se trabaja en rama `main` sin ramas, así que el primer push suele ser limpio.
-3. **Carpeta `tp-u1` en la raíz del repositorio vs. dentro de una subcarpeta:** aclarar que el repo tiene `tp-u1/`, `tp-u2/`, etc. en la raíz. No crear una subcarpeta adicional.
-4. **Olvidar el `.gitignore`:** el `bin/` y `obj/` se suben al repositorio, ocupando espacio innecesario.
-5. **Parámetro `age` como `int` sin constraint de ruta:** en `older-than`, el parámetro `age` viene por query string y es `int` (no `long`), porque representa una edad, no una clave primaria. Esto es correcto y consistente con el canon.
+| Endpoint | Comando | Salida esperada |
+| --- | --- | --- |
+| `GET /` | `curl http://localhost:5000/` | `{"mensaje":"API de la unidad 1"}` |
+| `GET /saludo/Carlos` | `curl http://localhost:5000/saludo/Carlos` | `{"saludo":"Hola, Carlos!"}` |
+| `GET /suma/3/5` | `curl http://localhost:5000/suma/3/5` | `{"resultado":8}` |
+| `GET /productos` | `curl http://localhost:5000/productos` | Array JSON con 3 productos |
+| `GET /productos/1` | `curl http://localhost:5000/productos/1` | `{"id":1,"nombre":"Laptop","precio":999.99}` |
+| `GET /productos/99` | `curl http://localhost:5000/productos/99` | `{"mensaje":"Producto no encontrado"}` (404) |
 
-## Criterios de logro (4-8)
+## 2. Solución de la actividad de extensión
 
-| Nivel | Descripción |
-|---|---|
-| 4 | Entrega un proyecto que compila pero no cumple todos los endpoints. Sin commit ni push. |
-| 5 | Compila, tiene al menos 3 endpoints funcionales; no sube a GitHub. |
-| 6 | Todos los endpoints funcionan, el record está al final, hay `.gitignore`. Sube a GitHub sin mensaje de commit correcto. |
-| 7 | Entrega completa: 5 endpoints, record al final, `.gitignore`, commit con mensaje correcto, push exitoso. |
-| 8 | Todo lo del 7 más: código con comentarios explicativos, nombres de pacientes variados, un endpoint extra (ej. ordenado por nombre). |
+### Ejercicio 1: endpoint de detalle con resumen
 
-## Agrupamiento
+```csharp
+// GET /productos/{id}/detalle — resumen de un producto
+app.MapGet("/productos/{id:long}/detalle", (long id) =>
+{
+    var productos = new[]
+    {
+        new { id = 1L, nombre = "Laptop", precio = 999.99 },
+        new { id = 2L, nombre = "Mouse", precio = 29.99 },
+        new { id = 3L, nombre = "Teclado", precio = 59.99 }
+    };
 
-Grupal (2-3 integrantes). Cada grupo entrega un solo repositorio con un solo `tp-u1/`. Los integrantes pueden trabajar en una sola máquina o en equipo mediante compartir pantalla. A partir de la Unidad 4 se introducirán ramas por integrante.
+    var producto = productos.FirstOrDefault(p => p.id == id);
+    if (producto is null)
+    {
+        return Results.NotFound(new { mensaje = "Producto no encontrado" });
+    }
 
-## Ajustes para la siguiente edición
+    var detalle = $"{producto.nombre} - Precio: ${producto.precio}";
+    return Results.Ok(new { producto, detalle });
+});
+```
 
-- Si más del 40% de los grupos no logra completar el push en clase, dedicar los primeros 15 minutos de la Unidad 2 a resolver la conexión con GitHub.
-- Si el endpoint `older-than` resulta demasiado complejo para el cierre de U1, reemplazarlo por `GET /patients/summary` que devuelva solo `{ total, femenino, masculino }`.
+**Salida esperada:**
+- `GET /productos/1/detalle` → `{"producto":{"id":1,"nombre":"Laptop","precio":999.99},"detalle":"Laptop - Precio: $999.99"}`
+- `GET /productos/99/detalle` → `{"mensaje":"Producto no encontrado"}` (404)
+
+### Ejercicio 2: suma con query strings
+
+```csharp
+// GET /suma?a=3&b=5 — suma con parametros de query string
+app.MapGet("/suma", (double a, double b) =>
+    new { resultado = a + b });
+```
+
+**Salida esperada:**
+- `GET /suma?a=3&b=5` → `{"resultado":8}`
+- `GET /suma` → error 400 (parámetros obligatorios sin valores por defecto)
+
+### Ejercicio 3: validación del endpoint de saludo
+
+```csharp
+// GET /saludo/{nombre} con validacion
+app.MapGet("/saludo/{nombre}", (string nombre) =>
+{
+    if (string.IsNullOrWhiteSpace(nombre))
+    {
+        return Results.BadRequest(new { mensaje = "El nombre no puede estar vacio" });
+    }
+
+    return Results.Ok(new { saludo = $"Hola, {nombre}!" });
+});
+```
+
+**Salida esperada:**
+- `GET /saludo/Ana` → `{"saludo":"Hola, Ana!"}`
+- `GET /saludo/` → `{"mensaje":"El nombre no puede estar vacio"}` (400)
+
+## 3. Respuesta esperada del ejercicio
+
+| Pregunta | Respuesta esperada |
+| --- | --- |
+| ¿Qué debe contener el TP-U1? | Una Minimal API con al menos 5 endpoints GET funcionales en un único archivo `Program.cs`. |
+| ¿Cuál es la estructura mínima de `Program.cs`? | `CreateBuilder` → `Build` → `MapGet` (uno o más) → `Run`. |
+| ¿Qué es un commit en Git? | Una captura del estado del proyecto en un momento dado, con un mensaje descriptivo. |
+| ¿Por qué se usa `git push`? | Para enviar los commits locales al repositorio remoto en GitHub, compartiendo el trabajo con el equipo y el docente. |
+| ¿Qué debe contener el `.gitignore`? | Al menos `bin/` y `obj/` para evitar versionar archivos generados por la compilación. |
+| ¿Cuál es el mensaje de commit correcto para la entrega? | `tp-u1: entrega final minimal api get` (español, minúsculas después de los dos puntos, sin tildes). |
+| ¿Qué diferencia hay entre `Results.Ok` y `Results.NotFound`? | `Results.Ok` devuelve un código HTTP 200 con los datos. `Results.NotFound` devuelve un código HTTP 404 indicando que el recurso no existe. |
+
+## 4. Criterios de corrección (lista de verificación)
+
+### Para el TP-U1:
+
+- [ ] El repositorio del grupo existe en GitHub con la carpeta `tp-u1/`.
+- [ ] El archivo `Program.cs` contiene al menos 5 endpoints GET funcionales.
+- [ ] El endpoint `/` devuelve un objeto con la propiedad `mensaje`.
+- [ ] El endpoint `/saludo/{nombre}` recibe un parámetro de ruta y lo incluye en la respuesta.
+- [ ] El endpoint `/suma/{a}/{b}` recibe dos parámetros numéricos y devuelve la suma.
+- [ ] El endpoint `/productos` devuelve una lista de al menos 3 productos.
+- [ ] El endpoint `/productos/{id:long}` maneja correctamente el caso de ID inexistente con `Results.NotFound`.
+- [ ] El `.gitignore` en la raíz contiene `bin/` y `obj/`.
+- [ ] El último commit tiene el mensaje de entrega correcto.
+- [ ] El commit se hizo en la rama `main`.
+- [ ] El código compila y los endpoints se prueban correctamente.
+- [ ] Los comentarios en el código están en español y no llevan tildes ni eñes.
+
+### Para la defensa individual (evaluación del Encuentro 9):
+
+- [ ] El alumno puede explicar qué es .NET y qué rol cumple C#.
+- [ ] El alumno puede explicar la estructura de `Program.cs` en una Minimal API.
+- [ ] El alumno puede definir un endpoint GET con `MapGet` y explicar cada parte.
+- [ ] El alumno distingue entre parámetros de ruta y parámetros de query string.
+- [ ] El alumno puede modificar un endpoint existente para agregar un parámetro.
+
+## 5. Errores esperados y cómo intervenir
+
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| `git: command not found` | Git no está instalado o no está en el PATH | Verificar que Git esté instalado; en VS Code usar la terminal integrada que ya tiene Git configurado. |
+| `fatal: not a git repository` | No se ejecutó `git init` antes de los comandos de Git | Ejecutar `git init` en la carpeta raíz del proyecto antes de `git add`. |
+| `remote origin already exists` | Ya se agregó un remote con ese nombre | Usar `git remote set-url origin <nueva-url>` para actualizar la URL. |
+| `rejected: non-fast-forward` | El repositorio remoto tiene commits que el local no tiene | Hacer `git pull origin main` antes de `git push`. |
+| El commit no incluye los archivos nuevos | No se ejecutó `git add .` antes del commit | Verificar que `git add .` se ejecutó y que los archivos aparecen en `git status`. |
+| `tp-u1/` no está en el repositorio | El alumno creó los archivos en la carpeta raíz en lugar de en `tp-u1/` | Crear la carpeta `tp-u1/` y mover los archivos allí; hacer commit nuevamente. |
+| `Results.NotFound` no reconocido | Falta `using` o el proyecto no es `dotnet new web` | Verificar que el proyecto se creó con `dotnet new web`. En Minimal API, `Results` está disponible sin `using` adicionales. |
+| Commit con tildes en el mensaje | No conocer la convención del curso | Recordar que los mensajes de commit no llevan tildes ni eñes. Usar `e` o `ee` como reemplazo. |
+
+## 6. Registro de la clase
+
+| Grupo | Presentes | TP-U1 completado | Endpoints funcionales | Commit de entrega en GitHub | Rama main verificada | .gitignore correcto | Observaciones |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Grupo 1 | — | — | — | — | — | — | — |
+| Grupo 2 | — | — | — | — | — | — | — |
+| Grupo 3 | — | — | — | — | — | — | — |
+| Grupo 4 | — | — | — | — | — | — | — |
+
+**Notas para evaluación de proceso:**
+- Verificar que cada grupo tenga el commit de entrega en GitHub al final del encuentro.
+- Confirmar que el `.gitignore` en la raíz contenga `bin/` y `obj/`.
+- Confirmar que el último commit esté en la rama `main`.
+- Registrar qué grupos tienen todos los endpoints funcionando.
+- Anotar grupos que necesiten ayuda adicional para la defensa individual del Encuentro 9.
+- Verificar que los grupos hayan recalculado el tamaño de los equipos según presentes ÷ equipos disponibles.

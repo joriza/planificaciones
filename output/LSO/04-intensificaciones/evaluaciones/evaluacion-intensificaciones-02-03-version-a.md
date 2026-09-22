@@ -1,39 +1,69 @@
-# Evaluación — Intensificación y fortalecimiento de saberes previos — Versión A
+# Evaluación del momento 02-03 — Versión A
 
-## Metadatos
+> Dominio de esta versión: lógica, algoritmos y terminal sin C# aún. Duración: 90 minutos. Puntaje total: 100 puntos. Resolución individual, sin computadora (o mínima: seguir algoritmo, diagrama de flujo, secuencias/decisiones). Sin celular. Las condiciones completas están en `evaluacion-intensificaciones-02-03.md`.
 
-| Campo | Valor |
-|---|---|
-| Versión | A |
-| Dominio de datos | Sueldos de empleados (dominio numérico) |
-| Duración | 120 min |
-| Tipo de evaluación | Por objetivo mínimo — Apto / No apto aún |
+## Antes de empezar
 
-## Consigna
+- Resolver en papel o con mínimo uso de computadora (solo si el docente lo autoriza para la parte de terminal).
+- No se permite consultar C# ni documentación de programación.
+- Cada ítem tiene un puntaje indicado; la suma total es 100 puntos.
+- Si un ítem requiere un diagrama de flujo, usar los símbolos estándar: óvalo (inicio/fin), rectángulo (proceso), rombo (decisión), flechas de flujo.
+- Al terminar, avisar al docente para la corrección.
 
-Creá un programa de consola en C# (`dotnet new console`) que resuelva los siguientes puntos. Trabajá de forma individual.
+## Objetivos de la prueba
 
-### Datos de ejemplo
+- Evaluar saberes previos de lógica de programación: secuencia, decisión y repetición.
+- Evaluar capacidad de traducción de algoritmos cotidianos a diagramas de flujo.
+- Evaluar manejo básico de comandos de terminal (`cd`, `ls`/`dir`, `mkdir`, `touch`).
+- Criterio de evaluación: Apto / No apto aún por objetivo mínimo.
 
-```csharp
-// Lista de sueldos de 6 empleados (en pesos)
-double[] sueldos = { 85000, 120000, 65000, 95000, 110000, 72000 };
-```
+## Material provisto — Esqueleto de `Program.cs`
 
-### Requisitos
+No aplica para esta versión (sin C# aún). El alumno trabaja en papel o con mínimo uso de computadora.
 
-1. Declará una variable `string` para el nombre de la empresa y una variable `int` para la cantidad de empleados. Mostralas en consola con `Console.WriteLine`.
+## Parte 1 — Secuencia y terminal (30 puntos)
 
-2. Calculá el sueldo promedio del plantel usando un bucle `for` que recorra el arreglo. Mostrá el resultado con dos decimales.
+| Ítem | Consigna | Puntos |
+| --- | --- | --- |
+| 1.1 | Escribir el paso a paso de «preparar un mate» como secuencia de instrucciones numeradas (mínimo 6 pasos). | 10 |
+| 1.2 | Dados los comandos `cd documentos`, `mkdir proyecto`, `cd proyecto`, `touch notas.txt`, indicar en qué carpeta queda el archivo `notas.txt` y qué comando lo creó. | 10 |
+| 1.3 | Traducir el siguiente algoritmo a diagrama de flujo: «Si la nota es mayor o igual a 7, mostrar «Aprobado»; sino, mostrar «Recuperatorio»». | 10 |
 
-3. Determiná con un condicional `if/else` si cada empleado cobra más o menos que el promedio. Mostralo en pantalla así:
-   ```
-   Empleado 1: $85000 — debajo del promedio
-   Empleado 2: $120000 — arriba del promedio
-   ```
+## Parte 2 — Decisiones y repetición (40 puntos)
 
-4. Escribí una función `static double CalcularBonificacion(double sueldo)` que devuelva un 10 % del sueldo si este es menor a $100000, o un 5 % si es igual o mayor. Usá la función para mostrar la bonificación de cada empleado.
+| Ítem | Consigna | Puntos |
+| --- | --- | --- |
+| 2.1 | Dibujar un diagrama de flujo que lea tres números y muestre el mayor de ellos. | 15 |
+| 2.2 | Escribir la secuencia de pasos para sumar los números del 1 al 100 usando un bucle (pseudocódigo o diagrama). | 15 |
+| 2.3 | Indicar cuántas veces se ejecuta el cuerpo del bucle en el siguiente caso: `para i desde 1 hasta 10 con paso 2`. Justificar. | 10 |
 
-5. Pedí al usuario que ingrese un nuevo sueldo por consola, convertilo a `double` y agregalo al arreglo (simulado en un nuevo bucle). Mostrá el nuevo promedio.
+## Parte 3 — Integración (30 puntos)
 
-6. El programa completo debe compilar y ejecutarse sin errores. Usá comentarios en español para marcar cada sección.
+| Ítem | Consigna | Puntos |
+| --- | --- | --- |
+| 3.1 | Dado el diagrama de flujo de un kiosco escolar que pide un producto y un monto, y devuelve vuelto si el pago es suficiente o mensaje de «fondos insuficientes» si no, identificar la estructura de decisión y la estructura de repetición (si las hay). | 15 |
+| 3.2 | Relacionar cada símbolo del diagrama de flujo (óvalo, rectángulo, rombo, flecha) con su equivalente en pseudocódigo o en C# (`if`, `for`, `while`, `Console.WriteLine`). | 15 |
+
+## Parte 4 — Ítems conceptuales
+
+- ¿Cuál es la diferencia entre una estructura de secuencia y una estructura de decisión? (5 pts)
+- ¿Qué simbolo del diagrama de flujo representa una condición y por qué? (5 pts)
+- ¿Por qué el bucle «sumar del 1 al 100» no necesita una variable de acumulación en el diagrama de flujo pero sí en pseudocódigo? (5 pts)
+- ¿Qué comando de terminal crearías para listar los archivos de una carpeta y luego entrar en una subcarpeta? (5 pts)
+
+## Batería de verificación: salida esperada de cada prueba
+
+| Prueba | Pedido | Salida esperada |
+| --- | --- | --- |
+| 1.1 | Pasos para preparar un mate | Secuencia numerada de al menos 6 pasos lógicos (ej.: llenar la taza, agregar yerba, etc.) |
+| 1.2 | Ubicación de `notas.txt` | Carpeta `proyecto` dentro de `documentos`; comando `touch notas.txt` |
+| 1.3 | Diagrama de flujo de nota | Óvalo inicio → rectángulo «leer nota» → rombo «nota ≥ 7» → rectángulo «mostrar Aprobado» o «mostrar Recuperatorio» → óvalo fin |
+| 2.1 | Diagrama de flujo del mayor | Rombo con dos comparaciones encadenadas o anidadas; rectángulos para asignación y salida |
+| 2.2 | Pseudocódigo de suma 1-100 | Variable `suma ← 0`, bucle `para i desde 1 hasta 100`, `suma ← suma + i`, mostrar `suma` |
+| 2.3 | Cantidad de iteraciones | 50 iteraciones (1, 3, 5, ..., 99) |
+| 3.1 | Identificación de estructuras | Decisión: condición de fondos suficientes; Repetición: no aplica (o validación de entrada si se incluye) |
+| 3.2 | Relación símbolo-código | Óvalo → inicio/fin del programa; Rectángulo → proceso/asignación; Rombo → `if`/`while`; Flecha → flujo de ejecución |
+
+## Al terminar
+
+Dejar la prueba en la mesa y avisar al docente. Se devuelve con nota de Apto o No apto aún por objetivo mínimo. Si el objetivo mínimo queda pendiente, se ofrece la instancia de intensificación de los encuentros 17-18 como primera capa de recuperación.

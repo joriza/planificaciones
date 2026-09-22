@@ -1,120 +1,136 @@
-# Continuidad pedagógica — Repaso tras evaluación de la Unidad 2
+# Continuidad pedagógica 03 — Tras evaluación de U2
 
-**Curso:** Minimal API con C# .NET 6
-**Momento de uso:** Tras la evaluación de la Unidad 2 (encuentro 15)
-**Duración teórica:** 240 minutos
-**Requisitos:** Computadora con SDK .NET 6, VS Code, terminal, conexión a Internet, archivo `hospital.db` copiado junto al `.csproj`.
-**Contenido repasado:** Unidad 1 (fundamentos de C# y Minimal API GET) y Unidad 2 completa (SQLite, SQL con SELECT/JOIN/ORDER BY, Dapper con Query\<T\>, alias, parámetros y operador LIKE).
+## Datos de referencia
+
+| Campo | Valor |
+|-------|-------|
+| Curso | Minimal API con C# .NET 6 |
+| Momento de uso | Tras la evaluación de U2 (encuentro 15) |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Requisitos | Computadora, VS Code, SDK .NET 6, terminal. Archivo `hospital.db` disponible. |
+
+## Objetivos de aprendizaje
+
+1. Consolidar los conocimientos de U1 (tipos, control de flujo, métodos, endpoint GET) como base para el trabajo con bases de datos.
+2. Repasar las operaciones SQL fundamentales: SELECT, WHERE, ORDER BY.
+3. Practicar el uso de Dapper con `Query<T>`, alias `AS` y parámetros.
+4. Aplicar `LIKE` en consultas parametrizadas y construir endpoints GET que integren Dapper con filtrado.
+
+## Actividades puntuadas (sobre 100)
+
+### Actividad 1 — Repaso tipos y control de flujo de U1 (10 puntos / 25 minutos)
+
+**Consigna:** En la computadora, escribí un método `string ClassifyPatient(long? height, long? weight)` que clasifique a un paciente según su IMC aproximado.
+
+- Si `height` o `weight` son nulos, devolvé `"Datos incompletos"`.
+- Si `height ≤ 0` o `weight ≤ 0`, devolvé `"Datos inválidos"`.
+- Calcular IMC ≈ `weight / (height * height) * 10000` (peso en gramos, altura en centímetros).
+- Si IMC < 18.5 → `"Bajo peso"`, 18.5 ≤ IMC < 25 → `"Normal"`, 25 ≤ IMC < 30 → `"Sobrepeso"`, IMC ≥ 30 → `"Obesidad"`.
+
+Probá con estos datos:
+a) height = 175, weight = 75000 → esperado: `"Normal"`
+b) height = null, weight = 75000 → esperado: `"Datos incompletos"`
+c) height = 160, weight = 95000 → esperado: `"Obesidad"`
+
+**Puntos:** 10
 
 ---
 
-## Objetivos
+### Actividad 2 — Repaso métodos y endpoint GET de U1 (10 puntos / 25 minutos)
 
-- Conectar una base SQLite desde C# usando `SqliteConnection` y ejecutar consultas SELECT con Dapper.
-- Escribir consultas SQL con `WHERE`, `JOIN` entre dos tablas y `ORDER BY`.
-- Usar alias `AS` en el SELECT para emparejar con los registros posicionales de C#.
-- Aplicar el operador `LIKE` con parámetros para filtrar texto parcial.
-- Manejar el tipo `long` y `string` en los registros posicionales según las convenciones del curso.
+**Consigna:** En la computadora, creá un endpoint `GET /doctors` que retorne la lista de médicos con los campos `doctor_id AS DoctorId`, `first_name AS FirstName`, `last_name AS LastName`, `specialty AS Specialty`. Usá `Query<Doctor>` con alias `AS`.
+
+Luego creá un segundo endpoint `GET /doctors/{id:long}` que retorne un médico por ID o `Results.NotFound` si no existe.
+
+**Requisitos:**
+- El record `Doctor` debe ir después de `app.Run()`.
+- Toda consulta debe ser parametrizada.
+- Tipos canónicos: `long` para INTEGER, `string` para TEXT.
+
+**Puntos:** 10
 
 ---
 
-## Actividades (100 puntos — 240 minutos)
+### Actividad 3 — SQL básico: SELECT, WHERE, ORDER BY (20 puntos / 50 minutos)
 
-### Actividad 1 — Conexión y SELECT simple (20 puntos — 50 minutos)
+**Consigna:** En la computadora, abrí la base `hospital.db` con una herramienta SQLite o desde código y ejecutá las siguientes consultas. Escribí la consulta SQL y el resultado esperado.
 
-Escribí el código completo de un endpoint `GET /patients` que devuelva la lista de todos los pacientes de la tabla `patients`. Usá Dapper con `Query<Patient>` y mostrá el resultado con `Results.Ok`.
+a) Escribí un SELECT que obtenga `first_name`, `last_name` y `city` de la tabla `patients` donde `city = 'Buenos Aires'`, ordenado por `last_name` ascendente.
 
-Incluí:
-- La declaración de `connectionString`.
-- El `using var connection` dentro del endpoint.
-- El SELECT con alias `AS` para cada columna.
-- El record `Patient` posicional al final del archivo.
+b) Escribí un SELECT que obtenga `first_name`, `last_name` y `birth_date` de `patients` donde `birth_date >= '1990-01-01'`, ordenado por `birth_date` descendente.
 
-**Valores de la BD:** `patient_id` (INTEGER → `long`), `first_name`, `last_name`, `gender`, `birth_date` (TEXT → `string`), `city` (`string?`), `province_id` (`long`), `allergies` (`string?`), `height` (`long?`), `weight` (`long?`).
+c) ¿Qué diferencia hay entre `WHERE city = 'Buenos Aires'` y `WHERE city LIKE 'Buenos Aires'`? ¿Cuándo usarías cada uno?
 
-| Criterio | Puntaje |
-| --- | --- |
-| Conexión y estructura del endpoint correctas | 5 ptos. |
-| SELECT con alias `AS` para todas las columnas | 6 ptos. |
-| Record `Patient` con tipos correctos (long en PK, string en fechas, ? en nulables) | 6 ptos. |
-| Devolución con `Results.Ok(patients)` | 3 ptos. |
+d) Escribí un SELECT que cuente cuántos pacientes hay por ciudad. Agrupá por `city` y ordená por cantidad descendente. Usá `ExecuteScalar<long>` o `Query` con un tipo apropiado.
 
-### Actividad 2 — Filtro WHERE con parámetro (20 puntos — 50 minutos)
+**Puntos:** 20
 
-Agregá al mismo proyecto un endpoint `GET /patients/{id:long}` que busque un paciente por su ID. Usá `QueryFirstOrDefault<Patient>` con un parámetro `@id`.
+---
 
-Si el paciente existe, devolvelo con `Results.Ok`. Si no existe, devolvé `Results.NotFound` con un mensaje en español.
+### Actividad 4 — Dapper: Query<T> con alias AS y parámetros (25 puntos / 55 minutos)
 
-| Criterio | Puntaje |
-| --- | --- |
-| Endpoint con ruta `{id:long}` y parámetro `long id` | 6 ptos. |
-| Consulta parametrizada con `@id` y `new { id }` | 6 ptos. |
-| Manejo de `null` con `Results.NotFound` | 4 ptos. |
-| Mensaje de error en español | 4 ptos. |
+**Consigna:** En la computadora, escribí un endpoint `GET /patients/search` que reciba dos parámetros de query string: `city` (opcional) y `minHeight` (opcional, tipo `long?`). El endpoint debe:
 
-### Actividad 3 — JOIN entre dos tablas (20 puntos — 50 minutos)
+a) Si se proporciona `city`, filtrar pacientes por ciudad con `LIKE @city` (usando `%valor%`).
+b) Si se proporciona `minHeight`, filtrar pacientes con `height >= @minHeight`.
+c) Si no se proporciona ninguno, retornar todos los pacientes.
+d) Usar siempre alias `AS` en el SELECT y parámetros `@city`, `@minHeight`.
 
-La tabla `doctors` tiene las columnas `doctor_id`, `first_name`, `last_name` y `specialty`. Escribí un endpoint `GET /doctors` que devuelva todos los médicos. Luego, escribí un endpoint `GET /doctors/{id:long}` que devuelva un médico por ID.
+**Requisitos:**
+- Construir la consulta SQL dinámicamente o con condicionales en C#.
+- Toda consulta debe ser parametrizada (nunca concatenar).
+- El record `Patient` debe estar después de `app.Run()`.
+- Comentarios en español en cada paso.
 
-Para el segundo endpoint, el SELECT debe incluir **alias AS** exactamente como en el primer ejercicio. Mostrá el código completo de ambos endpoints.
+**Puntos:** 25
 
-| Criterio | Puntaje |
-| --- | --- |
-| Endpoint `GET /doctors` con SELECT y alias correctos | 8 ptos. |
-| Endpoint `GET /doctors/{id:long}` con filtro parametrizado | 8 ptos. |
-| Record `Doctor` correcto (tipos: `long DoctorId`, `string FirstName`, `string LastName`, `string Specialty`) | 4 ptos. |
+---
 
-### Actividad 4 — LIKE con parámetro (20 puntos — 50 minutos)
+### Actividad 5 — LIKE y consultas con parámetros (15 puntos / 40 minutos)
 
-Escribí un endpoint `GET /patients/search` que acepte un *query parameter* `term` (de tipo `string`) y devuelva los pacientes cuyo apellido (`last_name`) contenga ese término.
+**Consigna:** En la computadora, escribí y ejecutá las siguientes consultas parametrizadas contra `hospital.db`.
 
-Usá `LIKE '%' || @term || '%'` (concatenación con `||` compatible con SQLite). Devolvé la lista con `Results.Ok`.
+a) Buscar pacientes cuyo `first_name` empiece con la letra 'M'. Usá `LIKE @name` con el parámetro `new { name = "M%" }`.
 
-Ejemplo: `GET /patients/search?term=Garc` devuelve todos los pacientes con apellido que contenga "Garc".
+b) Buscar pacientes cuya `city` contenga la subcadena 'san' (sin importar mayúsculas/minúsculas). Usá `LIKE @city` con el patrón apropiado. ¿Qué problema podés tener con mayúsculas/minúsculas en SQLite? ¿Cómo lo resolvés?
 
-| Criterio | Puntaje |
-| --- | --- |
-| Lectura del parámetro `term` desde la *query string* | 6 ptos. |
-| Consulta con `LIKE` y concatenación segura (parametrizada) | 8 ptos. |
-| Devolución correcta con `Results.Ok` | 6 ptos. |
+c) Escribí un endpoint `GET /patients/bycity/{city}` que use `LIKE` con el patrón `%city%` y retorne `Results.NotFound(new { mensaje = "No se encontraron pacientes en esa ciudad" })` si la lista está vacía.
 
-### Actividad 5 — Repaso integrador Unidad 1 (20 puntos — 40 minutos)
+**Puntos:** 15
 
-Sin usar base de datos, escribí un endpoint `GET /resumen` que devuelva un objeto JSON con la siguiente información:
+---
 
-```json
-{
-  "materia": "Minimal API con C# .NET 6",
-  "unidadesVistas": ["U1: Fundamentos de C# y Minimal API", "U2: Acceso a datos con SQLite y Dapper"],
-  "totalEndpointsCreados": 4
-}
-```
+### Actividad 6 — Integración: endpoint GET con Dapper y filtrado (20 puntos / 45 minutos)
 
-El valor `totalEndpointsCreados` debe calcularse con una variable `int total` inicializada en 0 y sumarle 1 cuatro veces mediante un bucle `for`.
+**Consigna:** En la computadora, creá un proyecto de Minimal API completo que exponga los siguientes endpoints:
 
-| Criterio | Puntaje |
-| --- | --- |
-| Objeto JSON con las tres propiedades correctas | 8 ptos. |
-| Bucle `for` correcto para calcular el total | 8 ptos. |
-| Uso de `Results.Ok` y código compilable | 4 ptos. |
+a) `GET /patients` — lista completa de pacientes con todos los campos.
+b) `GET /patients/{id:long}` — un paciente por ID o 404.
+c) `GET /patients/search?city={city}&minHeight={minHeight}` — filtrado combinado (ambos parámetros opcionales).
+
+**Requisitos:**
+- Un solo archivo `Program.cs`.
+- Record `Patient` después de `app.Run()`.
+- Todos los SQL parametrizados con alias `AS`.
+- Códigos de respuesta correctos (200, 404).
+- Comentarios en español.
+
+**Puntos:** 20
 
 ---
 
 ## Autoevaluación para el alumno
 
-| Afirmación | Lo logré | Lo logré parcialmente | No lo logré |
-| --- | --- | --- | --- |
-| Conecto SQLite desde C# y ejecuto SELECT con Dapper. | ☐ | ☐ | ☐ |
-| Escribo un JOIN entre dos tablas con alias AS. | ☐ | ☐ | ☐ |
-| Filtro con WHERE parametrizado (`@id`, `new { id }`). | ☐ | ☐ | ☐ |
-| Uso LIKE con concatenación `||` para texto parcial. | ☐ | ☐ | ☐ |
-| Declaro records con `long` en PK, `string` en fechas y `?` en nulables. | ☐ | ☐ | ☐ |
-| Combino endpoints GET con y sin base de datos en un mismo proyecto. | ☐ | ☐ | ☐ |
+Antes de la próxima clase, respondé con honestidad las siguientes preguntas. No hay puntos en juego; es una herramienta para que identifiques qué repasar.
 
-**Tiempo real que me llevó:** ________ minutos.
+- ¿Puedo escribir una consulta SQL con WHERE, ORDER BY y GROUP BY?
+- ¿Sé usar Dapper para ejecutar `Query<T>` con alias `AS` y parámetros `@nombre`?
+- ¿Puedo construir un endpoint GET que filtre por parámetros de query string?
+- ¿Entiendo por qué `LIKE` con `%` permite búsquedas parciales y cómo parametrizarlo correctamente?
+- ¿Sé manejar valores nulos (`long?`, `string?`) en los parámetros de entrada?
 
----
+Si respondiste "no" a alguna de estas preguntas, repasá la actividad correspondiente antes del próximo encuentro.
 
-## Nota académica obligatoria
+## Nota de registro académico
 
-La resolución de estas actividades se realiza en forma habitual, por lo general en grupo. Las tareas de programación requieren el uso de la computadora. La presentación es **individual y manuscrita**, al inicio de la próxima clase, y constituye una actividad más de la asignatura que forma parte del proceso de evaluación.
+la resolución se realiza en forma habitual (por lo general, en grupo); las tareas de programación requieren el uso de la computadora; la presentación es individual y manuscrita, al inicio de la próxima clase, y constituye una actividad más de la asignatura que forma parte del proceso de evaluación.

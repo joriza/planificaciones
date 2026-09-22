@@ -1,152 +1,162 @@
 # Encuentro 22 — DELETE con Dapper y MapDelete
 
-## Metadatos de bloque
+> Unidad 3 — CRUD completo con Dapper
 
-| Campo | Valor |
-|---|---|
-| **Duracion** | 240 minutos |
-| **Unidad** | 3 — CRUD completo con Dapper |
-| **Eje** | 5 — CRUD con Dapper |
-| **Tipo** | Procedimental |
-| **Requiere** | Encuentro 21 (POST, `ExecuteScalar<long>`, validacion basica), proyecto con paquetes Dapper + Sqlite y `hospital.db` |
-| **Nuevo concepto** | Endpoint DELETE con `MapDelete`, `Execute` para borrado, respuesta `Results.NoContent` (204) |
+## 1. Metadatos de bloque
 
-## Reparto de tiempos (240 minutos)
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 22 de 36 |
+| Unidad | 3 — CRUD completo con Dapper |
+| Eje temático | 5 — CRUD con Dapper |
+| Carácter/Objetivo | Procedimental |
+| Estructura | clase |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Concepto nuevo | DELETE con Dapper y MapDelete |
+| Requisitos previos | Encuentro 21: INSERT con Dapper y POST, `ExecuteScalar<long>`, `Results.Created` |
+| Uso de celular | No permitido |
+| Organización del trabajo | Parejas, una computadora cada dos |
 
-| Bloque | Duracion |
-|---|---|
-| Apertura y motivacion | 20 min |
-| Teoria minima con ejemplo completo | 50 min |
-| Ejercicio progresivo | 120 min |
-| Puesta en comun y correccion de errores | 30 min |
-| Cierre | 20 min |
+### Reparto de tiempos teóricos
 
-## Objetivos de aprendizaje
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-- Crear un endpoint DELETE usando `MapDelete` para eliminar recursos por ID.
-- Ejecutar DELETE parametrizado con Dapper usando el metodo `Execute`.
-- Verificar existencia del recurso antes de borrar y devolver `404` si no existe.
-- Devolver `Results.NoContent` (204) cuando el borrado se completa exitosamente.
+## 2. Objetivos de aprendizaje
 
-## Charla rapida / analogia
+1. Borrar un registro de la tabla `patients` usando Dapper con SQL parametrizado.
+2. Validar la existencia del recurso antes de borrar y devolver `404` si no existe.
+3. Exponer el DELETE como endpoint con `MapDelete` y responder con código `204` (éxito) o `404` (no encontrado).
+4. Entender la semántica de `Results.NoContent()` como respuesta a un borrado exitoso.
 
-Imaginate que un paciente fue dado de alta por error y hay que **eliminar su ficha** del sistema. No alcanza con ocultarla: hay que borrarla definitivamente. En HTTP eso se hace con el verbo DELETE. A diferencia del POST, DELETE no devuelve el recurso borrado: solo confirma que ya no existe con un `204 No Content`.
+## 3. Apertura y motivación (20 min)
 
-## Teoria minima
+### Charla rápida: analogía breve que ancle el concepto
 
-### DELETE con Dapper
+Cuando un paciente se da de alta definitiva del hospital, su ficha se retira del sistema. No se puede borrar una ficha que no existe: primero hay que buscarla en el archivo, confirmar que está ahí, y recién entonces sacarla. Eso es exactamente lo que hace nuestro endpoint DELETE: primero verificamos que el paciente exista, y si existe lo borramos.
 
-DELETE es la operacion mas simple del CRUD en cuanto a codigo: recibe un ID por ruta, ejecuta `DELETE FROM tabla WHERE id = @id`, y devuelve `204`. La unica decision es si **verificar existencia** antes de borrar o confiar en las filas afectadas.
+### Lo mínimo indispensable
 
-### `Execute` de Dapper
+El método Dapper para DELETE es `Execute`, que devuelve la cantidad de filas afectadas. La diferencia clave con INSERT es que antes de borrar debemos verificar que el recurso exista. Si no existe, devolvemos `404` con `Results.NotFound`. Si existe y lo borramos correctamente, devolvemos `204` con `Results.NoContent()`. El endpoint se define con `MapDelete`.
 
-El metodo `Execute` de Dapper ejecuta cualquier comando SQL y devuelve la cantidad de **filas afectadas** como `int`. Es el metodo indicado para DELETE, pero tambien se usa para INSERT (cuando no necesitas el ID) y UPDATE.
+## 4. Desarrollo teórico-práctico (120 min)
 
-```csharp
-int filas = connection.Execute("DELETE FROM patients WHERE patient_id = @id", new { id });
-if (filas == 0) return Results.NotFound(...);
-```
-
-### Respuesta canonica para DELETE
-
-| Situacion | Respuesta | Codigo |
-|---|---|---|
-| El recurso existia y se borro | `Results.NoContent()` | `204` |
-| El recurso no existia | `Results.NotFound(mensaje)` | `404` |
-| El ID es invalido (negativo, cero) | `Results.BadRequest(mensaje)` | `400` |
-
-### DELETE sin cuerpo
-
-DELETE es un verbo que no requiere cuerpo en la peticion. Todo lo que necesita es el ID en la ruta:
-
-```
-DELETE /patients/5
-```
-
-## Practica guiada: endpoint DELETE /patients/{id:long}
-
-Agregamos este `MapDelete` a `Program.cs`, **antes** de `app.Run()`:
+### Paso 1 — El endpoint DELETE con validación de existencia
 
 ```csharp
-// DELETE /patients/{id:long} — eliminar un paciente por ID
+// DELETE /patients/{id:long} — borrar un paciente por ID
+// Primero verificamos que exista, luego borramos
 app.MapDelete("/patients/{id:long}", (long id) =>
 {
-    // El ID debe ser positivo
-    if (id <= 0)
-        return Results.BadRequest(new { mensaje = "El ID debe ser un numero positivo" });
-
+    // Abrir conexion a la base de datos
     using var connection = new SqliteConnection(connectionString);
-    int filasAfectadas = connection.Execute(
-        "DELETE FROM patients WHERE patient_id = @id", new { id });
 
-    // Si ninguna fila fue afectada, el paciente no existia
-    if (filasAfectadas == 0)
+    // Buscar el paciente antes de borrar para validar que exista
+    var paciente = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName,
+               gender AS Gender, birth_date AS BirthDate, city AS City,
+               province_id AS ProvinceId, allergies AS Allergies, height AS Height, weight AS Weight
+        FROM patients
+        WHERE patient_id = @id", new { id });
+
+    // Si no existe, devolver 404
+    if (paciente is null)
+    {
         return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
 
+    // Borrar el paciente con SQL parametrizado
+    int filasAfectadas = connection.Execute(@"
+        DELETE FROM patients
+        WHERE patient_id = @id", new { id });
+
+    // filasAfectadas deberia ser 1 si el delete fue exitoso
+    // Devolver 204 No Content (sin cuerpo en la respuesta)
     return Results.NoContent();
 });
 ```
 
-### ¿Que hace cada linea?
+> Comentario: `QueryFirstOrDefault` devuelve `null` si no encuentra ninguna fila. Esa es la señal para devolver `404` antes de intentar el DELETE.
 
-1. `MapDelete("/patients/{id:long}", (long id) => ...)` captura el ID de la ruta.
-2. Valida que el ID sea positivo. Si es `0` o negativo, `400` sin tocar la base.
-3. Abre la conexion y ejecuta `DELETE FROM patients WHERE patient_id = @id`.
-4. Si `filasAfectadas` es `0`, el registro no existe y responde `404`.
-5. Si el DELETE se ejecuto, responde `204` sin cuerpo.
-
-### Salida esperada
+### Paso 2 — Probar el DELETE con un paciente que existe
 
 ```bash
-# Borrar el paciente con ID 5
-curl -X DELETE http://localhost:5000/patients/5
-
-# Respuesta: 204 No Content (sin cuerpo)
-
-# Intentar borrar un ID inexistente (999)
-curl -X DELETE http://localhost:5000/patients/999
-
-# Respuesta: 404 Not Found
-# Cuerpo: { "mensaje": "Paciente no encontrado" }
+curl -X DELETE http://localhost:5000/patients/259
 ```
 
-## Ejercicio progresivo
+Salida esperada (código 204, sin body):
 
-### Etapa 1 — DELETE /doctors/{id:long} (guiada)
+```
+HTTP/1.1 204 No Content
+```
 
-Crea un endpoint `MapDelete` para la tabla `doctors`. Sigue el mismo patron: validar ID, ejecutar DELETE, verificar filas afectadas, devolver `204` o `404`.
+Si intentamos verificar que se borró:
 
-**Pista:** solo cambia el nombre de la tabla y el record referido.
+```bash
+curl http://localhost:5000/patients/259
+```
 
-### Etapa 2 — DELETE /provinces/{id:long} con restriccion (semiguiada)
+Salida esperada (código 404):
 
-Crea un endpoint DELETE para `province_names`. Pero ademas de verificar existencia, considera: ¿que pasa si hay pacientes que referencian esa provincia en `province_id`? SQLite no va a dejar borrar una provincia referenciada por una restriccion de clave foranea (si esta habilitada).
+```json
+{ "mensaje": "Paciente no encontrado" }
+```
 
-**Pista:** si el DELETE falla por restriccion, `Execute` devuelve `0` o puede lanzar una excepcion. Explica en un comentario que las provincias referenciadas no pueden eliminarse.
+### Paso 3 — Probar el DELETE con un paciente que no existe
 
-### Etapa 3 — DELETE /admissions/{id:long} con validacion de ID negativo (independiente)
+```bash
+curl -X DELETE http://localhost:5000/patients/9999
+```
 
-Crea un endpoint DELETE para `admissions`. Agrega validacion de que el ID sea positivo y maneja el caso `404`.
+Salida esperada (código 404):
 
-**Pista:** la tabla `admissions` tiene `admission_id` como clave primaria. No hay restricciones adicionales que considerar.
+```json
+{ "mensaje": "Paciente no encontrado" }
+```
+
+> Comentario: el código 404 indica que el recurso solicitado no existe. No devolvemos 200 ni 204 cuando el recurso no está, porque eso sería ambiguo: ¿se borró o simplemente no existía?
+
+### Paso 4 — DELETE con verificación del conteo de filas afectadas
+
+Una variante más robusta verifica que `Execute` haya afectado exactamente una fila:
+
+```csharp
+app.MapDelete("/patients/{id:long}", (long id) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+
+    int filasAfectadas = connection.Execute(@"
+        DELETE FROM patients
+        WHERE patient_id = @id", new { id });
+
+    // Si no se borro ninguna fila, el id no existia
+    if (filasAfectadas == 0)
+    {
+        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
+
+    // Se borro exactamente una fila
+    return Results.NoContent();
+});
+```
+
+> Comentario: esta variante no hace SELECT previo, sino que confía en que `Execute` devuelve 0 si no se encontró ninguna fila que coincida. Es más eficiente (una sola consulta a la BD) pero no permite devolver un mensaje más detallado.
+
+## 5. Consolidación y cierre (20 min)
 
 ### Qué te llevás
 
-- DELETE es el verbo HTTP para **eliminar** recursos.
-- `Execute` devuelve filas afectadas; si es `0`, el recurso no existía.
-- La respuesta canónica para DELETE exitoso es `204 No Content`.
-- Conviene validar el ID antes de ejecutar la consulta.
+- `MapDelete` expone un endpoint DELETE y `Results.NoContent()` responde con código `204` (sin cuerpo).
+- Antes de borrar siempre se valida la existencia del recurso. Si no existe, se devuelve `404` con `Results.NotFound(new { mensaje = "..." })`.
+- `Execute` devuelve `int` con la cantidad de filas afectadas; si es 0, el recurso no existía.
+- El SQL siempre usa `@id` como parámetro y `new { id }` como objeto anónimo.
+- La conexión se abre con `using var` para garantizar su cierre automático.
 
-### Lo que viene
+## Lo que viene
 
-En el Encuentro 23 vas a modificar recursos existentes con UPDATE y `MapPut`, completando el trío de escritura junto con POST y DELETE.
-
-## Errores comunes y trampas
-
-| Error | Causa | Solucion |
-|---|---|---|
-| Devolver `200` con el objeto borrado en lugar de `204` | Confundir DELETE con GET. | Recordar que DELETE confirma, no devuelve el recurso. Usar `Results.NoContent()`. |
-| No verificar `filasAfectadas == 0` y devolver `204` aunque no existiera | El DELETE sobre ID inexistente no falla, solo afecta 0 filas. | Verificar filas afectadas y devolver `404` si es 0. |
-| Usar `ExecuteScalar<long>` en lugar de `Execute` | Repetir el patron de POST sin pensar. | DELETE no devuelve un ID nuevo; `Execute` es el metodo correcto. |
-| Olvidar `@id` y concatenar el valor al SQL | Riesgo de inyeccion. | Usar `DELETE FROM patients WHERE patient_id = @id` con `new { id }`. |
-| Responder `404` con mensaje en ingles | Copiar de documentacion externa. | Usar `new { mensaje = "Paciente no encontrado" }` en espanol. |
+Encuentro 23: UPDATE con Dapper y MapPut. Modificaremos registros existentes con SQL parametrizado y aprenderemos a devolver el recurso actualizado.

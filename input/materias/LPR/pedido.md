@@ -1,6 +1,6 @@
-# Pedido — LAP (Programación en Python)
+# Pedido — LPR (Programación en Python)
 
-> Datos particulares de LAP para `prompt-plantilla-planificacion.md`. Identificador de la materia: LAP.
+> Datos particulares de LPR para `prompt-plantilla-planificacion.md`. Identificador de la materia: LPR.
 
 (Libro de aula)
 - Límite de caracteres: Tema del Día y Actividades, máximo 35 por celda (en la versión de 2 líneas, 35 por línea).

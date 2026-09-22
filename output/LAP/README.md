@@ -132,7 +132,18 @@ Actividades de repaso y fijación para que los alumnos trabajen sin presencia do
 | --- | --- |
 | [06-aprobacion/criterios-aprobacion.md](06-aprobacion/criterios-aprobacion.md) | Documento institucional dirigido a alumnos, familias y dirección: qué se evalúa en cada unidad, mínimos exigibles, regla de entrega incompleta y capas de recuperación. Se informa a los alumnos al inicio de la cursada y se consulta en cada instancia de evaluación y recuperación. |
 
-### 2.8 Otros documentos
+### 2.8 Carpeta `07-cierre-anual/` — cierre del ciclo anual
+
+Documentos derivados del cierre del ciclo, generados una vez y luego propiedad del docente: seguimiento anual, memoria de cátedra e informes de las mesas de diciembre y marzo. El modo actualización jamás los regenera; la regeneración completa los re-crea vacíos.
+
+| Documento | Qué es y cuándo se usa |
+| --- | --- |
+| [07-cierre-anual/seguimiento-anual.csv](07-cierre-anual/seguimiento-anual.csv) | Planilla de seguimiento del docente: 38 filas (36 encuentros + mesas de diciembre y marzo), con Nº, Instancia, Eje temático y Tema del día derivados del curso-data y de las filas invariantes; Fecha, TPs entregados, Defensas/Resultados y Observaciones quedan a cargo del docente. Render determinista desde el curso-data. |
+| [07-cierre-anual/memoria-anual.md](07-cierre-anual/memoria-anual.md) | Memoria anual de cátedra en registro docente formal: datos de referencia, desarrollo efectivo del ciclo, resultados por instancia, trabajos prácticos, continuidad pedagógica, intensificación y fortalecimiento, balance y ajustes propuestos, y firma. El análisis lo escribe el docente al cierre del ciclo. |
+| [07-cierre-anual/informe-mesa-diciembre.md](07-cierre-anual/informe-mesa-diciembre.md) | Informe formal de la mesa de diciembre (fuera de la estructura anual): datos de la mesa, destinatarios, alcance evaluado (camino mínimo por unidad y TPs), metodología (criterio Apto / No apto aún por objetivo mínimo; el estándar de marzo es idéntico al de diciembre), instrumento (versiones A/B del corpus) y resultados. |
+| [07-cierre-anual/informe-mesa-marzo.md](07-cierre-anual/informe-mesa-marzo.md) | Informe formal de la mesa de marzo (fuera de la estructura anual): mismo formato y estándar que diciembre, con más tiempo de preparación. |
+
+### 2.9 Otros documentos
 
 Documentos presentes en el corpus que el generador no clasificó según las convenciones de nombres: revisarlos y clasificarlos o incorporarlos a las convenciones antes de la próxima regeneración.
 

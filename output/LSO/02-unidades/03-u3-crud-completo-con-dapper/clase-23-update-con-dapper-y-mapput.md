@@ -1,183 +1,208 @@
 # Encuentro 23 — UPDATE con Dapper y MapPut
 
-## Metadatos de bloque
+> Unidad 3 — CRUD completo con Dapper
 
-| Campo | Valor |
-|---|---|
-| **Duracion** | 240 minutos |
-| **Unidad** | 3 — CRUD completo con Dapper |
-| **Eje** | 5 — CRUD con Dapper |
-| **Tipo** | Procedimental |
-| **Requiere** | Encuentro 21 (POST, `ExecuteScalar<long>`) y Encuentro 22 (DELETE, `Execute`), proyecto con Dapper + Sqlite y `hospital.db` |
-| **Nuevo concepto** | Endpoint PUT con `MapPut`, `Execute` para actualizacion, verificacion de existencia previa, respuesta `Results.NoContent` (204) para PUT sobre BD |
+## 1. Metadatos de bloque
 
-## Reparto de tiempos (240 minutos)
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 23 de 36 |
+| Unidad | 3 — CRUD completo con Dapper |
+| Eje temático | 5 — CRUD con Dapper |
+| Carácter/Objetivo | Procedimental |
+| Estructura | clase |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Concepto nuevo | UPDATE con Dapper y MapPut |
+| Requisitos previos | Encuentro 22: DELETE con Dapper y MapDelete, validación de existencia, códigos 404/204 |
+| Uso de celular | No permitido |
+| Organización del trabajo | Parejas, una computadora cada dos |
 
-| Bloque | Duracion |
-|---|---|
-| Apertura y motivacion | 20 min |
-| Teoria minima con ejemplo completo | 50 min |
-| Ejercicio progresivo | 120 min |
-| Puesta en comun y correccion de errores | 30 min |
-| Cierre | 20 min |
+### Reparto de tiempos teóricos
 
-## Objetivos de aprendizaje
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-- Crear un endpoint PUT usando `MapPut` que recibe ID por ruta y nuevos datos por cuerpo.
-- Verificar que el recurso existe antes de actualizar usando `QueryFirstOrDefault`.
-- Ejecutar un UPDATE parametrizado con Dapper y verificar filas afectadas.
-- Distinguir entre `Results.NoContent` (PUT sobre BD) y `Results.Ok` (PUT en memoria), segun el canon.
+## 2. Objetivos de aprendizaje
 
-## Charla rapida / analogia
+1. Modificar un registro existente en la tabla `patients` usando Dapper con SQL parametrizado.
+2. Validar que el recurso exista antes de actualizar y devolver `404` si no existe.
+3. Exponer el UPDATE como endpoint `PUT` con `MapPut` y responder con el recurso actualizado o `204`.
+4. Entender la diferencia entre devolver el recurso actualizado (`200`) y devolver sin body (`204`) en una actualización sobre base de datos.
 
-Un paciente cambio de domicilio y hay que **actualizar su ficha**. No se crea una nueva (POST) ni se borra la anterior (DELETE): se **modifica** el registro existente. En HTTP eso se hace con PUT. PUT reemplaza el recurso completo con los datos nuevos. Es el tercer verbo de escritura y completa el trio junto con POST y DELETE.
+## 3. Apertura y motivación (20 min)
 
-## Teoria minima
+### Charla rápida: analogía breve que ancle el concepto
 
-### PUT no es parcial
+Cuando el médico de un paciente cambia la diagnóstico o la ciudad de residencia, se abre la ficha, se modifican los campos y se guarda. No se crea una ficha nueva ni se borra la vieja: se actualiza. Eso es exactamente un UPDATE: buscar el registro, cambiar los valores que corresponda, y guardar.
 
-PUT reemplaza el recurso **completo**. Si el cliente envia solo `firstName`, el resto de los campos del registro se deberian actualizar tambien (aunque algunos queden como `null` si la columna lo permite). Para actualizaciones parciales existe PATCH, pero en este curso usamos PUT con todos los campos.
+### Lo mínimo indispensable
 
-### Verificacion de existencia
+El método Dapper para UPDATE es `Execute`, que devuelve la cantidad de filas afectadas. Antes de actualizar siempre se verifica que el recurso exista. Si no existe, se devuelve `404`. Si la actualización es exitosa, se puede devolver el recurso actualizado con `Results.Ok` (código `200`) o `Results.NoContent()` (código `204`). El endpoint se define con `MapPut`.
 
-Actualizar un registro que no existe no tiene sentido. SQLite ejecuta el UPDATE igual pero afecta 0 filas. La practica recomendada es:
+## 4. Desarrollo teórico-práctico (120 min)
 
-1. Leer el registro existente con `QueryFirstOrDefault`.
-2. Si no existe, devolver `404`.
-3. Si existe, ejecutar el UPDATE.
-
-### Respuesta canonica para PUT
-
-| Situacion | Respuesta | Codigo |
-|---|---|---|
-| Recurso actualizado en BD | `Results.NoContent()` | `204` |
-| Recurso no encontrado | `Results.NotFound(mensaje)` | `404` |
-| Dato invalido o faltante | `Results.BadRequest(mensaje)` | `400` |
-
-## Practica guiada: endpoint PUT /patients/{id:long}
-
-Agregamos este `MapPut` a `Program.cs`, **antes** de `app.Run()`:
+### Paso 1 — El endpoint PUT con validación de existencia y devolución del recurso actualizado
 
 ```csharp
 // PUT /patients/{id:long} — actualizar un paciente existente
-app.MapPut("/patients/{id:long}", (long id, PatientInput input) =>
+app.MapPut("/patients/{id:long}", (long id, Patient pacienteActualizado) =>
 {
-    // Validar que el nombre no este vacio
-    if (string.IsNullOrWhiteSpace(input.FirstName))
-        return Results.BadRequest(new { mensaje = "El nombre es obligatorio" });
-
+    // Abrir conexion a la base de datos
     using var connection = new SqliteConnection(connectionString);
 
-    // Verificar que el paciente existe
+    // Buscar el paciente actual para validar que exista
     var existente = connection.QueryFirstOrDefault<Patient>(@"
-        SELECT patient_id AS PatientId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               gender AS Gender,
-               birth_date AS BirthDate,
-               city AS City,
-               province_id AS ProvinceId,
-               allergies AS Allergies,
-               height AS Height,
-               weight AS Weight
-        FROM patients WHERE patient_id = @id", new { id });
+        SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName,
+               gender AS Gender, birth_date AS BirthDate, city AS City,
+               province_id AS ProvinceId, allergies AS Allergies, height AS Height, weight AS Weight
+        FROM patients
+        WHERE patient_id = @id", new { id });
 
+    // Si no existe, devolver 404
     if (existente is null)
+    {
         return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
 
-    // Actualizar todos los campos
-    connection.Execute(@"
+    // Actualizar solo los campos que se quieren cambiar
+    // La fecha de nacimiento no se modifica en este ejemplo
+    int filasAfectadas = connection.Execute(@"
         UPDATE patients
         SET first_name = @FirstName,
             last_name = @LastName,
             gender = @Gender,
-            birth_date = @BirthDate,
             city = @City,
             province_id = @ProvinceId,
             allergies = @Allergies,
             height = @Height,
             weight = @Weight
-        WHERE patient_id = @Id", new
-    {
-        input.FirstName,
-        input.LastName,
-        input.Gender,
-        input.BirthDate,
-        input.City,
-        input.ProvinceId,
-        input.Allergies,
-        input.Height,
-        input.Weight,
-        Id = id
-    });
+        WHERE patient_id = @id",
+        new
+        {
+            pacienteActualizado.FirstName,
+            pacienteActualizado.LastName,
+            pacienteActualizado.Gender,
+            pacienteActualizado.City,
+            pacienteActualizado.ProvinceId,
+            pacienteActualizado.Allergies,
+            pacienteActualizado.Height,
+            pacienteActualizado.Weight,
+            id
+        });
 
+    // Devolver el recurso actualizado con codigo 200
+    var pacienteActualizadoConId = pacienteActualizado with { PatientId = id };
+    return Results.Ok(pacienteActualizadoConId);
+});
+```
+
+> Comentario: en el UPDATE se incluye `id` en el objeto de parámetros para que el WHERE `WHERE patient_id = @id` encuentre la columna correcta. El `SET` usa los campos del record recibido por el body.
+
+### Paso 2 — Probar el PUT con un paciente que existe
+
+```bash
+curl -X PUT http://localhost:5000/patients/259 \
+  -H "Content-Type: application/json" \
+  -d '{"firstName":"Carlos","lastName":"Gomez","gender":"M","birthDate":"1985-03-15","city":"Buenos Aires","provinceId":"BA","allergies":"Penicillin","height":178,"weight":82}'
+```
+
+Salida esperada (código 200):
+
+```json
+{
+  "patientId": 259,
+  "firstName": "Carlos",
+  "lastName": "Gomez",
+  "gender": "M",
+  "birthDate": "1985-03-15",
+  "city": "Buenos Aires",
+  "provinceId": "BA",
+  "allergies": "Penicillin",
+  "height": 178,
+  "weight": 82
+}
+```
+
+> Comentario: el `city` cambió de "Rosario" a "Buenos Aires" y el `provinceId` de "SF" a "BA". El `patientId` permanece 259.
+
+### Paso 3 — Probar el PUT con un paciente que no existe
+
+```bash
+curl -X PUT http://localhost:5000/patients/9999 \
+  -H "Content-Type: application/json" \
+  -d '{"firstName":"Juan","lastName":"Perez","gender":"M","birthDate":"1990-01-01","provinceId":"ON"}'
+```
+
+Salida esperada (código 404):
+
+```json
+{ "mensaje": "Paciente no encontrado" }
+```
+
+### Paso 4 — Variante con `Results.NoContent()` (204 sin body)
+
+Si la convención de la API no requiere devolver el recurso actualizado, se puede usar `204`:
+
+```csharp
+// Variante: PUT que devuelve 204 sin body
+app.MapPut("/patients/{id:long}", (long id, Patient pacienteActualizado) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+
+    var existente = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId FROM patients WHERE patient_id = @id", new { id });
+
+    if (existente is null)
+    {
+        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
+
+    connection.Execute(@"
+        UPDATE patients
+        SET first_name = @FirstName,
+            last_name = @LastName,
+            gender = @Gender,
+            city = @City,
+            province_id = @ProvinceId,
+            allergies = @Allergies,
+            height = @Height,
+            weight = @Weight
+        WHERE patient_id = @id",
+        new
+        {
+            pacienteActualizado.FirstName,
+            pacienteActualizado.LastName,
+            pacienteActualizado.Gender,
+            pacienteActualizado.City,
+            pacienteActualizado.ProvinceId,
+            pacienteActualizado.Allergies,
+            pacienteActualizado.Height,
+            pacienteActualizado.Weight,
+            id
+        });
+
+    // 204 No Content: actualizacion exitosa, sin cuerpo en la respuesta
     return Results.NoContent();
 });
 ```
 
-### ¿Que hace cada linea?
+> Comentario: `Results.NoContent()` responde con código `204` y sin body. Es la convención canónica del curso para operaciones de actualización sobre base de datos (PUT con Dapper).
 
-1. Recibe dos parametros: el `id` de la ruta y el `input` del cuerpo JSON.
-2. Valida `FirstName` como obligatorio.
-3. Verifica existencia con `QueryFirstOrDefault`. Si no existe, `404`.
-4. Ejecuta el UPDATE con todos los campos. El `Id = id` pasa el ID de ruta al parametro `@Id` del SQL.
-5. Devuelve `204` sin cuerpo.
-
-### Salida esperada
-
-```bash
-# Actualizar el paciente con ID 5
-curl -X PUT http://localhost:5000/patients/5 \
-  -H "Content-Type: application/json" \
-  -d '{"firstName":"Ana Maria","lastName":"Lopez","gender":"F","birthDate":"1990-05-15",
-       "city":"Buenos Aires","provinceId":1,"allergies":"Polen","height":165,"weight":62}'
-
-# Respuesta: 204 No Content (sin cuerpo)
-
-# Intentar actualizar un ID inexistente
-curl -X PUT http://localhost:5000/patients/999 \
-  -H "Content-Type: application/json" \
-  -d '{"firstName":"Test","lastName":"X","gender":"M","birthDate":"2000-01-01"}'
-
-# Respuesta: 404 Not Found
-# Cuerpo: { "mensaje": "Paciente no encontrado" }
-```
-
-## Ejercicio progresivo
-
-### Etapa 1 — PUT /doctors/{id:long} (guiada)
-
-Crea un endpoint `MapPut` para `doctors`. Usa `DoctorInput` como entrada y el record `Doctor` para verificar existencia. Sigue el mismo patron del ejemplo.
-
-**Pista:** la tabla `doctors` tiene campos opcionales como `specialty`, `phone`, `email`. Asegurate de incluirlos en el UPDATE aunque sean `null`.
-
-### Etapa 2 — PUT /provinces/{id:long} con validacion de nombre (semiguiada)
-
-Crea un endpoint PUT para `province_names`. Solo tiene `province_name` para actualizar. Valida que el nombre no sea vacio.
-
-### Etapa 3 — PUT /admissions/{id:long} con filtro de solo campos no nulos (independiente)
-
-Crea un endpoint PUT para `admissions`. Pero en lugar de enviar todos los campos (incluyendo `discharge_date` que puede ser `null`), modifica solo los campos que llegan en el cuerpo. Investigá como armar un UPDATE condicional.
-
-**Pista:** podes armar el SQL dinamicamente concatenando solo los campos que no son `null`. Usa `Execute` con parametros adaptados al SQL armado.
+## 5. Consolidación y cierre (20 min)
 
 ### Qué te llevás
 
-- PUT reemplaza el recurso completo. Se usa con `MapPut` y recibe ID por ruta + cuerpo JSON.
-- Siempre verificar existencia antes de actualizar.
-- `Execute` es el método de Dapper para UPDATE, igual que para DELETE.
-- La respuesta canónica para PUT sobre BD es `204 No Content`.
+- `MapPut` expone un endpoint PUT y `Results.Ok(dato)` responde con código `200` y el recurso actualizado, mientras que `Results.NoContent()` responde con código `204` sin body.
+- Antes de actualizar siempre se valida la existencia del recurso. Si no existe, se devuelve `404`.
+- El SQL de UPDATE usa `SET campo = @Campo` para cada columna que se quiere modificar.
+- El objeto de parámetros incluye `id` para el `WHERE` y todas las propiedades del record para el `SET`.
+- `Execute` devuelve `int` con la cantidad de filas afectadas; si es 0, el recurso no existía (aunque ya lo verificamos antes).
 
-### Lo que viene
+## Lo que viene
 
-En el Encuentro 24 vas a unir todo: CRUD completo sobre una tabla + un endpoint con JOIN triple que combina `admissions`, `doctors` y `patients`.
-
-## Errores comunes y trampas
-
-| Error | Causa | Solucion |
-|---|---|---|
-| No verificar existencia antes de actualizar | El UPDATE se ejecuta igual, afecta 0 filas, y el cliente no sabe que el recurso no existia. | Usar `QueryFirstOrDefault` y devolver `404` si es `null`. |
-| Devolver `Results.Ok` con el objeto actualizado | Confundir PUT con GET. Sobre BD la respuesta canonica es `204`. | Usar `Results.NoContent()` para PUT sobre BD. |
-| Olvidar `Id = id` en el objeto anonimo del UPDATE | El parametro `@Id` no se pasa y el UPDATE se ejecuta sin WHERE, actualizando **todas** las filas. | Siempre incluir el ID en el objeto anonimo. |
-| Poner `id` directamente en el SQL | Riesgo de inyeccion si el valor viene de la ruta (aunque .NET lo valida). | Usar siempre `@id` y el objeto anonimo. |
-| Enviar los campos en el UPDATE en orden erroneo | No importa el orden, pero si falta un campo se setea a `NULL`. | Hacer el UPDATE explicito con todos los campos del record. |
+Encuentro 24: CRUD completo y JOIN triple. Integraremos los cuatro endpoints en un solo archivo y haremos consultas con JOIN de 3 tablas.

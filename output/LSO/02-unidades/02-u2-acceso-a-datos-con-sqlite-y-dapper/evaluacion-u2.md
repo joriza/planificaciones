@@ -1,90 +1,62 @@
-# Evaluación de la Unidad 2 — Acceso a datos con SQLite y Dapper
+# Evaluación de la Unidad 2 — Encuentro 15
 
-## Metadatos
+> Evaluación de la instancia «Evaluación de la Unidad 2 — Encuentro 15» · Curso: Minimal API con C# .NET 6. Documento de **metadatos y acuerdos de la instancia**, en registro docente formal. El material del alumno es la versión `evaluacion-u2-version-a` y sus versiones equivalentes generadas; sus soluciones y criterios de corrección van en el anexo docente separado (`evaluacion-u2-version-a-anexo-docente.md`).
 
-| Campo | Valor |
-|---|---|
-| Asignatura | Minimal API con C# .NET 6 |
-| Unidad | U2: Acceso a datos con SQLite y Dapper |
-| Encuentro de evaluación | 15 (dedicado) |
-| Tipo | Entrega grupal por GitHub + defensa individual |
-| Modalidad | Grupal (2-3 integrantes), defensa individual |
-| Duración del encuentro | 240 minutos |
-| Duración de la defensa | Hasta 10 minutos por integrante |
-| Criterio de aprobación | 60/100 en la entrega + defensa satisfactoria |
+## 1. Identificación
 
-## Objetivos de evaluación
+| Campo | Detalle |
+| --- | --- |
+| Instancia | Evaluación de la Unidad 2 — Encuentro 15 |
+| Unidad evaluada | 2 — Acceso a datos con SQLite y Dapper |
+| Eje temático | Consultas SELECT con Dapper: parametrización, alias AS, tipos canónicos |
+| Carácter/Objetivo | Evaluación de la capacidad de consultar una base SQLite con Dapper usando consultas parametrizadas, alias AS para mapeo de columnas, y los tipos canónicos INTEGER→long/long?. |
+| Destinatarios | Todo el curso |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Uso de celular | No permitido |
+| Documentos de la instancia | `evaluacion-u2.md` · `evaluacion-u2-version-a.md` · `evaluacion-u2-version-a-anexo-docente.md` (más las versiones equivalentes B/C/D generadas desde la A) |
 
-- Construir endpoints GET que consulten la base `hospital.db` usando Dapper y records posicionales.
-- Aplicar correctamente alias `AS` en SELECT para mapear snake_case a PascalCase.
-- Escribir consultas parametrizadas con `@` y objetos anónimos (nunca concatenar).
-- Usar `Query<T>` para listas y `QueryFirstOrDefault<T>` para búsqueda individual.
-- Implementar filtros con `LIKE` y búsqueda de texto parcial.
-- Realizar JOIN entre dos tablas para combinar datos relacionados.
-- Usar los tipos canónicos (`long` para IDs, `string` para fechas, `?` para nulables).
-- Publicar el trabajo en GitHub con la carpeta `tp-u2/`, `.gitignore`, y commit semántico.
-- Explicar y defender el código durante la defensa individual.
+## 2. Estructura del encuentro (240 min)
 
-## Formato de entrega
+| Momento | Tiempo | Qué ocurre |
+| --- | --- | --- |
+| Entrega del TP por GitHub + defensa individual | 60 min | Cada alumno presenta su TP-U2 (consultas a hospital.db) al docente; el docente verifica las consultas funcionando y pregunta por decisiones de diseño. |
+| Devolución y retroalimentación | 60 min | El docente devuelve la evaluación con comentarios individuales; se registran los puntos de mejora en la planilla. |
+| Cierre y registro | 60 min | Se consolidan las notas de la defensa en la planilla de evaluación; se anuncian los criterios de la próxima evaluación (U3). |
+| Apertura del encuentro siguiente | 60 min | Se presenta el TP-U3 y se resuelven preguntas sobre la transición de U2 a U3 (INSERT, UPDATE, DELETE). |
+| **Total** | **240 min** | |
 
-1. **Antes de la defensa (encuentro 15):** cada grupo debe tener su repositorio GitHub actualizado con la carpeta `tp-u2/` conteniendo el proyecto completo (`Program.cs`, `hospital.db` junto al `.csproj`, `.gitignore`). La base `hospital.db` se copia al lado del `.csproj`; no se sube la base al repositorio (se gitignora o se copia manualmente).
-2. **Defensa individual:** cada integrante ejecuta la API, prueba dos endpoints asignados y explica un fragmento de código.
-3. **Devolución:** el encuentro siguiente (encuentro 17, inicio de intensificación) abre con la devolución de resultados.
+## 3. Regla canónica de la instancia
 
-## Estructura general de la evaluación
+La entrega del TP-U2 se realiza por GitHub antes del encuentro. La defensa individual se realiza en este encuentro (E15). La devolución de evaluaciones abre el encuentro siguiente (E16). Si la entrega está incompleta, el alumno defiende solo lo entregado y recibe devolución condicionada; la entrega pendiente se resuelve en el encuentro siguiente con extensión de 48 horas.
 
-El docente asigna a cada grupo una versión (A o B). Ambas tienen los mismos requisitos de endpoints, puntaje y complejidad; cambia el dominio de datos (A: pacientes con JOIN a provincias; B: doctores con JOIN a admisiones).
+## 4. Defensa individual del TP (modalidad)
 
-### Requisitos comunes (ambas versiones)
+El alumno presenta sus consultas a hospital.db funcionando. El docente pregunta: (1) por qué se usa `long` y no `int` para las claves primarias, (2) qué pasa si se omite el alias `AS` en un SELECT, (3) cómo se parametrizan las consultas y por qué no se concatena, (4) qué diferencia hay entre `Query<T>` y `ExecuteScalar<long>`, (5) cómo se maneja un resultado nulo con `QueryFirstOrDefault`. Se registra por objetivo: correctitud de consultas (0-30), tipos canónicos y alias (0-25), parametrización (0-20), explicación de diseño (0-15), Git y entrega (0-10).
 
-- Usar Dapper y `Microsoft.Data.Sqlite`.
-- Conexión con `using var connection = new SqliteConnection("Data Source=hospital.db")`.
-- Todas las consultas parametrizadas con `@param` y `new { param = valor }`.
-- Alias `AS` obligatorios en todas las columnas del SELECT.
-- Registros posicionales con tipos canónicos: `long` para PK, `string` para fechas, `?` para nulables.
-- Registros después de `app.Run()`.
-- Respuestas con `Results.Ok`, `Results.NotFound` y `new { mensaje = "..." }`.
-- Proyecto en carpeta `tp-u2/`.
-- `.gitignore` con `bin/` y `obj/`.
+## 5. Alcance
 
-## Rúbrica de evaluación (100 puntos)
+Núcleos incluidos: SELECT con WHERE, ORDER BY, JOIN entre 2 tablas, `Query<T>` con alias `AS`, parámetros con `new { id }`, `LIKE` para búsqueda parcial, tipos canónicos INTEGER→`long`/`long?`, `ExecuteScalar<long>` para conteos, `QueryFirstOrDefault<T>` para lectura de una fila. No incluye: INSERT/UPDATE/DELETE, endpoints POST/PUT/DELETE, JOIN de 3 tablas.
 
-### Funcionalidad técnica (55 puntos)
+## 6. Prueba práctica individual (versiones equivalentes)
 
-| Criterio | Puntos | Descripción |
-|---|---|---|
-| GET /list (lista completa) | 10 | Devuelve 200 con todos los registros ordenados |
-| GET /list/{id:long} (búsqueda por ID) | 10 | 200 si existe, 404 con mensaje si no |
-| GET /list/by-field/{valor} (búsqueda LIKE) | 10 | Filtra por campo textual con LIKE %valor% |
-| GET /list/with-relation (JOIN) | 15 | Cruza con otra tabla usando JOIN |
-| GET /resource/{id:long} (recurso relacionado) | 10 | Endpoint sobre la segunda tabla con búsqueda por ID |
+Cada alumno recibe una versión equivalente (A o B) al azar. La prueba dura 90 minutos, es individual, con computadora, sin celular. El alumno debe completar el esqueleto de `Program.cs` provisto en la versión recibida conectando a `hospital.db`. La prueba evalúa los objetivos de la unidad con distinto dominio para evitar copia.
 
-### Calidad del código (25 puntos)
+## 7. Criterios de calificación
 
-| Criterio | Puntos | Descripción |
-|---|---|---|
-| IDs como `long` | 5 | Sin `int` en ningún record |
-| Fechas como `string` | 5 | Sin `DateTime` ni `DateOnly` |
-| Campos nulables con `?` | 5 | `string?`, `long?` donde corresponda |
-| Alias `AS` en todas las columnas | 5 | Todas las columnas tienen alias PascalCase |
-| Registros después de `app.Run()` | 5 | Sin tipos antes del código ejecutable |
+Se evalúan: correctitud de las consultas SQL (30 puntos), uso de tipos canónicos y alias `AS` (25 puntos), parametrización de consultas (20 puntos), explicación de decisiones de diseño (15 puntos), entrega Git con .gitignore y commits (10 puntos). La nota mínima para aprobar es 60 puntos.
 
-### Git y entrega (20 puntos)
+## 8. Condiciones de resolución de la prueba
 
-| Criterio | Puntos | Descripción |
-|---|---|---|
-| Carpeta `tp-u2/` en el repositorio | 5 | Proyecto dentro de `tp-u2/` |
-| `.gitignore` presente | 5 | Incluye `bin/` y `obj/` |
-| Commit semántico | 5 | `"tp-u2: consultas con Dapper y SQLite"` |
-| Push exitoso en GitHub | 5 | El commit aparece en el remoto |
+Resolución individual. Se permite el uso de la hoja de convenciones técnicas (`convenciones-tecnicas.md`) y la documentación de la base (`database-docs/`) como material consultable. No se permite consultar soluciones de compañeros ni usar IA generativa. El código debe estar en un único archivo `Program.cs`. La base de datos `hospital.db` se provee en la carpeta del proyecto. El alumno debe cerrar la aplicación (`Ctrl+C`) y dejar el proyecto en estado limpio al terminar.
 
-### Defensa individual (aprobación aparte)
+## 9. Regla de equivalencia entre versiones
 
-Ídem U1: obligatoria, satisfactoria/insatisfactoria. Se requiere 60/100 + defensa satisfactoria para aprobar.
+Las versiones A y B tienen los mismos objetivos y los mismos requisitos, con distinto dominio y datos. Ninguna versión tiene reglas que la otra no tenga. Ambas versiones evalúan lo mismo: consultas SELECT a hospital.db con Dapper, uso de alias AS, tipos canónicos, y parametrización.
 
-## Criterio de aprobación
+## 10. Mecánica de asignación de versiones
 
-- **Nota de entrega:** puntaje sobre 100 según rúbrica.
-- **Aprobación:** 60 puntos o más en la entrega **y** defensa individual satisfactoria.
-- **Entrega incompleta:** si falta alguno de los endpoints obligatorios (lista general, búsqueda por ID, LIKE, JOIN), el puntaje máximo es 50.
-- **Recuperación:** instancias de intensificación (encuentros 17-18 y diciembre/marzo).
+Se asigna una versión (A o B) a cada alumno al azar en el momento de la prueba. El docente registra la versión asignada en la planilla de evaluación junto al nombre del alumno. Los alumnos no pueden cambiar de versión una vez asignada.
+
+## 11. Devolución
+
+La devolución se realiza en el encuentro siguiente (E16). Se devuelve la evaluación con los puntos obtenidos por cada criterio y los comentarios del docente. Si un alumno no alcanza el objetivo mínimo (60 puntos), se le asigna la versión alternativa (B) para recuperación. Se registra la nota en la planilla con los comentarios del docente.

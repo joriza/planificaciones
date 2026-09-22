@@ -1,158 +1,152 @@
 # Anexo docente — Encuentro 30: Avance trabajo final
 
----
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
-## Preguntas guía para la apertura
+## 1. Solución del ejercicio independiente
 
-1. "¿Qué endpoints tiene hoy su trabajo final? ¿Cuáles faltan?"
-2. "¿Cómo saben si un endpoint funciona correctamente sin tener que mirar el código?"
-3. "Si tuvieran que explicar su API a alguien que no sabe programar, ¿qué le dirían?"
+### Solución: Plan del trabajo final
 
----
+**Plan de fases sugerido para el trabajo final:**
 
-## Resumen teórico para el pizarrón
+| Fase | Ramas de feature | Entregable | Criterio de éxito |
+| --- | --- | --- | --- |
+| Fase 1: Setup | `feature/setup-project` | `Program.cs` con using directives, builder, app.Run(), records; `hospital.db` en la carpeta `trabajo-final/`; `.gitignore` con `bin/` y `obj/` | API arranca sin errores |
+| Fase 2: CRUD Pacientes | `feature/crud-pacientes` | 5 endpoints para pacientes (GET list, GET by id, POST, PUT, DELETE) | Todos los endpoints responden con los códigos HTTP correctos |
+| Fase 3: CRUD Doctores | `feature/crud-doctorados` | 5 endpoints para doctores | Todos los endpoints responden con los códigos HTTP correctos |
+| Fase 4: CRUD Admisiones | `feature/crud-admisiones` | 5 endpoints para admisiones | Todos los endpoints responden con los códigos HTTP correctos |
+| Fase 5: JOIN Pacientes-Admisiones | `feature/join-pacientes-admisiones` | Endpoint `/patients-with-admissions` con JOIN | Devuelve pacientes con sus admisiones agrupadas |
+| Fase 6: JOIN Doctores-Pacientes | `feature/join-doctorados-pacientes` | Endpoint `/doctors-with-patients` con JOIN | Devuelve doctores con sus pacientes agrupados |
+| Fase 7: Tests de integración | `feature/test-integracion` | Tests básicos que verifican 200, 201, 204, 400, 404 | Tests pasan contra la API en ejecución |
+| Fase 8: README técnico | `feature/readme-tecnico` | README con arquitectura, endpoints, decisiones de diseño e instrucciones de ejecución | README completo y en español |
 
-- Trabajo final mínimo: GET (listar, uno, JOIN, conteo), POST, PUT, DELETE + doctor con conteo.
-- Verificación sistemática: curl o Thunder Client, código HTTP, JSON de respuesta, terminal de errores.
-- Defensa individual: explicar endpoints, mostrar código, responder conceptos, demostrar Git.
-- Antes del encuentro 31: todo en `main`, README completo, protección activa.
+### Solución: Avance con commits por feature
 
----
-
-## Ejemplo de verificacion con curl (para proyectar)
+**Ejemplo de ciclo completo para Fase 2 (CRUD Pacientes):**
 
 ```bash
-# Probar que el servidor responde
-curl -s http://localhost:5000/patients | head -c 200
+# 1. Crear rama de feature
+git checkout -b feature/crud-pacientes
 
-# Verificar que la respuesta es JSON valido
-curl -s http://localhost:5000/patients | python -m json.tool
+# 2. Codificar los 5 endpoints de pacientes en Program.cs
+# (GET list, GET by id, POST, PUT, DELETE con Dapper y hospital.db)
 
-# Verificar codigo HTTP
-curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/patients
+# 3. Probar localmente
+dotnet run
+# curl http://localhost:5000/patients
+# curl http://localhost:5000/patients/1
 
-# Probar 404
-curl -s -w "\n%{http_code}" http://localhost:5000/patients/9999
+# 4. Commitear con mensaje descriptivo
+git add .
+git commit -m "trabajo-final: crud completo de pacientes con endpoints get post put delete"
 
-# Probar POST y capturar la URL del recurso creado
-curl -s -i -X POST http://localhost:5000/patients \
-  -H "Content-Type: application/json" \
-  -d '{"firstName":"Test","lastName":"User","gender":"M","birthDate":"2000-01-01","provinceId":1}' \
-  | grep -i location
+# 5. Push de la rama
+git push origin feature/crud-pacientes
+
+# 6. Abrir PR en GitHub desde feature/crud-pacientes a main
+# Asignar revisor (compañero del grupo)
+
+# 7. Esperar revision y fusionar
+# Borrar rama despues de fusionar
+git branch -d feature/crud-pacientes
 ```
 
----
+## 2. Solución de la actividad de extensión
 
-## Rúbrica de evaluación del ejercicio independiente
+### README técnico del trabajo final
 
-| Criterio | Logrado (2 pts) | En desarrollo (1 pt) | No logrado (0 pts) |
-|---|---|---|---|
-| Primera funcionalidad adicional | Endpoint funcional, probado, código correcto | Endpoint existe pero no funciona | No implementado |
-| Segunda funcionalidad adicional | Endpoint funcional, probado, código correcto | Endpoint existe pero no funciona | No implementado |
-| Todos los endpoints mínimos funcionan | Los 8 endpoints básicos devuelven la respuesta esperada | 5-7 endpoints funcionan | Menos de 5 endpoints |
-| PR mergeado con los cambios | PR aprobado y mergeado en main | PR abierto sin merge | Sin PR |
-| README actualizado | README incluye todos los endpoints del trabajo final | README incompleto | README sin cambios |
+El README técnico debe contener como mínimo:
 
----
+```markdown
+# Trabajo Final — API de Hospital con Dapper
 
-## Solucion de los ejercicios independientes
+## Arquitectura
 
-### 1. `GET /doctors` — listar doctores
+Proyecto de Minimal API con C# .NET 6 que expone endpoints CRUD contra la base de datos SQLite `hospital.db`. Todo el código vive en un único archivo `Program.cs` con top-level statements. Dapper se usa para el acceso a datos y las conexiones se abren con `using var` dentro de cada handler.
 
-```csharp
-app.MapGet("/doctors", () =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var doctors = connection.Query(@"
-        SELECT doctor_id AS DoctorId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               specialty AS Specialty
-        FROM doctors
-    ").ToList();
-    return Results.Ok(doctors);
-});
+## Endpoints disponibles
+
+| Método | Ruta | Descripción |
+| --- | --- | --- |
+| GET | /patients | Listar todos los pacientes |
+| GET | /patients/{id:long} | Obtener un paciente por ID |
+| POST | /patients | Crear un nuevo paciente |
+| PUT | /patients/{id:long} | Actualizar un paciente existente |
+| DELETE | /patients/{id:long} | Eliminar un paciente |
+| GET | /patients-with-admissions | Listar pacientes con sus admisiones (JOIN) |
+| GET | /doctors | Listar todos los doctores |
+| GET | /doctors/{id:long} | Obtener un doctor por ID |
+| POST | /doctors | Crear un nuevo doctor |
+| PUT | /doctors/{id:long} | Actualizar un doctor existente |
+| DELETE | /doctors/{id:long} | Eliminar un doctor |
+| GET | /admissions | Listar todas las admisiones |
+| GET | /admissions/{id:long} | Obtener una admision por ID |
+| POST | /admissions | Crear una nueva admision |
+| PUT | /admissions/{id:long} | Actualizar una admision existente |
+| DELETE | /admissions/{id:long} | Eliminar una admision |
+| GET | /doctors-with-patients | Listar doctores con sus pacientes (JOIN) |
+
+## Decisiones de diseño
+
+- **Un solo archivo:** todo el código vive en `Program.cs` con top-level statements.
+- **Records posicionales al final:** despues de `app.Run()` para evitar CS8803.
+- **Tipos canonicos:** `long` para IDs INTEGER, `string` para fechas, `?` para campos nullable.
+- **Consultas parametrizadas:** siempre con `@param` y `new { param }`.
+- **Sin abstracciones:** no se usa patron repositorio, inyeccion de dependencias ni carpetas Models/Services/Controllers.
+
+## Como ejecutar
+
+```bash
+git clone <url-del-repo>
+cd trabajo-final
+dotnet run
 ```
 
-### 2. `GET /admissions` con JOIN completo
-
-```csharp
-app.MapGet("/admissions", () =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var admissions = connection.Query(@"
-        SELECT a.id AS AdmissionId,
-               a.admission_date AS AdmissionDate,
-               a.discharge_date AS DischargeDate,
-               d.doctor_id AS DoctorId,
-               d.first_name AS DoctorFirstName,
-               d.last_name AS DoctorLastName,
-               p.patient_id AS PatientId,
-               p.first_name AS PatientFirstName,
-               p.last_name AS PatientLastName
-        FROM admissions a
-        JOIN doctors d ON a.attending_doctor_id = d.doctor_id
-        JOIN patients p ON a.patient_id = p.patient_id
-    ").ToList();
-    return Results.Ok(admissions);
-});
+La API queda disponible en `http://localhost:5000` (o el puerto asignado por .NET).
 ```
 
-### 3. `GET /patients?search={texto}` con LIKE
+## 3. Respuesta esperada del ejercicio
 
-```csharp
-app.MapGet("/patients", (string? search) =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    if (string.IsNullOrWhiteSpace(search))
-    {
-        var patients = connection.Query<Patient>("SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName, gender AS Gender, birth_date AS BirthDate, city AS City, province_id AS ProvinceId, allergies AS Allergies, height AS Height, weight AS Weight FROM patients").ToList();
-        return Results.Ok(patients);
-    }
-    var filtered = connection.Query<Patient>(@"
-        SELECT patient_id AS PatientId, first_name AS FirstName,
-               last_name AS LastName, gender AS Gender,
-               birth_date AS BirthDate, city AS City,
-               province_id AS ProvinceId, allergies AS Allergies,
-               height AS Height, weight AS Weight
-        FROM patients
-        WHERE last_name LIKE @pattern", new { pattern = $"%{search}%" }).ToList();
-    return Results.Ok(filtered);
-});
-```
+| Tarea | Resultado esperado |
+| --- | --- |
+| Plan de fases | Tabla con al menos 5 fases, cada una con nombre de rama de feature y entregable |
+| Issues creados | Al menos un issue por fase del plan |
+| Commits por feature | Al menos un commit atómico por feature con mensaje descriptivo en español |
+| PRs revisados | Al menos un PR fusionado con revisión de compañero |
+| `main` limpia | Sin commits directos, solo fusiones por PR |
+| README técnico (extensión) | Arquitectura, endpoints, decisiones de diseño e instrucciones de ejecución |
 
-### 4. `GET /patients/{id:long}/admissions`
+## 4. Criterios de corrección (lista de verificación)
 
-```csharp
-app.MapGet("/patients/{id:long}/admissions", (long id) =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var admissions = connection.Query(@"
-        SELECT a.id AS AdmissionId,
-               a.admission_date AS AdmissionDate,
-               a.discharge_date AS DischargeDate,
-               a.diagnosis AS Diagnosis,
-               d.first_name AS DoctorFirstName,
-               d.last_name AS DoctorLastName
-        FROM admissions a
-        JOIN doctors d ON a.attending_doctor_id = d.doctor_id
-        WHERE a.patient_id = @id
-    ", new { id }).ToList();
-    return Results.Ok(admissions);
-});
-```
+- ☐ El plan del trabajo final tiene al menos 5 fases con nombres de ramas de feature.
+- ☐ Cada fase tiene un issue correspondiente en el repositorio.
+- ☐ Los commits siguen la convención del curso (español, sin tildes, minúsculas tras los dos puntos).
+- ☐ Cada commit es atómico y corresponde a una sola fase o cambio lógico.
+- ☐ Los PRs tienen revisión de al menos un compañero del grupo.
+- ☐ `main` no tiene commits directos durante el desarrollo.
+- ☐ `Program.cs` tiene el código más reciente con todas las fases completadas.
+- ☐ `hospital.db` está en la carpeta `trabajo-final/` junto al `.csproj`.
+- ☐ El `.gitignore` ignora `bin/` y `obj/`.
+- ☐ El README técnico (extensión) cubre al menos arquitectura, endpoints y decisiones de diseño.
 
----
+## 5. Errores esperados y cómo intervenir
 
-## Notas para el docente
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| Commits en `main` en lugar de en rama de feature | No crear la rama antes de empezar a codear | Verificar que el grupo crea la rama `feature/<nombre>` antes de cualquier cambio |
+| Mensajes de commit en inglés o con tildes | No seguir la convención del curso | Recordar que los mensajes deben estar en español, sin tildes, con minúsculas después de los dos puntos |
+| PR fusionado sin revisión | Prisa por avanzar | Recordar que la revisión entre pares es obligatoria antes de fusionar |
+| No hay plan de fases | No planificar antes de implementar | Orientar a que el plan con issues es la base del trabajo profesional |
+| `main` tiene commits directos | Confusión sobre el flujo de trabajo | Verificar que `main` está protegida y que todos los cambios pasan por PR |
+| Commits con cambios mezclados de varias fases | No hacer commits atómicos por feature | Cada commit debe reflejar una sola fase o cambio lógico |
+| README técnico faltante o incompleto | No dedicar tiempo a la documentación | Enfatizar que el README técnico es parte del trabajo profesional y se evalúa |
 
-- Este encuentro es el último de trabajo puramente técnico antes de la defensa. Circular entre los grupos para asegurarse de que todos tengan el mínimo funcional.
-- Si algún grupo está muy atrasado (menos de 5 endpoints funcionando), ayudarlos a priorizar: primero los endpoints GET con JOIN, después POST, PUT, DELETE.
-- Recordar a los grupos que el `Program.cs` del trabajo final debe estar en la carpeta `trabajo-final/` y tener su propio `hospital.db` (copiado al lado del `.csproj`).
-- Para la defensa del encuentro 31, preparar una lista de preguntas conceptuales posibles:
-  - ¿Por qué los IDs se declaran como `long` y no como `int`?
-  - ¿Qué hace `ExecuteScalar<long>` en el POST?
-  - ¿Por qué usamos alias `AS` en el SELECT?
-  - ¿Cuál es la diferencia entre `Results.Ok`, `Results.Created` y `Results.NoContent`?
-  - ¿Qué pasa si la rama `main` no está protegida?
-- Advertir que el README debe estar completo para el encuentro 31. Sin README profesional, el trabajo final se considera incompleto.
+## 6. Registro de la clase
+
+| Grupo | Fases completadas | Commits por feature | PRs revisados | `main` limpia | Observaciones |
+| --- | --- | --- | --- | --- | --- |
+| Grupo 1 | | | | | |
+| Grupo 2 | | | | | |
+| Grupo 3 | | | | | |
+| Grupo 4 | | | | | |
+
+**Notas para evaluación de proceso:** verificar que cada grupo tenga un plan de fases, commits atómicos por feature y PRs revisados. Registrar qué grupos necesitan acompañamiento adicional en planificación o en el flujo de Git.

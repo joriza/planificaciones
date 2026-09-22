@@ -1,182 +1,346 @@
 # Anexo docente — Encuentro 29: Consolidación CRUD con JOINs
 
----
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
-## Preguntas guía para la apertura
+## 1. Solución del ejercicio independiente
 
-1. "¿Qué diferencia hay entre un JOIN y hacer dos consultas separadas?"
-2. "¿Para qué sirve un LEFT JOIN cuando contamos admisiones por doctor?"
-3. "¿Cómo explicarían el flujo de un endpoint GET que devuelve datos de tres tablas?"
+### Solución: CRUD completo para doctors y admissions
 
----
-
-## Resumen teórico para el pizarrón
-
-- JOIN de 2 tablas: `patients` + `province_names` → paciente con nombre de provincia.
-- JOIN de 3 tablas: `admissions` + `doctors` + `patients` → admisión completa.
-- Conteo: `COUNT` + `GROUP BY` + `LEFT JOIN` (para no perder filas con cero).
-- Flujo Git: `feature/endpoint-joins` → PR → revisión → merge.
-
----
-
-## Ejemplo de código completo para proyectar y verificar
-
-El `Program.cs` completo del trabajo final hasta este encuentro:
+**Endpoints para doctors:**
 
 ```csharp
-using Dapper;
-using Microsoft.Data.Sqlite;
-
-var connectionString = "Data Source=hospital.db";
-
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-
-// GET /patients — listar todos
-app.MapGet("/patients", () =>
+// GET /doctors — listar todos los doctores
+app.MapGet("/doctors", () =>
 {
+    // Abrir conexion a la base de datos
     using var connection = new SqliteConnection(connectionString);
-    var patients = connection.Query<Patient>("SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName, gender AS Gender, birth_date AS BirthDate, city AS City, province_id AS ProvinceId, allergies AS Allergies, height AS Height, weight AS Weight FROM patients").ToList();
-    return Results.Ok(patients);
+    var doctors = connection.Query<Doctor>("SELECT * FROM doctors");
+    return Results.Ok(doctors);
 });
 
-// GET /patients/{id:long} — obtener uno
-app.MapGet("/patients/{id:long}", (long id) =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var patient = connection.QueryFirstOrDefault<Patient>("SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName, gender AS Gender, birth_date AS BirthDate, city AS City, province_id AS ProvinceId, allergies AS Allergies, height AS Height, weight AS Weight FROM patients WHERE patient_id = @id", new { id });
-    return patient is null ? Results.NotFound(new { mensaje = "Paciente no encontrado" }) : Results.Ok(patient);
-});
-
-// GET /patients/with-province — pacientes con nombre de provincia
-app.MapGet("/patients/with-province", () =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var patients = connection.Query(@"
-        SELECT pa.patient_id AS PatientId, pa.first_name AS FirstName,
-               pa.last_name AS LastName, pa.gender AS Gender,
-               pa.birth_date AS BirthDate, pa.city AS City,
-               pa.allergies AS Allergies, pa.height AS Height,
-               pa.weight AS Weight, pn.province_name AS ProvinceName
-        FROM patients pa
-        JOIN province_names pn ON pa.province_id = pn.province_id
-    ").ToList();
-    return Results.Ok(patients);
-});
-
-// GET /patients/count-by-province — conteo por provincia
-app.MapGet("/patients/count-by-province", () =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var result = connection.Query(@"
-        SELECT pn.province_name AS ProvinceName,
-               COUNT(pa.patient_id) AS PatientCount
-        FROM province_names pn
-        LEFT JOIN patients pa ON pa.province_id = pn.province_id
-        GROUP BY pn.province_name
-        ORDER BY PatientCount DESC
-    ").ToList();
-    return Results.Ok(result);
-});
-
-// POST /patients — crear paciente
-app.MapPost("/patients", (Patient patient) =>
-{
-    if (string.IsNullOrWhiteSpace(patient.FirstName) || string.IsNullOrWhiteSpace(patient.LastName))
-        return Results.BadRequest(new { mensaje = "Nombre y apellido son obligatorios" });
-    using var connection = new SqliteConnection(connectionString);
-    var newId = connection.ExecuteScalar<long>(@"
-        INSERT INTO patients (first_name, last_name, gender, birth_date, city, province_id, allergies, height, weight)
-        VALUES (@FirstName, @LastName, @Gender, @BirthDate, @City, @ProvinceId, @Allergies, @Height, @Weight);
-        SELECT last_insert_rowid();", patient);
-    return Results.Created($"/patients/{newId}", patient);
-});
-
-// PUT /patients/{id:long} — actualizar paciente
-app.MapPut("/patients/{id:long}", (long id, Patient patient) =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var existing = connection.QueryFirstOrDefault<Patient>("SELECT patient_id AS PatientId, first_name AS FirstName FROM patients WHERE patient_id = @id", new { id });
-    if (existing is null) return Results.NotFound(new { mensaje = "Paciente no encontrado" });
-    connection.Execute(@"
-        UPDATE patients SET first_name = @FirstName, last_name = @LastName,
-            gender = @Gender, birth_date = @BirthDate, city = @City,
-            province_id = @ProvinceId, allergies = @Allergies,
-            height = @Height, weight = @Weight
-        WHERE patient_id = @id",
-        new { patient.FirstName, patient.LastName, patient.Gender, patient.BirthDate, patient.City, patient.ProvinceId, patient.Allergies, patient.Height, patient.Weight, id });
-    return Results.NoContent();
-});
-
-// DELETE /patients/{id:long} — eliminar paciente
-app.MapDelete("/patients/{id:long}", (long id) =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var existing = connection.QueryFirstOrDefault<Patient>("SELECT patient_id AS PatientId FROM patients WHERE patient_id = @id", new { id });
-    if (existing is null) return Results.NotFound(new { mensaje = "Paciente no encontrado" });
-    connection.Execute("DELETE FROM patients WHERE patient_id = @id", new { id });
-    return Results.NoContent();
-});
-
-app.Run();
-
-record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate, string? City, long ProvinceId, string? Allergies, long? Height, long? Weight);
-```
-
----
-
-## Rúbrica de evaluación del ejercicio independiente
-
-| Criterio | Logrado (2 pts) | En desarrollo (1 pt) | No logrado (0 pts) |
-|---|---|---|---|
-| Endpoint `GET /doctors/{id:long}` con JOIN | Devuelve datos del doctor + `AdmissionCount` | Devuelve datos sin conteo | Endpoint no implementado |
-| Conteo con LEFT JOIN | Usa LEFT JOIN para incluir doctores sin admisiones | Usa JOIN y doctores sin admisiones no aparecen | Sin COUNT ni GROUP BY |
-| Prueba con curl o Thunder Client | Endpoint probado y respuesta verificada | Probado pero respuesta incorrecta | Sin probar |
-| Integración Git profesional | Rama feature, PR, revisión y merge completos | Rama creada pero sin merge | Sin rama ni PR |
-
----
-
-## Solución del ejercicio independiente
-
-Endpoint esperado:
-
-```csharp
+// GET /doctors/{id:long} — obtener un doctor por ID
 app.MapGet("/doctors/{id:long}", (long id) =>
 {
+    // Abrir conexion a la base de datos
     using var connection = new SqliteConnection(connectionString);
-    var doctor = connection.QueryFirstOrDefault(@"
-        SELECT d.doctor_id AS DoctorId,
-               d.first_name AS FirstName,
-               d.last_name AS LastName,
-               d.specialty AS Specialty,
-               COUNT(a.id) AS AdmissionCount
-        FROM doctors d
-        LEFT JOIN admissions a ON a.attending_doctor_id = d.doctor_id
-        WHERE d.doctor_id = @id
-    ", new { id });
+    // Buscar doctor por id con consulta parametrizada
+    var doctor = connection.QueryFirstOrDefault<Doctor>(@"
+        SELECT doctor_id AS DoctorId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               specialty AS Specialty,
+               city AS City,
+               province_id AS ProvinceId
+        FROM doctors
+        WHERE doctor_id = @id", new { id });
+
     return doctor is null
         ? Results.NotFound(new { mensaje = "Doctor no encontrado" })
         : Results.Ok(doctor);
 });
-```
 
-Respuesta esperada para `GET /doctors/1`:
-
-```json
+// POST /doctors — crear un nuevo doctor
+app.MapPost("/doctors", (Doctor newDoctor) =>
 {
-  "doctorId": 1,
-  "firstName": "John",
-  "lastName": "Smith",
-  "specialty": "Cardiology",
-  "admissionCount": 42
-}
+    // Validar que el nombre no venga vacio
+    if (string.IsNullOrWhiteSpace(newDoctor.FirstName))
+    {
+        return Results.BadRequest(new { mensaje = "El nombre es obligatorio" });
+    }
+
+    // Abrir conexion a la base de datos
+    using var connection = new SqliteConnection(connectionString);
+    // Insertar doctor y obtener el id generado
+    var newId = connection.ExecuteScalar<long>(@"
+        INSERT INTO doctors (first_name, last_name, specialty, city, province_id)
+        VALUES (@FirstName, @LastName, @Specialty, @City, @ProvinceId)",
+        newDoctor);
+
+    return Results.Created($"/doctors/{newId}", newDoctor);
+});
+
+// PUT /doctors/{id:long} — actualizar un doctor existente
+app.MapPut("/doctors/{id:long}", (long id, Doctor updatedDoctor) =>
+{
+    // Abrir conexion a la base de datos
+    using var connection = new SqliteConnection(connectionString);
+    // Verificar que el doctor existe antes de actualizar
+    var existing = connection.QueryFirstOrDefault<Doctor>(
+        "SELECT doctor_id FROM doctors WHERE doctor_id = @id", new { id });
+
+    if (existing is null)
+    {
+        return Results.NotFound(new { mensaje = "Doctor no encontrado" });
+    }
+
+    // Ejecutar la actualizacion
+    connection.Execute(@"
+        UPDATE doctors SET
+            first_name = @FirstName,
+            last_name = @LastName,
+            specialty = @Specialty,
+            city = @City,
+            province_id = @ProvinceId
+        WHERE doctor_id = @id", updatedDoctor);
+
+    return Results.NoContent();
+});
+
+// DELETE /doctors/{id:long} — eliminar un doctor
+app.MapDelete("/doctors/{id:long}", (long id) =>
+{
+    // Abrir conexion a la base de datos
+    using var connection = new SqliteConnection(connectionString);
+    // Ejecutar eliminacion
+    var rowsAffected = connection.Execute("DELETE FROM doctors WHERE doctor_id = @id", new { id });
+
+    if (rowsAffected == 0)
+    {
+        return Results.NotFound(new { mensaje = "Doctor no encontrado" });
+    }
+
+    return Results.NoContent();
+});
+
+public record Doctor(long DoctorId, string FirstName, string LastName, string Specialty, string City, long ProvinceId);
 ```
 
----
+**Endpoints para admissions:**
 
-## Notas para el docente
+```csharp
+// GET /admissions — listar todas las admisiones
+app.MapGet("/admissions", () =>
+{
+    // Abrir conexion a la base de datos
+    using var connection = new SqliteConnection(connectionString);
+    var admissions = connection.Query<Admission>("SELECT * FROM admissions");
+    return Results.Ok(admissions);
+});
 
-- El `Program.cs` completo presentado en el anexo es extenso. Proyectarlo en partes: primero los endpoints JOIN, después el CRUD completo. Si algún grupo ya tiene su CRUD propio, solo debe agregar los nuevos endpoints.
-- Verificar que todos los grupos tengan el endpoint de conteo (`/patients/count-by-province`) funcionando antes del cierre, porque es el que se usa en el encuentro 30.
-- Para grupos lentos, establecer un mínimo: el endpoint `GET /patients/with-province` y el de conteo. El JOIN triple puede quedar como extensión.
-- Recordar a los grupos que el trabajo final se defiende en el encuentro 31. El código debe estar completo y probado.
+// GET /admissions/{id:long} — obtener una admision por ID
+app.MapGet("/admissions/{id:long}", (long id) =>
+{
+    // Abrir conexion a la base de datos
+    using var connection = new SqliteConnection(connectionString);
+    // Buscar admision por id con consulta parametrizada
+    var admission = connection.QueryFirstOrDefault<Admission>(@"
+        SELECT admission_id AS AdmissionId,
+               patient_id AS PatientId,
+               doctor_id AS DoctorId,
+               admission_date AS AdmissionDate,
+               discharge_date AS DischargeDate,
+               diagnosis AS Diagnosis
+        FROM admissions
+        WHERE admission_id = @id", new { id });
+
+    return admission is null
+        ? Results.NotFound(new { mensaje = "Admisión no encontrada" })
+        : Results.Ok(admission);
+});
+
+// POST /admissions — crear una nueva admision
+app.MapPost("/admissions", (Admission newAdmission) =>
+{
+    // Abrir conexion a la base de datos
+    using var connection = new SqliteConnection(connectionString);
+    // Insertar admision y obtener el id generado
+    var newId = connection.ExecuteScalar<long>(@"
+        INSERT INTO admissions (patient_id, doctor_id, admission_date, discharge_date, diagnosis)
+        VALUES (@PatientId, @DoctorId, @AdmissionDate, @DischargeDate, @Diagnosis)",
+        newAdmission);
+
+    return Results.Created($"/admissions/{newId}", newAdmission);
+});
+
+// PUT /admissions/{id:long} — actualizar una admision existente
+app.MapPut("/admissions/{id:long}", (long id, Admission updatedAdmission) =>
+{
+    // Abrir conexion a la base de datos
+    using var connection = new SqliteConnection(connectionString);
+    // Verificar que la admision existe antes de actualizar
+    var existing = connection.QueryFirstOrDefault<Admission>(
+        "SELECT admission_id FROM admissions WHERE admission_id = @id", new { id });
+
+    if (existing is null)
+    {
+        return Results.NotFound(new { mensaje = "Admisión no encontrada" });
+    }
+
+    // Ejecutar la actualizacion
+    connection.Execute(@"
+        UPDATE admissions SET
+            patient_id = @PatientId,
+            doctor_id = @DoctorId,
+            admission_date = @AdmissionDate,
+            discharge_date = @DischargeDate,
+            diagnosis = @Diagnosis
+        WHERE admission_id = @id", updatedAdmission);
+
+    return Results.NoContent();
+});
+
+// DELETE /admissions/{id:long} — eliminar una admision
+app.MapDelete("/admissions/{id:long}", (long id) =>
+{
+    // Abrir conexion a la base de datos
+    using var connection = new SqliteConnection(connectionString);
+    // Ejecutar eliminacion
+    var rowsAffected = connection.Execute("DELETE FROM admissions WHERE admission_id = @id", new { id });
+
+    if (rowsAffected == 0)
+    {
+        return Results.NotFound(new { mensaje = "Admisión no encontrada" });
+    }
+
+    return Results.NoContent();
+});
+
+public record Admission(long AdmissionId, long PatientId, long DoctorId, string AdmissionDate, string? DischargeDate, string? Diagnosis);
+```
+
+### Solución: JOIN endpoint `/doctors-with-patients`
+
+```csharp
+// GET /doctors-with-patients — listar doctores con sus pacientes
+app.MapGet("/doctors-with-patients", () =>
+{
+    // Abrir conexion a la base de datos
+    using var connection = new SqliteConnection(connectionString);
+    // Consulta con JOIN entre doctors y patients
+    var sql = @"
+        SELECT d.doctor_id AS DoctorId,
+               d.first_name AS FirstName,
+               d.last_name AS LastName,
+               d.specialty AS Specialty,
+               d.city AS City,
+               d.province_id AS ProvinceId,
+               p.patient_id AS PatientId,
+               p.first_name AS FirstName,
+               p.last_name AS LastName,
+               p.gender AS Gender,
+               p.birth_date AS BirthDate,
+               p.city AS City,
+               p.province_id AS ProvinceId,
+               p.allergies AS Allergies,
+               p.height AS Height,
+               p.weight AS Weight
+        FROM doctors d
+        LEFT JOIN patients p ON d.doctor_id = p.doctor_id
+        ORDER BY d.doctor_id";
+
+    var result = connection.Query<Doctor, Patient, Doctor>(sql, (doctor, patient) =>
+    {
+        // Agregar el paciente a la lista del doctor
+        doctor.Patients ??= new List<Patient>();
+        doctor.Patients.Add(patient);
+        return doctor;
+    }, splitOn: "PatientId");
+
+    // Agrupar por doctor ya que una consulta con JOIN devuelve una fila por paciente
+    var grouped = result.GroupBy(d => d.DoctorId).Select(g => g.First());
+    return Results.Ok(grouped);
+});
+
+public record Doctor(long DoctorId, string FirstName, string LastName, string Specialty, string City, long ProvinceId, List<Patient>? Patients);
+public record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate, string? City, long ProvinceId, string? Allergies, long? Height, long? Weight);
+```
+
+## 2. Solución de la actividad de extensión
+
+### Tests de integración básicos
+
+Los tests de integración verifican que los endpoints responden correctamente a solicitudes HTTP reales. Se recomienda usar `WebApplicationFactory` de ASP.NET Core o probar contra la API en ejecución con `HttpClient`.
+
+**Ejemplo de test para GET /patients:**
+
+```csharp
+// Test: GET /patients devuelve 200 y una lista de pacientes
+// Se ejecuta contra la API en ejecucion en http://localhost:5000
+using var client = new HttpClient();
+var response = await client.GetAsync("http://localhost:5000/patients");
+Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+```
+
+**Ejemplo de test para GET /patients/{id:long} con ID inexistente:**
+
+```csharp
+// Test: GET /patients/99999 devuelve 404
+using var client = new HttpClient();
+var response = await client.GetAsync("http://localhost:5000/patients/99999");
+Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+```
+
+**Ejemplo de test para POST /patients con datos válidos:**
+
+```csharp
+// Test: POST /patients con datos validos devuelve 201
+using var client = new HttpClient();
+var json = "{ \"firstName\": \"Ana\", \"lastName\": \"Lopez\", \"gender\": \"F\", \"birthDate\": \"1990-01-15\" }";
+var content = new StringContent(json, Encoding.UTF8, "application/json");
+var response = await client.PostAsync("http://localhost:5000/patients", content);
+Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+```
+
+**Ejemplo de test para POST /patients con datos faltantes:**
+
+```csharp
+// Test: POST /patients con nombre vacio devuelve 400
+using var client = new HttpClient();
+var json = "{ \"firstName\": \"\", \"lastName\": \"Lopez\" }";
+var content = new StringContent(json, Encoding.UTF8, "application/json");
+var response = await client.PostAsync("http://localhost:5000/patients", content);
+Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+```
+
+## 3. Respuesta esperada del ejercicio
+
+| Endpoint | Método | Código esperado | Cuerpo esperado |
+| --- | --- | --- | --- |
+| `GET /patients` | GET | 200 | Lista de pacientes |
+| `GET /patients/1` | GET | 200 | Paciente con ID 1 |
+| `GET /patients/99999` | GET | 404 | `{ "mensaje": "Paciente no encontrado" }` |
+| `POST /patients` (válido) | POST | 201 | Paciente creado con ID generado |
+| `POST /patients` (nombre vacío) | POST | 400 | `{ "mensaje": "El nombre es obligatorio" }` |
+| `PUT /patients/1` (existente) | PUT | 204 | Sin cuerpo |
+| `PUT /patients/99999` (inexistente) | PUT | 404 | `{ "mensaje": "Paciente no encontrado" }` |
+| `DELETE /patients/1` (existente) | DELETE | 204 | Sin cuerpo |
+| `DELETE /patients/99999` (inexistente) | DELETE | 404 | `{ "mensaje": "Paciente no encontrado" }` |
+| `GET /patients-with-admissions` | GET | 200 | Lista de pacientes con admisiones |
+| `GET /doctors-with-patients` | GET | 200 | Lista de doctores con pacientes |
+
+## 4. Criterios de corrección (lista de verificación)
+
+- ☐ CRUD completo para `patients`, `doctors` y `admissions` (5 endpoints cada uno).
+- ☐ Todos los IDs de records usan `long` (nunca `int`).
+- ☐ Las fechas en records usan `string` (nunca `DateTime` ni `DateOnly`).
+- ☐ Los campos nullable usan `?` (`string?`, `long?`).
+- ☐ Todas las consultas usan alias `AS` para mapear snake_case a PascalCase.
+- ☐ Todas las consultas están parametrizadas (nunca concatenadas).
+- ☐ Las conexiones usan `using var connection` dentro de cada handler.
+- ☐ Los records están declarados después de `app.Run()`.
+- ☐ Los JOINs usan `splitOn` correctamente y agrupan los resultados.
+- ☐ Los tests de integración verifican al menos 5 escenarios (200, 201, 204, 400, 404).
+
+## 5. Errores esperados y cómo intervenir
+
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| `InvalidOperationException` al materializar un record | Usar `int` en lugar de `long` para IDs | Verificar que todos los IDs de tabla usan `long` en el record |
+| `InvalidOperationException` por fecha en el record | Usar `DateTime` o `DateOnly` en lugar de `string` | Usar `string BirthDate` en el record y convertir solo al presentar |
+| SELECT sin alias `AS` y Dapper no encuentra el constructor | Las columnas snake_case no coinciden con los nombres PascalCase | Usar siempre `SELECT column_name AS PascalName` en cada consulta |
+| Concatenar valores al SQL | Práctica antigua o desconocimiento del riesgo | Usar siempre `@param` con `new { param }` en toda consulta |
+| Conexión no cerrada | Olvidar el `using` en la declaración | Usar `using var connection = new SqliteConnection(...)` dentro de cada handler |
+| Record declarado antes de `app.Run()` | Error CS8803 | Escribir `app.Run();` primero y los records después |
+| JOIN devuelve duplicados sin agrupar | No usar `GroupBy` después del JOIN | Explicar que `splitOn` crea objetos separados y hay que agrupar por el padre |
+| Test de integración no conecta a la API | API no está corriendo o puerto diferente | Verificar que `dotnet run` está ejecutándose y el puerto es el correcto |
+
+## 6. Registro de la clase
+
+| Grupo | CRUD patients | CRUD doctors | CRUD admissions | JOINs funcionales | Tests de integración | Observaciones |
+| --- | --- | --- | --- | --- | --- | --- |
+| Grupo 1 | | | | | | |
+| Grupo 2 | | | | | | |
+| Grupo 3 | | | | | | |
+| Grupo 4 | | | | | | |
+
+**Notas para evaluación de proceso:** verificar que cada grupo tenga CRUD completo para las 3 tablas, al menos 2 JOINs funcionales y tests de integración básicos. Registrar qué grupos necesitan acompañamiento adicional en tipos canónicos o en parametrización de consultas.

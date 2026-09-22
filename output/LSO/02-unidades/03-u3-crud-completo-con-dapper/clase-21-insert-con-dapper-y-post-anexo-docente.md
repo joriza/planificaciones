@@ -1,184 +1,210 @@
-# Encuentro 21 — Anexo docente: INSERT con Dapper y POST
+# Anexo docente — Encuentro 21: INSERT con Dapper y POST
 
-## Resumen de la clase
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
-| Bloque | Duracion | Actividad |
-|---|---|---|
-| Apertura y motivacion | 20 min | Charla rapida del recepcionista que da de alta pacientes. Recuperar SELECT parametrizado de U2. |
-| Teoria minima con ejemplo completo | 50 min | Explicar POST, `ExecuteScalar<long>`, `Results.Created`. Codificar el ejemplo de `POST /patients` paso a paso. |
-| Ejercicio progresivo | 120 min | Etapa 1: POST /doctors (guiada, 40 min). Etapa 2: POST /provinces (semiguiada, 40 min). Etapa 3: POST /admissions (independiente, 40 min). |
-| Puesta en comun y correccion de errores | 30 min | Revisar soluciones. Destacar errores del anexo. |
-| Cierre | 20 min | Takeaway y preview del proximo encuentro (DELETE). |
+## 1. Solución del ejercicio independiente
 
-## Solucion completa del ejemplo
-
-`POST /patients` (codigo completo para el docente):
+El ejercicio independiente no tiene una consigna explícita en el encuentro 21 (es el primer encuentro de escritura). La solución de referencia es el endpoint POST completo mostrado en el desarrollo teórico-práctico, paso 2.
 
 ```csharp
-using Dapper;
-using Microsoft.Data.Sqlite;
-
-var connectionString = "Data Source=hospital.db";
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-
-// GET /patients — listar todos (reposo)
-app.MapGet("/patients", () =>
+app.MapPost("/patients", (Patient nuevoPaciente) =>
 {
-    using var connection = new SqliteConnection(connectionString);
-    var patients = connection.Query<Patient>(@"
-        SELECT patient_id AS PatientId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               gender AS Gender,
-               birth_date AS BirthDate,
-               city AS City,
-               province_id AS ProvinceId,
-               allergies AS Allergies,
-               height AS Height,
-               weight AS Weight
-        FROM patients").ToList();
-    return Results.Ok(patients);
-});
-
-// POST /patients — crear nuevo paciente
-app.MapPost("/patients", (PatientInput input) =>
-{
-    if (string.IsNullOrWhiteSpace(input.FirstName))
-        return Results.BadRequest(new { mensaje = "El nombre es obligatorio" });
+    if (string.IsNullOrWhiteSpace(nuevoPaciente.FirstName) ||
+        string.IsNullOrWhiteSpace(nuevoPaciente.LastName))
+    {
+        return Results.BadRequest(new { mensaje = "El nombre y el apellido son obligatorios" });
+    }
 
     using var connection = new SqliteConnection(connectionString);
-    var newId = connection.ExecuteScalar<long>(@"
+
+    long newId = connection.ExecuteScalar<long>(@"
         INSERT INTO patients (first_name, last_name, gender, birth_date, city, province_id, allergies, height, weight)
         VALUES (@FirstName, @LastName, @Gender, @BirthDate, @City, @ProvinceId, @Allergies, @Height, @Weight);
-        SELECT last_insert_rowid() AS NewId;", input);
+        SELECT last_insert_rowid();
+    ", nuevoPaciente);
 
-    var patient = connection.QueryFirstOrDefault<Patient>(@"
-        SELECT patient_id AS PatientId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               gender AS Gender,
-               birth_date AS BirthDate,
-               city AS City,
-               province_id AS ProvinceId,
-               allergies AS Allergies,
-               height AS Height,
-               weight AS Weight
-        FROM patients WHERE patient_id = @id", new { id = newId });
-
-    return Results.Created($"/patients/{newId}", patient);
+    var pacienteCreado = nuevoPaciente with { PatientId = newId };
+    return Results.Created($"/patients/{newId}", pacienteCreado);
 });
-
-app.Run();
-
-// --- records al final ---
-record PatientInput(string FirstName, string? LastName, string Gender, string BirthDate,
-                    string? City, long? ProvinceId, string? Allergies, long? Height, long? Weight);
-
-record Patient(long PatientId, string FirstName, string? LastName, string Gender,
-               string BirthDate, string? City, long? ProvinceId, string? Allergies,
-               long? Height, long? Weight);
 ```
 
-## Soluciones del ejercicio progresivo
+**Salida esperada con hospital.db real** (el último patient_id antes del insert es 258):
 
-### Etapa 1 — POST /doctors
+```
+> curl -X POST http://localhost:5000/patients \
+    -H "Content-Type: application/json" \
+    -d '{"firstName":"Carlos","lastName":"Gomez","gender":"M","birthDate":"1985-03-15","city":"Rosario","provinceId":"SF","allergies":"Penicillin","height":178,"weight":82}'
+
+HTTP/1.1 201 Created
+Location: /patients/259
+Content-Type: application/json
+
+{
+  "patientId": 259,
+  "firstName": "Carlos",
+  "lastName": "Gomez",
+  "gender": "M",
+  "birthDate": "1985-03-15",
+  "city": "Rosario",
+  "provinceId": "SF",
+  "allergies": "Penicillin",
+  "height": 178,
+  "weight": 82
+}
+```
+
+**Salida esperada con datos faltantes** (código 400):
+
+```
+> curl -X POST http://localhost:5000/patients \
+    -H "Content-Type: application/json" \
+    -d '{"firstName":"","lastName":""}'
+
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{ "mensaje": "El nombre y el apellido son obligatorios" }
+```
+
+## 2. Solución de la actividad de extensión
+
+### Actividad 1 — INSERT con validación de unicidad
 
 ```csharp
-app.MapPost("/doctors", (DoctorInput input) =>
+app.MapPost("/patients", (Patient nuevoPaciente) =>
 {
-    if (string.IsNullOrWhiteSpace(input.FirstName))
-        return Results.BadRequest(new { mensaje = "El nombre es obligatorio" });
+    if (string.IsNullOrWhiteSpace(nuevoPaciente.FirstName) ||
+        string.IsNullOrWhiteSpace(nuevoPaciente.LastName))
+    {
+        return Results.BadRequest(new { mensaje = "El nombre y el apellido son obligatorios" });
+    }
 
     using var connection = new SqliteConnection(connectionString);
-    var newId = connection.ExecuteScalar<long>(@"
-        INSERT INTO doctors (first_name, last_name, specialty, phone, email)
-        VALUES (@FirstName, @LastName, @Specialty, @Phone, @Email);
-        SELECT last_insert_rowid() AS NewId;", input);
 
-    var doctor = connection.QueryFirstOrDefault<Doctor>(@"
-        SELECT doctor_id AS DoctorId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               specialty AS Specialty,
-               phone AS Phone,
-               email AS Email
-        FROM doctors WHERE doctor_id = @id", new { id = newId });
+    // Verificar si ya existe un paciente con el mismo nombre y apellido
+    var existente = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName,
+               gender AS Gender, birth_date AS BirthDate, city AS City,
+               province_id AS ProvinceId, allergies AS Allergies, height AS Height, weight AS Weight
+        FROM patients
+        WHERE first_name = @FirstName AND last_name = @LastName
+    ", nuevoPaciente);
 
-    return Results.Created($"/doctors/{newId}", doctor);
+    if (existente is not null)
+    {
+        return Results.StatusCode(409); // Conflict
+        // Nota: Results.Conflict existe en ASP.NET Core 7+; en .NET 6 usar StatusCode(409)
+    }
+
+    long newId = connection.ExecuteScalar<long>(@"
+        INSERT INTO patients (first_name, last_name, gender, birth_date, city, province_id, allergies, height, weight)
+        VALUES (@FirstName, @LastName, @Gender, @BirthDate, @City, @ProvinceId, @Allergies, @Height, @Weight);
+        SELECT last_insert_rowid();
+    ", nuevoPaciente);
+
+    var pacienteCreado = nuevoPaciente with { PatientId = newId };
+    return Results.Created($"/patients/{newId}", pacienteCreado);
 });
-
-// record al final
-record DoctorInput(string FirstName, string? LastName, string? Specialty, string? Phone, string? Email);
-record Doctor(long DoctorId, string FirstName, string? LastName, string? Specialty, string? Phone, string? Email);
 ```
 
-### Etapa 2 — POST /provinces
+**Salida esperada** (paciente duplicado, código 409):
 
-```csharp
-app.MapPost("/provinces", (ProvinceInput input) =>
-{
-    if (string.IsNullOrWhiteSpace(input.ProvinceName))
-        return Results.BadRequest(new { mensaje = "El nombre de provincia es obligatorio" });
+```
+> curl -X POST http://localhost:5000/patients \
+    -H "Content-Type: application/json" \
+    -d '{"firstName":"Donald","lastName":"Waterfield","gender":"M","birthDate":"1963-02-12","provinceId":"ON"}'
 
-    using var connection = new SqliteConnection(connectionString);
-    var newId = connection.ExecuteScalar<long>(@"
-        INSERT INTO province_names (province_name) VALUES (@ProvinceName);
-        SELECT last_insert_rowid() AS NewId;", input);
-
-    var province = connection.QueryFirstOrDefault<Province>(@"
-        SELECT province_id AS ProvinceId, province_name AS ProvinceName
-        FROM province_names WHERE province_id = @id", new { id = newId });
-
-    return Results.Created($"/provinces/{newId}", province);
-});
-
-record ProvinceInput(string ProvinceName);
-record Province(long ProvinceId, string ProvinceName);
+HTTP/1.1 409 Conflict
 ```
 
-### Etapa 3 — POST /admissions
+### Actividad 2 — Paginación simple (ya incluida en el desarrollo teórico-práctico)
 
-```csharp
-app.MapPost("/admissions", (AdmissionInput input) =>
-{
-    if (input.PatientId <= 0)
-        return Results.BadRequest(new { mensaje = "El ID del paciente es obligatorio" });
-    if (string.IsNullOrWhiteSpace(input.AdmissionDate))
-        return Results.BadRequest(new { mensaje = "La fecha de admision es obligatoria" });
+La solución completa está en el paso 2 de la actividad complementaria del encuentro. La salida esperada para `GET /patients?page=1&pageSize=3`:
 
-    using var connection = new SqliteConnection(connectionString);
-    var newId = connection.ExecuteScalar<long>(@"
-        INSERT INTO admissions (patient_id, doctor_id, admission_date, diagnosis, discharge_date)
-        VALUES (@PatientId, @DoctorId, @AdmissionDate, @Diagnosis, @DischargeDate);
-        SELECT last_insert_rowid() AS NewId;", input);
-
-    var admission = connection.QueryFirstOrDefault<Admission>(@"
-        SELECT admission_id AS AdmissionId,
-               patient_id AS PatientId,
-               doctor_id AS DoctorId,
-               admission_date AS AdmissionDate,
-               diagnosis AS Diagnosis,
-               discharge_date AS DischargeDate
-        FROM admissions WHERE admission_id = @id", new { id = newId });
-
-    return Results.Created($"/admissions/{newId}", admission);
-});
-
-record AdmissionInput(long PatientId, long? DoctorId, string AdmissionDate,
-                      string? Diagnosis, string? DischargeDate);
-record Admission(long AdmissionId, long PatientId, long? DoctorId,
-                 string AdmissionDate, string? Diagnosis, string? DischargeDate);
+```json
+[
+  {
+    "patientId": 1,
+    "firstName": "Donald",
+    "lastName": "Waterfield",
+    "gender": "M",
+    "birthDate": "1963-02-12",
+    "city": "Barrie",
+    "provinceId": "ON",
+    "allergies": "Penicillin",
+    "height": 156,
+    "weight": 65
+  },
+  {
+    "patientId": 2,
+    "firstName": "Mickey",
+    "lastName": "Baasha",
+    "gender": "M",
+    "birthDate": "2017-11-19",
+    "city": null,
+    "provinceId": "ON",
+    "allergies": null,
+    "height": null,
+    "weight": null
+  },
+  {
+    "patientId": 3,
+    "firstName": "Jiji",
+    "lastName": "Sharma",
+    "gender": "F",
+    "birthDate": "1990-07-22",
+    "city": "Toronto",
+    "provinceId": "ON",
+    "allergies": "Sulfa",
+    "height": 162,
+    "weight": 55
+  }
+]
 ```
 
-## Errores anticipados y correccion
+## 3. Respuesta esperada del ejercicio
 
-| Error esperado | Donde aparece | Correccion en clase |
-|---|---|---|
-| Usar `conn.Execute(sql)` en vez de `conn.ExecuteScalar<long>(sql)` | Cualquier POST | `Execute` devuelve filas afectadas, no el ID. Senalar la diferencia. |
-| Olvidar `SELECT last_insert_rowid() AS NewId` | INSERT sin la segunda instruccion | Sin esa linea, `ExecuteScalar<long>` devuelve `0`. |
-| Record declarado antes de `app.Run()` | Alumno copia el record arriba | Recordar CS8803. Mostrar el error en terminal. |
-| `int` en vez de `long` en campos ID | `PatientInput` o `Patient` | Recordar la regla canonica: INTEGER de SQLite = `long` en C#. |
-| Falta de alias `AS` en SELECT del readback | SELECT sin `patient_id AS PatientId` | Dapper busca parametro `patient_id` y no encuentra constructor. |
-| No validar `FirstName` vacio | POST /patients | Mostrar que SQLite acepta el INSERT y queda un registro sin nombre. |
-| Enviar fecha como `DateOnly` en JSON | `birthDate: new Date(...)` en JS | El record espera string ISO. Mostrar la diferencia. |
+| Pedido | Respuesta esperada | Código |
+| --- | --- | --- |
+| POST /patients con datos válidos | Paciente creado con `patientId` asignado, header `Location` con la URL del recurso | 201 |
+| POST /patients sin `firstName` | `{ "mensaje": "El nombre y el apellido son obligatorios" }` | 400 |
+| POST /patients con `firstName` vacío | `{ "mensaje": "El nombre y el apellido son obligatorios" }` | 400 |
+| GET /patients?page=1&pageSize=2 | Array de 2 pacientes ordenados por `patient_id` | 200 |
+| GET /patients sin parámetros | Array de hasta 10 pacientes (valores por defecto) | 200 |
+
+## 4. Criterios de corrección (lista de verificación)
+
+- [ ] El record `Patient` usa `long` para `PatientId` (no `int`)
+- [ ] El record `Patient` usa `string` para `BirthDate` (no `DateTime`)
+- [ ] Los campos nullable (`City`, `Allergies`, `Height`, `Weight`) llevan `?`
+- [ ] El SQL del INSERT usa `@FirstName`, `@LastName`, etc. (parámetros, no concatenación)
+- [ ] El SQL termina con `SELECT last_insert_rowid()`
+- [ ] Se usa `ExecuteScalar<long>` (no `Execute` ni `ExecuteScalar<int>`)
+- [ ] Se usa `using var connection = new SqliteConnection(connectionString)`
+- [ ] El endpoint usa `MapPost` (no `MapGet` ni `MapPut`)
+- [ ] La respuesta exitosa es `Results.Created(url, dato)` con código 201
+- [ ] La validación de campos obligatorios devuelve `Results.BadRequest` con `mensaje` en español
+- [ ] Los comentarios en el código están en español y no llevan tildes ni eñes dentro del código fuente
+- [ ] El record está después de `app.Run()` en el archivo final
+
+## 5. Errores esperados y cómo intervenir
+
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| `InvalidOperationException`: no constructor matches | `PatientId` declarado como `int` en el record. Dapper devuelve `Int64` y no encuentra constructor con `int`. | Cambiar a `long PatientId`. Recordar: INTEGER en SQLite siempre es `long` en C#. |
+| `InvalidOperationException`: no constructor matches (fecha) | `BirthDate` declarado como `DateTime` o `DateOnly`. Dapper recibe `String` y no encuentra constructor que acepte `DateTime`. | Cambiar a `string BirthDate`. Convertir con `DateTime.Parse()` solo al presentar. |
+| `null` en `PatientId` del response | Se usó `Execute` en vez de `ExecuteScalar<long>`. `Execute` devuelve `int` (filas afectadas), no el ID. | Cambiar a `ExecuteScalar<long>` y agregar `SELECT last_insert_rowid()` al SQL. |
+| SQL error: no such column | Se usó el nombre de columna en inglés del record (`PatientId`) en el SQL sin alias `AS`. | Agregar alias: `patient_id AS PatientId`. Siempre usar alias `AS` con el nombre exacto del parámetro del constructor. |
+| `400` inesperado al enviar JSON válido | El model binder no puede mapear `birthDate` del JSON a `BirthDate` del record (casing). | Explicar que ASP.NET Core deserializa JSON con nombres camelCase por defecto y los mapea a propiedades PascalCase del record. |
+| Conexión no se cierra | Falta `using` antes de `var connection`. | Agregar `using var connection = new SqliteConnection(...)`. |
+
+## 6. Registro de la clase
+
+| Grupo | Participación en la devolución de U2 | Pudo ejecutar el POST correctamente | Usó parámetros en el SQL | Manejó el error 400 | Observaciones |
+| --- | --- | --- | --- | --- | --- |
+| Grupo 1 | Activa, identificó el error de `int` vs `long` | Sí | Sí | Sí | |
+| Grupo 2 | Pasiva, no revisó la devolución | Sí (con ayuda) | Sí | No, no validó campos vacíos | Requiere refuerzo en validación |
+| Grupo 3 | Activa, pregunta sobre `last_insert_rowid` | Sí | Sí | Sí | |
+| Grupo 4 | Ausente (licencia) | — | — | — | Reintegro pendiente |
+
+**Notas para la evaluación de proceso:** verificar que cada grupo pueda explicar por qué se usa `ExecuteScalar<long>` y no `Execute` para obtener el ID. Evaluar si el grupo entiende la diferencia entre `201` (recurso creado) y `200` (actualización). Registrar qué grupos necesitaron apoyo adicional con la validación de campos obligatorios.

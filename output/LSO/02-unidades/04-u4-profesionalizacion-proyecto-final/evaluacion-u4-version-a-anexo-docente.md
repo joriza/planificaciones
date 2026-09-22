@@ -1,218 +1,84 @@
-# Anexo docente — Evaluación U4 Versión A (Proyecto final sobre pacientes)
+# Anexo docente — Evaluación de la Unidad 4 — Encuentro 32 — Versión A
 
-## Solución completa
+> Documento docente formal. No se entrega a los alumnos: contiene la solución completa de la versión A, las respuestas esperadas de los ítems conceptuales, los criterios de corrección ítem por ítem y la pauta de devolución.
 
-El `Program.cs` completo para la versión A (ubicado en `trabajo-final/`):
+## 1. Solución completa — Flujo de profesionalización
 
-```csharp
-using Dapper;
-using Microsoft.Data.Sqlite;
+### 1.1 Creación de la rama por feature
 
-var connectionString = "Data Source=hospital.db";
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-
-// GET /patients — listar todos
-app.MapGet("/patients", () =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var patients = connection.Query<Patient>(@"
-        SELECT patient_id AS PatientId, first_name AS FirstName,
-               last_name AS LastName, gender AS Gender,
-               birth_date AS BirthDate, city AS City,
-               province_id AS ProvinceId, allergies AS Allergies,
-               height AS Height, weight AS Weight
-        FROM patients ORDER BY last_name").ToList();
-    return Results.Ok(patients);
-});
-
-// GET /patients/{id:long} — buscar por ID
-app.MapGet("/patients/{id:long}", (long id) =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var patient = connection.QueryFirstOrDefault<Patient>(@"
-        SELECT patient_id AS PatientId, first_name AS FirstName,
-               last_name AS LastName, gender AS Gender,
-               birth_date AS BirthDate, city AS City,
-               province_id AS ProvinceId, allergies AS Allergies,
-               height AS Height, weight AS Weight
-        FROM patients WHERE patient_id = @id", new { id });
-    return patient is null
-        ? Results.NotFound(new { mensaje = "Paciente no encontrado" })
-        : Results.Ok(patient);
-});
-
-// GET /patients/with-province — pacientes con nombre de provincia
-app.MapGet("/patients/with-province", () =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var patients = connection.Query<PatientWithProvince>(@"
-        SELECT p.patient_id AS PatientId, p.first_name AS FirstName,
-               p.last_name AS LastName, p.gender AS Gender,
-               p.birth_date AS BirthDate, p.city AS City,
-               pn.province_name AS ProvinceName, p.allergies AS Allergies,
-               p.height AS Height, p.weight AS Weight
-        FROM patients p
-        JOIN province_names pn ON p.province_id = pn.province_id
-        ORDER BY p.last_name, p.first_name").ToList();
-    return Results.Ok(patients);
-});
-
-// GET /patients/count-by-province — conteo por provincia
-app.MapGet("/patients/count-by-province", () =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var counts = connection.Query<ProvinceCount>(@"
-        SELECT pn.province_id AS ProvinceId, pn.province_name AS ProvinceName,
-               COUNT(p.patient_id) AS PatientCount
-        FROM province_names pn
-        LEFT JOIN patients p ON pn.province_id = p.province_id
-        GROUP BY pn.province_id, pn.province_name
-        ORDER BY pn.province_name").ToList();
-    return Results.Ok(counts);
-});
-
-// POST /patients — crear paciente
-app.MapPost("/patients", (PatientInput input) =>
-{
-    if (string.IsNullOrWhiteSpace(input.FirstName))
-        return Results.BadRequest(new { mensaje = "El nombre es obligatorio" });
-
-    using var connection = new SqliteConnection(connectionString);
-    var newId = connection.ExecuteScalar<long>(@"
-        INSERT INTO patients (first_name, last_name, gender, birth_date,
-                              city, province_id, allergies, height, weight)
-        VALUES (@FirstName, @LastName, @Gender, @BirthDate,
-                @City, @ProvinceId, @Allergies, @Height, @Weight);
-        SELECT last_insert_rowid()", input);
-
-    var patient = connection.QueryFirstOrDefault<Patient>(@"
-        SELECT patient_id AS PatientId, first_name AS FirstName,
-               last_name AS LastName, gender AS Gender,
-               birth_date AS BirthDate, city AS City,
-               province_id AS ProvinceId, allergies AS Allergies,
-               height AS Height, weight AS Weight
-        FROM patients WHERE patient_id = @id", new { id = newId });
-
-    return Results.Created($"/patients/{newId}", patient);
-});
-
-// PUT /patients/{id:long} — actualizar paciente
-app.MapPut("/patients/{id:long}", (long id, PatientInput input) =>
-{
-    if (string.IsNullOrWhiteSpace(input.FirstName))
-        return Results.BadRequest(new { mensaje = "El nombre es obligatorio" });
-
-    using var connection = new SqliteConnection(connectionString);
-    var existente = connection.QueryFirstOrDefault<Patient>(@"
-        SELECT patient_id AS PatientId, first_name AS FirstName,
-               last_name AS LastName, gender AS Gender,
-               birth_date AS BirthDate, city AS City,
-               province_id AS ProvinceId, allergies AS Allergies,
-               height AS Height, weight AS Weight
-        FROM patients WHERE patient_id = @id", new { id });
-
-    if (existente is null)
-        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
-
-    connection.Execute(@"
-        UPDATE patients SET first_name = @FirstName, last_name = @LastName,
-            gender = @Gender, birth_date = @BirthDate, city = @City,
-            province_id = @ProvinceId, allergies = @Allergies,
-            height = @Height, weight = @Weight
-        WHERE patient_id = @Id",
-        new { input.FirstName, input.LastName, input.Gender, input.BirthDate,
-              input.City, input.ProvinceId, input.Allergies, input.Height,
-              input.Weight, Id = id });
-
-    return Results.NoContent();
-});
-
-// DELETE /patients/{id:long} — eliminar paciente
-app.MapDelete("/patients/{id:long}", (long id) =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    int filas = connection.Execute("DELETE FROM patients WHERE patient_id = @id", new { id });
-
-    if (filas == 0)
-        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
-
-    return Results.NoContent();
-});
-
-// GET /doctors/{id:long} — buscar doctor por ID
-app.MapGet("/doctors/{id:long}", (long id) =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var doctor = connection.QueryFirstOrDefault<Doctor>(@"
-        SELECT doctor_id AS DoctorId, first_name AS FirstName,
-               last_name AS LastName, specialty AS Specialty
-        FROM doctors WHERE doctor_id = @id", new { id });
-    return doctor is null
-        ? Results.NotFound(new { mensaje = "Doctor no encontrado" })
-        : Results.Ok(doctor);
-});
-
-app.Run();
-
-record PatientInput(string FirstName, string LastName, string Gender,
-                    string BirthDate, string? City, string ProvinceId,
-                    string? Allergies, long? Height, long? Weight);
-
-record Patient(long PatientId, string FirstName, string LastName, string Gender,
-               string BirthDate, string? City, string ProvinceId, string? Allergies,
-               long? Height, long? Weight);
-
-record PatientWithProvince(long PatientId, string FirstName, string LastName, string Gender,
-                           string BirthDate, string? City, string ProvinceName, string? Allergies,
-                           long? Height, long? Weight);
-
-record ProvinceCount(string ProvinceId, string ProvinceName, long PatientCount);
-
-record Doctor(long DoctorId, string FirstName, string LastName, string Specialty);
+```bash
+git checkout main
+git pull origin main
+git checkout -b feature/get-doctors
 ```
 
-## Tabla de puntaje detallada
+### 1.2 Resolver el issue
 
-| ✔ | Criterio | Pts | Notas |
-|---|---|---|---|
-| ☐ | GET /patients | 3 | Ordenado por last_name |
-| ☐ | GET /patients/{id} — 200 | 2 | |
-| ☐ | GET /patients/{id} — 404 | 1 | |
-| ☐ | GET /patients/with-province | 4 | JOIN con province_names |
-| ☐ | GET /patients/count-by-province | 4 | LEFT JOIN + GROUP BY |
-| ☐ | POST /patients — crea y 201 | 3 | |
-| ☐ | POST /patients — valida | 2 | 400 si FirstName vacío |
-| ☐ | PUT /patients/{id} — actualiza | 2 | 204 |
-| ☐ | PUT /patients/{id} — 404 | 2 | |
-| ☐ | DELETE /patients/{id} — 204 | 2 | |
-| ☐ | DELETE /patients/{id} — 404 | 2 | |
-| ☐ | GET /doctors/{id} | 3 | 200 o 404 |
-| ☐ | Tipos canónicos | 5 | long, string, ? |
-| ☐ | Alias AS | 4 | |
-| ☐ | using conexiones | 4 | |
-| ☐ | Results.* | 4 | |
-| ☐ | Records al final | 3 | |
-| ☐ | Issues | 5 | 2+ creados y cerrados |
-| ☐ | Ramas feature | 5 | feature/... |
-| ☐ | PR con revisión | 5 | 2+ mergeados |
-| ☐ | Main protegida | 5 | |
-| ☐ | README nombre/desc | 2 | |
-| ☐ | README requisitos | 2 | |
-| ☐ | README estructura | 2 | |
-| ☐ | README tecnologías | 2 | |
-| ☐ | README integrantes | 2 | |
-| ☐ | Defensa individual | 20 | Aparte |
-| | **Total** | **100** | |
+El alumno implementa el endpoint `GET /doctors` en su repositorio local, hace commit y push a la rama `feature/get-doctors`.
 
-## Equivalencia con versión B
+### 1.3 Abrir la PR
 
-| Aspecto | Versión A | Versión B |
-|---|---|---|
-| Tabla principal CRUD | patients | doctors |
-| JOIN con | province_names | admissions (conteo) |
-| Segunda tabla | doctors | patients |
-| Query string / filtro | Ninguno | ?search= |
-| Defensa | Individual, 8+2 min | Individual, 8+2 min |
-| Puntaje | 100 | 100 |
-| Dificultad | Equivalente | Equivalente |
+Desde GitHub, se abre una Pull Request de `feature/get-doctors` a `main` con una descripción clara:
+
+```
+Implementación del endpoint GET /doctors
+
+- Agrega el record Doctor con tipos canónicos (long para DoctorId)
+- Implementa GET /doctors que retorna la lista completa de doctores
+- Implementa GET /doctors/{doctorId:long} con manejo de 404
+- Usa consultas parametrizadas y alias AS en todos los SELECT
+- Sigue las convenciones del curso (convenciones-tecnicas.md)
+```
+
+### 1.4 Revisión de la PR
+
+El docente (o un compañero) revisa la PR y agrega al menos un comentario de revisión aprobándola o sugiriendo mejoras.
+
+### 1.5 Merge a main
+
+Una vez aprobada la PR, se realiza el merge a `main`. La rama `feature/get-doctors` se puede eliminar después del merge.
+
+### 1.6 Protección de main
+
+En la configuración del repositorio GitHub:
+1. Ir a Settings → Branches → Branch protection rules → Add rule.
+2. Branch name pattern: `main`.
+3. Marcar "Require a pull request before merging".
+4. Marcar "Require approvals" y establecer al menos 1.
+5. Marcar "Include administrators" si aplica.
+6. Guardar la regla.
+
+## 2. Solución del ejercicio de profesionalización
+
+El ejercicio de profesionalización evalúa que el alumno pueda:
+1. Crear una rama por feature desde `main`.
+2. Trabajar en la rama sin afectar `main`.
+3. Abrir una PR con descripción clara.
+4. Recibir y aplicar revisión de PR.
+5. Hacer merge a `main` solo después de la aprobación.
+6. Demostrar que `main` está protegida contra push directo.
+
+## 3. Respuestas esperadas de los ítems conceptuales
+
+| Ítem | Pregunta | Respuesta esperada |
+| --- | --- | --- |
+| 4.1 | ¿Por qué se protege la rama `main`? | Para evitar pushes directos que puedan romper la rama principal; toda changes debe pasar por revisión de PR. Esto asegura que solo código revisado y aprobado llegue a la rama principal. |
+| 4.2 | ¿Qué diferencia hay entre una rama por feature y trabajar directamente en `main`? | Las ramas por feature aislán los cambios, permiten revisión, y facilitan la trazabilidad de cada mejora. Trabajar directamente en `main` mezcla cambios, dificulta la reversión y no permite revisión previa. |
+
+## 4. Criterios de corrección ítem por ítem
+
+| Ítem | Puntos | Qué se observa | Error previsto | Intervención |
+| --- | --- | --- | --- | --- |
+| 1.1 Crear rama por feature | 10 | La rama `feature/get-doctors` existe y parte de `main`. | Rama creada desde otra rama; nombre incorrecto. | Verificar la rama y su origen en `main`. |
+| 1.2 Resolver el issue en la rama | 10 | El endpoint GET /doctors está implementado en la rama de feature. | Endpoint no funcional; cambios en `main` directamente. | Verificar que los cambios están en la rama de feature y no en `main`. |
+| 1.3 Abrir PR con descripción | 10 | La PR está abierta desde `feature/get-doctors` a `main` con descripción clara. | PR sin descripción; dirección incorrecta de la PR. | Verificar la dirección y la descripción de la PR. |
+| 1.4 Revisión de la PR | 10 | Al menos un comentario de revisión en la PR. | Sin revisión; revisión genérica sin contenido. | Verificar que existe al menos un comentario de revisión sustantivo. |
+| 2.1 Protección de main | 15 | La rama `main` tiene protección que requiere al menos 1 revisión de PR. | Protección no configurada; configuración incorrecta. | Verificar la configuración de protección de ramas en GitHub. |
+| 2.2 Demostrar que no es posible push directo | 10 | El alumno explica o demuestra que el push directo a `main` está bloqueado. | No puede explicar la protección; intenta push directo y falla. | Verificar que el alumno entiende el propósito de la protección. |
+| 3.1 README de portada | 20 | El README incluye título, descripción, instalación, uso de la API, y convenciones. | README incompleto; sin instrucciones de uso; sin convenciones. | Verificar que todas las secciones requeridas están presentes. |
+| 4.1 Pregunta conceptual protección de main | 8 | Respuesta correcta sobre el propósito de proteger `main`. | Respuesta incorrecta o incompleta. | Guiar al alumno a recordar el propósito de las ramas protegidas. |
+| 4.2 Pregunta conceptual rama por feature | 7 | Respuesta correcta sobre la diferencia entre rama por feature y `main`. | Respuesta incorrecta o incompleta. | Guiar al alumno a recordar los beneficios del aislamiento de cambios. |
+
+## 5. Pauta de devolución
+
+Se devuelve la evaluación con los puntos obtenidos por cada ítem. Se indica qué ítems están pendientes y qué correcciones se esperan. Si el alumno no alcanza 60 puntos, se le asigna la versión alternativa (B) para recuperación. Se registra la nota en la planilla con los comentarios del docente.

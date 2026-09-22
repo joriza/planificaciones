@@ -3,14 +3,14 @@
 # No forma parte del flujo de creación del material didáctico: es una acción manual.
 #
 # Uso (desde la raíz del repositorio):
-#   powershell -File tools\convertir-a-pdf.ps1 -Materia LAP
-#   powershell -File tools\convertir-a-pdf.ps1 -Materia LAP -Combinado
-#   powershell -File tools\convertir-a-pdf.ps1 -Materia LAP -Combinado -Unidad 1
-#   powershell -File tools\convertir-a-pdf.ps1 -Materia LAP -SoloAnexos
-#   powershell -File tools\convertir-a-pdf.ps1 -Materia LAP -Css mi-plantilla.css
+#   powershell -File tools\convertir-a-pdf.ps1 -Materia LPR
+#   powershell -File tools\convertir-a-pdf.ps1 -Materia LPR -Combinado
+#   powershell -File tools\convertir-a-pdf.ps1 -Materia LPR -Combinado -Unidad 1
+#   powershell -File tools\convertir-a-pdf.ps1 -Materia LPR -SoloAnexos
+#   powershell -File tools\convertir-a-pdf.ps1 -Materia LPR -Css mi-plantilla.css
 #
 # Parametros:
-#   -Materia   (obligatorio) nombre de la carpeta en output/ (ej. LAP, LSO).
+#   -Materia   (obligatorio) nombre de la carpeta en output/ (ej. LPR, LSO).
 #   -Css       ruta a una plantilla CSS (por defecto: input/plantillas/print.css).
 #   -Combinado  (switch) genera UN PDF por subcarpeta (unidad, encuadre, etc.) en vez de uno por archivo.
 #   -SoloAnexos (switch) genera UN PDF de anexos docente por carpeta (<carpeta>-anexo-docente.pdf).

@@ -1,98 +1,294 @@
-# Anexo docente — Encuentro 12: Dapper: Query\<T\> con alias
+# Anexo docente — Encuentro 12: Dapper: Query<T> con alias
 
-**Tipo:** Anexo docente — material exclusivo para el profesorado. No se entrega a los alumnos.
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
----
+## 1. Solución del ejercicio independiente
 
-## Encuadre
-
-Este encuentro marca el ingreso al Eje 4. Es el primer contacto con Dapper. Los alumnos ya conocen SQLite y SQL básico (SELECT, WHERE, JOIN, ORDER BY) desde los encuentros E10 y E11, donde escribian todo el loop de `SqliteDataReader` a mano. Ahora Dapper automatiza esa transcripcion. El salto es grande: pasan de 15 líneas de lectura manual a 1 línea con `Query<T>`. El foco esta en tres conceptos: (1) instalación de Dapper, (2) records posicionales con tipos canónicos, (3) alias AS obligatorios.
-
----
-
-## Qué observar durante la práctica
-
-- **Ubicación del record**: el error CS8803 (tipo declarado antes de top-level statements) es el más frecuente. Los records deben ir después de `app.Run()`. Ayudar a los alumnos a moverlos si el proyecto no compila.
-- **Alias AS**: sin alias, Dapper busca `first_name` como parámetro del constructor y falla. Verificar que todos los SELECT usen `AS PascalCase`.
-- **Tipos canónicos**: `doctor_id` debe ser `long DoctorId`, no `int`. Las fechas como `string BirthDate`, no `DateTime`. Los campos nulables con `?` (`string? Allergies`).
-- **`.ToList()`**: sin esto, `Query<T>` devuelve `IEnumerable<T>` y el JSON se ve bien, pero puede comportarse distinto en ciertos contextos.
-- **Paquetes**: verificar que ambos paquetes (Dapper y Microsoft.Data.Sqlite) estén instalados. Si falta Dapper, la compilación falla porque `Query<T>` no se encuentra.
-
----
-
-## Solución completa (ejercicio independiente)
+### Consigna 1 — `/provinces`
 
 ```csharp
-using Dapper;
-using Microsoft.Data.Sqlite;
-
-var connectionString = "Data Source=hospital.db";
-
-app.MapGet("/doctors", () =>
+// GET /provinces — listar todas las provincias
+app.MapGet("/provinces", () =>
 {
     using var connection = new SqliteConnection(connectionString);
-
-    var doctors = connection.Query<Doctor>(@"
-        SELECT doctor_id AS DoctorId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               specialty AS Specialty
-        FROM doctors
-        ORDER BY last_name
+    var provinces = connection.Query<Province>(@"
+        SELECT province_id AS ProvinceId,
+               province_name AS ProvinceName
+        FROM province_names
+        ORDER BY province_name
     ").ToList();
 
-    return Results.Ok(doctors);
+    return Results.Ok(provinces);
 });
-
-app.Run();
-
-public record Doctor(long DoctorId, string FirstName, string LastName, string Specialty);
 ```
 
-Probar en `http://localhost:5000/doctors`. Debe devolver 27 médicos ordenados por apellido, con campos camelCase.
+Record correspondiente:
 
----
+```csharp
+// Record para provincias: province_id es TEXT -> string (no nullable, es PK)
+// province_name es TEXT -> string (not null)
+public record Province(
+    string ProvinceId,
+    string ProvinceName
+);
+```
 
-## Errores previsibles
+**Salida esperada al navegar a `http://localhost:5000/provinces`:**
 
-Incluye los defectos de la checklist de `convenciones-tecnicas.md`:
+```json
+[
+  {
+    "provinceId": "AB",
+    "provinceName": "Alberta"
+  },
+  {
+    "provinceId": "BC",
+    "provinceName": "British Columbia"
+  },
+  {
+    "provinceId": "MB",
+    "provinceName": "Manitoba"
+  },
+  {
+    "provinceId": "NB",
+    "provinceName": "New Brunswick"
+  },
+  {
+    "provinceId": "NL",
+    "provinceName": "Newfoundland and Labrador"
+  },
+  {
+    "provinceId": "NS",
+    "provinceName": "Nova Scotia"
+  },
+  {
+    "provinceId": "NT",
+    "provinceName": "Northwest Territories"
+  },
+  {
+    "provinceId": "NU",
+    "provinceName": "Nunavut"
+  },
+  {
+    "provinceId": "ON",
+    "provinceName": "Ontario"
+  },
+  {
+    "provinceId": "PE",
+    "provinceName": "Prince Edward Island"
+  },
+  {
+    "provinceId": "QC",
+    "provinceName": "Quebec"
+  },
+  {
+    "provinceId": "SK",
+    "provinceName": "Saskatchewan"
+  },
+  {
+    "provinceId": "YT",
+    "provinceName": "Yukon"
+  }
+]
+```
 
-| Error | Cómo se manifiesta | Corrección |
-|-------|-------------------|------------|
-| **ID declarado como `int` en el record** | `InvalidOperationException`: Dapper busca constructor `(Int64, String)` pero el record ofrece `(int, String)` | Usar `long DoctorId` |
-| **Fecha declarada como `DateTime`** | `InvalidOperationException`: Dapper recibe `String` de TEXT y no encuentra constructor | Usar `string BirthDate` |
-| **Columna INTEGER nullable como `int?`** | `InvalidOperationException`: Dapper espera `Int64` | Usar `long? Height` |
-| **SELECT sin alias AS** | `InvalidOperationException`: Dapper busca constructor con parámetros snake_case | Usar `SELECT patient_id AS PatientId, ...` |
-| **Records antes de `app.Run()`** | Error CS8803 | Mover records después de `app.Run()` |
-| **Olvidar `?` en campos nulables** | Dapper asigna `null` pero la propiedad no nulable lo oculta | Declarar como `string?` o `long?` |
-| **Falta paquete Dapper** | `Query<T>` no se encuentra | `dotnet add package Dapper` |
+### Consigna 2 — `/admissions` y `/admissions/patient/{patientId}`
 
----
+```csharp
+// GET /admissions — listar los primeros 10 ingresos
+app.MapGet("/admissions", () =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var admissions = connection.Query<Admission>(@"
+        SELECT patient_id AS PatientId,
+               admission_date AS AdmissionDate,
+               discharge_date AS DischargeDate,
+               diagnosis AS Diagnosis,
+               attending_doctor_id AS AttendingDoctorId
+        FROM admissions
+        ORDER BY admission_date DESC
+        LIMIT 10
+    ").ToList();
 
-## Criterios de logro
+    return Results.Ok(admissions);
+});
 
-| Criterio | Lo evidencia |
-|----------|--------------|
-| Instala Dapper correctamente | Agrega el paquete NuGet sin error |
-| Define un record posicional con tipos canónicos | `long`, `string`, `string?`, `long?` según corresponda |
-| Usa alias AS en el SELECT | Cada columna snake_case tiene su alias PascalCase |
-| Reemplaza el loop manual con `Query<T>` | El código ya no usa `SqliteDataReader` |
-| Coloca los records después de `app.Run()` | El proyecto compila sin CS8803 |
+// GET /admissions/patient/{patientId:long} — ingresos de un paciente
+app.MapGet("/admissions/patient/{patientId:long}", (long patientId) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var admissions = connection.Query<Admission>(@"
+        SELECT patient_id AS PatientId,
+               admission_date AS AdmissionDate,
+               discharge_date AS DischargeDate,
+               diagnosis AS Diagnosis,
+               attending_doctor_id AS AttendingDoctorId
+        FROM admissions
+        WHERE patient_id = @patientId
+        ORDER BY admission_date DESC
+    ", new { patientId }).ToList();
 
----
+    return Results.Ok(admissions);
+});
+```
 
-## Agrupamiento
+Record correspondiente:
 
-- **Apertura:** grupo completo. La charla rápida del "asistente" ayuda a que entiendan por qué Dapper simplifica el código.
-- **Práctica guiada:** individual con proyección. El cambio de leer con Dapper en vez de `DataReader` requiere atención: pausar después del `Query<T>` para que todos vean que las 15 líneas anteriores se redujeron a 1.
-- **Ejercicio independiente:** pares. Un alumno escribe el record, el otro escribe el endpoint. Intercambian roles en la actividad complementaria.
-- **Actividad complementaria:** individual, con revisión del compañero.
+```csharp
+// Record para admisiones: patient_id y attending_doctor_id son INTEGER -> long
+// admission_date y discharge_date son TEXT -> string (nullable para discharge_date)
+// diagnosis es TEXT -> string nullable
+public record Admission(
+    long PatientId,
+    string AdmissionDate,
+    string? DischargeDate,
+    string? Diagnosis,
+    long AttendingDoctorId
+);
+```
 
----
+**Salida esperada al navegar a `http://localhost:5000/admissions` (primeros 2 registros):**
 
-## Ajustes
+```json
+[
+  {
+    "patientId": 1,
+    "admissionDate": "2019-06-02",
+    "dischargeDate": "2019-06-05",
+    "diagnosis": "Pneumonia",
+    "attendingDoctorId": 1
+  },
+  {
+    "patientId": 2,
+    "admissionDate": "2019-06-01",
+    "dischargeDate": null,
+    "diagnosis": "Asthma",
+    "attendingDoctorId": 2
+  }
+]
+```
 
-- **Si se atrasan:** dedicar los primeros 20 minutos a repasar el concepto de record posicional con ejemplos en pizarra. Reducir la práctica guiada a solo `patients` (sin JOIN), y dejar el JOIN para la actividad complementaria.
-- **Si avanzan rápido:** como complemento, pedir que creen un record `Province` y un endpoint `/provinces` que devuelva las 13 provincias ordenadas por nombre.
-- **Alumnos con dificultades:** darles el record ya escrito. Que se concentren solo en el endpoint y la consulta SQL.
-- **Alumnos avanzados:** proponer que agreguen un record `Patient` sin JOIN (solo la tabla patients) y comparen la longitud del código con la versión manual de E10.
+**Salida esperada al navegar a `http://localhost:5000/admissions/patient/1`:**
+
+```json
+[
+  {
+    "patientId": 1,
+    "admissionDate": "2019-06-02",
+    "dischargeDate": "2019-06-05",
+    "diagnosis": "Pneumonia",
+    "attendingDoctorId": 1
+  },
+  {
+    "patientId": 1,
+    "admissionDate": "2019-05-28",
+    "dischargeDate": "2019-05-30",
+    "diagnosis": "Appendicitis",
+    "attendingDoctorId": 3
+  },
+  {
+    "patientId": 1,
+    "admissionDate": "2019-05-15",
+    "dischargeDate": "2019-05-18",
+    "diagnosis": "Fractured Hip",
+    "attendingDoctorId": 5
+  }
+]
+```
+
+### Consigna 3 — Depuración de mapeo
+
+**Paso 3a — Cambiar `long DoctorId` por `int DoctorId`:**
+
+```csharp
+// ESTO FALLA: doctor_id es INTEGER -> Int64 -> long, no int
+public record DoctorWrong(
+    int DoctorId,    // ERROR: debe ser long
+    string FirstName,
+    string LastName,
+    string Specialty
+);
+```
+
+**Error en la terminal:**
+
+```
+InvalidOperationException: No constructor matching type 'System.Int64' found on type 'DoctorWrong'
+```
+
+**Corrección:** cambiar `int DoctorId` por `long DoctorId`.
+
+**Paso 3b — Cambiar `string BirthDate` por `DateTime BirthDate`:**
+
+```csharp
+// ESTO FALLA: birth_date es TEXT -> string, no DateTime
+public record PatientWrong(
+    long PatientId,
+    string FirstName,
+    DateTime BirthDate   // ERROR: debe ser string
+);
+```
+
+**Error en la terminal:**
+
+```
+InvalidOperationException: No constructor matching type 'System.String' found on type 'PatientWrong'
+```
+
+**Corrección:** cambiar `DateTime BirthDate` por `string BirthDate`.
+
+## 2. Solución de la actividad de extensión
+
+**Consigna 1:** Se espera que el alumno haya creado un record `Province` con `string ProvinceId` y `string ProvinceName`, y un endpoint `/provinces` que devuelva las 13 provincias.
+
+**Consigna 2:** Se espera que el alumno haya creado un record `Admission` con los tipos canónicos correctos (`long` para IDs INTEGER, `string` para TEXT, `string?` para nullable) y dos endpoints para la tabla `admissions`.
+
+**Consigna 3:** Se espera que el alumno haya podido identificar y corregir los errores de mapeo (`int` vs `long`, `string` vs `DateTime`) y explicar por qué ocurren.
+
+## 3. Respuesta esperada del ejercicio
+
+| Pedido | Respuesta esperada | Verificación |
+| --- | --- | --- |
+| `/provinces` devuelve 13 provincias | Array de 13 objetos con `ProvinceId` y `ProvinceName` | Verificar la cantidad y los valores |
+| `/admissions` devuelve 10 ingresos | Array de 10 objetos con `PatientId`, `AdmissionDate`, `DischargeDate`, `Diagnosis`, `AttendingDoctorId` | Verificar que `DischargeDate` sea null para ingresos activos |
+| `/admissions/patient/1` devuelve los ingresos del paciente 1 | Array de objetos con `PatientId: 1` | Verificar que todos los objetos tengan `patientId: 1` |
+| El record usa `long` para INTEGER | Sin `InvalidOperationException` | Compilar y ejecutar sin errores |
+| Los alias `AS` coinciden con el record | Sin `InvalidOperationException` | Compilar y ejecutar sin errores |
+| Los campos nullable llevan `?` | `null` se serializa correctamente en el JSON | Verificar que las propiedades nullable aparecen como `null` y no como cadena vacía |
+
+## 4. Criterios de corrección (lista de verificación)
+
+- [ ] El archivo `Program.cs` compila sin errores ni advertencias.
+- [ ] Se usa `using Dapper;` y `using Microsoft.Data.Sqlite;` al inicio.
+- [ ] La cadena de conexión es `"Data Source=hospital.db"`.
+- [ ] Cada endpoint abre la conexión con `using var connection = new SqliteConnection(...)`.
+- [ ] Todas las columnas del SELECT tienen alias `AS` que coinciden con el record.
+- [ ] Los records usan `long` para columnas INTEGER (no `int`).
+- [ ] Los campos nullable llevan `?` (`string?`, `long?`).
+- [ ] Los records están declarados después de `app.Run();`.
+- [ ] Los endpoints devuelven `Results.Ok(...)`, `Results.NotFound(...)` o `Results.BadRequest(...)` (nunca el objeto crudo).
+- [ ] Los comentarios en el código están en español y no contienen tildes ni eñes.
+- [ ] Se demostraron los 3 errores de mapeo (int vs long, falta de alias, DateTime vs string).
+- [ ] Los alumnos pudieron identificar y corregir cada error de mapeo.
+
+## 5. Errores esperados y cómo intervenir
+
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| `InvalidOperationException`: no constructor match | El record usa `int` para una columna INTEGER de SQLite. | Indicar que SQLite INTEGER siempre devuelve `Int64` (long) y el record debe usar `long`. |
+| `InvalidOperationException`: no constructor match | Falta alias `AS` en el SELECT; Dapper busca `doctor_id` pero el record tiene `DoctorId`. | Mostrar que cada columna necesita `AS NombrePropiedad` que coincida exactamente con el parámetro del constructor del record. |
+| `InvalidOperationException`: no constructor match | Se usó `DateTime` para una columna TEXT. | Explicar que Dapper recibe `String` de SQLite para columnas TEXT y no encuentra constructor que acepte `DateTime`. Usar `string` y convertir solo al presentar. |
+| `null` aparece como cadena vacía en el JSON | La propiedad nullable no lleva `?` en la declaración del record. | Declarar como `string?` o `long?` según el tipo canónico. |
+| El endpoint devuelve un error 500 | La base `hospital.db` no está en la carpeta de salida del proyecto. | Verificar que `hospital.db` esté en la raíz del proyecto y que la cadena de conexión sea `"Data Source=hospital.db"`. |
+| CS8803 al compilar | El record está declarado antes de `app.Run()`. | Mover el record para que quede después de `app.Run();`. |
+
+## 6. Registro de la clase
+
+| Indicador | Qué registrar |
+| --- | --- |
+| Comprensión del mapeo | Observar si los alumnos entienden la relación entre tipos de columna SQLite y tipos C#. |
+| Uso de alias `AS` | Verificar que los alumnos usan alias en todas las columnas del SELECT. |
+| Errores de mapeo | Documentar qué alumnos tuvieron errores por tipo incorrecto (`int` vs `long`, `DateTime` vs `string`) y cómo los resolvieron. |
+| Depuración | Registrar si los alumnos pudieron identificar y corregir los errores intencionales mostrados por el docente. |
+| Trabajo individual | Anotar quiénes completaron las 3 consignas de la actividad complementaria y cuáles necesitaron más tiempo. |
+| Errores frecuentes | Documentar los errores más comunes encontrados durante la clase para ajustar la retroalimentación de la próxima sesión. |

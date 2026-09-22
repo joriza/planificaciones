@@ -1,34 +1,95 @@
-# Evaluación — Intensificación de las Unidades 1 y 2 — Versión A
+# Evaluación del momento 17-18 — Versión A
 
-## Metadatos
+> Dominio de esta versión: tickets de soporte (U1, mini API en memoria) y doctors/admissions de hospital.db (U2). Duración: 90 minutos. Puntaje total: 100 puntos. Resolución individual, con computadora, sin celular. Las condiciones completas están en `evaluacion-intensificaciones-17-18.md`.
 
-| Campo | Valor |
-|---|---|
-| Versión | A |
-| Dominio de datos | Tabla `Patients` con `Provinces` (JOIN paciente-provincia) |
-| Duración | 120 min |
-| Tipo de evaluación | Por objetivo mínimo — Apto / No apto aún |
+## Antes de empezar
 
-## Consigna
+- El esqueleto de `Program.cs` se proporciona a continuación. No se modifica la lista base, el contador de ids ni los records provistos.
+- Convenciones del curso: INTEGER → `long`, SQL parametrizado con `new { id }`, respuestas con `Results.*` (`Ok`, `NotFound`, `Created`, `BadRequest`).
+- Usar `Data Source=hospital.db` para conectar a la base de datos.
+- Probar cada endpoint con curl o Thunder Client antes de entregar.
+- Al terminar, avisar al docente y dejar el repo con commit y push realizados.
 
-Sobre tu proyecto Minimal API existente (el de los encuentros 17–18), creá los siguientes endpoints. Trabajá de forma individual. Verificá cada uno con Thunder Client.
+## Objetivos de la prueba
 
-### Endpoints requeridos
+- U1: implementar endpoints GET con tipos canónicos, parámetros de ruta y query, y respuestas HTTP correctas (200, 404).
+- U2: conectar a SQLite, ejecutar SELECT con WHERE y parámetros, usar LIKE para búsqueda parcial, y consultar con JOIN.
+- Criterio de evaluación: Apto / No apto aún por objetivo mínimo.
 
-1. **GET /employees** — Devuelve todos los pacientes como JSON. Usá `Query<Patient>` con los alias canónicos de `convenciones-tecnicas.md`.
+## Material provisto — Esqueleto de `Program.cs`
 
-2. **GET /employees/{id:long}** — Devuelve un paciente por su ID. Usá `QueryFirstOrDefault<Patient>`. Si no existe, devolvé `Results.NotFound`.
+```csharp
+using Dapper;
+using Microsoft.AspNetCore.Mvc;
+using System.Data.SQLite;
 
-3. **GET /employees/with-province** — Devuelve una lista con nombre del paciente y nombre de la provincia. Usá `JOIN Provinces` y mapeá a un record `PatientWithProvince` (propiedades `FullName` y `ProvinceName`).
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
 
-### Registros necesarios
+// --- U1: tickets de soporte (en memoria) ---
+var tickets = new List<object>
+{
+    new { ticketId = 1L, ticketInput = "No funciona la impresora", priority = "alta", createdDate = "2025-01-15" },
+    new { ticketId = 2L, ticketInput = "Error al guardar", priority = "media", createdDate = "2025-01-16" },
+    new { ticketId = 3L, ticketInput = "Solicitud de acceso", priority = "baja", createdDate = "2025-01-17" }
+};
+var nextTicketId = 4L;
 
-Ubicalos después de `app.Run()`. Incluí `Patient` (campos canónicos). Definí `PatientWithProvince` con las propiedades que necesita el endpoint 3.
+// --- U2: conexión a hospital.db ---
+var connectionString = "Data Source=hospital.db";
 
-### Condiciones de aprobación
+// TODO: implementar endpoints U1 y U2
 
-- Todos los endpoints deben devolver JSON válido.
-- El endpoint por ID debe devolver `404` para un ID inexistente.
-- El JOIN debe mostrar datos reales de la base para al menos 2 pacientes.
-- El código debe usar consultas parametrizadas en todos los casos.
-- No debe haber concatenación de cadenas SQL.
+app.Run();
+```
+
+## Parte 1 — Endpoints GET de tickets (U1, 40 puntos)
+
+| Ítem | Consigna | Puntos |
+| --- | --- | --- |
+| 1.1 | Implementar `GET /tickets` que retorne la lista completa de tickets con `Results.Ok`. | 10 |
+| 1.2 | Implementar `GET /tickets/{ticketId:long}` que retorne el ticket con ese ID o `Results.NotFound` con `new { mensaje = "Ticket no encontrado" }` si no existe. | 15 |
+| 1.3 | Implementar `GET /tickets?priority=alta` que filtre los tickets por prioridad (query string) y retorne la lista filtrada. | 15 |
+
+## Parte 2 — Consultas a doctors y admissions (U2, 40 puntos)
+
+| Ítem | Consigna | Puntos |
+| --- | --- | --- |
+| 2.1 | Implementar `GET /doctors` que retorne la lista completa de doctores con `Results.Ok`. | 10 |
+| 2.2 | Implementar `GET /doctors/{doctorId:long}` que retorne el doctor con ese ID o `Results.NotFound` con `new { mensaje = "Doctor no encontrado" }` si no existe. | 10 |
+| 2.3 | Implementar `GET /admissions` que retorne todas las admissions con sus datos, usando alias `AS` en el SELECT y un JOIN a doctors. | 15 |
+| 2.4 | Implementar `GET /admissions?doctorId={doctorId:long}` que retorne solo las admissions del doctor indicado, parametrizando la consulta con `new { doctorId }`. | 5 |
+
+## Parte 3 — Verificación y cierre (20 puntos)
+
+| Ítem | Consigna | Puntos |
+| --- | --- | --- |
+| 3.1 | Ejecutar `GET /tickets` y verificar que retorna los 3 tickets iniciales. | 5 |
+| 3.2 | Ejecutar `GET /tickets/1` y verificar que retorna el ticket con ID 1. | 5 |
+| 3.3 | Ejecutar `GET /doctors` y verificar que retorna la lista de doctores. | 5 |
+| 3.4 | Realizar commit y push del repo. | 5 |
+
+## Parte 4 — Ítems conceptuales
+
+- ¿Qué diferencia hay entre un parámetro de ruta (`{ticketId:long}`) y un parámetro de query (`?priority=alta`)? (5 pts)
+- ¿Por qué se usa `long` para los campos INTEGER de SQLite y no `int`? (5 pts)
+- ¿Qué es el alias `AS` en una consulta SQL y para qué sirve en el contexto de Dapper? (5 pts)
+- ¿Cuándo se debe usar `Results.NotFound` en lugar de retornar `null`? (5 pts)
+
+## Batería de verificación: salida esperada de cada prueba
+
+| Prueba | Pedido | Salida esperada |
+| --- | --- | --- |
+| `GET /tickets` | Lista completa de tickets | JSON con 3 objetos Ticket, cada uno con TicketId, TicketInput, Priority, CreatedDate |
+| `GET /tickets/1` | Ticket con ID 1 | JSON del ticket con TicketId = 1 |
+| `GET /tickets/99` | Ticket inexistente | `404` con `{ "mensaje": "Ticket no encontrado" }` |
+| `GET /tickets?priority=alta` | Tickets con prioridad "alta" | JSON con los tickets cuya prioridad sea "alta" |
+| `GET /doctors` | Lista completa de doctores | JSON con la lista de doctores de hospital.db |
+| `GET /doctors/1` | Doctor con ID 1 | JSON del doctor con DoctorId=1 |
+| `GET /doctors/999` | Doctor inexistente | `404` con `{ "mensaje": "Doctor no encontrado" }` |
+| `GET /admissions` | Lista completa de admissions | JSON con todas las admissions con datos del doctor |
+| `GET /admissions?doctorId=1` | Admissions del doctor 1 | JSON con las admissions del doctor con DoctorId=1 |
+
+## Al terminar
+
+Dejar el proyecto funcionando, con commit y push realizados. Avisar al docente para la corrección. Se devuelve con nota de Apto o No apto aún por objetivo mínimo. Si el objetivo mínimo queda pendiente, se ofrece la instancia del proyecto puente (E19-20) como primera capa de recuperación.

@@ -1,176 +1,170 @@
 # Encuentro 21 — INSERT con Dapper y POST
 
-## Metadatos de bloque
+> Unidad 3 — CRUD completo con Dapper
 
-| Campo | Valor |
-|---|---|
-| **Duración** | 240 minutos |
-| **Unidad** | 3 — CRUD completo con Dapper |
-| **Eje** | 5 — CRUD con Dapper |
-| **Tipo** | Procedimental |
-| **Requiere** | Unidad 2 (SELECT parametrizado, QueryFirstOrDefault, alias AS), proyecto `dotnet new web` funcional con paquetes Dapper + Sqlite y base `hospital.db` |
-| **Nuevo concepto** | Endpoint POST, `ExecuteScalar<long>` para `last_insert_rowid()`, respuesta `Results.Created` |
+## 1. Metadatos de bloque
 
-## Reparto de tiempos (240 minutos)
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 21 de 36 |
+| Unidad | 3 — CRUD completo con Dapper |
+| Eje temático | 5 — CRUD con Dapper |
+| Carácter/Objetivo | Procedimental |
+| Estructura | clase |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Concepto nuevo | INSERT con Dapper y POST |
+| Requisitos previos | Encuentros 19-20: GET con Dapper, SELECT parametrizado, registros posicionales |
+| Uso de celular | No permitido |
+| Organización del trabajo | Parejas, una computadora cada dos |
 
-| Bloque | Duracion |
-|---|---|
-| Apertura y motivacion | 20 min |
-| Teoria minima con ejemplo completo | 50 min |
-| Ejercicio progresivo | 120 min |
-| Puesta en comun y correccion de errores | 30 min |
-| Cierre | 20 min |
+### Reparto de tiempos teóricos
 
-## Objetivos de aprendizaje
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-- Crear un endpoint POST usando `MapPost` en una Minimal API.
-- Ejecutar un INSERT parametrizado con Dapper usando `ExecuteScalar<long>` para recuperar el ID generado.
-- Devolver `Results.Created` con la URL del recurso recién creado y el objeto completo, cumpliendo el canon de respuestas HTTP.
-- Validar datos obligatorios en el cuerpo de la peticion y rechazar con `400` cuando falten.
+## 2. Objetivos de aprendizaje
 
-## Charla rapida / analogia
+1. Insertar un registro en la tabla `patients` usando Dapper con SQL parametrizado.
+2. Devolver el ID generado con `ExecuteScalar<long>` y usarlo en la respuesta.
+3. Exponer el INSERT como endpoint `POST` con `MapPost` y responder con código `201`.
+4. Validar que los campos obligatorios estén presentes antes de insertar y devolver `400` si faltan.
 
-Pensá en el recepcionista del hospital que **da de alta a un nuevo paciente**. Hasta ahora solo supimos **consultar** la ficha de pacientes que ya estaban internados (GET). Ahora vamos a ser nosotros quienes **agreguemos** una ficha nueva. En terminos HTTP, pasamos del verbo GET al verbo POST: el verbo que **crea** recursos.
+## 3. Apertura y motivación (20 min)
 
-## Teoria minima
+### Charla rápida: analogía breve que ancle el concepto
 
-### ¿Que cambia con POST?
+Imaginen que son recepcionistas de un hospital. Cuando llega un paciente nuevo, ustedes no escriben el nombre en cualquier lado: lo anotan en el libro de registro, con todos los campos completos, y le asignan un número de ficha. Esa ficha es el `INSERT`: un registro nuevo, completo y verificado, que queda almacenado para siempre.
 
-En los encuentros anteriores siempre leimos datos. POST es el primer verbo de **escritura**: el cliente envia un objeto JSON en el cuerpo de la peticion y el servidor lo guarda en la base de datos.
+### Devolución de la evaluación de la Unidad 2
 
-### `ExecuteScalar<long>` y `last_insert_rowid()`
+Se devuelve la evaluación de la Unidad 2. Se revisan los errores más frecuentes (IDs como `int` en lugar de `long`, fechas como `DateTime`, SELECT sin alias `AS`). Se recuerda que la regla de oro es: INTEGER en SQLite siempre es `long` en C#.
 
-Dapper ofrece `ExecuteScalar<long>` para ejecutar un INSERT y devolver el valor de la primera columna de la primera fila del resultado. En SQLite escribimos:
+### Lo mínimo indispensable
 
-```sql
-INSERT INTO patients (first_name, last_name, gender, birth_date)
-VALUES (@FirstName, @LastName, @Gender, @BirthDate);
-SELECT last_insert_rowid() AS NewId;
-```
+Hasta ahora solo leíamos datos con `Query<T>` y `QueryFirstOrDefault<T>`. Hoy vamos a escribir datos. El método Dapper para INSERT es `Execute`, y cuando necesitamos el ID que se acaba de generar usamos `ExecuteScalar<long>` con `SELECT last_insert_rowid()` al final del SQL. El endpoint correspondiente es `MapPost`, y la respuesta correcta es `Results.Created(url, dato)` con código `201`.
 
-La funcion `last_insert_rowid()` devuelve el `id` que SQLite acaba de asignar. Al ejecutar dos instrucciones separadas por punto y coma, Dapper toma el resultado del `SELECT` como valor de retorno.
+## 4. Desarrollo teórico-práctico (120 min)
 
-### Record para entrada vs. record para salida
-
-Usamos dos records distintos:
-
-- **`PatientInput`** — solo los campos que envia el cliente (sin `PatientId`, que la base genera).
-- **`Patient`** — el record completo con `PatientId` que usamos para devolver el recurso creado.
-
-Esto evita confusion: no tiene sentido que el cliente envie un `PatientId` que aun no existe.
-
-### POST y `Results.Created`
-
-| Metodo | Retorno | Uso |
-|---|---|---|
-| `Results.Created(url, objeto)` | `201 Created` | Alta correcta. La URL senala donde se encuentra el recurso nuevo. |
-| `Results.BadRequest(mensaje)` | `400 Bad Request` | El cuerpo de la peticion no paso la validacion. |
-
-## Practica guiada: endpoint POST /patients
-
-Agregamos el siguiente `MapPost` a `Program.cs`, **antes** de `app.Run()`:
+### Paso 1 — El record y la cadena de conexión
 
 ```csharp
-// POST /patients — crear un nuevo paciente
-app.MapPost("/patients", (PatientInput input) =>
-{
-    // Validar que el nombre no este vacio
-    if (string.IsNullOrWhiteSpace(input.FirstName))
-        return Results.BadRequest(new { mensaje = "El nombre es obligatorio" });
+using Dapper;
+using Microsoft.Data.Sqlite;
 
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+var connectionString = "Data Source=hospital.db";
+
+// Record posicional para pacientes: ids long, fechas string, nulables con ?
+public record Patient(
+    long PatientId,
+    string FirstName,
+    string LastName,
+    string Gender,
+    string BirthDate,
+    string? City,
+    string ProvinceId,
+    string? Allergies,
+    long? Height,
+    long? Weight
+);
+```
+
+> Comentario: el record va **después** de `app.Run()` en el archivo final. Acá lo ponemos arriba para leerlo cómodo.
+
+### Paso 2 — El endpoint POST con INSERT parametrizado
+
+```csharp
+// POST /patients — crear un paciente nuevo y devolver 201 con la URL del recurso
+app.MapPost("/patients", (Patient nuevoPaciente) =>
+{
+    // Validar que los campos obligatorios no sean nulos o vacios
+    if (string.IsNullOrWhiteSpace(nuevoPaciente.FirstName) ||
+        string.IsNullOrWhiteSpace(nuevoPaciente.LastName))
+    {
+        return Results.BadRequest(new { mensaje = "El nombre y el apellido son obligatorios" });
+    }
+
+    // Abrir conexion a la base de datos con using para que se cierre automaticamente
     using var connection = new SqliteConnection(connectionString);
-    var newId = connection.ExecuteScalar<long>(@"
+
+    // INSERT parametrizado: nunca concatenar datos al SQL
+    // last_insert_rowid() devuelve el ID del ultimo insert en la conexion actual
+    long newId = connection.ExecuteScalar<long>(@"
         INSERT INTO patients (first_name, last_name, gender, birth_date, city, province_id, allergies, height, weight)
         VALUES (@FirstName, @LastName, @Gender, @BirthDate, @City, @ProvinceId, @Allergies, @Height, @Weight);
-        SELECT last_insert_rowid() AS NewId;", input);
+        SELECT last_insert_rowid();
+    ", nuevoPaciente);
 
-    // Recuperar el paciente recien creado para devolverlo completo
-    var paciente = connection.QueryFirstOrDefault<Patient>(@"
-        SELECT patient_id AS PatientId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               gender AS Gender,
-               birth_date AS BirthDate,
-               city AS City,
-               province_id AS ProvinceId,
-               allergies AS Allergies,
-               height AS Height,
-               weight AS Weight
-        FROM patients
-        WHERE patient_id = @id", new { id = newId });
+    // Asignar el ID generado al objeto para la respuesta
+    var pacienteCreado = nuevoPaciente with { PatientId = newId };
 
-    return Results.Created($"/patients/{newId}", paciente);
+    // 201 Created con la URL del recurso recien creado
+    return Results.Created($"/patients/{newId}", pacienteCreado);
 });
 ```
 
-Record de entrada (al final del archivo, **despues** de `app.Run()`):
+> Comentario: `ExecuteScalar<long>` lee el primer valor de la primera fila del resultado como `Int64`. Esto es canónico para obtener el ID autoincremental en SQLite con Dapper.
 
-```csharp
-record PatientInput(string FirstName, string? LastName, string Gender, string BirthDate,
-                    string? City, long? ProvinceId, string? Allergies, long? Height, long? Weight);
-```
+### Paso 3 — Probar el endpoint
 
-### ¿Que hace cada linea?
-
-1. `MapPost` espera el cuerpo JSON en `input` y lo deserializa automaticamente.
-2. Valida que `FirstName` no este vacio. Si lo esta, devuelve `400` sin tocar la base.
-3. Abre la conexion y ejecuta el INSERT con `ExecuteScalar<long>`.
-4. `last_insert_rowid()` devuelve el ID generado; Dapper lo asigna a `newId` como `long`.
-5. Vuelve a leer el registro completo para devolverlo como `Patient`.
-6. `Results.Created` produce `201` con la URL del recurso y el cuerpo JSON.
-
-### Salida esperada
+Desde Thunder Client o curl:
 
 ```bash
 curl -X POST http://localhost:5000/patients \
   -H "Content-Type: application/json" \
-  -d '{"firstName":"Ana","lastName":"Lopez","gender":"F","birthDate":"1990-05-15"}'
-
-# Respuesta: 201 Created
-# Location: /patients/226 (el id puede variar)
-# Cuerpo: { "patientId": 226, "firstName": "Ana", ... }
+  -d '{"firstName":"Carlos","lastName":"Gomez","gender":"M","birthDate":"1985-03-15","city":"Rosario","provinceId":"SF","allergies":"Penicillin","height":178,"weight":82}'
 ```
 
-## Ejercicio progresivo
+Salida esperada (código 201, body con el paciente creado incluyendo su `patientId`):
 
-### Etapa 1 — Agregar endpoint POST /doctors (guiada)
+```json
+{
+  "patientId": 259,
+  "firstName": "Carlos",
+  "lastName": "Gomez",
+  "gender": "M",
+  "birthDate": "1985-03-15",
+  "city": "Rosario",
+  "provinceId": "SF",
+  "allergies": "Penicillin",
+  "height": 178,
+  "weight": 82
+}
+```
 
-Crea un endpoint `MapPost` para la tabla `doctors`. Usa el mismo patron que el ejemplo. La tabla `doctors` tiene estas columnas: `doctor_id` (autonumerico), `first_name`, `last_name`, `specialty`, `phone`, `email`.
+El header `Location` del response contiene `/patients/259`.
 
-**Pista:** crea un record `DoctorInput` con los campos que envia el cliente (sin `DoctorId`). Usa `ExecuteScalar<long>` con `last_insert_rowid()`.
+### Paso 4 — Qué pasa si falta un campo obligatorio
 
-### Etapa 2 — Agregar endpoint POST /provinces (semiguiada)
+```bash
+curl -X POST http://localhost:5000/patients \
+  -H "Content-Type: application/json" \
+  -d '{"firstName":"","lastName":"","gender":"M","birthDate":"1985-03-15"}'
+```
 
-Crea un endpoint POST para la tabla `province_names`. Columnas: `province_id` (autonumerico), `province_name`.
+Salida esperada (código 400):
 
-**Pista:** la validacion debe verificar que `ProvinceName` no este vacio. No tiene campos nulables, asi que `ProvinceInput` es simple.
+```json
+{ "mensaje": "El nombre y el apellido son obligatorios" }
+```
 
-### Etapa 3 — Endpoint POST /admissions (independiente)
-
-Crea un endpoint POST para la tabla `admissions`. Columnas: `admission_id` (autonumerico), `patient_id`, `doctor_id`, `admission_date`, `diagnosis`, `discharge_date` (puede ser nulo).
-
-**Pistas:**
-- `AdmissionInput` recibe `PatientId`, `DoctorId`, `AdmissionDate`, `Diagnosis`, `DischargeDate?`.
-- La validacion debe verificar `PatientId > 0` y que `AdmissionDate` no este vacia.
-- La respuesta incluye la URL `/admissions/{newId}`.
+## 5. Consolidación y cierre (20 min)
 
 ### Qué te llevás
 
-- POST es el verbo HTTP para **crear** recursos.
-- `ExecuteScalar<long>` con `last_insert_rowid()` recupera el ID generado por SQLite.
-- `Results.Created` devuelve `201` con la URL del nuevo recurso.
-- Conviene tener un record de entrada separado del record completo.
+- `ExecuteScalar<long>` es el método canónico para obtener el ID generado por un INSERT en SQLite con Dapper.
+- El SQL debe terminar con `SELECT last_insert_rowid()` para devolver el ID.
+- `MapPost` expone un endpoint POST y `Results.Created(url, dato)` responde con código `201` y la URL del recurso nuevo en el header `Location`.
+- Siempre se validan los campos obligatorios antes de tocar la base de datos y se devuelve `400` con un `mensaje` en español si faltan.
+- Los comentarios en el código van en español, sin tildes ni eñes dentro del código fuente.
 
-### Lo que viene
+## Lo que viene
 
-En el Encuentro 22 vas a borrar pacientes con DELETE, otro verbo de escritura que responde con `204`.
-
-## Errores comunes y trampas
-
-| Error | Causa | Solucion |
-|---|---|---|
-| `InvalidOperationException`: no hay constructor que acepte los parametros | Olvidaste el alias `AS` en el SELECT que recupera el paciente creado. | Agregar `patient_id AS PatientId, first_name AS FirstName, ...` |
-| El INSERT se ejecuta pero devuelve `0` en lugar del ID | Usaste `conn.Execute(sql)` en vez de `conn.ExecuteScalar<long>(sql)`. | Cambiar a `ExecuteScalar<long>` que captura el resultado del `SELECT last_insert_rowid()`. |
-| Error `400` aunque enviaste todos los datos | El nombre de la propiedad JSON no coincide con el record (case-sensitive en algunos clientes). | Revisar que el JSON use camelCase (`firstName`, no `FirstName`). |
-| El record `PatientInput` esta declarado **antes** de `app.Run()` | Error CS8803: las top-level statements deben preceder a las declaraciones de tipo. | Mover el record despues de `app.Run()`. |
-| El campo `birth_date` se envia como `DateTime` en lugar de `"yyyy-MM-dd"` | El record espera `string`, pero el cliente manda un objeto fecha. | El cliente debe enviar el string ISO: `"1990-05-15"`. |
+Encuentro 22: DELETE con Dapper y MapDelete. Aprenderemos a borrar registros validando primero que existan, diferenciando `404` (no encontrado) de `204` (borrado exitoso).

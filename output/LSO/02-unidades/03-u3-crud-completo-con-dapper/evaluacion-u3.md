@@ -1,77 +1,62 @@
-# Evaluación de la Unidad 3 — CRUD completo con Dapper
+# Evaluación de la Unidad 3 — Encuentro 26
 
-## Metadatos
+> Evaluación de la instancia «Evaluación de la Unidad 3 — Encuentro 26» · Curso: Minimal API con C# .NET 6. Documento de **metadatos y acuerdos de la instancia**, en registro docente formal. El material del alumno es la versión `evaluacion-u3-version-a` y sus versiones equivalentes generadas; sus soluciones y criterios de corrección van en el anexo docente separado (`evaluacion-u3-version-a-anexo-docente.md`).
 
-| Campo | Valor |
-|---|---|
-| Asignatura | Minimal API con C# .NET 6 |
-| Unidad | U3: CRUD completo con Dapper |
-| Encuentro de evaluación | 26 (dedicado) |
-| Tipo | Entrega grupal por GitHub + defensa individual |
-| Modalidad | Grupal (2-3 integrantes), defensa individual |
-| Duración del encuentro | 240 minutos |
-| Duración de la defensa | Hasta 10 minutos por integrante |
-| Criterio de aprobación | 60/100 en la entrega + defensa satisfactoria |
+## 1. Identificación
 
-## Objetivos de evaluación
+| Campo | Detalle |
+| --- | --- |
+| Instancia | Evaluación de la Unidad 3 — Encuentro 26 |
+| Unidad evaluada | 3 — CRUD completo con Dapper |
+| Eje temático | Operaciones CRUD completas con Dapper: INSERT, DELETE, UPDATE, validación de existencia |
+| Carácter/Objetivo | Evaluación de la capacidad de implementar las cuatro operaciones CRUD vía endpoints HTTP con Dapper, incluyendo validación de existencia y JOIN de 3 tablas. |
+| Destinatarios | Todo el curso |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Uso de celular | No permitido |
+| Documentos de la instancia | `evaluacion-u3.md` · `evaluacion-u3-version-a.md` · `evaluacion-u3-version-a-anexo-docente.md` (más las versiones equivalentes B/C/D generadas desde la A) |
 
-- Implementar los cuatro verbos HTTP (GET, POST, PUT, DELETE) sobre una tabla de la base `hospital.db`.
-- Validar datos de entrada y devolver `400 Bad Request` con mensaje en español cuando corresponda.
-- Verificar existencia del recurso antes de actualizar o eliminar, devolviendo `404` cuando no existe.
-- Usar `ExecuteScalar<long>` para INSERT con devolución del ID generado.
-- Usar `Execute` para UPDATE y DELETE con control de filas afectadas.
-- Implementar un endpoint con JOIN triple para combinar tres tablas.
-- Mantener los tipos canónicos y la estructura de `Program.cs` establecidas en las unidades anteriores.
-- Publicar en GitHub con la carpeta `tp-u3/`, `.gitignore` y commit semántico.
-- Explicar y defender el código durante la defensa individual.
+## 2. Estructura del encuentro (240 min)
 
-## Formato de entrega
+| Momento | Tiempo | Qué ocurre |
+| --- | --- | --- |
+| Entrega del TP por GitHub + defensa individual | 60 min | Cada alumno presenta su TP-U3 (API CRUD completa con hospital.db) al docente; el docente verifica los endpoints funcionando y pregunta por decisiones de diseño. |
+| Devolución y retroalimentación | 60 min | El docente devuelve la evaluación con comentarios individuales; se registran los puntos de mejora en la planilla. |
+| Cierre y registro | 60 min | Se consolidan las notas de la defensa en la planilla de evaluación; se anuncian los criterios de la próxima evaluación (U4). |
+| Apertura del encuentro siguiente | 60 min | Se presenta el trabajo final de U4 y se resuelven preguntas sobre la transición de U3 a U4 (profesionalización, ramas, PR). |
+| **Total** | **240 min** | |
 
-1. **Antes de la defensa (encuentro 26):** cada grupo debe tener en GitHub la carpeta `tp-u3/` con el proyecto completo y funcional.
-2. **Defensa individual:** cada integrante ejecuta la API, prueba endpoints de escritura y lectura, y explica el flujo de un POST o un JOIN triple.
-3. **Devolución:** el encuentro siguiente (encuentro 27, inicio de U4) abre con devolución.
+## 3. Regla canónica de la instancia
 
-## Rúbrica de evaluación (100 puntos)
+La entrega del TP-U3 se realiza por GitHub antes del encuentro. La defensa individual se realiza en este encuentro (E26). La devolución de evaluaciones abre el encuentro siguiente (E27). Si la entrega está incompleta, el alumno defiende solo lo entregado y recibe devolución condicionada; la entrega pendiente se resuelve en el encuentro siguiente con extensión de 48 horas.
 
-### Funcionalidad técnica (55 puntos)
+## 4. Defensa individual del TP (modalidad)
 
-| Criterio | Puntos | Descripción |
-|---|---|---|
-| GET /list (lista completa) | 5 | Devuelve todos los registros |
-| GET /list/{id:long} (búsqueda por ID) | 5 | 200 si existe, 404 si no |
-| POST /list (crear) | 12 | Crea con validación, devuelve 201 con URL |
-| PUT /list/{id:long} (actualizar) | 12 | Actualiza si existe, 404 si no, 204 si ok |
-| DELETE /list/{id:long} (eliminar) | 6 | Elimina si existe, 404 si no, 204 si ok |
-| GET /relation/{id:long} (JOIN triple) | 15 | Endpoint de lectura con JOIN entre tres tablas |
+El alumno presenta su API CRUD completa funcionando. El docente pregunta: (1) cómo se implementa la validación de existencia antes de INSERT/UPDATE/DELETE, (2) qué código HTTP se retorna en cada operación y por qué, (3) cómo se parametrizan las consultas y por qué no se concatena, (4) cómo se maneja un JOIN de 3 tablas, (5) qué pasa si se intenta borrar un recurso inexistente. Se registra por objetivo: correctitud de CRUD (0-30), códigos HTTP y validación (0-25), JOIN triple (0-20), explicación de diseño (0-15), Git y entrega (0-10).
 
-### Calidad del código (25 puntos)
+## 5. Alcance
 
-| Criterio | Puntos | Descripción |
-|---|---|---|
-| IDs como `long` | 5 | Sin `int` en ningún record |
-| Fechas como `string` | 3 | Sin `DateTime` ni `DateOnly` |
-| Nulables con `?` | 3 | `string?`, `long?` donde corresponda |
-| Alias `AS` en todas las columnas | 4 | Todas las columnas tienen alias PascalCase |
-| Registros después de `app.Run()` | 3 | Sin tipos antes del código ejecutable |
-| `Results.Created` en POST | 2 | Código 201 con URL del recurso creado |
-| `Results.NoContent` en PUT/DELETE | 2 | Código 204 (no 200) |
-| `using` en cada conexión | 3 | Conexiones dentro del bloque del endpoint |
+Núcleos incluidos: INSERT con `ExecuteScalar<long>` y `MapPost`, DELETE con `MapDelete` y código 204, UPDATE con `MapPut` y código 200, validación de existencia con `QueryFirstOrDefault`, códigos 201/200/404, JOIN de 3 tablas (admissions + doctors + patients), consultas parametrizadas con `new {}`. No incluye: autenticación, paginación avanzada, tests de integración.
 
-### Git y entrega (20 puntos)
+## 6. Prueba práctica individual (versiones equivalentes)
 
-| Criterio | Puntos | Descripción |
-|---|---|---|
-| Carpeta `tp-u3/` | 5 | Proyecto en `tp-u3/` |
-| `.gitignore` | 5 | Incluye `bin/` y `obj/` |
-| Commit semántico | 5 | `"tp-u3: CRUD completo con Dapper"` |
-| Push exitoso | 5 | Commit en GitHub |
+Cada alumno recibe una versión equivalente (A o B) al azar. La prueba dura 90 minutos, es individual, con computadora, sin celular. El alumno debe completar el esqueleto de `Program.cs` provisto en la versión recibida conectando a `hospital.db`. La prueba evalúa los objetivos de la unidad con distinto dominio para evitar copia.
 
-### Defensa individual (aprobación aparte)
+## 7. Criterios de calificación
 
-Obligatoria. Requisito: 60/100 + defensa satisfactoria.
+Se evalúan: correctitud de las operaciones CRUD (30 puntos), códigos HTTP y validación de existencia (25 puntos), JOIN de 3 tablas (20 puntos), explicación de decisiones de diseño (15 puntos), entrega Git con .gitignore y commits (10 puntos). La nota mínima para aprobar es 60 puntos.
 
-## Criterio de aprobación
+## 8. Condiciones de resolución de la prueba
 
-- **Nota de entrega:** puntaje sobre 100 según rúbrica.
-- **Aprobación:** 60 puntos o más **y** defensa satisfactoria.
-- **Recuperación:** instancias de intensificación (encuentros 34-35 y diciembre/marzo).
+Resolución individual. Se permite el uso de la hoja de convenciones técnicas (`convenciones-tecnicas.md`) y la documentación de la base (`database-docs/`) como material consultable. No se permite consultar soluciones de compañeros ni usar IA generativa. El código debe estar en un único archivo `Program.cs`. La base de datos `hospital.db` se provee en la carpeta del proyecto. El alumno debe cerrar la aplicación (`Ctrl+C`) y dejar el proyecto en estado limpio al terminar.
+
+## 9. Regla de equivalencia entre versiones
+
+Las versiones A y B tienen los mismos objetivos y los mismos requisitos, con distinto dominio y datos. Ninguna versión tiene reglas que la otra no tenga. Ambas versiones evalúan lo mismo: operaciones CRUD completas con Dapper sobre hospital.db, validación de existencia, códigos HTTP correctos, y JOIN de 3 tablas.
+
+## 10. Mecánica de asignación de versiones
+
+Se asigna una versión (A o B) a cada alumno al azar en el momento de la prueba. El docente registra la versión asignada en la planilla de evaluación junto al nombre del alumno. Los alumnos no pueden cambiar de versión una vez asignada.
+
+## 11. Devolución
+
+La devolución se realiza en el encuentro siguiente (E27). Se devuelve la evaluación con los puntos obtenidos por cada criterio y los comentarios del docente. Si un alumno no alcanza el objetivo mínimo (60 puntos), se le asigna la versión alternativa (B) para recuperación. Se registra la nota en la planilla con los comentarios del docente.

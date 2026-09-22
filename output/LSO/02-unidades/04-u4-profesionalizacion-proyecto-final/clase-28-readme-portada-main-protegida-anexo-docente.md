@@ -1,123 +1,140 @@
-# Anexo docente — Encuentro 28: README de portada y main protegida
+# Anexo docente — Encuentro 28: README de portada y más
 
----
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
-## Preguntas guía para la apertura
+## 1. Solución del ejercicio independiente
 
-1. "¿Alguna vez entraron a un repositorio en GitHub y no entendieron de qué se trataba?"
-2. "¿Qué información esperan ver en la página principal de un proyecto open source?"
-3. "¿Qué pasaría si alguien del grupo hiciera un push con código que rompe todo en main?"
+### Solución: README de portada
 
----
-
-## Resumen teórico para el pizarrón
-
-- README.md: nombre, requisitos, instalación, estructura, tecnologías, integrantes.
-- Protección de main: Settings > Branches > Add rule, PR requerido, 1 approval.
-- Gitignore correcto: `bin/` y `obj/` desde el principio; si ya están trackeados se corrigen con `git rm --cached`.
-
----
-
-## Ejemplo de README completo (para proyectar)
+**Estructura mínima del README.md:**
 
 ```markdown
-# Hospital API
+# API de Hospital — Minimal API con C# .NET 6
 
-API REST Minimal con C# .NET 6 para gestionar pacientes, doctores y admisiones
-de un hospital, utilizando SQLite y Dapper.
+API Minimal que expone endpoints CRUD para gestionar pacientes, doctores y admisiones de un hospital. Utiliza Dapper para el acceso a datos y SQLite como base de datos (`hospital.db`).
 
-## Requisitos previos
+## Tecnologías
 
-- SDK .NET 6 o superior
-- Git
-- SQLite3 (incluido en la base hospital.db)
+- C# .NET 6
+- Minimal API
+- Dapper
+- SQLite
 
-## Instalacion
+## Cómo ejecutar
 
-git clone https://github.com/grupo/hospital-api
-cd hospital-api
+```bash
+git clone <url-del-repo>
+cd trabajo-final
 dotnet run
+```
+
+La API queda disponible en `http://localhost:5000` (o el puerto asignado por .NET).
+
+## Endpoints
+
+| Método | Ruta | Descripción |
+| --- | --- | --- |
+| GET | /patients | Listar todos los pacientes |
+| GET | /patients/{id:long} | Obtener un paciente por ID |
+| POST | /patients | Crear un nuevo paciente |
+| PUT | /patients/{id:long} | Actualizar un paciente existente |
+| DELETE | /patients/{id:long} | Eliminar un paciente |
+| GET | /patients-with-admissions | Listar pacientes con sus admisiones (JOIN) |
 
 ## Estructura del repositorio
 
-- tp-u1/ — Minimal API GET
-- tp-u2/ — SQLite y Dapper basico
-- tp-u3/ — CRUD completo
-- trabajo-final/ — API completa con Dapper
-
-## Tecnologias
-
-.NET 6, Minimal API, Dapper, SQLite, Git/GitHub
-
-## Integrantes
-
-- Ana Lopez
-- Carlos Martinez
-- Sofia Rodriguez
+```
+trabajo-final/
+├── Program.cs          # Código completo de la API
+├── hospital.db         # Base de datos SQLite
+├── .gitignore          # Ignora bin/ y obj/
+└── README.md           # Este archivo
+```
 ```
 
----
+**Resultado esperado:** El README cubre las 6 secciones mínimas, está en español, y se encuentra en la raíz del repositorio.
 
-## Rúbrica de evaluación del ejercicio independiente
+### Solución: Issues para organizar el trabajo
 
-| Criterio | Logrado (2 pts) | En desarrollo (1 pt) | No logrado (0 pts) |
-|---|---|---|---|
-| README profesional completo | README con nombre, requisitos, instalación, estructura, tecnologías e integrantes | Falta una o dos secciones | README ausente o incompleto |
-| Sección de pruebas agregada | README incluye endpoints curl de ejemplo | Sección presente pero incompleta | No hay sección de pruebas |
-| `.gitignore` verificado | `.gitignore` presente con `bin/` y `obj/`, sin archivos trackeados de esas carpetas | Existe pero hay archivos trackeados | No hay `.gitignore` |
-| Protección de main configurada | Regla activa, push directo falla | Regla creada pero no probada | No hay protección |
-| PR mergeado | PR aprobado y mergeado | PR abierto sin merge | No se abrió PR |
+**Ejemplo de issue 1 — `feature/endpoint-pacientes`:**
+- Título: `feature/endpoint-pacientes`
+- Descripción: Implementar CRUD completo de pacientes con endpoints GET, POST, PUT y DELETE contra `hospital.db`.
+- Label: `feature`
+- Asignado a: integrante responsable del CRUD.
 
----
+**Ejemplo de issue 2 — `feature/endpoint-joins`:**
+- Título: `feature/endpoint-joins`
+- Descripción: Agregar endpoints que muestren datos de múltiples tablas usando JOINs (pacientes con admisiones, doctores con pacientes).
+- Label: `feature`
+- Asignado a: integrante responsable de los JOINs.
 
-## Solución del ejercicio independiente
+**Ejemplo de issue 3 — `test/integracion-basica`:**
+- Título: `test/integracion-basica`
+- Descripción: Agregar tests de integración básicos que verifiquen que los endpoints responden con los códigos HTTP esperados (200, 201, 204, 400, 404).
+- Label: `test`
+- Asignado a: integrante responsable de tests.
 
-El README debe incluir al final una sección adicional como:
+## 2. Solución de la actividad de extensión
+
+### README con sección de contribución
+
+Los grupos que terminan temprano pueden agregar una sección de "Contribución" al README:
 
 ```markdown
-## Pruebas con Thunder Client
+## Contribución
 
-### Obtener todos los pacientes
-GET http://localhost:5000/patients
-
-### Obtener paciente por ID
-GET http://localhost:5000/patients/1
-
-### Crear paciente
-POST http://localhost:5000/patients
-Content-Type: application/json
-
-{
-  "firstName": "Juan",
-  "lastName": "Perez",
-  "gender": "M",
-  "birthDate": "1990-05-15",
-  "city": "Buenos Aires",
-  "provinceId": 1,
-  "allergies": null,
-  "height": null,
-  "weight": null
-}
-
-### Actualizar paciente
-PUT http://localhost:5000/patients/1
-Content-Type: application/json
-
-{
-  "firstName": "Juan",
-  "lastName": "Perez",
-  "allergies": "Penicilina"
-}
-
-### Eliminar paciente
-DELETE http://localhost:5000/patients/1
+1. Fork del repositorio.
+2. Crear una rama de feature: `git checkout -b feature/<nombre>`.
+3. Realizar los cambios y commitear con mensaje descriptivo.
+4. Abrir un pull request hacia `main`.
+5. Esperar la revisión de un compañero antes de fusionar.
 ```
 
----
+### Checklist de flujo de PRs
 
-## Notas para el docente
+- ☐ `main` está protegida (no se puede hacer push directo).
+- ☐ Cada cambio se hace en una rama de feature.
+- ☐ Cada PR tiene al menos un revisor del mismo grupo.
+- ☐ El PR incluye una descripción de los cambios realizados.
+- ☐ El PR es aprobado y fusionado.
+- ☐ La rama de feature se borra después de fusionar.
 
-- Algunos grupos pueden tener problemas con la protección de main si el repositorio está en una organización de GitHub. Verificar que tengan permisos de administrador para modificar las reglas de ramas.
-- Si un grupo no logra que el push a `main` falle, revisar en Settings > Branches que la regla esté aplicada al branch correcto y no tenga excepciones.
-- Para grupos avanzados, sugerir que agreguen shields de badges al README (`![NET](https://img.shields.io/badge/.NET-6-blue)`) como elemento extra.
-- Recordar que en el encuentro 31 se defiende el trabajo final. El README debe estar completo para esa fecha.
+## 3. Respuesta esperada del ejercicio
+
+| Tarea | Resultado esperado |
+| --- | --- |
+| README de portada | Archivo `README.md` en la raíz con al menos 6 secciones: nombre, descripción, tecnologías, ejecución, endpoints, estructura |
+| Issues | Al menos 3 issues con títulos descriptivos, labels y asignación a integrantes |
+| Ciclo de PR | Al menos un PR fusionado con revisión aprobada, sin commits directos a `main` |
+| `main` protegida | Branch protection rule activa para `main` con "Require pull request" y "Require 1 approval" |
+
+## 4. Criterios de corrección (lista de verificación)
+
+- ☐ README de portada presente en la raíz del repositorio con al menos 6 secciones completas.
+- ☐ README está en español (textos visibles y documentación).
+- ☐ Se crearon al menos 3 issues con títulos descriptivos.
+- ☐ Los issues tienen labels para categorización.
+- ☐ `main` está protegida y no recibe push directo.
+- ☐ Al menos un PR fue revisado y fusionado por un compañero del grupo.
+- ☐ No hay commits directos a `main` durante el encuentro.
+
+## 5. Errores esperados y cómo intervenir
+
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| README en inglés o con textos en inglés | Convención del curso exige español en textos visibles | Recordar que el README es documentación del proyecto y debe estar en español |
+| Issues sin descripción o con títulos tipo "cambios" | No entender que el issue es una tarea concreta | Orientar a escribir títulos descriptivos que indiquen qué funcionalidad se implementa |
+| PR fusionado sin revisión | Prisa o confusión sobre el flujo | Verificar que el grupo entiende que la revisión entre pares es obligatoria antes de merge |
+| Push directo a `main` exitoso | Branch protection mal configurada | Verificar que la regla incluya "Require a pull request" y "Include administrators" |
+| README faltante o vacío | No dedicar tiempo a la documentación | Enfatizar que el README es parte del trabajo profesional y se evalúa |
+
+## 6. Registro de la clase
+
+| Grupo | README completo | Issues creados | PRs revisados | Main protegida | Observaciones |
+| --- | --- | --- | --- | --- | --- |
+| Grupo 1 | | | | | |
+| Grupo 2 | | | | | |
+| Grupo 3 | | | | | |
+| Grupo 4 | | | | | |
+
+**Notas para evaluación de proceso:** verificar que cada grupo tenga README completo, issues organizados y al menos un PR fusionado con revisión. Registrar qué grupos necesitan acompañamiento adicional en documentación o en el flujo de PRs.

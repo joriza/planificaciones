@@ -1,179 +1,180 @@
-# Encuentro 8: Cierre U1 — repaso y TP
+# Encuentro 8 — Cierre U1: repaso y TP
 
-## Datos del encuentro
+> Unidad 1 — Fundamentos de C# y Minimal API
 
-| Campo | Valor |
-|---|---|
-| Unidad | U1: Fundamentos de C# y Minimal API |
-| Encuentro | 8 de 8 |
-| Duración | 240 minutos |
-| Carácter | Actitudinal |
+## 1. Metadatos de bloque
 
-## Objetivos de aprendizaje
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 8 de 36 |
+| Unidad | 1 — Fundamentos de C# y Minimal API |
+| Eje temático | 2 — Minimal API y endpoints HTTP |
+| Carácter/Objetivo | Actitudinal |
+| Estructura | cierre |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Uso de celular | No permitido |
+| Concepto nuevo | Cierre U1: repaso y TP |
+| Requisitos previos | Encuentros 4 a 7 de la Unidad 1 |
+| Organización del trabajo | Grupos de 3-4 personas; un repositorio compartido por grupo para todo el curso; presentes ÷ equipos disponibles para recalcular el tamaño de los grupos |
 
-- Integrar todos los conceptos de la Unidad 1 en una API funcional.
-- Implementar el TP-U1: Minimal API con endpoints GET.
-- Publicar el trabajo en GitHub siguiendo la rutina de cierre.
-- Revisar los errores más frecuentes del código propio y ajeno.
+### Reparto de tiempos teóricos
 
-## Reparto de tiempos (240 minutos)
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-| Bloque | Minutos |
-|---|---|
-| Apertura y motivación | 20 |
-| Desarrollo teórico-práctico | 120 |
-| Consolidación y cierre | 20 |
-| Actividad complementaria | 80 |
+## 2. Objetivos de aprendizaje
 
-## Charla rápida
+1. Repasar los conceptos clave de la Unidad 1: tipos de datos, estructuras de control, métodos, Minimal API y endpoints GET.
+2. Ejecutar el TP-U1 completo: crear una Minimal API con al menos 3 endpoints GET funcionales.
+3. Realizar el ciclo completo de Git/GitHub: init, add, commit, remote add, push.
+4. Entregar el TP-U1 en GitHub con el mensaje de commit correcto.
+5. Prepararse para la evaluación individual de la Unidad 1.
 
-Hasta acá aprendimos a escribir código C#, a envolverlo en métodos, a decidir con `if`, a repetir con `foreach`, y a exponer datos por HTTP con una Minimal API. Todo ese conocimiento se integra en un solo trabajo práctico: el TP-U1. Piensen en el TP como el "examen de cocina" donde tienen que preparar el plato completo sin ayuda. La receta la conocen: es la misma progresión que hicimos desde el Encuentro 4 hasta hoy. Lo nuevo es que al terminar lo suben a GitHub, y a partir de ahora cada entrega va a tener su propio espacio en el repositorio del grupo.
+## 3. Apertura y motivación (20 min)
 
-## Repaso integrador
+### Charla rápida: ¿Qué aprendimos en esta unidad?
 
-### Estructura canónica de `Program.cs`
+Hemos recorrido un camino: desde entender qué es .NET y C#, hasta crear nuestros propios endpoints web con Minimal API. Cada encuentro construyó sobre el anterior. Hoy vamos a repasar todo y a entregar el trabajo práctico.
 
-```
-1. Datos (lista de pacientes literal)
-2. var builder = WebApplication.CreateBuilder(args);
-3. var app = builder.Build();
-4. Endpoints GET (listar, buscar por ID, filtrar)
-5. app.Run();
-6. Records posicionales AL FINAL
-```
+### Repaso rápido en grupos
 
-### Checklist de lo que debe tener el TP-U1
+Cada grupo responde en una hoja:
 
-- [ ] Proyecto creado con `dotnet new web`.
-- [ ] Carpeta `tp-u1/` dentro del repositorio grupal.
-- [ ] Archivo `Program.cs` con top-level statements.
-- [ ] Lista de pacientes en memoria (literal, sin base de datos).
-- [ ] Endpoint `GET /patients` que devuelva la lista completa.
-- [ ] Endpoint `GET /patients/{id:long}` que devuelva un paciente o 404.
-- [ ] Endpoint `GET /patients/count` que devuelva el total.
-- [ ] Filtro opcional `?gender=X` en `GET /patients`.
-- [ ] `Results.Ok`, `Results.NotFound` con `new { mensaje = "..." }`.
-- [ ] Record al final del archivo después de `app.Run()`.
-- [ ] `.gitignore` con `bin/` y `obj/`.
-- [ ] Commit y push al final.
+1. ¿Qué es .NET y qué rol cumple C#?
+2. ¿Cuál es la diferencia entre `dotnet new console` y `dotnet new web`?
+3. ¿Qué hace `app.MapGet`?
+4. ¿Cuál es la diferencia entre un parámetro de ruta y un parámetro de query string?
+5. ¿Qué es un commit en Git y por qué lo hacemos al final de cada encuentro?
 
-## Práctica guiada: armado del TP
+Se comparten 3 respuestas al plenario.
 
-Vamos a construir juntos el esqueleto del TP-U1. Cada grupo parte de esta base y la completa con sus propios datos.
+## 4. Desarrollo teórico-práctico (120 min)
 
-**Paso 1:** crear la carpeta del TP dentro del repositorio grupal:
+### 4.1 Repaso de conceptos clave (30 min)
 
-```bash
-mkdir -p tp-u1
-cd tp-u1
-dotnet new web
-```
+El docente recorre los siguientes temas con ejemplos rápidos en el pizarrón:
 
-**Paso 2:** reemplazar `Program.cs` con la estructura completa:
+- **Estructura de Program.cs:** `CreateBuilder` → `Build` → `MapGet` → `Run`.
+- **Tipos de datos:** `string`, `int`, `long`, `bool`, `double`.
+- **Condicionales:** `if`/`else if`/`else`.
+- **Bucles:** `for`, `foreach`, `while`.
+- **Métodos:** declaración con parámetros y retorno.
+- **Endpoints GET:** con y sin parámetros de ruta, con query strings.
 
-```csharp
-// Lista de pacientes del grupo (completar con 5 pacientes propios)
-var patients = new List<Patient>
-{
-    new Patient(1, "Ana", "Lopez", "F", "1990-05-15"),
-    new Patient(2, "Luis", "Martinez", "M", "1985-08-22"),
-    new Patient(3, "Elena", "Garcia", "F", "1978-12-03"),
-    new Patient(4, "Carlos", "Perez", "M", "2000-01-10"),
-    new Patient(5, "Sofia", "Diaz", "F", "1995-07-30")
-};
+### 4.2 TP-U1: Minimal API GET (50 min)
 
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+El TP-U1 consiste en crear una Minimal API que cumpla con los siguientes requisitos:
 
-// GET /patients — lista completa (con filtro opcional por genero)
-app.MapGet("/patients", (string? gender) =>
-{
-    if (gender is not null)
-    {
-        var filtered = patients.Where(p => p.Gender == gender).ToList();
-        return Results.Ok(filtered);
-    }
-    return Results.Ok(patients);
-});
+1. **Endpoint `/`** — devuelve `{"mensaje":"API de la unidad 1"}`.
+2. **Endpoint `/saludo/{nombre}`** — devuelve `{"saludo":"Hola, {nombre}!"}`.
+3. **Endpoint `/suma/{a:double}/{b:double}`** — devuelve `{"resultado":a+b}`.
+4. **Endpoint `/productos`** — devuelve una lista de al menos 3 productos como JSON.
+5. **Endpoint `/productos/{id:long}`** — devuelve un producto por ID o `404` si no existe.
 
-// GET /patients/count — total de pacientes
-app.MapGet("/patients/count", () =>
-{
-    return Results.Ok(new { total = patients.Count });
-});
+El código debe estar en un único archivo `Program.cs`, con comentarios en español (sin tildes ni eñes en el código) y records al final si se usan.
 
-// GET /patients/{id:long} — buscar por ID
-app.MapGet("/patients/{id:long}", (long id) =>
-{
-    var patient = patients.FirstOrDefault(p => p.PatientId == id);
-    return patient is null
-        ? Results.NotFound(new { mensaje = "Paciente no encontrado" })
-        : Results.Ok(patient);
-});
+### 4.3 Repaso del ciclo Git/GitHub (20 min)
 
-app.Run();
-
-record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate);
-```
-
-**Paso 3:** probar los cuatro endpoints.
-
-**Paso 4:** crear el `.gitignore` en `tp-u1/`:
+Este es el primer encuentro de entrega. Se enseña el ciclo completo de Git/GitHub:
 
 ```bash
-echo "bin/" > .gitignore
-echo "obj/" >> .gitignore
-```
+# 1. Verificar que .gitignore esta en la raiz del repositorio
+# El archivo .gitignore debe contener:
+# bin/
+# obj/
 
-## Ejercicio independiente: personalizar y entregar
+# 2. Inicializar el repositorio (solo la primera vez)
+git init
 
-1. Cambiar los pacientes de la lista por datos inventados por el grupo (mínimo 5 pacientes, con al menos 2 de cada género).
-2. Agregar un endpoint adicional `GET /patients/older-than?age=30` que devuelva los pacientes mayores de una edad dada.
-
-**Pista:** filtrar con `Where` y calcular la edad con `DateTime.Parse` y la misma lógica del Encuentro 5:
-
-```csharp
-var older = patients.Where(p =>
-{
-    var birth = DateTime.Parse(p.BirthDate);
-    int edad = DateTime.Today.Year - birth.Year;
-    if (DateTime.Today < birth.AddYears(edad)) edad--;
-    return edad > age;
-}).ToList();
-```
-
-## Rutina de cierre (git)
-
-Al finalizar, subir el trabajo al repositorio grupal:
-
-```bash
+# 3. Agregar todos los archivos
 git add .
-git commit -m "tp-u1: minimal api get con filtros y endpoint por id"
-git push
+
+# 4. Hacer el commit con mensaje descriptivo
+git commit -m "tp-u1: api minimal con endpoints get implementados"
+
+# 5. Crear el repositorio en GitHub (desde la web de GitHub)
+# No se hace desde la terminal; se crea en github.com
+
+# 6. Agregar el repositorio remoto
+git remote add origin https://github.com/usuario/nombre-repo.git
+
+# 7. Subir el commit al repositorio remoto
+git push -u origin main
 ```
 
-> **Importante:** un commit por encuentro. El mensaje va en español, sin tildes, después de los dos puntos.
+**Reglas del repositorio:**
+- Un repositorio por grupo para todo el curso.
+- Carpeta `tp-u1/` para este trabajo práctico.
+- Rama única `main`.
+- Un commit al final de cada encuentro que referencie el progreso realizado.
+- El mensaje del commit va en español, minúsculas después de los dos puntos, sin tildes.
+
+### 4.4 Trabajo en grupo: completar y entregar el TP (20 min)
+
+Cada grupo:
+1. Verifica que su API tenga todos los endpoints requeridos.
+2. Prueba cada endpoint en el navegador o con `curl`.
+3. Hace el commit final del TP-U1 con el mensaje: `tp-u1: entrega final minimal api get`.
+4. Sube el commit con `git push`.
+
+## 5. Consolidación y cierre (20 min)
+
+- Cada grupo muestra su API funcionando en el navegador.
+- Se verifica que todos los grupos tengan el commit de entrega en GitHub.
+- Se repasan los errores más frecuentes de la unidad.
+- Se anuncia el Encuentro 9: Evaluación de la Unidad 1 (entrega y defensa individual).
+
+## 6. Actividad complementaria (80 min)
+
+### Preparación para la evaluación de la Unidad 1
+
+La evaluación de la Unidad 1 será individual y constará de:
+1. **Entrega del TP-U1** en GitHub (ya realizada en este encuentro).
+2. **Defensa individual** en el próximo encuentro: cada alumno deberá explicar los conceptos clave de la unidad y demostrar que puede modificar un endpoint existente.
+
+### Repaso con ejercicios de refuerzo
+
+Los grupos que terminan la entrega del TP-U1 pueden trabajar en estos ejercicios de refuerzo:
+
+1. **Agregar un endpoint `/productos/{id:long}/detalle`** que devuelva un objeto con el producto y un mensaje de descripción.
+2. **Crear un endpoint `/suma` con query strings** en lugar de parámetros de ruta: `/suma?a=3&b=5`.
+3. **Agregar validación** al endpoint `/saludo/{nombre}`: si el nombre está vacío, devolver `Results.BadRequest(new { mensaje = "El nombre no puede estar vacio" })`.
+
+### Entrega final del TP-U1 en GitHub
+
+Verificar que:
+- El repositorio del grupo tiene la carpeta `tp-u1/`.
+- El archivo `Program.cs` contiene todos los endpoints requeridos.
+- El último commit tiene el mensaje de entrega.
+- El `.gitignore` en la raíz contiene `bin/` y `obj/`.
+- El commit se hizo en la rama `main`.
+
+## 7. Cierre (15 min)
 
 ### Qué te llevás
 
-- .NET ejecuta código C# compilado.
-- `string` para texto, `long` para números enteros.
-- Métodos, `if`, `foreach` y records posicionales.
-- Una Minimal API expone datos por HTTP con `MapGet`.
-- Los parámetros de ruta y query string permiten filtrar.
+- .NET es la plataforma y C# es el lenguaje para programar sobre ella.
+- Una Minimal API se crea con `dotnet new web` y tiene `Program.cs` como archivo único.
+- `MapGet` define endpoints que responden a solicitudes GET.
+- Los parámetros de ruta se definen entre llaves en la URL; los de query string van después del `?`.
+- Se puede filtrar datos en los endpoints usando parámetros de query string.
+- El ciclo de Git/GitHub incluye: init, add, commit, remote add, push.
+- El TP-U1 se entrega en GitHub con la carpeta `tp-u1/` y commits que referencien el progreso.
 
 ### Lo que viene
 
-En el Encuentro 9, evaluación de la Unidad 1: defensa oral y prueba A/B. Después, en la Unidad 2, la API se conecta a una base de datos SQLite real (`hospital.db`): consultas SELECT con JOIN y resultados mapeados con Dapper y records posicionales. Los datos dejan de ser literales en el código.
+**Encuentro 9: Evaluación de la Unidad 1** — Entrega y defensa individual del TP-U1. Cada alumno deberá explicar los conceptos clave de la unidad y demostrar que puede modificar un endpoint existente.
 
-## Errores comunes y trampas (repaso general)
+## 8. Errores comunes y trampas
 
-| Error | Causa | Solución |
-|---|---|---|
-| Record antes de `app.Run()` | CS8803: declaraciones de tipo antes que el código ejecutable. | Mover el record al final. |
-| ID como `int` en el record | Dapper espera `Int64`; inconsistencia con la BD futura. | Usar `long PatientId`. |
-| Fecha como `DateTime` en el record | Dapper recibe `string` de SQLite; el constructor no coincide. | Usar `string BirthDate`. |
-| Olvidar `Results.*` | Devolver el objeto crudo serializa, pero viola la convención. | Envolver con `Results.Ok()`, `Results.NotFound()`, etc. |
-| Ruta sin barra inicial | `MapGet("patients", ...)` sin `/` no matchea. | Usar `"/patients"`. |
-| Query string sin `string?` | El parámetro nullable sin `?` es obligatorio y la ruta falla. | Declarar `string? gender`. |
-| `SELECT` sin alias `AS` | Para la Unidad 2: sin `AS PatientId` el mapeo con Dapper falla. | Usar `SELECT patient_id AS PatientId`. |
+1. **No hacer `git init` antes de `git add`** — Sin inicializar el repositorio, los comandos de Git no funcionan. Verificar que exista la carpeta `.git` antes de hacer commit.
+2. **Commitar archivos de `bin/` y `obj/`** — Estos archivos son generados por la compilación y no deben versionarse. Verificar que `.gitignore` en la raíz contenga `bin/` y `obj/`.
+3. **Olvidar `git push` después del commit** — El commit local no se comparte con el equipo ni con el repositorio remoto. Siempre hacer `git push` al final de cada encuentro.
+4. **Mensaje de commit con tildes** — Los mensajes de commit no llevan tildes ni eñes. Usar `e` o `ee` como reemplazo (ejemplo: `entrega`, no `entrega`).
+5. **No crear la carpeta `tp-u1/`** — El TP debe estar en una carpeta específica dentro del repositorio del grupo. Verificar que la estructura sea `tp-u1/Program.cs`.
+6. **Mezclar el repositorio del curso con el del TP** — Cada grupo tiene un solo repositorio para todo el curso. No crear repositorios separados para cada encuentro.

@@ -1,149 +1,128 @@
-# Continuidad pedagógica — Repaso tras evaluación de la Unidad 1
+# Continuidad pedagógica 02 — Tras evaluación de U1
 
-**Curso:** Minimal API con C# .NET 6
-**Momento de uso:** Tras la evaluación de la Unidad 1 (encuentro 9)
-**Duración teórica:** 240 minutos
-**Requisitos:** Computadora con SDK .NET 6, VS Code o editor similar, terminal de comandos y conexión a Internet para crear proyectos y descargar paquetes.
-**Contenido repasado:** Unidad 1 completa — fundamentos de C#, estructuras de control, Minimal API con endpoint GET, parámetros de ruta y *query string*.
+## Datos de referencia
 
----
+| Campo | Valor |
+|-------|-------|
+| Curso | Minimal API con C# .NET 6 |
+| Momento de uso | Tras la evaluación de U1 (encuentro 9) |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Requisitos | Computadora, VS Code, SDK .NET 6, terminal. Archivo `hospital.db` disponible. |
 
-## Objetivos
+## Objetivos de aprendizaje
 
-- Crear un proyecto web con `dotnet new web` y ejecutarlo con `dotnet run`.
-- Declarar variables de tipos básicos (`int`, `long`, `double`, `string`, `bool`) y escribir estructuras de control (`if`, `for`, `while`).
-- Definir endpoints `MapGet` que devuelvan datos en formato JSON.
-- Extraer parámetros de la ruta (`{id:long}`) y de la *query string* (`?nombre=...`).
-- Aplicar el alias `AS` en SQL y el uso correcto de `Results.Ok` y `Results.NotFound`.
+1. Repasar los tipos de datos de C# y la declaración de variables para consolidar la base del curso.
+2. Reforzar el uso de estructuras de control de flujo (if/else, switch) en la resolución de problemas.
+3. Revisar la definición y uso de métodos con parámetros y valores de retorno.
+4. Practicar la creación de endpoints GET con `MapGet` en una Minimal API.
 
----
+## Actividades puntuadas (sobre 100)
 
-## Actividades (100 puntos — 240 minutos)
+### Actividad 1 — Tipos de datos y variables (15 puntos / 40 minutos)
 
-### Actividad 1 — Repaso de C# básico (20 puntos — 50 minutos)
+**Consigna:** En una computadora, abrí una consola de C# (o un proyecto de Minimal API) y completá las siguientes tareas.
 
-**Parte A (10 ptos.).** Escribí un programa de consola (sin Minimal API) que:
+a) Declará e inicializá variables de cada uno de estos tipos: `long`, `string`, `string?`, `long?`, `int`, `double`. Asignáles valores representativos del contexto hospitalario (por ejemplo, `patientId`, `firstName`, `height`, `weight`).
 
-1. Declare una variable `string? nombre` y otra `int edad`.
-2. Pida al usuario que ingrese su nombre y su edad (usá `Console.ReadLine()`).
-3. Si la edad es mayor o igual a 18, muestre `"Hola {nombre}, sos mayor de edad"`. Si no, muestre `"Hola {nombre}, sos menor de edad"`.
-
-Copiá el código completo en tu hoja.
-
-**Parte B (10 ptos.).** Explicá, en tres líneas como máximo, qué significa `string?` (con el signo de pregunta) y en qué se diferencia de `string`.
-
-| Criterio | Puntaje |
-| --- | --- |
-| Código correcto (variables, lectura, condición, escritura) | 10 ptos. |
-| Explicación clara de `string?` (nullable) | 10 ptos. |
-
-### Actividad 2 — Endpoint GET sin base de datos (20 puntos — 50 minutos)
-
-Escribí el código de un proyecto Minimal API (archivo `Program.cs` completo) que:
-
-- Exponga un endpoint `GET /saludo` que devuelva `Results.Ok(new { mensaje = "Hola desde Minimal API" })`.
-- Exponga un endpoint `GET /saludo/{nombre:string}` que devuelva `Results.Ok(new { mensaje = $"Hola {nombre}" })`.
-
-Incluí las directivas `using` necesarias y la estructura completa del archivo (`builder`, `app.Build()`, endpoints, `app.Run()`).
-
-| Criterio | Puntaje |
-| --- | --- |
-| Estructura completa del archivo Program.cs | 6 ptos. |
-| Endpoint `/saludo` correcto | 6 ptos. |
-| Endpoint `/saludo/{nombre}` con string correcto | 8 ptos. |
-
-### Actividad 3 — Parámetros de ruta y query string (20 puntos — 50 minutos)
-
-Agregá al proyecto de la Actividad 2 un endpoint `GET /calcular` que acepte dos *query parameters* llamados `a` y `b` (ambos `long`) y devuelva:
-
-```json
-{ "a": 10, "b": 5, "suma": 15 }
-```
-
-El endpoint debe:
-- Leer los parámetros desde la *query string* usando `HttpContext`.
-- Validar que ambos estén presentes: si falta alguno, devolver `Results.BadRequest`.
-- Devolver la suma y los valores originales.
-
-| Criterio | Puntaje |
-| --- | --- |
-| Lectura correcta de query parameters desde `HttpContext` | 8 ptos. |
-| Validación de parámetros faltantes con `Results.BadRequest` | 6 ptos. |
-| Cálculo y respuesta JSON correctos | 6 ptos. |
-
-### Actividad 4 — Errores comunes (20 puntos — 40 minutos)
-
-Identificá y corregí los errores del siguiente código. Hay exactamente **tres errores** conceptuales (no de sintaxis menor):
+b) Predicí el resultado de cada una de estas operaciones y luego verificá ejecutando:
 
 ```csharp
-using Dapper;
-using Microsoft.Data.Sqlite;
+long patientId = 42;
+string firstName = "Carlos";
+long? height = 175;
+string? city = null;
 
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-
-app.MapGet("/patients/{id:int}", (int id) =>
-{
-    using var connection = new SqliteConnection("Data Source=hospital.db");
-    var patient = connection.QueryFirstOrDefault<Patient>(
-        "SELECT * FROM patients WHERE patient_id = @id", new { id });
-
-    return patient is null
-        ? Results.NotFound(new { mensaje = "Paciente no encontrado" })
-        : Results.Ok(patient);
-});
-
-app.Run();
-
-record Patient(int patient_id, string first_name, string birth_date);
+Console.WriteLine(patientId.GetType().Name);
+Console.WriteLine(height.HasValue);
+Console.WriteLine(city == null);
 ```
 
-Para cada error:
-- Escribí **cuál es**.
-- Escribí **la línea corregida**.
+c) ¿Qué pasa si declarás `int patientId = 42` en lugar de `long`? Ejecutá el código y registrá el error o comportamiento observado.
 
-| Criterio | Puntaje |
-| --- | --- |
-| Error 1 identificado y corregido | 7 ptos. |
-| Error 2 identificado y corregido | 7 ptos. |
-| Error 3 identificado y corregido | 6 ptos. |
+**Puntos:** 15
 
-### Actividad 5 — Bucle y lista en endpoint (20 puntos — 50 minutos)
+---
 
-Escribí un endpoint `GET /tabla/{numero:long}` que devuelva los primeros diez múltiplos del número ingresado, en este formato:
+### Actividad 2 — Control de flujo (20 puntos / 45 minutos)
 
-```json
-{
-  "numero": 7,
-  "multiplos": [7, 14, 21, 28, 35, 42, 49, 56, 63, 70]
-}
-```
+**Consigna:** En la computadora, escribí un programa que resuelva cada uno de los siguientes enunciados usando `if/else` o `switch`.
 
-Usá un bucle `for` para generar la lista y `Results.Ok` para la respuesta.
+a) Dado un número entero `patientId`, escribí un mensaje que indique si el paciente es menor de 18 años (requiere consentimiento), entre 18 y 65 (adulto), o mayor de 65 (adulto mayor). Usá una variable `int age` y probá con tres valores distintos.
 
-| Criterio | Puntaje |
-| --- | --- |
-| Bucle `for` correcto (índice de 1 a 10, multiplicación) | 8 ptos. |
-| Construcción de la lista de múltiplos | 6 ptos. |
-| Respuesta con `Results.Ok` en el formato exacto | 6 ptos. |
+b) Escribí un método `string GetSeverity(long heartRate)` que devuelva `"Bajo"` si `heartRate < 60`, `"Normal"` si está entre 60 y 100 inclusive, y `"Alto"` si es mayor a 100. Probá con los valores 55, 75 y 110.
+
+c) ¿Qué sucede si en el inciso b) no incluís un `else` para el caso `"Alto"`? Ejecutá el código y explicá el resultado.
+
+**Puntos:** 20
+
+---
+
+### Actividad 3 — Métodos y funciones (20 puntos / 45 minutos)
+
+**Consigna:** En la computadora, escribí los siguientes métodos dentro de un proyecto de Minimal API o en una consola de prueba.
+
+a) Escribí un método `long CalculateBMI(long weight, long height)` que calcule el IMC usando la fórmula `weight / (height * height) * 10000` (peso en gramos, altura en centímetros, resultado redondeado a entero). Usá `long` para todos los parámetros y el retorno.
+
+b) Escribí un método `bool IsValidPatient(long? height, long? weight)` que devuelva `true` solo si ambos valores no son nulos y son mayores a cero.
+
+c) Llamá ambos métodos desde el `Main` (o desde un endpoint de prueba) con estos datos: peso = 75000 (75 kg), altura = 175 (cm). Mostrá el resultado por consola.
+
+d) ¿Por qué el método de IMC usa `long` y no `double`? ¿Qué pérdida de precisión puede generar esto? Anotá tu respuesta.
+
+**Puntos:** 20
+
+---
+
+### Actividad 4 — Endpoint GET con MapGet (25 puntos / 60 minutos)
+
+**Consigna:** En la computadora, creá un proyecto de Minimal API (`dotnet new web`) que exponga los siguientes endpoints. Usá solo `Program.cs`, Dapper y `hospital.db`.
+
+a) `GET /patients` — retorna la lista completa de pacientes con todos sus campos. Usa `Query<Patient>` y alias `AS` en el SELECT.
+
+b) `GET /patients/{id:long}` — retorna un paciente por ID. Si no existe, devolvé `Results.NotFound` con un mensaje en español.
+
+c) `GET /patients?city={city}` — retorna los pacientes filtrados por ciudad usando `LIKE` con parámetro. Si no se pasa `city`, retorna todos los pacientes.
+
+**Requisitos:**
+- El record `Patient` debe ir después de `app.Run()`.
+- Toda consulta SQL debe ser parametrizada (`@city`, `@id`).
+- Los tipos canónicos deben respetar la convención del curso (`long` para INTEGER, `string?` para nullable).
+- Comentarios en español en cada paso del código.
+
+**Puntos:** 25
+
+---
+
+### Actividad 5 — Repaso conceptual (20 puntos / 50 minutos)
+
+**Consigna:** Respondé las siguientes preguntas en papel o en un archivo de texto (sin ejecutar código).
+
+a) ¿Cuál es la diferencia entre `MapGet` y `MapPost`? Explicá con un ejemplo de cada uno.
+
+b) ¿Por qué Dapper requiere alias `AS` en los SELECT cuando los nombres de columna usan snake_case?
+
+c) ¿Qué diferencia hay entre `Query<T>` y `QueryFirstOrDefault<T>`? ¿Cuándo usarías cada uno?
+
+d) ¿Qué código de respuesta HTTP se devuelve cuando un recurso no existe? ¿Y cuando la solicitud tiene datos faltantes?
+
+e) ¿Por qué se usa `ExecuteScalar<long>` en lugar de `ExecuteScalar<int>` para conteos y claves primarias?
+
+**Puntos:** 20
 
 ---
 
 ## Autoevaluación para el alumno
 
-| Afirmación | Lo logré | Lo logré parcialmente | No lo logré |
-| --- | --- | --- | --- |
-| Creo y ejecuto un proyecto `dotnet new web`. | ☐ | ☐ | ☐ |
-| Escribo un `if` con variables de tipo `string` y `int`. | ☐ | ☐ | ☐ |
-| Defino endpoints `MapGet` con y sin parámetros. | ☐ | ☐ | ☐ |
-| Leo parámetros desde la *query string* y valido su presencia. | ☐ | ☐ | ☐ |
-| Corrijo errores de tipos (usar `int` en vez de `long`, fecha como `string`, alias `AS`). | ☐ | ☐ | ☐ |
-| Genero una lista con un bucle `for` dentro de un endpoint. | ☐ | ☐ | ☐ |
+Antes de la próxima clase, respondé con honestidad las siguientes preguntas. No hay puntos en juego; es una herramienta para que identifiques qué repasar.
 
-**Tiempo real que me llevó:** ________ minutos.
+- ¿Puedo declarar variables de los tipos canónicos del curso (`long`, `string`, `string?`, `long?`) y explicar por qué no uso `int` para las claves primarias?
+- ¿Soy capaz de escribir estructuras `if/else` y `switch` que manejen al menos tres ramas?
+- ¿Puedo definir un método con parámetros y valor de retorno, y llamarlo desde un endpoint?
+- ¿Sé crear un endpoint `GET` con `MapGet` que use Dapper para consultar la base de datos?
+- ¿Entiendo por qué las consultas SQL deben ser siempre parametrizadas?
 
----
+Si respondiste "no" a alguna de estas preguntas, repasá la actividad correspondiente antes del próximo encuentro.
 
-## Nota académica obligatoria
+## Nota de registro académico
 
-La resolución de estas actividades se realiza en forma habitual, por lo general en grupo. Las tareas de programación requieren el uso de la computadora. La presentación es **individual y manuscrita**, al inicio de la próxima clase, y constituye una actividad más de la asignatura que forma parte del proceso de evaluación.
+la resolución se realiza en forma habitual (por lo general, en grupo); las tareas de programación requieren el uso de la computadora; la presentación es individual y manuscrita, al inicio de la próxima clase, y constituye una actividad más de la asignatura que forma parte del proceso de evaluación.

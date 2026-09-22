@@ -1,150 +1,96 @@
 # Encuentro 25 — Cierre U3: repaso y TP
 
-## Metadatos de bloque
+> Unidad 3 — CRUD completo con Dapper · Encuentro de cierre de unidad
 
-| Campo | Valor |
-|---|---|
-| **Duracion** | 240 minutos |
-| **Unidad** | 3 — CRUD completo con Dapper |
-| **Eje** | 5 — CRUD con Dapper |
-| **Tipo** | Actitudinal — cierre de unidad |
-| **Requiere** | Unidad 3 completa (encuentros 21-24): POST, DELETE, PUT, JOIN triple |
-| **Produccion** | TP-U3: API completa con CRUD sobre dos tablas relacionadas |
+## 1. Metadatos de bloque
 
-## Reparto de tiempos (240 minutos)
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 25 de 36 |
+| Unidad | 3 — CRUD completo con Dapper |
+| Eje temático | 5 — CRUD con Dapper |
+| Carácter/Objetivo | Actitudinal |
+| Estructura | cierre |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| TP obligatorio | TP-U3: CRUD completo |
+| Concepto nuevo | Cierre U3: repaso y TP |
+| Requisitos previos | Encuentros 21-24: INSERT, DELETE, UPDATE, CRUD completo y JOIN triple |
+| Uso de celular | No permitido |
+| Organización del trabajo | Grupos de 3-4 integrantes (presentes ÷ equipos disponibles) |
 
-| Bloque | Duracion |
-|---|---|
-| Apertura y motivacion | 20 min |
-| Repaso teorico-practico | 50 min |
-| Trabajo en el TP-U3 | 120 min |
-| Puesta en comun y cierre de unidad | 30 min |
-| Cierre | 20 min |
+### Reparto de tiempos teóricos
 
-## Objetivos de aprendizaje
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-- Integrar los cuatro verbos CRUD en una sola API funcional con Dapper y SQLite.
-- Implementar un endpoint con JOIN triple que combine `admissions`, `doctors` y `patients`.
-- Aplicar la checklist de defectos frecuentes para verificar el codigo antes de la entrega.
-- Publicar el TP-U3 en GitHub dentro de la carpeta `tp-u3/` del repositorio grupal.
+## 2. Objetivos de aprendizaje
 
-## Charla rapida / analogia
+1. Repasar los cuatro endpoints CRUD y la diferencia entre los códigos HTTP de cada operación.
+2. Explicar por qué se usa `ExecuteScalar<long>` para INSERT y `Execute` para UPDATE/DELETE.
+3. Describir cómo funciona un JOIN de 3 tablas y por qué se usan alias `AS`.
+4. Entregar el TP-U3 en GitHub con la estructura de carpetas correcta.
 
-Imaginate que terminaste de construir tu primera herramienta profesional: una API que puede **crear**, **leer**, **actualizar** y **eliminar** datos de un hospital. Es como tener tu propia llave maestra del sistema de salud digital. Hoy repasamos todo lo que aprendiste, corregimos los errores tipicos y armas la entrega final de la Unidad 3: el TP-U3.
+## 3. Apertura y motivación (20 min)
 
-## Repaso de los conceptos de la unidad
+### Charla rápida: analogía breve que ancle el concepto
 
-### Los cuatro verbos HTTP y sus metodos Dapper
+Repasamos la unidad completa como si fuera el menú completo de un restaurante. El GET es la carta, el POST es el pedido nuevo, el PUT es la modificación y el DELETE es la cancelación. El JOIN de 3 tablas es como pedir un plato que viene con todos los ingredientes listados juntos. Hoy cerramos la unidad y entregamos el trabajo práctico.
 
-| Verbo | Metodo C# | Metodo Dapper | Respuesta | Record de entrada |
-|---|---|---|---|---|
-| GET (lista) | `MapGet` | `Query<T>` con `.ToList()` | `200 Ok` | Ninguno |
-| GET (uno) | `MapGet` con parametro `{id:long}` | `QueryFirstOrDefault<T>` | `200 Ok` o `404` | Ninguno |
-| POST | `MapPost` | `ExecuteScalar<long>` con `last_insert_rowid()` | `201 Created` | `Input` (sin ID) |
-| PUT | `MapPut` | `Execute` con existencia previa | `204 NoContent` | `Input` (todos los campos) |
-| DELETE | `MapDelete` | `Execute` verificando filas afectadas | `204 NoContent` | Ninguno |
+### Lo mínimo indispensable
 
-### Los tipos canonicos que no se negocian
+La unidad cubrió las cuatro operaciones CRUD con Dapper en Minimal API. Cada operación tiene su método Dapper canónico (`Query<T>`, `ExecuteScalar<long>`, `Execute`) y su código HTTP correspondiente (`200`, `201`, `204`, `400`, `404`). El TP-U3 integra todo lo aprendido en un repositorio de grupo con commits organizados.
 
-| Columna BD | Tipo en C# |
-|---|---|
-| INTEGER (PK) | `long` (nunca `int`) |
-| TEXT (fecha) | `string` (nunca `DateTime`) |
-| TEXT nullable | `string?` |
-| INTEGER nullable | `long?` |
+## 4. Desarrollo teórico-práctico (120 min)
 
-### Estructura del Program.cs
+### Paso 1 — Repaso rápido de los 4 endpoints
 
-```
-using Dapper;
-using Microsoft.Data.Sqlite;
+| Operación | Método Dapper | Código HTTP | Endpoint |
+| --- | --- | --- | --- |
+| GET (listar) | `Query<T>` | 200 | `MapGet` |
+| GET (uno) | `QueryFirstOrDefault<T>` | 200 o 404 | `MapGet` |
+| POST (crear) | `ExecuteScalar<long>` | 201 | `MapPost` |
+| PUT (actualizar) | `Execute` | 204 o 404 | `MapPut` |
+| DELETE (borrar) | `Execute` | 204 o 404 | `MapDelete` |
 
-var connectionString = "Data Source=hospital.db";
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+### Paso 2 — Repaso del JOIN de 3 tablas
 
-// todos los endpoints MapGet / MapPost / MapPut / MapDelete
-// ...
+El JOIN de 3 tablas une `admissions` con `patients` y `doctors`. Cada columna del SELECT necesita alias `AS` que coincida con el nombre del parámetro del record. Los campos calculados (como `PatientName` con `||`) se aliasean con `AS`.
 
-app.Run();
+### Paso 3 — Entrega del TP-U3 en GitHub
 
-// todos los records posicionales aca abajo
-```
+La entrega del TP-U3 se realiza de la siguiente manera:
 
-## Checklist de verificacion pre-entrega
+1. Cada grupo crea una carpeta `tp-u3/` en su repositorio de grupo.
+2. Dentro de `tp-u3/` se incluye el `Program.cs` con los cuatro endpoints CRUD completos y al menos un endpoint con JOIN de 3 tablas.
+3. Se hace commit con el mensaje: `tp-u3: crud completo con join de 3 tablas` (español, minúsculas tras los dos puntos, sin tildes).
+4. Se hace push al repositorio remoto.
 
-Antes de subir el TP, revisa cada punto:
+**Tamaño de grupos**: presentes ÷ equipos disponibles. Si hay 12 presentes y 3 equipos disponibles, cada grupo tiene 4 integrantes. La distribución se ajusta según la cantidad de equipos disponibles en el aula.
 
-- [ ] Los records usan `long` para IDs, nunca `int`.
-- [ ] Las fechas son `string`, nunca `DateTime` ni `DateOnly`.
-- [ ] Todos los SELECT tienen alias `AS` con PascalCase.
-- [ ] Todas las consultas usan parametros `@nombre` con `new { ... }`, nunca concatenacion.
-- [ ] Los records estan **despues** de `app.Run()`.
-- [ ] `Results.Created()` se usa en POST, `Results.NoContent()` en PUT y DELETE sobre BD.
-- [ ] Los mensajes de error estan en espanol dentro de `new { mensaje = "..." }`.
-- [ ] El proyecto tiene `.gitignore` con `bin/` y `obj/`.
-- [ ] El codigo esta en la carpeta `tp-u3/` del repositorio del grupo.
+### Paso 4 — Verificación de la entrega
 
-## TP-U3: CRUD completo
+El docente verifica que cada grupo tenga:
+- La carpeta `tp-u3/` en la rama `main` del repositorio.
+- Un `Program.cs` que compile y corra contra `hospital.db`.
+- Los cuatro endpoints CRUD funcionales.
+- Al menos un endpoint con JOIN de 3 tablas.
+- Un `.gitignore` en la raíz con `bin/` y `obj/`.
 
-### Consigna
-
-Crear una API en `Program.cs` que implemente CRUD completo sobre dos tablas relacionadas de la base `hospital.db`. La API debe incluir al menos:
-
-1. **GET /doctors** — listar todos los doctores.
-2. **GET /doctors/{id:long}** — obtener un doctor por ID.
-3. **POST /doctors** — crear un nuevo doctor (validar que `first_name` no este vacio).
-4. **PUT /doctors/{id:long}** — actualizar un doctor existente.
-5. **DELETE /doctors/{id:long}** — eliminar un doctor.
-6. **GET /admissions/{id:long}** — obtener una admision con JOIN triple que incluya:
-   - Datos de la admision (`admission_id`, `admission_date`, `diagnosis`, `discharge_date`)
-   - Nombre del doctor (`DoctorFirstName`, `DoctorLastName`)
-   - Nombre del paciente (`PatientFirstName`, `PatientLastName`)
-
-### Criterios de aprobacion
-
-- El codigo compila y corre sin errores.
-- Todos los endpoints responden con el codigo HTTP correcto segun el canon.
-- Los mensajes de error estan en espanol.
-- Los records usan los tipos canonicos (IDs como `long`, fechas como `string`).
-- Todos los SELECT usan alias `AS`.
-- No hay carpetas `Models/`, `Services/` ni `Controllers/`.
-
-### Pistas
-
-- Revisa los ejemplos de los encuentros 21 a 24. El endpoint GET /doctors/{id} es similar al GET /patients/{id} de la Unidad 2.
-- Para el JOIN triple de admissions, usa el record `AdmissionDetail` del encuentro 24.
-- La validacion de cada POST y PUT debe verificar que `FirstName` no sea vacio o nulo.
+## 5. Consolidación y cierre (20 min)
 
 ### Qué te llevás
 
-- POST crea recursos y devuelve `201 Created`.
-- DELETE elimina recursos y devuelve `204 No Content`.
-- PUT actualiza recursos existentes y devuelve `204 No Content`.
-- JOIN triple cruza tres tablas usando alias en las columnas.
-- `ExecuteScalar<long>` para INSERT con retorno de ID, `Execute` para UPDATE y DELETE.
-- Record de entrada separado del record completo para evitar que el cliente envíe IDs.
-- Entrega del TP-U3 por GitHub, dentro de `tp-u3/`:
+- Los cuatro endpoints CRUD se implementan con Dapper usando `Query<T>`, `ExecuteScalar<long>` y `Execute`.
+- Los códigos HTTP canónicos son: `200` (lectura), `201` (alta), `204` (actualización/borrado), `400` (dato faltante), `404` (recurso inexistente).
+- El JOIN de 3 tablas usa `JOIN ... ON` con alias `AS` para cada columna del SELECT.
+- La entrega del TP-U3 es en la carpeta `tp-u3/` del repositorio de grupo, con commit y push a `main`.
+- Los grupos se forman con presentes ÷ equipos disponibles.
 
-```bash
-# Desde la carpeta del repositorio grupal
-mkdir -p tp-u3
-# Copiar Program.cs a tp-u3/
-git add .
-git commit -m "tp-u3: CRUD completo con Dapper"
-git push
-```
+## Lo que viene
 
-### Lo que viene
-
-En el Encuentro 26, evaluación de la Unidad 3: defensa oral y prueba A/B. Después, en la Unidad 4, vas a profesionalizar el repositorio: README, ramas por feature, pull requests, main protegida y el trabajo final integrador.
-
-## Errores comunes y trampas
-
-| Error | Causa | Solucion |
-|---|---|---|
-| El TP no compila | Error de sintaxis, record mal ubicado, falta `using`. | Revisar la estructura con la checklist pre-entrega. |
-| Falta el alias en una columna del JOIN triple | Dapper no puede construir el record. | Cada columna del SELECT debe tener `AS NombreParametro`. |
-| El DELETE devuelve `200` en lugar de `204` | Usar `Results.Ok()` en lugar de `Results.NoContent()`. | Recordar: DELETE con BD devuelve `204`. |
-| El POST devuelve `200` en lugar de `201` | Usar `Results.Ok()` en lugar de `Results.Created()`. | POST correcto devuelve `201 Created` con URL. |
-| Olvidar `.gitignore` en el repositorio | Los archivos `bin/` y `obj/` se suben. | Agregar `.gitignore` con `bin/` y `obj/`. |
+Encuentro 26: Evaluación de la Unidad 3. Cada alumno defenderá individualmente su implementación del TP-U3.

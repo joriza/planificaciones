@@ -1,224 +1,331 @@
 # Encuentro 29 — Consolidación CRUD con JOINs
 
-**Unidad 4:** Profesionalización y proyecto final
-**Carácter:** Procedimental
-**Duración:** 240 minutos
+> Profesionalización y proyecto final
 
----
+## 1. Metadatos de bloque
 
-## Objetivos de aprendizaje
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 29 de 36 |
+| Unidad | 4 — Profesionalización y proyecto final |
+| Eje temático | 6 — Profesionalización y control de versiones |
+| Carácter/Objetivo | Procedimental |
+| Estructura | clase |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Concepto nuevo | Consolidación CRUD con JOINs |
+| Requisitos previos | Encuentro 28: README de portada y issues creados; flujo de ramas y PRs configurado |
+| Uso de celular | No permitido |
+| Organización del trabajo | Grupos de trabajo (presentes ÷ equipos disponibles); cada grupo opera su propio repositorio |
 
-- Consolidar las cuatro operaciones CRUD (GET, POST, PUT, DELETE) con Dapper.
-- Implementar endpoints con JOIN entre dos y tres tablas.
-- Diseñar un endpoint de conteo con agrupación.
-- Aplicar el flujo Git profesional para integrar los cambios.
+### Reparto de tiempos teóricos
 
----
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-## Reparto de tiempos (240 minutos)
+## 2. Objetivos de aprendizaje
 
-| Bloque | Minutos |
-|---|---|
-| Apertura y motivación | 20 |
-| Desarrollo teórico-práctico | 120 |
-| Consolidación y cierre | 20 |
-| Actividad complementaria / trabajo final | 80 |
-| **Total** | **240** |
+1. Consolidar el CRUD completo (GET, POST, PUT, DELETE) sobre `hospital.db` usando Dapper.
+2. Escribir consultas con JOINs que relacionen `patients`, `doctors`, `provinces` y `admissions`.
+3. Aplicar los tipos canónicos del curso: `long` para INTEGER, `string` para fechas, `?` para campos nullable.
+4. Mantener los endpoints parametrizados y seguros contra inyección SQL.
 
----
+## 3. Apertura y motivación (20 min)
 
-## Teoría mínima
+### Charla rápida
 
-### Repaso rápido del CRUD canónico
+Cuando un paciente llega al hospital, no basta con saber su nombre: necesitamos saber qué doctor lo atiende, en qué provincia está, y si tiene admisiones previas. En una API real, los datos viven en varias tablas conectadas entre sí. Los JOINs son la herramienta que permite traer toda esa información junta en una sola consulta. Hoy van a consolidar el CRUD completo y van a construir endpoints que conecten las tablas de `hospital.db`.
 
-| Operación | Endpoint | Método Dapper | Código HTTP |
-|---|---|---|---|
-| Listar todos | `GET /patients` | `Query<T>` | 200 |
-| Obtener uno | `GET /patients/{id:long}` | `QueryFirstOrDefault<T>` | 200 / 404 |
-| Crear | `POST /patients` | `ExecuteScalar<long>` | 201 |
-| Actualizar | `PUT /patients/{id:long}` | `Execute` | 204 / 404 |
-| Eliminar | `DELETE /patients/{id:long}` | `Execute` | 204 / 404 |
+### Puente desde el trabajo anterior
 
-### JOIN de dos tablas (pacientes + provincias)
+En los encuentros anteriores, cada grupo tiene su repositorio con README de portada, issues organizados y flujo profesional de ramas y PRs. Ahora toca poner la API a funcionar con la base de datos real: CRUD completo sobre `hospital.db` y endpoints que usen JOINs para mostrar datos relacionados.
 
-```sql
-SELECT pa.patient_id AS PatientId,
-       pa.first_name AS FirstName,
-       pa.last_name AS LastName,
-       pa.gender AS Gender,
-       pa.birth_date AS BirthDate,
-       pa.city AS City,
-       pn.province_name AS ProvinceName
-FROM patients pa
-JOIN province_names pn ON pa.province_id = pn.province_id
-```
+## 4. Desarrollo teórico-práctico (120 min)
 
-### JOIN de tres tablas (admisiones + doctores + pacientes)
+### 4.1 — CRUD completo sobre hospital.db (40 min)
 
-```sql
-SELECT a.id AS AdmissionId,
-       a.admission_date AS AdmissionDate,
-       a.discharge_date AS DischargeDate,
-       d.doctor_id AS DoctorId,
-       d.first_name AS DoctorFirstName,
-       d.last_name AS DoctorLastName,
-       p.patient_id AS PatientId,
-       p.first_name AS PatientFirstName,
-       p.last_name AS PatientLastName
-FROM admissions a
-JOIN doctors d ON a.attending_doctor_id = d.doctor_id
-JOIN patients p ON a.patient_id = p.patient_id
-```
+El CRUD completo significa que cada tabla de la base de datos tiene endpoints para leer, crear, actualizar y eliminar registros. Siguiendo las convenciones del curso, todo el código vive en un único archivo `Program.cs` y se accede a la base con Dapper.
 
-### Endpoint de conteo con agrupación
+**Convenciones canónicas a respetar:**
 
-```sql
-SELECT pn.province_name AS ProvinceName,
-       COUNT(pa.patient_id) AS PatientCount
-FROM province_names pn
-LEFT JOIN patients pa ON pa.province_id = pn.province_id
-GROUP BY pn.province_name
-ORDER BY PatientCount DESC
-```
+| Regla | Detalle |
+| --- | --- |
+| Tipos de ID | Siempre `long` (nunca `int`) para claves primarias INTEGER de SQLite |
+| Fechas | Siempre `string` en el record, formato ISO `yyyy-MM-dd` |
+| Campos nullable | `string?` para TEXT nullable, `long?` para INTEGER nullable |
+| Consultas | Siempre parametrizadas con `@id` y `new { id }` |
+| Respuestas | Siempre con `Results.Ok()`, `Results.Created()`, `Results.NoContent()`, `Results.BadRequest()`, `Results.NotFound()` |
+| Records | Siempre al final del archivo, después de `app.Run()` |
 
----
-
-## Práctica guiada
-
-### Paso 1: Endpoint GET con JOIN de dos tablas
-
-Crear o verificar el endpoint que devuelve pacientes con el nombre de la provincia:
+**Esqueleto canónico de Program.cs:**
 
 ```csharp
-app.MapGet("/patients/with-province", () =>
+using Dapper;
+using Microsoft.Data.Sqlite;
+
+var connectionString = "Data Source=hospital.db";
+
+// --- ENDPOINTS DE PACIENTES ---
+
+// GET /patients — listar todos los pacientes
+app.MapGet("/patients", () =>
 {
+    // Abrir conexion a la base de datos
     using var connection = new SqliteConnection(connectionString);
-    var patients = connection.Query(@"
-        SELECT pa.patient_id AS PatientId,
-               pa.first_name AS FirstName,
-               pa.last_name AS LastName,
-               pa.gender AS Gender,
-               pa.birth_date AS BirthDate,
-               pa.city AS City,
-               pa.allergies AS Allergies,
-               pa.height AS Height,
-               pa.weight AS Weight,
-               pn.province_name AS ProvinceName
-        FROM patients pa
-        JOIN province_names pn ON pa.province_id = pn.province_id
-    ").ToList();
+    var patients = connection.Query<Patient>("SELECT * FROM patients");
     return Results.Ok(patients);
 });
-```
 
-Probar con `curl http://localhost:5000/patients/with-province`.
-
-### Paso 2: Endpoint de conteo por provincia
-
-Agregar el endpoint que devuelve cuántos pacientes tiene cada provincia:
-
-```csharp
-app.MapGet("/patients/count-by-province", () =>
+// GET /patients/{id:long} — obtener un paciente por ID
+app.MapGet("/patients/{id:long}", (long id) =>
 {
+    // Abrir conexion a la base de datos
     using var connection = new SqliteConnection(connectionString);
-    var result = connection.Query(@"
-        SELECT pn.province_name AS ProvinceName,
-               COUNT(pa.patient_id) AS PatientCount
-        FROM province_names pn
-        LEFT JOIN patients pa ON pa.province_id = pn.province_id
-        GROUP BY pn.province_name
-        ORDER BY PatientCount DESC
-    ").ToList();
-    return Results.Ok(result);
+    // Buscar paciente por id con consulta parametrizada
+    var patient = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               gender AS Gender,
+               birth_date AS BirthDate,
+               city AS City,
+               province_id AS ProvinceId,
+               allergies AS Allergies,
+               height AS Height,
+               weight AS Weight
+        FROM patients
+        WHERE patient_id = @id", new { id });
+
+    return patient is null
+        ? Results.NotFound(new { mensaje = "Paciente no encontrado" })
+        : Results.Ok(patient);
 });
+
+// POST /patients — crear un nuevo paciente
+app.MapPost("/patients", (Patient newPatient) =>
+{
+    // Validar que el nombre no venga vacio
+    if (string.IsNullOrWhiteSpace(newPatient.FirstName))
+    {
+        return Results.BadRequest(new { mensaje = "El nombre es obligatorio" });
+    }
+
+    // Abrir conexion a la base de datos
+    using var connection = new SqliteConnection(connectionString);
+    // Insertar paciente y obtener el id generado
+    var newId = connection.ExecuteScalar<long>(@"
+        INSERT INTO patients (first_name, last_name, gender, birth_date, city, province_id, allergies, height, weight)
+        VALUES (@FirstName, @LastName, @Gender, @BirthDate, @City, @ProvinceId, @Allergies, @Height, @Weight)",
+        newPatient);
+
+    return Results.Created($"/patients/{newId}", newPatient);
+});
+
+// PUT /patients/{id:long} — actualizar un paciente existente
+app.MapPut("/patients/{id:long}", (long id, Patient updatedPatient) =>
+{
+    // Abrir conexion a la base de datos
+    using var connection = new SqliteConnection(connectionString);
+    // Verificar que el paciente existe antes de actualizar
+    var existing = connection.QueryFirstOrDefault<Patient>(
+        "SELECT patient_id FROM patients WHERE patient_id = @id", new { id });
+
+    if (existing is null)
+    {
+        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
+
+    // Ejecutar la actualizacion
+    connection.Execute(@"
+        UPDATE patients SET
+            first_name = @FirstName,
+            last_name = @LastName,
+            gender = @Gender,
+            birth_date = @BirthDate,
+            city = @City,
+            province_id = @ProvinceId,
+            allergies = @Allergies,
+            height = @Height,
+            weight = @Weight
+        WHERE patient_id = @id", updatedPatient);
+
+    return Results.NoContent();
+});
+
+// DELETE /patients/{id:long} — eliminar un paciente
+app.MapDelete("/patients/{id:long}", (long id) =>
+{
+    // Abrir conexion a la base de datos
+    using var connection = new SqliteConnection(connectionString);
+    // Ejecutar eliminacion
+    var rowsAffected = connection.Execute("DELETE FROM patients WHERE patient_id = @id", new { id });
+
+    if (rowsAffected == 0)
+    {
+        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
+
+    return Results.NoContent();
+});
+
+// Record posicional al final, despues de app.Run()
+public record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate, string? City, long ProvinceId, string? Allergies, long? Height, long? Weight);
+
+app.Run();
 ```
 
-Probar con `curl http://localhost:5000/patients/count-by-province`.
+**Práctica guiada:**
 
-### Paso 3: Endpoint de admisiones con JOIN triple
+El docente muestra el CRUD completo de pacientes y explica cada parte:
+- La conexión se abre con `using var connection` dentro de cada handler.
+- Las consultas usan siempre `@id` con `new { id }` (nunca concatenar).
+- Los records usan `long` para IDs y `string` para fechas.
+- Los campos nullable llevan `?` (`string?`, `long?`).
+
+**Ejercicio independiente:**
+
+Cada grupo completa el CRUD completo para las tablas `doctors` y `admissions` siguiendo el mismo patrón:
+- `GET /doctors`, `GET /doctors/{id:long}`, `POST /doctors`, `PUT /doctors/{id:long}`, `DELETE /doctors/{id:long}`
+- `GET /admissions`, `GET /admissions/{id:long}`, `POST /admissions`, `PUT /admissions/{id:long}`, `DELETE /admissions/{id:long}`
+
+### 4.2 — JOINs en los endpoints (40 min)
+
+Los JOINs permiten combinar datos de varias tablas en una sola consulta. En el contexto del hospital, los casos más frecuentes son:
+
+- **Pacientes con sus admisiones:** un paciente puede tener múltiples admisiones.
+- **Doctores con sus pacientes:** un doctor atiende a varios pacientes.
+- **Admisiones con datos completos:** mostrar una admisión incluyendo el nombre del paciente y del doctor.
+
+**Patrón canónico para JOINs:**
 
 ```csharp
-app.MapGet("/admissions/with-doctors-patients", () =>
+// GET /patients-with-admissions — listar pacientes con sus admisiones
+app.MapGet("/patients-with-admissions", () =>
 {
+    // Abrir conexion a la base de datos
     using var connection = new SqliteConnection(connectionString);
-    var admissions = connection.Query(@"
-        SELECT a.id AS AdmissionId,
+    // Consulta con JOIN entre patients y admissions
+    var sql = @"
+        SELECT p.patient_id AS PatientId,
+               p.first_name AS FirstName,
+               p.last_name AS LastName,
+               p.gender AS Gender,
+               p.birth_date AS BirthDate,
+               p.city AS City,
+               p.province_id AS ProvinceId,
+               p.allergies AS Allergies,
+               p.height AS Height,
+               p.weight AS Weight,
+               a.admission_id AS AdmissionId,
                a.admission_date AS AdmissionDate,
                a.discharge_date AS DischargeDate,
-               d.doctor_id AS DoctorId,
-               d.first_name AS DoctorFirstName,
-               d.last_name AS DoctorLastName,
-               d.specialty AS Specialty,
-               p.patient_id AS PatientId,
-               p.first_name AS PatientFirstName,
-               p.last_name AS PatientLastName
-        FROM admissions a
-        JOIN doctors d ON a.attending_doctor_id = d.doctor_id
-        JOIN patients p ON a.patient_id = p.patient_id
-    ").ToList();
-    return Results.Ok(admissions);
+               a.diagnosis AS Diagnosis
+        FROM patients p
+        INNER JOIN admissions a ON p.patient_id = a.patient_id
+        ORDER BY p.patient_id";
+
+    var result = connection.Query<Patient, Admission, Patient>(sql, (patient, admission) =>
+    {
+        // Agregar la admision a la lista del paciente
+        patient.Admissions ??= new List<Admission>();
+        patient.Admissions.Add(admission);
+        return patient;
+    }, splitOn: "AdmissionId");
+
+    // Agrupar por paciente ya que una consulta con JOIN devuelve una fila por admision
+    var grouped = result.GroupBy(p => p.PatientId).Select(g => g.First());
+    return Results.Ok(grouped);
 });
+
+public record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate, string? City, long ProvinceId, string? Allergies, long? Height, long? Weight, List<Admission>? Admissions);
+public record Admission(long AdmissionId, long PatientId, long DoctorId, string AdmissionDate, string? DischargeDate, string? Diagnosis);
 ```
 
-### Paso 4: Integrar con el flujo Git
+**Nota sobre tipos canónicos:** las columnas INTEGER de SQLite se mapean como `long` en C#. Las columnas TEXT nullable se mapean como `string?`. Siempre se usa alias `AS` en el SELECT con el nombre exacto del parámetro del constructor del record.
 
-Los cambios de este encuentro se trabajan desde la rama `main` del repositorio grupal, dentro de la carpeta `trabajo-final/`:
+**Práctica guiada:**
 
-```bash
-git checkout main
-git pull origin main
-git checkout -b feature/endpoint-joins
-# agregar los endpoints al Program.cs del trabajo final
-git add .
-git commit -m "trabajo-final: endpoints con JOINs y conteo por provincia"
-git push origin feature/endpoint-joins
-```
+El docente muestra cómo construir un JOIN entre `patients` y `admissions`, explicando:
+- El uso de `splitOn` para indicar dónde Dapper debe separar los objetos.
+- La necesidad de agrupar los resultados por paciente.
+- El uso de `List<Admission>?` para la propiedad de navegación.
 
-Abrir Pull Request, solicitar revisión y mergear.
+**Ejercicio independiente:**
 
----
+Cada grupo construye un endpoint `/doctors-with-patients` que muestre cada doctor con la lista de pacientes que atiende, usando un JOIN entre `doctors` y `patients`.
 
-## Ejercicio independiente
+### 4.3 — Verificación contra hospital.db (40 min)
 
-Sobre la base del trabajo final en `trabajo-final/`:
+Una vez que el CRUD y los JOINs están implementados, cada grupo verifica que todo funcione contra la base de datos real `hospital.db`.
 
-1. Agregar un endpoint `GET /doctors/{id:long}` que devuelva un doctor con la cantidad de admisiones que atendió.
-2. El endpoint debe usar `QueryFirstOrDefault` con un JOIN entre `doctors` y `admissions`, y un `COUNT` agrupado.
-3. Probar con `curl http://localhost:5000/doctors/1`.
-4. Integrar el cambio mediante el flujo Git profesional (rama, PR, revisión, merge).
+**Práctica guiada:**
 
-**Pista:** la consulta SQL puede ser:
+El docente muestra cómo verificar:
+1. Ejecutar `dotnet run` y confirmar que la API arranca sin errores.
+2. Probar cada endpoint con `curl` o Thunder Client:
+   - `curl http://localhost:5000/patients` → lista de pacientes.
+   - `curl http://localhost:5000/patients/1` → paciente con ID 1.
+   - `curl http://localhost:5000/patients-with-admissions` → pacientes con sus admisiones.
+3. Probar errores:
+   - `curl http://localhost:5000/patients/99999` → 404 con mensaje.
+   - `curl -X POST http://localhost:5000/patients -H "Content-Type: application/json" -d '{"firstName":""}'` → 400 con mensaje.
 
-```sql
-SELECT d.doctor_id AS DoctorId,
-       d.first_name AS FirstName,
-       d.last_name AS LastName,
-       d.specialty AS Specialty,
-       COUNT(a.id) AS AdmissionCount
-FROM doctors d
-LEFT JOIN admissions a ON a.attending_doctor_id = d.doctor_id
-WHERE d.doctor_id = @id
-```
+**Ejercicio independiente:**
 
-**Solución esperada:** endpoint funcional que devuelve un doctor con la cantidad de admisiones. PR mergeado en el repositorio grupal.
+Cada grupo prueba todos sus endpoints y verifica que los códigos HTTP coinciden con lo esperado (200, 201, 204, 400, 404).
 
----
+## 5. Consolidación y cierre (20 min)
+
+Revisión de los CRUD completos y JOINs:
+
+- ¿Cada tabla tiene sus 5 endpoints (GET list, GET by id, POST, PUT, DELETE)?
+- ¿Los JOINs devuelven datos relacionados correctamente?
+- ¿Los tipos canónicos se respetan (`long` para IDs, `string` para fechas, `?` para nullable)?
+- ¿Las consultas están parametrizadas (nunca concatenadas)?
+
+El docente verifica en pantalla los endpoints de cada grupo y confirma que los tipos y los JOINs funcionan correctamente.
+
+## 6. Actividad complementaria (80 min)
+
+### Trabajo en grupo: CRUD completo + JOINs + Tests de integración básicos
+
+Cada grupo completa las siguientes tareas:
+
+1. **CRUD completo para las 3 tablas** (25 min): verificar que `patients`, `doctors` y `admissions` tienen los 5 endpoints cada una y que funcionan contra `hospital.db`.
+2. **JOINs funcionales** (20 min): implementar al menos 2 endpoints con JOINs y verificar que devuelven datos relacionados correctamente.
+3. **Tests de integración básicos** (35 min): la extensión de esta unidad son tests de integración básicos con la API. Cada grupo escribe tests que:
+   - Verifican que `GET /patients` devuelve 200.
+   - Verifican que `GET /patients/{id:long}` con un ID existente devuelve 200.
+   - Verifican que `GET /patients/{id:long}` con un ID inexistente devuelve 404.
+   - Verifican que `POST /patients` con datos válidos devuelve 201.
+   - Verifican que `POST /patients` con datos faltantes devuelve 400.
+
+Los tests se escriben en un archivo separado o como parte de la actividad complementaria, sin modificar `Program.cs`. La extensión justifica los 80 minutos de actividad complementaria con la práctica de integración completa.
+
+## 7. Cierre (15 min)
 
 ### Qué te llevás
 
-- El CRUD con JOINs es la operación más común en APIs reales.
-- Combinar datos de varias tablas, contarlos y devolverlos en un mismo endpoint es lo que distingue una API funcional de un asistente de base de datos.
+- El CRUD completo sobre `hospital.db` sigue las convenciones canónicas: tipos `long` para IDs, `string` para fechas, `?` para nullable, consultas siempre parametrizadas.
+- Los JOINs permiten relacionar datos de varias tablas en un solo endpoint.
+- Los tests de integración verifican que la API responde correctamente a solicitudes reales.
+- Todo el código vive en `Program.cs` con records posicionales al final.
 
-### Lo que viene
+## Lo que viene
 
-En el Encuentro 30 todo el tiempo se dedica al avance del trabajo final: cada grupo llega con los endpoints de este encuentro integrados y funcionando.
+Encuentro 30: Avance trabajo final — van a planificar el trabajo final y a avanzar con commits por feature en su flujo profesional de Git.
 
-## Errores comunes y trampas
+## 8. Errores comunes y trampas
 
-| Error | Causa | Solución |
-|---|---|---|
-| JOIN sin alias en columnas | Dapper busca nombres PascalCase y encuentra snake_case | Usar `SELECT columna AS Propiedad` siempre. |
-| LEFT JOIN vs INNER JOIN | Se usa LEFT cuando se necesitan solo los que tienen relación | Elegir según la necesidad: LEFT incluye filas sin relación, INNER solo las que coinciden. |
-| COUNT sin GROUP BY | La consulta devuelve una sola fila | Agrupar por las columnas no agregadas. |
-| Endpoint devuelve 500 | La consulta SQL tiene un error (tabla mal nombrada, columna inexistente) | Revisar el mensaje de error en la terminal; probar la consulta directamente en SQLite. |
-| Olvidar `ToList()` en `Query<T>` | Dapper ejecuta la consulta pero no materializa la lista | `Query<T>(sql).ToList()` fuerza la ejecución y cierra el lector. |
+| ✔ | Error | Causa probable | Intervención |
+| --- | --- | --- | --- |
+| ☐ | `InvalidOperationException` al materializar un record | Usar `int` en lugar de `long` para el ID del record | Verificar que todos los IDs de tabla usan `long` en el record, nunca `int` |
+| ☐ | `InvalidOperationException` por fecha en el record | Usar `DateTime` o `DateOnly` en lugar de `string` | Usar `string BirthDate` en el record y convertir solo al presentar |
+| ☐ | SELECT sin alias `AS` y Dapper no encuentra el constructor | Las columnas snake_case no coinciden con los nombres PascalCase del record | Usar siempre `SELECT column_name AS PascalName` en cada consulta |
+| ☐ | Concatenar valores al SQL en lugar de usar parámetro | Práctica antigua o desconocimiento del riesgo | Usar siempre `@param` con `new { param }` en toda consulta |
+| ☐ | Conexión no cerrada | Olvidar el `using` en la declaración de la conexión | Usar `using var connection = new SqliteConnection(...)` dentro de cada handler |
+| ☐ | Record declarado antes de `app.Run()` | Error CS8803: las top-level statements deben preceder a las declaraciones de tipos | Escribir `app.Run();` primero y los records después |

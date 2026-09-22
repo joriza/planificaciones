@@ -1,109 +1,84 @@
-# Anexo docente — Evaluación U1 Versión B (Doctores en memoria)
+# Anexo docente — Evaluación de la Unidad 1 — Encuentro 9 — Versión B
 
-## Solución completa
+> Documento docente formal. No se entrega a los alumnos: contiene la solución completa de la versión B, las respuestas esperadas de los ítems conceptuales, los criterios de corrección ítem por ítem y la pauta de devolución.
 
-A continuación se muestra el `Program.cs` completo para la versión B, incluyendo el endpoint extra `GET /doctors/summary`. Corresponde a 100 puntos si se entrega completo y con defensa satisfactoria.
+## 1. Solución completa (`Program.cs`)
 
 ```csharp
-var doctors = new List<Doctor>
-{
-    new Doctor(1, "Maria", "Gomez", "Cardiologia", "1165432100", "maria.gomez@hospital.com", "M", "1980-03-15"),
-    new Doctor(2, "Pedro", "Ramirez", "Clinica Medica", null, "pedro.ramirez@hospital.com", "M", "1975-07-22"),
-    new Doctor(3, "Laura", "Fernandez", "Pediatria", "1165112233", null, "F", "1988-11-10"),
-    new Doctor(4, "Diego", "Torres", "Cardiologia", "1165778899", "diego.torres@hospital.com", "M", "1992-05-05"),
-    new Doctor(5, "Valentina", "Acosta", "Neurologia", null, null, "F", "1985-09-18"),
-    new Doctor(6, "Jorge", "Mendoza", "Clinica Medica", "1165432777", "jorge.mendoza@hospital.com", "M", "1979-12-01")
-};
+using Dapper;
+using Microsoft.Data.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-// GET /doctors — lista completa con filtro opcional por genero
-app.MapGet("/doctors", (string? gender) =>
+// Lista en memoria para simular persistencia sin base de datos
+var books = new List<Book>
 {
-    if (gender is not null)
-    {
-        var filtered = doctors.Where(d => d.Gender == gender).ToList();
-        return Results.Ok(filtered);
-    }
-    return Results.Ok(doctors);
+    new Book(1, "Cien años de soledad", "Gabriel García Márquez", "2025-01-15"),
+    new Book(2, "Rayuela", "Julio Cortázar", "2025-02-10"),
+    new Book(3, "Ficciones", "Jorge Luis Borges", "2025-03-20")
+};
+
+// Contador para generar IDs de nuevos books
+var nextBookId = 4;
+
+// GET /books — retornar la lista completa de books
+app.MapGet("/books", () =>
+{
+    return Results.Ok(books);
 });
 
-// GET /doctors/count — total de doctores
-app.MapGet("/doctors/count", () =>
+// GET /books/{bookId:long} — obtener un book por ID
+app.MapGet("/books/{bookId:long}", (long bookId) =>
 {
-    return Results.Ok(new { total = doctors.Count });
+    var book = books.FirstOrDefault(b => b.BookId == bookId);
+    return book is null
+        ? Results.NotFound(new { mensaje = "Book no encontrado" })
+        : Results.Ok(book);
 });
 
-// GET /doctors/older-than?age=N — filtrar por edad
-app.MapGet("/doctors/older-than", (int age) =>
+// GET /books?author=alta — filtrar books por autor
+app.MapGet("/books", (string? author) =>
 {
-    var older = doctors.Where(d =>
-    {
-        var birth = DateTime.Parse(d.BirthDate);
-        int edad = DateTime.Today.Year - birth.Year;
-        if (DateTime.Today < birth.AddYears(edad)) edad--;
-        return edad > age;
-    }).ToList();
-    return Results.Ok(older);
-});
-
-// GET /doctors/{id:long} — buscar por ID
-app.MapGet("/doctors/{id:long}", (long id) =>
-{
-    var doctor = doctors.FirstOrDefault(d => d.DoctorId == id);
-    return doctor is null
-        ? Results.NotFound(new { mensaje = "Doctor no encontrado" })
-        : Results.Ok(doctor);
-});
-
-// ENDPOINT EXTRA: GET /doctors/summary
-app.MapGet("/doctors/summary", () =>
-{
-    int femenino = doctors.Count(d => d.Gender == "F");
-    int masculino = doctors.Count(d => d.Gender == "M");
-    return Results.Ok(new { total = doctors.Count, femenino, masculino });
+    if (string.IsNullOrEmpty(author))
+        return Results.Ok(books);
+    var filtrados = books.Where(b => b.Author.Equals(author, StringComparison.OrdinalIgnoreCase)).ToList();
+    return Results.Ok(filtrados);
 });
 
 app.Run();
 
-record Doctor(long DoctorId, string FirstName, string LastName, string Specialty,
-              string? Phone, string? Email, string Gender, string BirthDate);
+// Records posicionales (después de app.Run()): CS8803 requiere que las declaraciones de tipos
+// sigan a las top-level statements; colocar el record antes produce error de compilación.
+public record Book(long BookId, string BookInput, string Author, string PublishedDate);
 ```
 
-## Criterios de corrección específicos
+## 2. Salidas de referencia para la corrección
 
-| ✔ | Criterio | Puntos | Notas para la corrección |
-|---|---|---|---|
-| ☐ | GET /doctors sin filtro | 10 | Debe devolver la lista completa. |
-| ☐ | GET /doctors?gender=F/M | 10 | Filtro aplicado. Si `gender` es null, devuelve toda la lista. |
-| ☐ | GET /doctors/{id} con ID existente | 5 | Devuelve 200 con el doctor. |
-| ☐ | GET /doctors/{id} con ID inexistente | 5 | Devuelve 404 con `{ "mensaje": "Doctor no encontrado" }`. |
-| ☐ | GET /doctors/count | 5 | Devuelve `{ "total": 6 }`. |
-| ☐ | GET /doctors/older-than?age=30 | 10 | Filtra correctamente usando fecha de nacimiento. |
-| ☐ | Endpoint extra (summary/por-especialidad/sorted) | 10 | Debe cumplir la consigna elegida. |
-| ☐ | IDs como `long` | 5 | Todos los IDs son `long`. |
-| ☐ | Fechas como `string` | 5 | BirthDate es `string`. |
-| ☐ | Nulables con `?` | 5 | `string?` donde corresponde. |
-| ☐ | Records después de `app.Run()` | 5 | No hay tipos antes del código ejecutable. |
-| ☐ | `Results.*` en todas las respuestas | 5 | Ok, NotFound, etc. |
-| ☐ | Carpeta `tp-u1/` | 5 | Proyecto dentro de `tp-u1/`. |
-| ☐ | `.gitignore` con `bin/` y `obj/` | 5 | Archivo presente en la raíz del proyecto. |
-| ☐ | Commit semántico | 5 | Mensaje en español sin tildes. |
-| ☐ | Push exitoso en GitHub | 5 | El commit aparece en el remoto. |
+| Prueba | Pedido | Respuesta esperada |
+| --- | --- | --- |
+| `GET /books` | Lista completa | JSON con 3 objetos Book: IDs 1,2,3 con sus datos |
+| `GET /books/1` | Book con ID 1 | JSON del book con BookId=1, BookInput="Cien años de soledad" |
+| `GET /books/99` | Book inexistente | 404 con `{ "mensaje": "Book no encontrado" }` |
+| `GET /books?author=Gabriel García Márquez` | Filtrado por autor | JSON con el book de ID 1 (autor "Gabriel García Márquez") |
+| `GET /books?author=Jorge Luis Borges` | Filtrado por autor | JSON con el book de ID 3 (autor "Jorge Luis Borges") |
 
-## Errores frecuentes esperados
+## 3. Criterios de corrección ítem por ítem
 
-Idénticos a la versión A (ver anexo A para la lista completa). La equivalencia entre versiones A y B garantiza que ningún grupo tenga ventaja por el dominio de datos asignado.
+| Ítem | Puntos | Qué se observa | Error previsto | Intervención |
+| --- | --- | --- | --- | --- |
+| 1.1 Record Book con campos correctos | 10 | Los campos BookId (long), BookInput (string), Author (string), PublishedDate (string) están declarados como record posicional. | Usar `int` en lugar de `long` para BookId. | Recordar que Dapper exige `Int64` para columnas INTEGER; aunque no hay BD en esta versión, la convención del curso es `long`. |
+| 1.2 Lista `books` con al menos 3 elementos | 10 | La lista se inicializa con 3 o más objetos `Book`. | Lista vacía o con menos de 3 elementos. | Verificar que la lista tenga al menos 3 elementos con datos válidos. |
+| 1.3 `GET /books` retorna lista | 15 | El endpoint retorna `Results.Ok(books)` con la lista completa. | Retornar la lista sin envolver en `Results.Ok`; retornar solo la lista cruda. | Explicar que toda respuesta debe usar `Results.*` y no el objeto crudo. |
+| 1.4 `GET /books/{bookId:long}` con 404 | 15 | El endpoint busca por ID y retorna 404 con `mensaje` en español si no existe. | No manejar el caso de no encontrado; usar `int` en lugar de `long` para el parámetro; mensaje en inglés. | Verificar el tipo del parámetro de ruta y la presencia del mensaje en español. |
+| 1.5 `GET /books?author=alta` con filtrado | 10 | El endpoint filtra por query string `author` y retorna la lista filtrada. | No manejar el parámetro query; filtrado incorrecto (case-sensitive sin justificación). | Verificar que el filtrado funcione y que se maneje el caso de parámetro nulo. |
+| 2.1 Contador `nextBookId` | 10 | Se declara `var nextBookId = 4;` después de la lista. | No declarar el contador; inicializar en otro valor. | Verificar que el contador exista y tenga valor coherente (4, después de los 3 books iniciales). |
+| 2.2 Comentario sobre ubicación del record | 10 | El comentario explica que el record va después de `app.Run()` por la regla CS8803. | Comentario genérico sin referencia a CS8803; comentario en inglés. | Verificar que el comentario sea en español y mencione la razón técnica. |
+| 3.1 Probar GET /books | 5 | El endpoint funciona y retorna los 3 books. | Endpoint no responde; retorna error 500. | Verificar que la aplicación compile y el endpoint retorne datos. |
+| 3.2 Probar GET /books/1 | 5 | El endpoint retorna el book con ID 1. | Endpoint no responde; retorna 404. | Verificar que la ruta y el parámetro estén correctamente definidos. |
+| 4.1 Pregunta conceptual long vs int | 5 | Respuesta correcta sobre Dapper e Int64. | Respuesta incorrecta o incompleta. | Guiar al alumno a recordar la tabla de tipos canónicos. |
+| 4.2 Pregunta conceptual CS8803 | 5 | Respuesta correcta sobre records antes de app.Run(). | Respuesta incorrecta o incompleta. | Guiar al alumno a recordar el error de compilación. |
 
-## Equivalencia con versión A
+## 4. Pauta de devolución
 
-| Aspecto | Versión A (Pacientes) | Versión B (Doctores) |
-|---|---|---|
-| Cantidad de endpoints requeridos | 4 | 4 |
-| Endpoint extra | 1 a elección | 1 a elección |
-| Tipos canónicos | `long`, `string`, `string?`, `long?` | `long`, `string`, `string?` |
-| Filtro por género | `?gender=F/M` | `?gender=F/M` |
-| Filtro por edad | `older-than?age=N` | `older-than?age=N` |
-| Puntaje total | 100 | 100 |
-| Dificultad técnica | Equivalente | Equivalente |
+Se devuelve la evaluación con los puntos obtenidos por cada ítem. Se indica qué ítems están pendientes y qué correcciones se esperan. Si el alumno no alcanza 60 puntos, se le asigna la versión alternativa (A) para recuperación. Se registra la nota en la planilla con los comentarios del docente.

@@ -1,185 +1,473 @@
-# Continuidad pedagógica — Anexo docente: Repaso tras evaluación de la Unidad 3
-
-> Documento exclusivo para el docente. Soluciones y criterios de corrección.
-> No se entrega a los alumnos ni a la administración.
-
----
+# Anexo docente — Continuidad pedagógica 04: Tras evaluación de U3
 
 ## Soluciones
 
-### Actividad 1 — POST: INSERT con Dapper (20 ptos.)
+### Actividad 1 — Repaso U1+U2 rápido (10 puntos)
 
-**Código esperado:**
+**a) Tipos canónicos:**
+- INTEGER → `long` (no `int`). Dapper lee columnas INTEGER de SQLite como `Int64`. Si el record usa `int` (que es `Int32`), el constructor posicional no coincide y se produce `InvalidOperationException`.
+- TEXT → `string` (o `string?` si es nullable).
 
-```csharp
-app.MapPost("/patients", (PatientCreateRequest request) =>
-{
-    if (string.IsNullOrWhiteSpace(request.FirstName) ||
-        string.IsNullOrWhiteSpace(request.LastName) ||
-        string.IsNullOrWhiteSpace(request.Gender) ||
-        string.IsNullOrWhiteSpace(request.BirthDate))
-        return Results.BadRequest(new { mensaje = "Faltan campos obligatorios" });
+**b) Error sin alias `AS`:**
+Dapper busca un constructor cuyos parámetros coincidan con los nombres de columna del resultado. Si la columna se llama `patient_id` (snake_case) y el record tiene `PatientId` (PascalCase), Dapper no encuentra coincidencia y lanza `InvalidOperationException`. El alias `AS PatientId` renombra la columna en el resultado para que coincida.
 
-    using var connection = new SqliteConnection(connectionString);
-    var sql = @"
-        INSERT INTO patients (first_name, last_name, gender, birth_date, city, allergies)
-        VALUES (@FirstName, @LastName, @Gender, @BirthDate, @City, @Allergies);
-        SELECT last_insert_rowid();";
+**c) Códigos de respuesta:**
+- `Results.Ok` → 200 OK (lectura exitosa).
+- `Results.Created` → 201 Created (recurso creado, incluye URL del nuevo recurso).
+- `Results.NotFound` → 404 Not Found (recurso inexistente).
+- `Results.NoContent` → 204 No Content (operación exitosa sin cuerpo en la respuesta, típico de DELETE y PUT).
 
-    long newId = connection.ExecuteScalar<long>(sql, request);
+**d) SQL parametrizado:**
 
-    var createdPatient = connection.QueryFirstOrDefault<Patient>(
-        @"SELECT patient_id AS PatientId, first_name AS FirstName, ... FROM patients WHERE patient_id = @id",
-        new { id = newId });
-
-    return Results.Created($"/patients/{newId}", createdPatient);
-});
-
-// Al final del archivo
-record PatientCreateRequest(string FirstName, string LastName, string Gender, string BirthDate,
-                           string? City, string? Allergies);
-record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate,
-               string? City, long ProvinceId, string? Allergies, long? Height, long? Weight);
+```sql
+SELECT * FROM patients WHERE city LIKE @city
 ```
 
-- Validación (6 ptos.): debe chequear los cuatro campos obligatorios. Si solo chequea uno o dos, descuento 3 ptos. Si usa `string.IsNullOrEmpty` en lugar de `string.IsNullOrWhiteSpace`, es aceptable (no descuenta).
-- `ExecuteScalar<long>` (6 ptos.): si usa `Execute` (que devuelve `int` de filas afectadas) y no obtiene el ID, descuento 4 ptos. Si usa `ExecuteScalar<int>` descuento 2 ptos. por tipo no canónico.
-- `Results.Created` (5 ptos.): debe incluir la URL `$"/patients/{newId}"` y los datos del paciente creado. Si solo devuelve `Results.Ok`, descuento 3 ptos.
-- Record (3 ptos.): `PatientCreateRequest` con `string?` en City y Allergies. Si usa `string` sin `?`, descuento 1 pto.
+Con parámetro: `new { city = $"%{valor}%" }` (o mejor, `new { city = $"%{valor}%" }`).
 
-### Actividad 2 — DELETE: borrar un paciente (20 ptos.)
+**Criterios de corrección:**
+- Cada respuesta correcta: 2.5 puntos (total 10 puntos).
 
-**Código esperado:**
+---
+
+### Actividad 2 — INSERT/DELETE/UPDATE parametrizados (25 puntos)
+
+**a) POST /patients:**
 
 ```csharp
+// Alta de un paciente nuevo
+app.MapPost("/patients", (Patient patient) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+
+    // Insertar el paciente y obtener el ID generado
+    var newId = connection.ExecuteScalar<long>(@"
+        INSERT INTO patients (first_name, last_name, gender, birth_date, city, province_id, allergies, height, weight)
+        VALUES (@FirstName, @LastName, @Gender, @BirthDate, @City, @ProvinceId, @Allergies, @Height, @Weight)",
+        patient);
+
+    // Devolver 201 Created con la URL del nuevo recurso
+    return Results.Created($"/patients/{newId}", patient);
+});
+```
+
+**b) DELETE /patients/{id:long}:**
+
+```csharp
+// Eliminar un paciente por ID
 app.MapDelete("/patients/{id:long}", (long id) =>
 {
     using var connection = new SqliteConnection(connectionString);
-    int affected = connection.Execute(
-        "DELETE FROM patients WHERE patient_id = @id", new { id });
 
-    return affected == 0
-        ? Results.NotFound(new { mensaje = "Paciente no encontrado" })
-        : Results.NoContent();
-});
-```
+    // Verificar que el paciente existe antes de eliminar
+    var exists = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId
+        FROM patients
+        WHERE patient_id = @id", new { id });
 
-- Ruta `{id:long}` y parámetro `long id` (5 ptos.): si usa `{id:int}` o `int id`, descuento 3 ptos.
-- DELETE parametrizado (5 ptos.): debe usar `@id` y `new { id }`. Concatenar descuenta todo el ítem.
-- Comprobación de `affected` (5 ptos.): `affected == 0` o `affected < 1` según el caso. Si no comprueba y siempre devuelve `NoContent`, descuento 3 ptos.
-- Respuestas HTTP (5 ptos.): `Results.NotFound` cuando affected es 0; `Results.NoContent` cuando affected > 0.
-
-### Actividad 3 — PUT: actualizar un paciente (20 ptos.)
-
-**Código esperado:**
-
-```csharp
-app.MapPut("/patients/{id:long}", (long id, PatientCreateRequest request) =>
-{
-    using var connection = new SqliteConnection(connectionString);
-
-    var existing = connection.QueryFirstOrDefault<Patient>(
-        "SELECT patient_id AS PatientId FROM patients WHERE patient_id = @id", new { id });
-
-    if (existing is null)
-        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
-
-    var sql = @"
-        UPDATE patients
-        SET first_name = @FirstName, last_name = @LastName, gender = @Gender,
-            birth_date = @BirthDate, city = @City, allergies = @Allergies
-        WHERE patient_id = @Id";
-
-    connection.Execute(sql, new
+    if (exists is null)
     {
-        request.FirstName, request.LastName, request.Gender,
-        request.BirthDate, request.City, request.Allergies,
-        Id = id
-    });
+        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
+
+    // Eliminar el paciente
+    connection.Execute(@"
+        DELETE FROM patients
+        WHERE patient_id = @id", new { id });
 
     return Results.NoContent();
 });
 ```
 
-- Verificación de existencia (6 ptos.): debe ejecutar un `QueryFirstOrDefault` antes del UPDATE. Si intenta actualizar directamente sin verificar, descuento 4 ptos.
-- UPDATE parametrizado (6 ptos.): todos los campos SET deben ser parámetros. Si falta un campo, descuento 1 pto. cada uno. Si algún valor está concatenado, descuento 3 ptos.
-- `Results.NotFound`/`Results.NoContent` (4 ptos.): `NotFound` si no existe, `NoContent` si se actualiza.
-- Body (4 ptos.): debe aceptar `PatientCreateRequest` en el lambda. Si declara un record separado o usa tipos sueltos, es válido mientras funcione.
-
-### Actividad 4 — JOIN triple con filtro (20 ptos.)
-
-**Código esperado:**
+**c) PUT /patients/{id:long}:**
 
 ```csharp
-app.MapGet("/admissions", () =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var admissions = connection.Query<AdmissionDetail>(@"
-        SELECT a.admission_id AS AdmissionId,
-               p.first_name || ' ' || p.last_name AS PatientName,
-               d.first_name || ' ' || d.last_name AS DoctorName,
-               a.diagnosis AS Diagnosis,
-               a.admission_date AS AdmissionDate
-        FROM admissions a
-        JOIN patients p ON a.patient_id = p.patient_id
-        JOIN doctors d ON a.doctor_id = d.doctor_id").ToList();
-
-    return Results.Ok(admissions);
-});
-
-// Al final del archivo
-record AdmissionDetail(long AdmissionId, string PatientName, string DoctorName,
-                       string Diagnosis, string AdmissionDate);
-```
-
-- JOIN triple (8 ptos.): debe conectar `admissions` con `patients` por `patient_id` y con `doctors` por `doctor_id`. Si falta un JOIN, descuento 4 ptos. Si usa `LEFT JOIN` en lugar de `JOIN` (INNER) es aceptable (no descuenta).
-- Alias (5 ptos.): todas las columnas del SELECT deben tener alias AS correspondientes al record. La concatenación `p.first_name || ' ' || p.last_name` debe aliasearse como `PatientName`.
-- Record (4 ptos.): `AdmissionDetail` con `long AdmissionId`, `string PatientName`, `string DoctorName`, `string Diagnosis`, `string AdmissionDate`. Si falta una propiedad, descuento 1 pto. cada una.
-- `Results.Ok` (3 ptos.): debe devolver la lista envuelta.
-
-### Actividad 5 — Repaso integrador U1+U2 (20 ptos.)
-
-**Código esperado:**
-
-```csharp
-app.MapGet("/doctors/{id:long}/summary", (long id) =>
+// Actualizar un paciente existente
+app.MapPut("/patients/{id:long}", (long id, Patient patient) =>
 {
     using var connection = new SqliteConnection(connectionString);
 
-    var doctor = connection.QueryFirstOrDefault<Doctor>(
-        @"SELECT doctor_id AS DoctorId, first_name AS FirstName,
-                  last_name AS LastName, specialty AS Specialty
-           FROM doctors WHERE doctor_id = @id", new { id });
+    // Verificar que el paciente existe antes de actualizar
+    var exists = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId
+        FROM patients
+        WHERE patient_id = @id", new { id });
 
-    if (doctor is null)
-        return Results.NotFound(new { mensaje = "Médico no encontrado" });
-
-    long total = connection.ExecuteScalar<long>(
-        "SELECT COUNT(*) FROM admissions WHERE doctor_id = @id", new { id });
-
-    return Results.Ok(new
+    if (exists is null)
     {
-        doctorId = doctor.DoctorId,
-        fullName = $"{doctor.FirstName} {doctor.LastName}",
-        specialty = doctor.Specialty,
-        totalAdmissions = total
-    });
+        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
+
+    // Actualizar los datos del paciente
+    connection.Execute(@"
+        UPDATE patients
+        SET first_name = @FirstName,
+            last_name = @LastName,
+            gender = @Gender,
+            birth_date = @BirthDate,
+            city = @City,
+            province_id = @ProvinceId,
+            allergies = @Allergies,
+            height = @Height,
+            weight = @Weight
+        WHERE patient_id = @id",
+        new { patient.FirstName, patient.LastName, patient.Gender, patient.BirthDate, patient.City, patient.ProvinceId, patient.Allergies, patient.Height, patient.Weight, id });
+
+    return Results.NoContent();
 });
 ```
 
-- Consulta del médico (6 ptos.): `QueryFirstOrDefault<Doctor>` con alias y parámetro. Si usa `Query<Doctor>` sin `FirstOrDefault`, descuento 2 ptos. (no funciona igual cuando no hay médico).
-- COUNT (6 ptos.): `ExecuteScalar<long>` (no `int`, no `Execute`). Si usa `int`, descuento 2 ptos.
-- Objeto de respuesta (4 ptos.): cuatro propiedades exactas con los nombres en camelCase del ejemplo.
-- `Results.NotFound` (4 ptos.): si doctor es null, debe devolverlo con mensaje en español.
+**Criterios de corrección:**
+- POST con `ExecuteScalar<long>` y `Results.Created`: 6 puntos.
+- DELETE con validación de existencia y `Results.NotFound`/`Results.NoContent`: 6 puntos.
+- PUT con validación de existencia y `Results.NotFound`/`Results.NoContent`: 6 puntos.
+- SQL parametrizado en todas las operaciones: 4 puntos.
+- Comentarios en español: 3 puntos.
 
 ---
 
-## Criterios generales de corrección
+### Actividad 3 — MapPost/MapDelete/MapPut y códigos de respuesta (20 puntos)
 
-- **Puntaje total:** 100 puntos.
-- **Presentación:** descuento de hasta 5 ptos. si no es manuscrita o es ilegible.
-- **Aprobación del repaso:** 60 ptos. o más.
-- **Verificación de código:** se espera que el alumno anote al menos un resultado de prueba por actividad con base de datos. Sin eso, descuento 1 pto. por actividad.
-- **Grupo:** se permite trabajo grupal. Si dos entregas tienen exactamente el mismo código manuscrito, se cita a defensa oral breve.
-- **Uso de computadora obligatorio para las actividades 1 a 4.** Actividad 5 puede resolverse en papel (código sin ejecutar).
-- **Convenciones del curso:** cualquier desvío de los tipos canónicos (`int` en PK, `DateTime` en fechas, alias faltantes) se descuenta aunque el código compile teóricamente. El curso tiene una hoja de convenciones técnicas que es fuente única de verdad.
+**a) POST /doctors:**
+
+```csharp
+app.MapPost("/doctors", (Doctor doctor) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var newId = connection.ExecuteScalar<long>(@"
+        INSERT INTO doctors (first_name, last_name, specialty)
+        VALUES (@FirstName, @LastName, @Specialty)",
+        doctor);
+
+    return Results.Created($"/doctors/{newId}", doctor);
+});
+```
+
+**b) DELETE /doctors/{id:long}:**
+
+```csharp
+app.MapDelete("/doctors/{id:long}", (long id) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var exists = connection.QueryFirstOrDefault<Doctor>(@"
+        SELECT doctor_id AS DoctorId
+        FROM doctors
+        WHERE doctor_id = @id", new { id });
+
+    if (exists is null)
+    {
+        return Results.NotFound(new { mensaje = "Medico no encontrado" });
+    }
+
+    connection.Execute(@"
+        DELETE FROM doctors
+        WHERE doctor_id = @id", new { id });
+
+    return Results.NoContent();
+});
+```
+
+**c) Códigos HTTP para DELETE:**
+- DELETE exitoso → `204 No Content`. Indica que la operación se completó y no hay contenido para devolver. Es el semánticamente correcto para eliminaciones.
+- Recurso no existía → `404 Not Found`. Indica que el cliente intentó eliminar algo que no existe.
+- No se devuelve `200 OK` en DELETE exitoso porque `204` es más apropiado semánticamente: la operación tuvo éxito pero no hay cuerpo en la respuesta. `200 OK` implicaría que hay un cuerpo de respuesta, lo cual no es el caso.
+
+**d) NoContent vs Ok en PUT:**
+- `Results.NoContent()` → 204. Indica que la actualización fue exitosa y no se devuelve contenido.
+- `Results.Ok()` → 200. Indica éxito y devuelve un cuerpo en la respuesta.
+- El semánticamente correcto para PUT es `204 NoContent` si no se devuelve el recurso actualizado, o `200 Ok` si se devuelve el recurso actualizado como cuerpo de la respuesta.
+
+**Criterios de corrección:**
+- Código POST correcto: 5 puntos.
+- Código DELETE correcto: 5 puntos.
+- Explicación de códigos HTTP: 5 puntos.
+- Diferencia NoContent vs Ok: 5 puntos.
+
+---
+
+### Actividad 4 — Validación de existencia y manejo de errores (15 puntos)
+
+**a) POST /admissions con validación:**
+
+```csharp
+app.MapPost("/admissions", (Admission admission) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+
+    // Validar que el paciente existe
+    var patient = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId
+        FROM patients
+        WHERE patient_id = @patientId", new { admission.PatientId });
+
+    if (patient is null)
+    {
+        return Results.BadRequest(new { mensaje = "El paciente con ID " + admission.PatientId + " no existe" });
+    }
+
+    // Validar que el medico existe
+    var doctor = connection.QueryFirstOrDefault<Doctor>(@"
+        SELECT doctor_id AS DoctorId
+        FROM doctors
+        WHERE doctor_id = @doctorId", new { admission.DoctorId });
+
+    if (doctor is null)
+    {
+        return Results.BadRequest(new { mensaje = "El medico con ID " + admission.DoctorId + " no existe" });
+    }
+
+    // Insertar la admision
+    var newId = connection.ExecuteScalar<long>(@"
+        INSERT INTO admissions (patient_id, doctor_id, admission_date, discharge_date)
+        VALUES (@PatientId, @DoctorId, @AdmissionDate, @DischargeDate)",
+        admission);
+
+    return Results.Created($"/admissions/{newId}", admission);
+});
+```
+
+**b) Si ambos existen, se inserta y se devuelve `Results.Created`.**
+
+**c) Problema de concurrencia:**
+Si dos grupos insertan admisiones para el mismo paciente al mismo tiempo, podrían generarse admisiones duplicadas o inconsistentes. Se mitiga usando transacciones (`connection.Execute` dentro de `connection.BeginTransaction()`) o usando un nivel de aislamiento más estricto en la base de datos. También se puede agregar una restricción UNIQUE en la base de datos si las admisiones duplicadas no están permitidas.
+
+**Criterios de corrección:**
+- Validación de existencia de patient_id y doctor_id: 5 puntos.
+- `Results.BadRequest` con mensaje en español: 3 puntos.
+- INSERT con `ExecuteScalar<long>` y `Results.Created`: 4 puntos.
+- Respuesta conceptual sobre concurrencia: 3 puntos.
+
+---
+
+### Actividad 5 — JOIN triple y consultas complejas (20 puntos)
+
+**a) JOIN triple:**
+
+```sql
+SELECT p.first_name AS FirstName,
+       p.last_name AS LastName,
+       d.first_name AS DoctorFirstName,
+       d.last_name AS DoctorLastName,
+       a.admission_date AS AdmissionDate
+FROM admissions a
+JOIN patients p ON a.patient_id = p.patient_id
+JOIN doctors d ON a.doctor_id = d.doctor_id
+```
+
+Con Dapper:
+
+```csharp
+var results = connection.Query(@"
+    SELECT p.first_name AS FirstName,
+           p.last_name AS LastName,
+           d.first_name AS DoctorFirstName,
+           d.last_name AS DoctorLastName,
+           a.admission_date AS AdmissionDate
+    FROM admissions a
+    JOIN patients p ON a.patient_id = p.patient_id
+    JOIN doctors d ON a.doctor_id = d.doctor_id").ToList();
+```
+
+**b) Filtrado por specialty:**
+
+```sql
+SELECT p.first_name AS FirstName,
+       p.last_name AS LastName,
+       d.first_name AS DoctorFirstName,
+       d.last_name AS DoctorLastName,
+       a.admission_date AS AdmissionDate
+FROM admissions a
+JOIN patients p ON a.patient_id = p.patient_id
+JOIN doctors d ON a.doctor_id = d.doctor_id
+WHERE d.specialty = 'Cardiología'
+```
+
+**c) Conteo de admisiones por médico:**
+
+```sql
+SELECT d.first_name AS DoctorFirstName,
+       d.last_name AS DoctorLastName,
+       COUNT(*) AS AdmissionCount
+FROM admissions a
+JOIN doctors d ON a.doctor_id = d.doctor_id
+GROUP BY d.doctor_id, d.first_name, d.last_name
+ORDER BY AdmissionCount DESC
+```
+
+**d) Si un paciente no tiene admisiones en un INNER JOIN, se pierde de los resultados.** Para incluirlo, se usaría un `LEFT JOIN` (o `LEFT OUTER JOIN`) desde `patients` hacia `admissions`:
+
+```sql
+SELECT p.first_name AS FirstName,
+       p.last_name AS LastName,
+       d.first_name AS DoctorFirstName,
+       a.admission_date AS AdmissionDate
+FROM patients p
+LEFT JOIN admissions a ON p.patient_id = a.patient_id
+LEFT JOIN doctors d ON a.doctor_id = d.doctor_id
+```
+
+Esto incluye todos los pacientes, incluso los que no tienen admisiones (los campos de admisión y médico serán NULL para esos pacientes).
+
+**Criterios de corrección:**
+- JOIN triple correcto con alias `AS`: 5 puntos.
+- Filtrado por specialty correcto: 4 puntos.
+- Conteo por médico con GROUP BY y ORDER BY: 4 puntos.
+- Explicación de LEFT JOIN y por qué se usa: 4 puntos.
+- Consultas parametrizadas y sintaxis correcta: 3 puntos.
+
+---
+
+### Actividad 6 — Integración final: CRUD completo (10 puntos)
+
+**Solución completa:**
+
+```csharp
+using Dapper;
+using Microsoft.Data.Sqlite;
+
+var connectionString = "Data Source=hospital.db";
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// GET /patients — lista completa de pacientes
+app.MapGet("/patients", () =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var patients = connection.Query<Patient>(@"
+        SELECT patient_id AS PatientId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               gender AS Gender,
+               birth_date AS BirthDate,
+               city AS City,
+               province_id AS ProvinceId,
+               allergies AS Allergies,
+               height AS Height,
+               weight AS Weight
+        FROM patients").ToList();
+
+    return Results.Ok(patients);
+});
+
+// GET /patients/{id:long} — un paciente por ID o 404
+app.MapGet("/patients/{id:long}", (long id) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var patient = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               gender AS Gender,
+               birth_date AS BirthDate,
+               city AS City,
+               province_id AS ProvinceId,
+               allergies AS Allergies,
+               height AS Height,
+               weight AS Weight
+        FROM patients
+        WHERE patient_id = @id", new { id });
+
+    return patient is null
+        ? Results.NotFound(new { mensaje = "Paciente no encontrado" })
+        : Results.Ok(patient);
+});
+
+// POST /patients — alta de un paciente nuevo
+app.MapPost("/patients", (Patient patient) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var newId = connection.ExecuteScalar<long>(@"
+        INSERT INTO patients (first_name, last_name, gender, birth_date, city, province_id, allergies, height, weight)
+        VALUES (@FirstName, @LastName, @Gender, @BirthDate, @City, @ProvinceId, @Allergies, @Height, @Weight)",
+        patient);
+
+    return Results.Created($"/patients/{newId}", patient);
+});
+
+// PUT /patients/{id:long} — actualizar un paciente existente
+app.MapPut("/patients/{id:long}", (long id, Patient patient) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var exists = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId
+        FROM patients
+        WHERE patient_id = @id", new { id });
+
+    if (exists is null)
+    {
+        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
+
+    connection.Execute(@"
+        UPDATE patients
+        SET first_name = @FirstName,
+            last_name = @LastName,
+            gender = @Gender,
+            birth_date = @BirthDate,
+            city = @City,
+            province_id = @ProvinceId,
+            allergies = @Allergies,
+            height = @Height,
+            weight = @Weight
+        WHERE patient_id = @id",
+        new { patient.FirstName, patient.LastName, patient.Gender, patient.BirthDate, patient.City, patient.ProvinceId, patient.Allergies, patient.Height, patient.Weight, id });
+
+    return Results.NoContent();
+});
+
+// DELETE /patients/{id:long} — eliminar un paciente
+app.MapDelete("/patients/{id:long}", (long id) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var exists = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId
+        FROM patients
+        WHERE patient_id = @id", new { id });
+
+    if (exists is null)
+    {
+        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
+
+    connection.Execute(@"
+        DELETE FROM patients
+        WHERE patient_id = @id", new { id });
+
+    return Results.NoContent();
+});
+
+app.Run();
+
+// Record posicional despues de app.Run()
+record Patient(
+    long PatientId,
+    string FirstName,
+    string LastName,
+    string Gender,
+    string BirthDate,
+    string? City,
+    long ProvinceId,
+    string? Allergies,
+    long? Height,
+    long? Weight);
+```
+
+**Criterios de corrección:**
+- Los cinco endpoints funcionan correctamente: 4 puntos.
+- Todos los SQL usan alias `AS` y parámetros `@`: 2 puntos.
+- Códigos de respuesta correctos (200, 201, 204, 404): 2 puntos.
+- Validación de existencia en PUT y DELETE: 1 punto.
+- Record `Patient` después de `app.Run()`, tipos canónicos: 1 punto.
+
+---
+
+## Criterios de corrección generales
+
+| Criterio | Ponderación |
+|----------|-------------|
+| Soluciones de código correctas y compilables | 45% |
+| Explicaciones técnicas precisas (SQL, Dapper, HTTP codes) | 25% |
+| Cumplimiento de convenciones del curso (tipos, alias, parametrización) | 20% |
+| Presentación ordenada y legible | 10% |
+
+La presentación es individual y manuscrita. Los fragmentos de código deben estar transcritos a mano con la misma estructura y comentarios que la solución oficial. Se penaliza la entrega de código que no compile, que omita alias `AS` en consultas Dapper, que concatene valores en consultas SQL, o que no valide la existencia antes de operaciones de escritura.

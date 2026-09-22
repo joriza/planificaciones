@@ -1,5 +1,5 @@
 {
-  "descripcion": "Tabla de mapeo de dominio para generar versiones equivalentes (B) desde una versión A en LAP (Programación en Python). La usa tools/generar-version-b.ps1 con -Tabla input/materias/LAP/tabla-dominio.json. Los tokens A de cada dominio ocurren textualmente en las evaluaciones reales del corpus (versiones A de unidades y momentos). Consolidación en un solo pase: los tokens A son únicos en TODA la tabla.",
+  "descripcion": "Tabla de mapeo de dominio para generar versiones equivalentes (B) desde una versión A en LPR (Programación en Python). La usa tools/generar-version-b.ps1 con -Tabla input/materias/LPR/tabla-dominio.json. Los tokens A de cada dominio ocurren textualmente en las evaluaciones reales del corpus (versiones A de unidades y momentos). Consolidación en un solo pase: los tokens A son únicos en TODA la tabla.",
   "reglas": [
     "Reemplazo de palabra completa (whole-word), insensible a mayúsculas, preservando el patrón de caja del token hallado: articulos -> LIBROS si el original era PRODUCTOS, memberName -> toolName si el original era memberName.",
     "La sustitución es una sola pasada sobre el texto base: un reemplazo nunca se vuelve a mapear (la alternancia evalúa de mayor a menor longitud).",

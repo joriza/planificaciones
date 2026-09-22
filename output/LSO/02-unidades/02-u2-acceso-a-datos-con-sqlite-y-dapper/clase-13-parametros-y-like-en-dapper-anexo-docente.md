@@ -1,119 +1,252 @@
 # Anexo docente — Encuentro 13: Parámetros y LIKE en Dapper
 
-**Tipo:** Anexo docente — material exclusivo para el profesorado. No se entrega a los alumnos.
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
----
+## 1. Solución del ejercicio independiente
 
-## Encuadre
-
-Cuarto encuentro de la Unidad 2. Los alumnos ya usan Dapper con records y alias. Este encuentro cierra el dominio de lectura consultas: aprenden a parametrizar con `@` (en lugar de concatenar) y a usar `LIKE` con comodines para búsqueda de texto parcial. Es el último encuentro procedimental antes del cierre de unidad. El ejercicio independiente combina JOIN + parametro + ORDER BY, integrando lo aprendido en E10-E13.
-
----
-
-## Qué observar durante la práctica
-
-- **`%` en el lugar equivocado**: los alumnos tienden a escribir `LIKE '%@patron%'` pensando que Dapper va a reemplazar `@patron` dentro del string. Explicar que el `%` debe ir en el valor de C#, no en el SQL.
-- **Nombre del parámetro**: `new { patron = ... }` es la forma correcta. Algunos escriben `new { @patron = ... }` (el `@` en C# es un prefijo para palabras reservadas, no necesario acá).
-- **Lista vacía vs 404**: en la práctica guiada devolvemos `Results.Ok(listaVacia)` en vez de `Results.NotFound`. Discutir cuándo corresponde cada uno: si el endpoint busca por alergia, una lista vacía es un resultado válido (no encontró), no un error de recurso inexistente.
-- **LIKE case-sensitive**: SQLite es case-insensitive para caracteres ASCII en LIKE, pero conviene mencionarlo porque otros motores se comportan distinto.
-
----
-
-## Solución completa (ejercicio independiente)
+### Consigna 1 — `/doctors/by-specialty?specialty=Card`
 
 ```csharp
-using Dapper;
-using Microsoft.Data.Sqlite;
+// GET /doctors/by-specialty — buscar medicos por especialidad (búsqueda parcial)
+app.MapGet("/doctors/by-specialty", (string specialty) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var doctors = connection.Query<Doctor>(@"
+        SELECT doctor_id AS DoctorId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               specialty AS Specialty
+        FROM doctors
+        WHERE specialty LIKE @specialty
+        ORDER BY last_name, first_name
+    ", new { specialty = $"%{specialty}%" }).ToList();
 
-var connectionString = "Data Source=hospital.db";
+    return Results.Ok(doctors);
+});
+```
 
-public record PatientWithProvince(
-    long PatientId,
-    string FirstName,
-    string LastName,
-    string Gender,
-    string BirthDate,
-    string? City,
-    string ProvinceName,
-    string? Allergies,
-    long? Height,
-    long? Weight
+**Salida esperada al navegar a `http://localhost:5000/doctors/by-specialty?specialty=Card`:**
+
+```json
+[
+  {
+    "doctorId": 2,
+    "firstName": "Joshua",
+    "lastName": "Green",
+    "specialty": "Cardiologist"
+  },
+  {
+    "doctorId": 7,
+    "firstName": "Simon",
+    "lastName": "Santiago",
+    "specialty": "Cardiologist"
+  },
+  {
+    "doctorId": 15,
+    "firstName": "Douglas",
+    "lastName": "Brooks",
+    "specialty": "Cardiologist"
+  }
+]
+```
+
+### Consigna 2 — `/admissions/search?diagnosis=Heart`
+
+```csharp
+// GET /admissions/search — buscar admisiones por diagnostico
+app.MapGet("/admissions/search", (string diagnosis) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var admissions = connection.Query<AdmissionSearchResult>(@"
+        SELECT a.admission_date AS AdmissionDate,
+               a.diagnosis AS Diagnosis,
+               p.first_name || ' ' || p.last_name AS PatientName,
+               d.first_name || ' ' || d.last_name AS DoctorName
+        FROM admissions a
+        JOIN patients p ON a.patient_id = p.patient_id
+        JOIN doctors d ON a.attending_doctor_id = d.doctor_id
+        WHERE a.diagnosis LIKE @diagnosis
+        ORDER BY a.admission_date DESC
+    ", new { diagnosis = $"%{diagnosis}%" }).ToList();
+
+    return Results.Ok(admissions);
+});
+```
+
+Record correspondiente:
+
+```csharp
+// Record para resultados de busqueda de admisiones
+public record AdmissionSearchResult(
+    string AdmissionDate,
+    string? Diagnosis,
+    string PatientName,
+    string DoctorName
 );
+```
 
-// GET /patients/by-province/{provinceId} — pacientes por provincia con Dapper
-app.MapGet("/patients/by-province/{provinceId}", (string provinceId) =>
+**Salida esperada al navegar a `http://localhost:5000/admissions/search?diagnosis=Heart`:**
+
+```json
+[
+  {
+    "admissionDate": "2018-11-06",
+    "diagnosis": "Congestive Heart Failure",
+    "patientName": "Donald Waterfield",
+    "doctorName": "Claude Walls"
+  },
+  {
+    "admissionDate": "2018-10-15",
+    "diagnosis": "Myocardial Infarction",
+    "patientName": "Mickey Baasha",
+    "doctorName": "Joshua Green"
+  }
+]
+```
+
+### Consigna 3 — `/patients/filter` con múltiples filtros opcionales
+
+```csharp
+// GET /patients/filter — filtrar pacientes con parametros opcionales
+app.MapGet("/patients/filter", (
+    string? gender,
+    string? city,
+    string? provinceId) =>
 {
     using var connection = new SqliteConnection(connectionString);
 
-    var patients = connection.Query<PatientWithProvince>(@"
-        SELECT p.patient_id AS PatientId,
-               p.first_name AS FirstName,
-               p.last_name AS LastName,
-               p.gender AS Gender,
-               p.birth_date AS BirthDate,
-               p.city AS City,
-               pn.province_name AS ProvinceName,
-               p.allergies AS Allergies,
-               p.height AS Height,
-               p.weight AS Weight
-        FROM patients p
-        JOIN province_names pn ON p.province_id = pn.province_id
-        WHERE p.province_id = @prov
-        ORDER BY p.last_name, p.first_name
-    ", new { prov = provinceId }).ToList();
+    // Construir la consulta con WHERE 1=1 y agregar condiciones segun corresponda
+    var sql = @"
+        SELECT patient_id AS PatientId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               gender AS Gender,
+               birth_date AS BirthDate,
+               city AS City,
+               province_id AS ProvinceId,
+               allergies AS Allergies,
+               height AS Height,
+               weight AS Weight
+        FROM patients
+        WHERE 1=1";
+
+    var parameters = new {};
+
+    // Agregar filtros solo si los parametros no son nulos
+    if (!string.IsNullOrEmpty(gender))
+    {
+        sql += " AND gender = @gender";
+        parameters = new { gender };
+    }
+
+    if (!string.IsNullOrEmpty(city))
+    {
+        sql += " AND city LIKE @city";
+        parameters = new { city = $"%{city}%" };
+    }
+
+    if (!string.IsNullOrEmpty(provinceId))
+    {
+        sql += " AND province_id = @provinceId";
+        parameters = new { provinceId };
+    }
+
+    sql += " ORDER BY last_name, first_name";
+
+    var patients = connection.Query<Patient>(sql, parameters).ToList();
 
     return Results.Ok(patients);
 });
-
-app.Run();
 ```
 
-Probar: `http://localhost:5000/patients/by-province/ON` (197 pacientes), `http://localhost:5000/patients/by-province/BC` (8, aprox.), `http://localhost:5000/patients/by-province/XX` (0, lista vacía).
+**Salida esperada al navegar a `http://localhost:5000/patients/filter?gender=F&provinceId=ON`:**
 
----
+```json
+[
+  {
+    "patientId": 3,
+    "firstName": "Jiji",
+    "lastName": "Sharma",
+    "gender": "F",
+    "birthDate": "1990-05-15",
+    "city": "Toronto",
+    "provinceId": "ON",
+    "allergies": "Sulfa",
+    "height": 162,
+    "weight": 55
+  },
+  {
+    "patientId": 5,
+    "firstName": "Valeria",
+    "lastName": "Lopez",
+    "gender": "F",
+    "birthDate": "1985-03-22",
+    "city": "Mendoza",
+    "provinceId": "ON",
+    "allergies": null,
+    "height": 158,
+    "weight": 54
+  }
+]
+```
 
-## Errores previsibles
+**Salida esperada al navegar a `http://localhost:5000/patients/filter` (sin filtros):**
 
-Incluye los defectos de la checklist de `convenciones-tecnicas.md`:
+Devuelve todos los 258 pacientes ordenados por apellido y nombre.
 
-| Error | Cómo se manifiesta | Corrección |
-|-------|-------------------|------------|
-| **ID declarado como `int` en el record** | `InvalidOperationException` | Usar `long PatientId` |
-| **Fecha declarada como `DateTime`** | `InvalidOperationException` | Usar `string BirthDate` |
-| **Columna INTEGER nullable como `int?`** | `InvalidOperationException` | Usar `long? Height` |
-| **SELECT sin alias AS** | `InvalidOperationException` | Usar `SELECT patient_id AS PatientId, ...` |
-| **Records antes de `app.Run()`** | Error CS8803 | Mover records después de `app.Run()` |
-| **Olvidar `?` en campos nulables** | Dapper asigna null a campo no nulable | Declarar como `string?` o `long?` |
-| **Concatenar datos al SQL** | Riesgo de inyección y errores con comillas | Usar `@prov` y `new { prov }` |
-| **`%` en el SQL en vez del valor** | LIKE busca literal `@patron` | Poner `%` en C#: `$"%{texto}%"` |
-| **Nombre del parámetro mal escrito** | Dapper no matchea y la consulta falla | Coincidencia exacta entre `@xxx` en SQL y `new { xxx }` en C# |
+## 2. Solución de la actividad de extensión
 
----
+**Consigna 1:** Se espera que el alumno haya creado un endpoint `GET /doctors/by-specialty` que use `LIKE` con comodines `%` envueltos en el objeto anónimo.
 
-## Criterios de logro
+**Consigna 2:** Se espera que el alumno haya creado un endpoint `GET /admissions/search` que use `LIKE` con `JOIN` entre `admissions`, `patients` y `doctors`.
 
-| Criterio | Lo evidencia |
-|----------|--------------|
-| Parametriza consultas con `@` | Usa `@prov` en SQL y `new { prov }` en C# |
-| Usa LIKE con comodín `%` | La búsqueda por alergia encuentra coincidencias parciales |
-| Combina JOIN + parámetro | El endpoint de provincia usa JOIN y WHERE parametrizado juntos |
-| Diferencia lista vacía de 404 | Devuelve `Results.Ok(lista)` en vez de `Results.NotFound` para consultas sin resultados |
-| Sigue el patrón Dapper canónico | `Query<T>`, alias AS, record después de `app.Run()` |
+**Consigna 3:** Se espera que el alumno haya creado un endpoint `GET /patients/filter` con parámetros opcionales y construcción dinámica de la consulta SQL.
 
----
+## 3. Respuesta esperada del ejercicio
 
-## Agrupamiento
+| Pedido | Respuesta esperada | Verificación |
+| --- | --- | --- |
+| `/doctors/by-specialty?specialty=Card` | Array de médicos con especialidad que contiene "Card" | Verificar que todos los objetos tengan "Card" en `specialty` |
+| `/admissions/search?diagnosis=Heart` | Array de admisiones con diagnóstico que contiene "Heart" | Verificar que todos los objetos tengan "Heart" en `diagnosis` |
+| `/patients/filter?gender=F&provinceId=ON` | Array de pacientes femeninos de Ontario | Verificar que todos tengan `gender: "F"` y `provinceId: "ON"` |
+| `/patients/filter` sin filtros | Array de todos los 258 pacientes | Verificar la cantidad |
+| Los parámetros son parametrizados | Sin concatenación de strings en el SQL | Verificar que se usa `@param` y `new { param }` |
+| Los comodines `%` están en el objeto anónimo | LIKE funciona para búsqueda parcial | Verificar que la búsqueda parcial devuelve resultados |
 
-- **Apertura:** grupo completo. Mostrar en la pizarra la diferencia entre concatenación (clase 10) y parametrización (esta clase). Incluso mostrar un ejemplo de inyección: `' OR '1'='1`.
-- **Práctica guiada:** individual con proyección. Pausar en el objeto anónimo: mostrar que `new { patron = $"%{allergyText}%" }` es donde sucede la magia.
-- **Ejercicio independiente:** pares. El que termina primero ayuda al compañero.
-- **Actividad complementaria:** individual, con prueba cruzada de endpoints.
+## 4. Criterios de corrección (lista de verificación)
 
----
+- [ ] El archivo `Program.cs` compila sin errores ni advertencias.
+- [ ] Se usa `using Dapper;` y `using Microsoft.Data.Sqlite;` al inicio.
+- [ ] La cadena de conexión es `"Data Source=hospital.db"`.
+- [ ] Cada endpoint abre la conexión con `using var connection = new SqliteConnection(...)`.
+- [ ] Todas las consultas usan alias `AS` para mapear columnas snake_case a PascalCase.
+- [ ] Los records usan `long` para columnas INTEGER y `string?` para columnas nullable.
+- [ ] Los records están declarados después de `app.Run();`.
+- [ ] Los endpoints devuelven `Results.Ok(...)`, `Results.NotFound(...)` o `Results.BadRequest(...)` (nunca el objeto crudo).
+- [ ] Los comentarios en el código están en español y no contienen tildes ni eñes.
+- [ ] Los parámetros se pasan con objetos anónimos `new { ... }` y nunca se concatenan en el SQL.
+- [ ] `LIKE` usa comodines `%` envueltos en el objeto anónimo (`$"%{valor}%"`).
+- [ ] `QueryFirstOrDefault<T>` se usa para buscar un solo registro y se maneja el `null`.
 
-## Ajustes
+## 5. Errores esperados y cómo intervenir
 
-- **Si se atrasan:** simplificar la práctica guiada: eliminar el JOIN, usar solo `patients` con LIKE. El JOIN puede ir como actividad complementaria.
-- **Si avanzan rápido:** proponer como complemento un endpoint `/patients/search` que acepte query strings: `?allergy=Penicillin&province=ON`. Usar dos parámetros en el mismo objeto anónimo.
-- **Alumnos con dificultades:** darles una plantilla con el SQL ya escrito; que solo completen el objeto anónimo.
-- **Alumnos avanzados:** proponer que implementen `QueryFirstOrDefault<T>` para buscar un paciente por ID usando parámetro, y devolver 404 si no existe.
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| LIKE no devuelve resultados parciales | Falta envolver el valor con `%` en el objeto anónimo. | Mostrar que `LIKE @nombre` requiere `new { nombre = $"%{valor}%" }` para los comodines. |
+| La búsqueda con `=` no encuentra coincidencias parciales | Se usó `=` en vez de `LIKE` para búsqueda parcial. | Recordar que `=` busca coincidencia exacta y `LIKE` permite coincidencia parcial con `%`. |
+| Inyección SQL en la consulta | Se concatenó el valor directamente en el SQL con `$"{valor}"`. | Explicar que siempre se debe usar `@param` con `new { param }` y nunca concatenar. |
+| `null` en el JSON para campos nullable | La propiedad no lleva `?` en el record. | Declarar como `string?` o `long?` según el tipo canónico. |
+| La consulta con múltiples filtros no funciona | Se usó `WHERE` sin manejar parámetros opcionales. | Mostrar la técnica de `WHERE 1=1` con `AND` condicional o construir la consulta dinámicamente. |
+| CS8803 al compilar | El record está declarado antes de `app.Run()`. | Mover el record para que quede después de `app.Run();`. |
+| `InvalidOperationException`: no constructor match | El tipo del parámetro del record no coincide con el tipo de la columna. | Verificar que INTEGER → `long`, TEXT → `string`, y que los nullable lleven `?`. |
+
+## 6. Registro de la clase
+
+| Indicador | Qué registrar |
+| --- | --- |
+| Comprensión de la parametrización | Observar si los alumnos entienden que los valores siempre deben ir como parámetros `@nombre` y nunca concatenados. |
+| Uso de LIKE con comodines | Verificar que los alumnos envuelven los valores con `%` en el objeto anónimo y no en el SQL. |
+| QueryFirstOrDefault con null | Registrar si los alumnos manejan correctamente el caso de `null` cuando no hay resultados. |
+| Filtros opcionales | Anotar qué alumnos lograron construir la consulta dinámica con `WHERE 1=1` y cuáles necesitaron más ayuda. |
+| Errores de inyección SQL | Documentar si algún alumno intentó concatenar valores en el SQL y cómo se corrigió. |
+| Trabajo individual | Anotar quiénes completaron las 3 consignas de la actividad complementaria y cuáles necesitaron más tiempo. |

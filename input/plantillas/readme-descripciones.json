@@ -31,6 +31,7 @@
     "continuidad": { "descripcion": "Documento {{i}} de {{total}}: {{alcance}}. Se usa ante ausencia docente." },
     "continuidad-anexo": { "descripcion": "Anexo docente del documento {{i}} de continuidad: resolución de referencia y guía de corrección. Material de uso exclusivo del docente." },
     "criterios": { "descripcion": "Documento institucional dirigido a alumnos, familias y dirección: qué se evalúa en cada unidad, mínimos exigibles, regla de entrega incompleta y capas de recuperación. Se informa a los alumnos al inicio de la cursada y se consulta en cada instancia de evaluación y recuperación." },
-    "otros": { "descripcion": "Documento presente en el corpus sin tipo reconocido por las convenciones de nombres del generador; clasificarlo o incorporarlo a las convenciones antes de la próxima regeneración." }
+    "otros": { "descripcion": "Documento presente en el corpus sin tipo reconocido por las convenciones de nombres del generador; clasificarlo o incorporarlo a las convenciones antes de la próxima regeneración." },
+    "cierre-anual": { "descripcion": "Carpeta de cierre del ciclo anual: seguimiento (CSV de 38 filas), memoria anual de cátedra e informes de mesa de diciembre y marzo. Documentos derivados una vez y luego propiedad del docente; el modo actualización jamás los regenera." }
   }
 }

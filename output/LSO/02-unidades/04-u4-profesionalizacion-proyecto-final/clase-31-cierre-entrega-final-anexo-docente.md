@@ -1,125 +1,165 @@
 # Anexo docente — Encuentro 31: Cierre U4: entrega final
 
----
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
-## Preguntas guía para la apertura
+## 1. Solución del ejercicio independiente
 
-1. "¿Qué fue lo más difícil de aprender en este curso?"
-2. "¿En qué momento sintieron que 'hacía clic' la conexión entre C#, la base de datos y la API?"
-3. "Si tuvieran que recomendarle este curso a alguien, ¿qué le dirían que se va a encontrar?"
+### Solución: Últimos ajustes del trabajo final
 
----
+**Verificación final del repositorio:**
 
-## Guía de preguntas para la defensa individual
+1. **Código en `Program.cs`:**
+   - Todos los endpoints CRUD funcionan para `patients`, `doctors` y `admissions`.
+   - Los JOINs funcionan para `/patients-with-admissions` y `/doctors-with-patients`.
+   - Los records están al final del archivo, después de `app.Run()`.
+   - Los tipos canónicos se respetan: `long` para IDs, `string` para fechas, `?` para nullable.
+   - Todas las consultas están parametrizadas.
 
-El docente asigna **una pregunta de código** al azar cuando el alumno llega al frente, y luego elige **2-3 preguntas conceptuales** según el desempeño.
+2. **`hospital.db` en la carpeta `trabajo-final/`:**
+   - La base de datos está junto al `.csproj`.
+   - La cadena de conexión es `"Data Source=hospital.db"`.
 
-### Preguntas de código (para asignar una por alumno)
+3. **`.gitignore` en la raíz:**
+   - Incluye `bin/` y `obj/`.
 
-| Pregunta | Lo que debe explicar |
-|---|---|
-| "Explique el record de Patient" | Tipos `long` para IDs, `string` para fechas, `string?`/`long?` para nulables, posición después de `app.Run()`. |
-| "Explique el endpoint GET /patients/count-by-province" | LEFT JOIN, COUNT, GROUP BY, alias en snake_case, `Results.Ok()`. |
-| "Explique el bloque de validacion del POST" | `string.IsNullOrWhiteSpace()`, `Results.BadRequest()`, devolución temprana. |
-| "Explique la proteccion de main en Git" | Branch protection rule, PR requerido, 1 approval, push directo bloqueado. |
-| "Explique el flujo de un PR" | Issue -> rama feature -> commit -> push -> PR -> revision -> merge -> borrar rama. |
-| "Explique por que la conexion se abre con `using`" | IDisposable, cierre automático, pool de conexiones SQLite. |
+4. **README de portada completo:**
+   - Nombre del proyecto, descripción, tecnologías, cómo ejecutar, endpoints disponibles, estructura del repositorio.
 
-### Preguntas conceptuales (elegir 2-3 por alumno)
+5. **Issues organizados:**
+   - Al menos las fases del trabajo final creadas como issues.
 
-- ¿Por qué los IDs se declaran como `long` y no `int`?
-- ¿Qué hace `ExecuteScalar<long>` y por qué se usa en el POST?
-- ¿Cuál es la diferencia entre `Results.Ok`, `Results.Created` y `Results.NoContent`?
-- ¿Por qué usamos alias `AS` en el SELECT?
-- ¿Qué protege la regla de branch protection en main?
-- ¿Qué pasa si no cerramos la conexión con `using`?
-- ¿Cuándo usarías LEFT JOIN en lugar de INNER JOIN?
-- ¿Por qué las fechas son `string` en los records en lugar de `DateTime`?
-- ¿Cuál es la diferencia entre `Query<T>` y `QueryFirstOrDefault<T>`?
-- ¿Qué devuelve `Execute` en un DELETE?
+6. **Historial de commits limpio:**
+   - Mensajes descriptivos en español, sin tildes, con el prefijo de la carpeta.
 
----
+7. **PRs revisados y fusionados:**
+   - No hay cambios pendientes en ramas de feature abiertas.
 
-## Escala de evaluacion para la defensa individual
+8. **`main` protegida:**
+   - La rama principal está protegida y no recibe push directo.
 
-| Dimensión | Excelente (4 pts) | Bien (3 pts) | Suficiente (2 pts) | Insuficiente (1 pt) |
-|---|---|---|---|---|
-| Claridad al exponer | Explica de forma clara y estructurada, usa vocabulario técnico preciso | Explica con claridad pero omite algún detalle | Se nota inseguro, salta entre conceptos | No logra explicar el proyecto |
-| Demostración técnica | Ejecuta y prueba endpoints sin problemas | Prueba endpoints con ayuda menor | Tiene dificultad para ejecutar | No puede mostrar la API funcionando |
-| Explicación de código | Explica línea por línea con precisión | Explica el bloque general pero omite detalles | Muestra el código sin explicarlo | No reconoce su propio código |
-| Preguntas conceptuales | Responde correctamente 3 preguntas | Responde correctamente 2 preguntas | Responde correctamente 1 pregunta | No responde ninguna |
-| Git profesional | Muestra PR, ramas y main protegida | Muestra PR pero falta algún elemento | Tiene Git pero sin PR | Sin evidencia de Git profesional |
+### Solución: Entrega por GitHub
 
----
+**Comando de commit final de cierre:**
 
-## Planilla de evaluacion del trabajo final (para completar por grupo)
+```bash
+# Verificar que estamos en main y que tiene los ultimos cambios
+git checkout main
+git pull origin main
 
-| Grupo: _______________ | Puntaje max | Puntaje obtenido |
-|---|---|---|
-| **Funcionalidad tecnica (30%)** | | |
-| `GET /patients` funciona | 3 | |
-| `GET /patients/{id}` funciona | 3 | |
-| `GET /patients/with-province` funciona | 4 | |
-| `GET /patients/count-by-province` funciona | 4 | |
-| `POST /patients` con validacion | 5 | |
-| `PUT /patients/{id}` con chequeo de existencia | 4 | |
-| `DELETE /patients/{id}` con chequeo de existencia | 4 | |
-| `GET /doctors/{id}` con conteo | 3 | |
-| Subtotal funcionalidad | 30 | |
-| **Calidad del codigo (20%)** | | |
-| Tipos canonicos correctos (long, string, ?) | 5 | |
-| Alias AS en SELECT | 4 | |
-| `using` en conexiones | 4 | |
-| `Results.*` en todas las respuestas | 4 | |
-| Records despues de `app.Run()` | 3 | |
-| Subtotal calidad | 20 | |
-| **Git profesional (20%)** | | |
-| Issues creados y cerrados | 5 | |
-| Ramas feature con nombre correcto | 5 | |
-| PR con revision entre pares | 5 | |
-| Main protegida activa | 5 | |
-| Subtotal Git | 20 | |
-| **README (10%)** | | |
-| Nombre y descripcion | 2 | |
-| Instalacion y requisitos | 2 | |
-| Estructura del repositorio | 2 | |
-| Tecnologias | 2 | |
-| Integrantes | 2 | |
-| Subtotal README | 10 | |
-| **Defensa individual (20%)** | 20 | |
-| **TOTAL** | **100** | |
+# Verificar que la API arranca
+dotnet run
+# En otra terminal: curl http://localhost:5000/patients
 
----
+# Commit final de cierre
+git add .
+git commit -m "trabajo-final: entrega final, api completa con crud y joins"
+git push origin main
+```
 
-## Notas para el docente
+**Resultado esperado:** El repositorio está en estado de entrega: `main` tiene el código más reciente, la API arranca sin errores, el README está completo y el historial de commits es limpio.
 
-### Logistica de la defensa
+### Solución: Preparación para la defensa individual
 
-- Si el curso tiene muchos alumnos, la defensa puede extenderse más de 130 minutos. Preparar un cronómetro visible y ser estricto con los 8 minutos por alumno.
-- Si algún alumno no termina su defensa en el tiempo asignado, cortar y asignar los puntos de "explicación de código" y "preguntas" como pendientes para una breve entrevista individual al final.
-- Para grupos grandes, considerar defensas simultáneas: mientras un alumno presenta, otro prepara su computadora.
+**Guía de presentación sugerida (5-10 min):**
 
-### Que hacer si un grupo no completo el trabajo final
+1. **Arquitectura del proyecto** (1 min): explicar que es una Minimal API con Dapper, un solo archivo `Program.cs`, base de datos SQLite `hospital.db`.
+2. **Endpoints disponibles** (2 min): mostrar la tabla de endpoints y explicar qué hace cada uno.
+3. **Decisiones de diseño** (2 min): explicar por qué se usan tipos canónicos (`long` para IDs, `string` para fechas), por qué las consultas están parametrizadas y por qué los records van al final.
+4. **Demostración en vivo** (3-5 min): mostrar la API funcionando con `curl` o Thunder Client.
+5. **Flujo profesional de Git** (1 min): explicar las ramas por feature, los PRs revisados y `main` protegida.
 
-- Si un grupo no tiene el trabajo final funcionando, permitirle presentar lo que tiene y evaluar sobre eso. El README y el flujo Git se evalúan igual.
-- Si un alumno faltó a encuentros anteriores pero su grupo completo el trabajo, evaluar su comprensión individual con más preguntas conceptuales.
+## 2. Solución de la actividad de extensión
 
-### Cierre emocional del curso
+### Tests de integración finales
 
-Destacar el logro: pasaron de no saber C# a tener una API REST funcional conectada a una base de datos real, con control de versiones profesional. Ese es un salto enorme en 31 encuentros.
+Los tests de integración finales verifican que todos los endpoints responden correctamente:
 
-### Despues del encuentro
+```csharp
+// Test: GET /patients devuelve 200
+using var client = new HttpClient();
+var response = await client.GetAsync("http://localhost:5000/patients");
+Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-Una vez cerradas las notas, subir las calificaciones al sistema de la institución y archivar los repositorios de los grupos como evidencia de la cursada.
+// Test: GET /patients/1 devuelve 200
+response = await client.GetAsync("http://localhost:5000/patients/1");
+Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
----
+// Test: GET /patients/99999 devuelve 404
+response = await client.GetAsync("http://localhost:5000/patients/99999");
+Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
-## Material complementario para quienes quieran seguir aprendiendo
+// Test: POST /patients con datos validos devuelve 201
+var json = "{ \"firstName\": \"Ana\", \"lastName\": \"Lopez\", \"gender\": \"F\", \"birthDate\": \"1990-01-15\" }";
+var content = new StringContent(json, Encoding.UTF8, "application/json");
+response = await client.PostAsync("http://localhost:5000/patients", content);
+Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-Para los alumnos que quieran continuar después del curso:
+// Test: POST /patients con nombre vacio devuelve 400
+json = "{ \"firstName\": \"\", \"lastName\": \"Lopez\" }";
+content = new StringContent(json, Encoding.UTF8, "application/json");
+response = await client.PostAsync("http://localhost:5000/patients", content);
+Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+```
 
-- **Entity Framework Core** — el ORM oficial de .NET, reemplaza a Dapper en proyectos más grandes.
-- **Autenticacion con JWT** — asegurar los endpoints con tokens.
-- **Minimal API avanzada** — grupos de rutas, filtros, validación con FluentValidation.
-- **Testing de integracion** — `Microsoft.AspNetCore.Mvc.Testing` para probar la API automáticamente.
-- **Deploy** — publicar en Azure, Railway o Render.
+### Preguntas de práctica para la defensa (simulacro de evaluadores)
+
+Los grupos que terminan temprano pueden preparar preguntas de práctica para la defensa de otros grupos:
+
+1. ¿Por qué usas `long` en lugar de `int` para los IDs?
+2. ¿Qué pasa si concatenas un valor al SQL en lugar de usar un parámetro?
+3. ¿Por qué los records van después de `app.Run()`?
+4. ¿Cómo funciona un JOIN entre `patients` y `admissions`?
+5. ¿Qué es `splitOn` en Dapper y por qué lo necesitas?
+6. ¿Por qué la rama `main` está protegida?
+7. ¿Qué es un pull request y por qué se revisa entre pares?
+
+## 3. Respuesta esperada del ejercicio
+
+| Tarea | Resultado esperado |
+| --- | --- |
+| Últimos ajustes | API completa funcionando, tipos canónicos correctos, README completo, commits limpios |
+| Entrega por GitHub | Commit final de cierre con mensaje descriptivo, push a `main`, repositorio en estado de entrega |
+| Preparación para la defensa | Presentación breve lista, demostración en vivo funcionando, respuestas a preguntas técnicas preparadas |
+| Tests de integración finales | Al menos 5 tests que verifican 200, 201, 204, 400, 404 pasan contra la API |
+| Preguntas de práctica (extensión) | Al menos 5 preguntas de práctica para la defensa de otros grupos |
+
+## 4. Criterios de corrección (lista de verificación)
+
+- ☐ API completa funcionando: todos los endpoints CRUD para `patients`, `doctors` y `admissions` responden correctamente.
+- ☐ JOINs funcionales: `/patients-with-admissions` y `/doctors-with-patients` devuelven datos relacionados.
+- ☐ Tipos canónicos correctos: `long` para IDs, `string` para fechas, `?` para nullable.
+- ☐ Consultas parametrizadas: ninguna concatenación de valores en SQL.
+- ☐ Records al final del archivo, después de `app.Run()`.
+- ☐ `hospital.db` en la carpeta `trabajo-final/` junto al `.csproj`.
+- ☐ `.gitignore` en la raíz con `bin/` y `obj/`.
+- ☐ README de portada completo con al menos 6 secciones.
+- ☐ Issues organizados con al menos las fases del trabajo final.
+- ☐ Historial de commits limpio con mensajes descriptivos en español.
+- ☐ `main` protegida y sin commits directos.
+- ☐ PRs revisados y fusionados antes de la entrega.
+- ☐ Commit final de cierre con mensaje descriptivo.
+- ☐ Grupo preparado para la defensa individual (presentación y demostración).
+
+## 5. Errores esperados y cómo intervenir
+
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| API no arranca al clonar el repositorio | `hospital.db` no está en la carpeta correcta o cadena de conexión incorrecta | Verificar que `hospital.db` está en `trabajo-final/` junto al `.csproj` y que la cadena es `"Data Source=hospital.db"` |
+| `InvalidOperationException` al ejecutar endpoints | Tipos canónicos incorrectos en el record | Verificar que los IDs usan `long`, las fechas usan `string` y los campos nullable usan `?` |
+| Commit de entrega con mensaje genérico | No dedicar tiempo al mensaje de commit | El mensaje final debe ser descriptivo: `trabajo-final: entrega final, api completa con crud y joins` |
+| Rama de feature sin fusionar al momento de la entrega | PRs pendientes que no se fusionaron | Verificar que `main` tiene todos los cambios y que no hay ramas de feature abiertas innecesarias |
+| README incompleto o faltante | No dedicar tiempo a la documentación | El README de portada es parte de la entrega profesional y se evalúa |
+| Grupo no preparado para la defensa | No ensayar la presentación | Dedicar tiempo del ensayo a practicar la exposición y preparar respuestas para preguntas técnicas |
+| Tests de integración fallan | API no está corriendo o puerto incorrecto | Verificar que `dotnet run` está ejecutándose y el puerto es el correcto |
+| `main` recibe push directo | Branch protection no configurada correctamente | Verificar que la regla de protección está activa para `main` y que requiere PR |
+
+## 6. Registro de la clase
+
+| Grupo | API completa | Tipos canónicos correctos | Consultas parametrizadas | README completo | Commits limpios | Main protegida | PRs fusionados | Listo para defensa | Observaciones |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Grupo 1 | | | | | | | | | |
+| Grupo 2 | | | | | | | | | |
+| Grupo 3 | | | | | | | | | |
+| Grupo 4 | | | | | | | | | |
+
+**Notas para evaluación de proceso:** verificar que cada grupo tenga la API completa funcionando, el repositorio en estado de entrega y esté preparado para la defensa individual. Registrar qué grupos necesitan acompañamiento adicional antes de la defensa.

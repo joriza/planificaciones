@@ -1,190 +1,261 @@
-# Encuentro 25 — Anexo docente: Cierre U3, repaso y TP
+# Anexo docente — Encuentro 25: Cierre U3: repaso y TP
 
-## Resumen de la clase
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
-| Bloque | Duracion | Actividad |
-|---|---|---|
-| Apertura y motivacion | 20 min | Repaso general de la Unidad 3. Presentar la checklist pre-entrega y el TP-U3. |
-| Repaso teorico-practico | 50 min | Recorrer la tabla de verbos HTTP + metodos Dapper. Verificar tipos canonicos. Ejemplo rapido de JOIN triple. |
-| Trabajo en el TP-U3 | 120 min | Los alumnos implementan el TP de forma individual o por grupos. El docente circula resolviendo dudas. |
-| Puesta en comun y cierre de unidad | 30 min | Revisar soluciones voluntarias. Checklist pre-entrega. Instrucciones de git y entrega. |
-| Cierre | 20 min | Preview de la Unidad 4. Reflexion sobre lo aprendido. |
+## 1. Solución del ejercicio independiente
 
-## Solucion completa del TP-U3
+El ejercicio independiente de este encuentro es la entrega del TP-U3 en GitHub. La solución de referencia es un repositorio de grupo con la carpeta `tp-u3/` que contiene un `Program.cs` funcional.
 
-`Program.cs` completo del TP (ubicado en `tp-u3/`):
+**Estructura esperada del repositorio de grupo**:
+
+```
+repo-grupo-x/
+├── .gitignore
+├── tp-u3/
+│   └── Program.cs
+└── (otros archivos del proyecto)
+```
+
+**Contenido esperado de `Program.cs`**:
 
 ```csharp
 using Dapper;
 using Microsoft.Data.Sqlite;
 
-var connectionString = "Data Source=hospital.db";
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-// GET /doctors — listar todos
-app.MapGet("/doctors", () =>
+var connectionString = "Data Source=hospital.db";
+
+// GET /patients — listar todos los pacientes
+app.MapGet("/patients", () =>
 {
     using var connection = new SqliteConnection(connectionString);
-    var doctors = connection.Query<Doctor>(@"
-        SELECT doctor_id AS DoctorId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               specialty AS Specialty,
-               phone AS Phone,
-               email AS Email
-        FROM doctors").ToList();
-    return Results.Ok(doctors);
+    var patients = connection.Query<Patient>(@"
+        SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName,
+               gender AS Gender, birth_date AS BirthDate, city AS City,
+               province_id AS ProvinceId, allergies AS Allergies, height AS Height, weight AS Weight
+        FROM patients ORDER BY patient_id"
+    ).ToList();
+    return Results.Ok(patients);
 });
 
-// GET /doctors/{id:long} — obtener un doctor
-app.MapGet("/doctors/{id:long}", (long id) =>
+// GET /patients/{id:long} — obtener un paciente por ID
+app.MapGet("/patients/{id:long}", (long id) =>
 {
     using var connection = new SqliteConnection(connectionString);
-    var doctor = connection.QueryFirstOrDefault<Doctor>(@"
-        SELECT doctor_id AS DoctorId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               specialty AS Specialty,
-               phone AS Phone,
-               email AS Email
-        FROM doctors WHERE doctor_id = @id", new { id });
+    var patient = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName,
+               gender AS Gender, birth_date AS BirthDate, city AS City,
+               province_id AS ProvinceId, allergies AS Allergies, height AS Height, weight AS Weight
+        FROM patients WHERE patient_id = @id", new { id });
 
-    return doctor is null
-        ? Results.NotFound(new { mensaje = "Doctor no encontrado" })
-        : Results.Ok(doctor);
+    return patient is null
+        ? Results.NotFound(new { mensaje = "Paciente no encontrado" })
+        : Results.Ok(patient);
 });
 
-// POST /doctors — crear un doctor
-app.MapPost("/doctors", (DoctorInput input) =>
+// POST /patients — crear un paciente nuevo
+app.MapPost("/patients", (Patient nuevoPaciente) =>
 {
-    if (string.IsNullOrWhiteSpace(input.FirstName))
-        return Results.BadRequest(new { mensaje = "El nombre es obligatorio" });
+    if (string.IsNullOrWhiteSpace(nuevoPaciente.FirstName) ||
+        string.IsNullOrWhiteSpace(nuevoPaciente.LastName))
+    {
+        return Results.BadRequest(new { mensaje = "El nombre y el apellido son obligatorios" });
+    }
 
     using var connection = new SqliteConnection(connectionString);
-    var newId = connection.ExecuteScalar<long>(@"
-        INSERT INTO doctors (first_name, last_name, specialty, phone, email)
-        VALUES (@FirstName, @LastName, @Specialty, @Phone, @Email);
-        SELECT last_insert_rowid() AS NewId;", input);
 
-    var doctor = connection.QueryFirstOrDefault<Doctor>(@"
-        SELECT doctor_id AS DoctorId, first_name AS FirstName,
-               last_name AS LastName, specialty AS Specialty,
-               phone AS Phone, email AS Email
-        FROM doctors WHERE doctor_id = @id", new { id = newId });
+    long newId = connection.ExecuteScalar<long>(@"
+        INSERT INTO patients (first_name, last_name, gender, birth_date, city, province_id, allergies, height, weight)
+        VALUES (@FirstName, @LastName, @Gender, @BirthDate, @City, @ProvinceId, @Allergies, @Height, @Weight);
+        SELECT last_insert_rowid();
+    ", nuevoPaciente);
 
-    return Results.Created($"/doctors/{newId}", doctor);
+    var pacienteCreado = nuevoPaciente with { PatientId = newId };
+    return Results.Created($"/patients/{newId}", pacienteCreado);
 });
 
-// PUT /doctors/{id:long} — actualizar un doctor
-app.MapPut("/doctors/{id:long}", (long id, DoctorInput input) =>
+// PUT /patients/{id:long} — actualizar un paciente existente
+app.MapPut("/patients/{id:long}", (long id, Patient pacienteActualizado) =>
 {
-    if (string.IsNullOrWhiteSpace(input.FirstName))
-        return Results.BadRequest(new { mensaje = "El nombre es obligatorio" });
-
     using var connection = new SqliteConnection(connectionString);
-    var existente = connection.QueryFirstOrDefault<Doctor>(@"
-        SELECT doctor_id AS DoctorId, first_name AS FirstName,
-               last_name AS LastName, specialty AS Specialty,
-               phone AS Phone, email AS Email
-        FROM doctors WHERE doctor_id = @id", new { id });
+
+    var existente = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId FROM patients WHERE patient_id = @id", new { id });
 
     if (existente is null)
-        return Results.NotFound(new { mensaje = "Doctor no encontrado" });
+    {
+        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
 
     connection.Execute(@"
-        UPDATE doctors SET first_name = @FirstName, last_name = @LastName,
-            specialty = @Specialty, phone = @Phone, email = @Email
-        WHERE doctor_id = @Id", new
+        UPDATE patients
+        SET first_name = @FirstName, last_name = @LastName, gender = @Gender,
+            city = @City, province_id = @ProvinceId, allergies = @Allergies,
+            height = @Height, weight = @Weight
+        WHERE patient_id = @id",
+        new
+        {
+            pacienteActualizado.FirstName,
+            pacienteActualizado.LastName,
+            pacienteActualizado.Gender,
+            pacienteActualizado.City,
+            pacienteActualizado.ProvinceId,
+            pacienteActualizado.Allergies,
+            pacienteActualizado.Height,
+            pacienteActualizado.Weight,
+            id
+        });
+
+    return Results.NoContent();
+});
+
+// DELETE /patients/{id:long} — borrar un paciente por ID
+app.MapDelete("/patients/{id:long}", (long id) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+
+    var paciente = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId FROM patients WHERE patient_id = @id", new { id });
+
+    if (paciente is null)
     {
-        input.FirstName, input.LastName, input.Specialty,
-        input.Phone, input.Email, Id = id
-    });
+        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
+
+    connection.Execute(@"
+        DELETE FROM patients WHERE patient_id = @id", new { id });
 
     return Results.NoContent();
 });
 
-// DELETE /doctors/{id:long} — eliminar un doctor
-app.MapDelete("/doctors/{id:long}", (long id) =>
-{
-    if (id <= 0)
-        return Results.BadRequest(new { mensaje = "El ID debe ser un numero positivo" });
-
-    using var connection = new SqliteConnection(connectionString);
-    int filas = connection.Execute("DELETE FROM doctors WHERE doctor_id = @id", new { id });
-
-    if (filas == 0)
-        return Results.NotFound(new { mensaje = "Doctor no encontrado" });
-
-    return Results.NoContent();
-});
-
-// GET /admissions/{id:long} — una admision con JOIN triple
-app.MapGet("/admissions/{id:long}", (long id) =>
+// GET /admissions/detail — JOIN de 3 tablas
+app.MapGet("/admissions/detail", () =>
 {
     using var connection = new SqliteConnection(connectionString);
-    var admision = connection.QueryFirstOrDefault<AdmissionDetail>(@"
-        SELECT a.admission_id AS AdmissionId,
+
+    var admissions = connection.Query<AdmissionDetail>(@"
+        SELECT a.patient_id AS PatientId,
+               p.first_name || ' ' || p.last_name AS PatientName,
+               d.first_name || ' ' || d.last_name AS DoctorName,
+               d.specialty AS DoctorSpecialty,
                a.admission_date AS AdmissionDate,
-               a.diagnosis AS Diagnosis,
                a.discharge_date AS DischargeDate,
-               d.doctor_id AS DoctorId,
-               d.first_name AS DoctorFirstName,
-               d.last_name AS DoctorLastName,
-               p.patient_id AS PatientId,
-               p.first_name AS PatientFirstName,
-               p.last_name AS PatientLastName
+               a.diagnosis AS Diagnosis
         FROM admissions a
-        JOIN doctors d ON a.doctor_id = d.doctor_id
         JOIN patients p ON a.patient_id = p.patient_id
-        WHERE a.admission_id = @id", new { id });
+        JOIN doctors d ON a.attending_doctor_id = d.doctor_id
+        ORDER BY a.admission_date DESC"
+    ).ToList();
 
-    return admision is null
-        ? Results.NotFound(new { mensaje = "Admision no encontrada" })
-        : Results.Ok(admision);
+    return Results.Ok(admissions);
 });
 
 app.Run();
 
-// --- records al final ---
-record DoctorInput(string FirstName, string? LastName, string? Specialty, string? Phone, string? Email);
-record Doctor(long DoctorId, string FirstName, string? LastName, string? Specialty,
-              string? Phone, string? Email);
-record AdmissionDetail(long AdmissionId, string AdmissionDate, string? Diagnosis,
-                       string? DischargeDate, long DoctorId, string DoctorFirstName,
-                       string? DoctorLastName, long PatientId, string PatientFirstName,
-                       string? PatientLastName);
+public record Patient(
+    long PatientId,
+    string FirstName,
+    string LastName,
+    string Gender,
+    string BirthDate,
+    string? City,
+    string ProvinceId,
+    string? Allergies,
+    long? Height,
+    long? Weight
+);
+
+public record AdmissionDetail(
+    long PatientId,
+    string PatientName,
+    string DoctorName,
+    string DoctorSpecialty,
+    string AdmissionDate,
+    string? DischargeDate,
+    string? Diagnosis
+);
 ```
 
-## Errores anticipados en el TP
+## 2. Solución de la actividad de extensión
 
-| Error esperado | Correccion |
-|---|---|
-| El alumno no incluye `DELETE /doctors` | El TP pide CRUD completo, DELETE es obligatorio. |
-| El JOIN triple no incluye `discharge_date` en el SELECT | La consigna pide datos de admision: `discharge_date` es opcional pero debe estar en el SELECT. |
-| Usar `DoctorInput` para PUT sin validar existencia | Recordar que PUT debe verificar existencia con `QueryFirstOrDefault`. |
-| Olvidar `.gitignore` | Sin `.gitignore` se suben `bin/` y `obj/`. Mostrar como crearlo. |
-| Commit con mensaje en ingles o sin formato | El canon exige espanol sin tildes: `"tp-u3: CRUD completo con Dapper"`. |
-| El record `DoctorInput` usa `string` en lugar de `string?` para campos nulables | `specialty`, `phone`, `email` aceptan NULL en la BD -- deben ser `string?`. |
+### Actividad 1 — Debug de código con errores intencionales
 
-## Checklist de correccion del TP
+**Código con errores** (para que los alumnos corrijan):
 
-| ✔ | Criterio | Puntaje |
-|---|---|---|
-| ☐ | GET /doctors funciona y devuelve 200 | 10% |
-| ☐ | GET /doctors/{id} funciona; 404 para ID inexistente | 10% |
-| ☐ | POST /doctors crea y devuelve 201 con URL | 15% |
-| ☐ | POST /doctors rechaza FirstName vacio con 400 | 10% |
-| ☐ | PUT /doctors/{id} actualiza y devuelve 204 | 15% |
-| ☐ | PUT /doctors/{id} devuelve 404 si no existe | 10% |
-| ☐ | DELETE /doctors/{id} borra y devuelve 204 | 10% |
-| ☐ | GET /admissions/{id} funciona con JOIN triple | 15% |
-| ☐ | Records usan `long` para IDs, `string` para fechas | 5% |
-| ☐ | Todos los SELECT tienen alias `AS` | 5% |
+```csharp
+// ERROR 1: int en vez de long para el ID
+public record Patient(int PatientId, string FirstName, string LastName, string BirthDate);
 
-## Notas para el docente
+// ERROR 2: DateTime en vez de string para la fecha
+public record Patient(int PatientId, string FirstName, string LastName, DateTime BirthDate);
 
-- **Entrega:** los alumnos deben tener el codigo en `tp-u3/Program.cs` dentro del repositorio grupal. No se aceptan archivos sueltos ni entregas por mail.
-- **Git:** recordar el ciclo: `git add .` → `git commit -m "..."` → `git push`. Verificar que el commit aparezca en GitHub.
-- **Tiempo de TP:** los 120 minutos de trabajo en el TP suelen ser justos. Si ves que un grupo se atrasa, sugerile completar primero los endpoints obligatorios (GET y POST) y dejar DELETE y PUT como mejora.
-- **Extension:** para los que terminan antes, pueden agregar un endpoint `GET /doctors?search=texto` que busque por especialidad usando `LIKE`.
+// ERROR 3: SELECT sin alias AS
+var patient = connection.Query<Patient>("SELECT patient_id, first_name, last_name FROM patients WHERE patient_id = @id", new { id });
+```
+
+**Correcciones**:
+
+1. Cambiar `int PatientId` a `long PatientId`.
+2. Cambiar `DateTime BirthDate` a `string BirthDate`.
+3. Agregar alias `AS`: `SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName`.
+
+### Actividad 2 — Preparación de la evaluación individual
+
+Cada alumno debe preparar una mini-charla de 3 minutos que cubra:
+
+1. **Método Dapper por operación**: `Query<T>` para GET many, `QueryFirstOrDefault<T>` para GET one, `ExecuteScalar<long>` para POST, `Execute` para PUT y DELETE.
+2. **Códigos HTTP**: `200` (lectura), `201` (alta), `204` (actualización/borrado), `400` (dato faltante), `404` (recurso inexistente).
+3. **JOIN de 3 tablas**: se une `admissions` con `patients` y `doctors` usando `JOIN ... ON`. Cada columna del SELECT tiene alias `AS` que coincide con el nombre del parámetro del record.
+
+## 3. Respuesta esperada del ejercicio
+
+| Pedido | Respuesta esperada |
+| --- | --- |
+| TP-U3 entregado en `tp-u3/` | Carpeta `tp-u3/` presente en la rama `main` del repositorio de grupo |
+| `Program.cs` compila y corre | El archivo compila con `dotnet build` y los endpoints responden contra `hospital.db` |
+| 4 endpoints CRUD funcionales | GET (200), POST (201), PUT (204/404), DELETE (204/404) |
+| JOIN de 3 tablas | Endpoint GET que une `admissions`, `patients` y `doctors` con alias `AS` |
+| `.gitignore` con `bin/` y `obj/` | Archivo `.gitignore` en la raíz del repositorio |
+| Commit con formato correcto | Mensaje en español, sin tildes, con formato `<carpeta>: <resumen>` |
+
+## 4. Criterios de corrección (lista de verificación)
+
+- [ ] La carpeta `tp-u3/` existe en la raíz del repositorio de grupo
+- [ ] El `Program.cs` dentro de `tp-u3/` tiene los `using` de Dapper y Sqlite
+- [ ] El `Program.cs` tiene `builder`, `app`, los 4 endpoints, `app.Run()`, y los records después
+- [ ] Los records usan `long` para IDs (no `int`)
+- [ ] Los records usan `string` para fechas (no `DateTime`)
+- [ ] Los campos nullable tienen `?` (`string?`, `long?`)
+- [ ] Cada endpoint usa `using var connection = new SqliteConnection(connectionString)`
+- [ ] Todos los SQL usan parámetros (`@id`, `@FirstName`, etc.) y nunca concatenación
+- [ ] El POST usa `ExecuteScalar<long>` y `Results.Created` con código 201
+- [ ] El PUT y DELETE validan existencia y devuelven 404 si no existe
+- [ ] El PUT y DELETE devuelven `Results.NoContent()` con código 204
+- [ ] El endpoint con JOIN de 3 tablas usa `JOIN patients p ON ... JOIN doctors d ON ...`
+- [ ] Cada columna del SELECT del JOIN tiene alias `AS`
+- [ ] El commit tiene el formato correcto (español, sin tildes, carpeta: resumen)
+- [ ] El push se realizó al repositorio remoto
+
+## 5. Errores esperados y cómo intervenir
+
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| No existe la carpeta `tp-u3/` | El grupo creó la carpeta con otro nombre o no creó la carpeta. | Indicar que la carpeta debe llamarse exactamente `tp-u3/` y estar en la raíz del repositorio. |
+| El commit tiene tildes o mayúsculas | No se respetó el formato del mensaje de commit. | Recordar: `<carpeta>: <resumen en español, sin tildes, minúsculas después de los dos puntos>`. |
+| El `Program.cs` no compila | Falta algún `using` o los records están antes de `app.Run()`. | Agregar `using Dapper;` y `using Microsoft.Data.Sqlite;`. Mover los records después de `app.Run()`. |
+| El endpoint POST devuelve `200` | Se usó `Results.Ok()` en vez de `Results.Created()`. | `Results.Created(url, dato)` devuelve `201` con header `Location`. |
+| El grupo no puede formarse | La cantidad de presentes no es divisible por los equipos disponibles. | Ajustar el tamaño de los grupos: algunos tendrán un integrante más que otros. |
+| El TP-U3 no tiene el JOIN de 3 tablas | El grupo solo implementó los 4 endpoints CRUD sin el JOIN. | Indicar que el TP-U3 requiere al menos un endpoint con JOIN de 3 tablas. |
+
+## 6. Registro de la clase
+
+| Grupo | TP-U3 entregado en tp-u3/ | Program.cs compila | 4 endpoints CRUD funcionales | JOIN de 3 tablas incluido | Commit con formato correcto | Push al repositorio | Observaciones |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Grupo 1 | Sí | Sí | Sí | Sí | Sí | Sí | |
+| Grupo 2 | Sí | Sí | Sí | No | Sí | Sí | Falta el JOIN de 3 tablas |
+| Grupo 3 | No, entregó en carpeta tp3/ | Sí | Sí | Sí | No, tiene tildes | Sí | Carpeta con nombre incorrecto |
+| Grupo 4 | Sí | No, falta using | Sí | Sí | Sí | No | Requiere refuerzo en using y push |
+
+**Notas para la evaluación de proceso:** verificar que cada grupo haya realizado el push al repositorio remoto. Evaluar si los alumnos pueden explicar la diferencia entre `ExecuteScalar<long>` y `Execute`. Registrar qué grupos tuvieron errores en el formato del commit o en la estructura de carpetas. Anotar qué alumnos no pudieron formar parte de un grupo y gestionar su reasignación.

@@ -1,43 +1,60 @@
-# Evaluación — Intensificación de diciembre — Camino mínimo completo
+# Evaluación del momento de intensificación y fortalecimiento diciembre
 
-## Metadatos
+> Evaluación de la instancia «Evaluación del momento de intensificación y fortalecimiento diciembre» · Curso: Minimal API con C# .NET 6. Documento de **metadatos y acuerdos de la instancia**, en registro docente formal. El material del alumno es la versión `evaluacion-intensificaciones-diciembre-version-a` y sus versiones equivalentes generadas; sus soluciones y criterios de corrección van en el anexo docente separado (`evaluacion-intensificaciones-diciembre-version-a-anexo-docente.md`).
 
-| Campo | Valor |
-|---|---|
-| Momento | Intensificación de diciembre (fuera de la estructura anual) |
-| Duración | 120 min |
-| Tipo de evaluación | Por objetivo mínimo — Apto / No apto aún |
-| Cantidad de versiones | 2 (A y B) |
-| Destinatarios | Estudiantes que no alcanzaron los objetivos mínimos durante el ciclo lectivo |
-| Requisitos | Haber cursado la totalidad del año; contar con `hospital.db`, SDK .NET 6, Dapper, Git y cuenta GitHub |
-| Lugar | Aula de informática con VS Code, Thunder Client y conexión a GitHub |
+## 1. Identificación
 
-## Descripción general
+| Campo | Detalle |
+| --- | --- |
+| Instancia | Evaluación del momento de intensificación y fortalecimiento diciembre |
+| Momento | Camino mínimo completo U1→U4 (dominios A) |
+| Carácter/Objetivo | Evaluación integradora del camino mínimo: U1 (tipos, control de flujo, endpoint GET), U2 (SELECT/JOIN/LIKE sobre hospital.db), U3 (CRUD con validación y códigos HTTP), U4 (flujo git básico). Criterio de evaluación: Apto / No apto. |
+| Destinatarios | Todo el curso |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Uso de celular | No permitido |
+| Documentos de la instancia | `evaluacion-intensificaciones-diciembre.md` · `evaluacion-intensificaciones-diciembre-version-a.md` · `evaluacion-intensificaciones-diciembre-version-a-anexo-docente.md` (más las versiones equivalentes B/C/D generadas desde la A) |
 
-Esta evaluación verifica el camino mínimo completo del curso. Cada estudiante construye (o completa) un proyecto Minimal API con CRUD sobre `hospital.db` y lo entrega en GitHub. El estándar es el mismo para ambas versiones; cambia la tabla de trabajo.
+## 2. Estructura del encuentro (240 min)
 
-## Criterios de evaluación
+| Momento | Tiempo | Qué ocurre |
+| --- | --- | --- |
+| Apertura y presentación del camino mínimo | 15 min | El docente presenta la estructura de la evaluación integradora, los dominios A (tickets y doctors/admissions) y la rúbrica de Apto/No apto. |
+| Bloque U1 — Tipos, control de flujo y endpoint GET | 60 min | Repaso de tipos canónicos, condicionales, bucles y primer endpoint GET con `MapGet`. Ejercicios de tickets en memoria. |
+| Bloque U2 — SELECT, JOIN y LIKE sobre hospital.db | 60 min | Conexión a SQLite, SELECT con WHERE y parámetros, LIKE para búsqueda, JOIN con alias `AS`. |
+| Bloque U3 — CRUD y U4 — Flujo git | 60 min | INSERT/UPDATE/DELETE con validación y códigos HTTP correctos; README, issue, rama y PR. |
+| Cierre y verificación | 45 min | Puesta en común, verificación de commits, retroalimentación individual. |
+| **Total** | **240 min** | |
 
-Se evalúa cada objetivo de forma independiente. El resultado general es **Apto** si todos los objetivos están logrados; **No apto aún por objetivo mínimo** si falta al menos uno, y se detalla cuál(es).
+## 3. Acuerdo pedagógico por grupo de condición
 
-| # | Objetivo mínimo | Logrado | No logrado |
-|---|---|---|---|
-| 1 | Declara variables, usa condicionales, bucles y funciones en un programa de consola C# | ☐ | ☐ |
-| 2 | Crea un endpoint GET con `MapGet` que devuelve una respuesta JSON | ☐ | ☐ |
-| 3 | Conecta SQLite con `SqliteConnection` y ejecuta una consulta SELECT con `QueryFirstOrDefault` y parámetro de ruta | ☐ | ☐ |
-| 4 | Devuelve `Results.NotFound` para un recurso inexistente | ☐ | ☐ |
-| 5 | Implementa un endpoint GET con `Query<T>` que devuelve una lista completa de registros | ☐ | ☐ |
-| 6 | Crea un endpoint POST con `MapPost`, `ExecuteScalar` y devuelve `Results.Created` | ☐ | ☐ |
-| 7 | Crea un endpoint PUT con `MapPut`, verifica existencia y actualiza con `Execute` | ☐ | ☐ |
-| 8 | Crea un endpoint DELETE con `MapDelete`, verifica existencia y devuelve `Results.NoContent` | ☐ | ☐ |
-| 9 | Todas las consultas SQL usan parámetros (`@param` + objeto anónimo) sin concatenación | ☐ | ☐ |
-| 10 | Entrega en GitHub con rama feature, PR mergeado y README de portada | ☐ | ☐ |
+**Grupo de intensificación (recuperación pedagógica):** U1: tipos (`int`, `long`, `float`, `string`, `bool`), entrada/salida (`Console.WriteLine`, `Console.ReadLine`), condicionales (`if`/`else`, `switch`), bucles (`for`, `while`), métodos (`static`, parámetros, retorno), primer endpoint GET (`MapGet`), parámetros de ruta y query. U2: conexión a SQLite (`Data Source=hospital.db`), SELECT con WHERE y parámetros, JOIN de 2 tablas, ORDER BY, `Query<T>` con alias `AS`, LIKE para búsqueda por patrón. U3: INSERT con `MapPost` y código 201, DELETE con `MapDelete` y código 204/404, UPDATE con `MapPut` y código 200/404, validación de existencia antes de cada operación. U4: README de portada, issues, ramas por feature, PR revisados, `main` protegida.
 
-## Guía de corrección (docente)
+**Grupo de fortalecimiento (profundización):** U1: tipos canónicos de Dapper (`long` para INTEGER, `string` para TEXT, `string?`/`long?` para nullable), registros posicionales, top-level statements, `Results.Ok`/`Results.NotFound`/`Results.Created`/`Results.BadRequest`, códigos HTTP 200/201/204/400/404. U2: `QueryFirstOrDefault<T>`, `ExecuteScalar<long>`, `Execute` para INSERT/UPDATE/DELETE, consultas parametrizadas con `new { id }`, triple JOIN, validación de existencia antes de operaciones. U3: triple JOIN en consultas de lectura, validación de integridad referencial en handlers, patrones de respuesta consistentes, manejo de errores con `try/catch` en handlers. U4: flujo profesional completo (issue → rama → PR → merge), README avanzado con badges, code review cruzado entre pares, protección de `main` con reglas de branch.
 
-**Versión A — tabla Patients.**
-**Versión B — tabla Doctors.**
+**Recursos:** VS Code, terminal, repo grupal clonado, guía impresa de núcleos U1 a U4, ejemplos resueltos de cada unidad, `hospital.db` copiado al lado del `.csproj`, consigna del camino mínimo impresa.
 
-El estudiante presenta su proyecto funcionando y el repositorio en GitHub. El docente recorre cada objetivo con la lista de verificación. Para aprobar cada objetivo, el código debe cumplir los patrones canónicos de `convenciones-tecnicas.md` (tipos `long` para IDs, `string` para fechas, alias `AS` en SELECT, consultas parametrizadas, `using var connection`, records después de `app.Run()`).
+## 4. Desarrollo de los encuentros del momento
 
-Si el estudiante completa todos los objetivos en la versión A pero no en la B (o viceversa), se considera **No apto aún** y se le asigna la misma versión que no completó para la instancia de marzo. No hay cambio de versión entre diciembre y marzo.
+**Encuentro diciembre (240 min):**
+
+| Momento | Tiempo | Qué ocurre |
+| --- | --- | --- |
+| Apertura y presentación del camino mínimo | 15 min | El docente presenta la evaluación integradora, los dominios A y la rúbrica de Apto/No apto. |
+| Bloque U1 — Tipos, control de flujo y endpoint GET | 60 min | Repaso de tipos canónicos, condicionales, bucles y primer endpoint GET con `MapGet`. Ejercicios de tickets en memoria. |
+| Bloque U2 — SELECT, JOIN y LIKE sobre hospital.db | 60 min | Conexión a SQLite, SELECT con WHERE y parámetros, LIKE para búsqueda, JOIN con alias `AS`. |
+| Bloque U3 — CRUD y U4 — Flujo git | 60 min | INSERT/UPDATE/DELETE con validación y códigos HTTP correctos; README, issue, rama y PR. |
+| Cierre y verificación | 45 min | Puesta en común, verificación de commits, retroalimentación individual. |
+
+**Pistas en paralelo:** no aplica — camino mínimo único para todo el curso.
+
+## 9. Regla de equivalencia entre versiones
+
+Las versiones equivalentes son A/B/C/D (mínimo dos según los grupos). Misma estructura, mismos objetivos y requisitos, distinto dominio o datos. La versión A usa el dominio de tickets (U1) y doctors/admissions (U2). Las versiones B/C/D usan el mismo dominio con datos equivalentes pero distintos (biblioteca/books para U1, pacientes/clínicas para U2).
+
+## 10. Mecánica de asignación de versiones
+
+El docente asigna la versión al inicio del encuentro y la registra en la planilla de evaluación. Las versiones se distribuyen equitativamente entre los grupos. Se anota la letra de la versión y el nombre del archivo en la planilla correspondiente.
+
+## 11. Devolución
+
+La devolución se realiza al final del encuentro. Se devuelve con nota de Apto o No apto. Si el objetivo mínimo queda pendiente, se ofrece la instancia de marzo como segunda capa de recuperación.

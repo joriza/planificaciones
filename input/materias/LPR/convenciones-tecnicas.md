@@ -4,7 +4,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Curso | Programación en Python (LAP) |
+| Curso | Programación en Python (LPR) |
 | Registro | Docente y alumnos del curso |
 | Base de datos canónica | Sin base de datos: todo se resuelve en memoria (sin archivos, CSV, JSON ni persistencia de ningún tipo) |
 | Referencias de apoyo | Spike de verificación Python 3.11 (comportamientos citados por sección, sección 9) |

@@ -1,186 +1,255 @@
-# Encuentro 6: Minimal API y endpoint GET
+# Encuentro 6 — Minimal API y endpoint GET
 
-## Datos del encuentro
+> Unidad 1 — Fundamentos de C# y Minimal API
 
-| Campo | Valor |
-|---|---|
-| Unidad | U1: Fundamentos de C# y Minimal API |
-| Encuentro | 6 de 8 |
-| Duración | 240 minutos |
-| Carácter | Procedimental |
+## 1. Metadatos de bloque
 
-## Objetivos de aprendizaje
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 6 de 36 |
+| Unidad | 1 — Fundamentos de C# y Minimal API |
+| Eje temático | 2 — Minimal API y endpoints HTTP |
+| Carácter/Objetivo | Procedimental |
+| Estructura | clase |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Uso de celular | No permitido |
+| Concepto nuevo | Minimal API y endpoint GET |
+| Requisitos previos | Encuentros 4 y 5: tipos de datos, variables, estructuras de control, métodos |
+| Organización del trabajo | Grupos de 3-4 personas; un repositorio compartido por grupo para todo el curso |
 
-- Crear un proyecto web con `dotnet new web`.
-- Explicar las partes de `Program.cs`: builder, endpoints y `app.Run()`.
-- Escribir un endpoint `MapGet` que devuelva una lista de pacientes con `Results.Ok`.
-- Probar el endpoint en el navegador.
-- Declarar el record posicional al final del archivo después de `app.Run()`.
+### Reparto de tiempos teóricos
 
-## Reparto de tiempos (240 minutos)
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-| Bloque | Minutos |
-|---|---|
-| Apertura y motivación | 20 |
-| Desarrollo teórico-práctico | 120 |
-| Consolidación y cierre | 20 |
-| Actividad complementaria | 80 |
+## 2. Objetivos de aprendizaje
 
-## Charla rápida
+1. Crear un proyecto de Minimal API con `dotnet new web`.
+2. Definir un endpoint GET con `MapGet` que devuelva una respuesta al navegador.
+3. Entender la diferencia entre devolver texto plano y un objeto JSON.
+4. Probar un endpoint GET desde el navegador y desde la terminal con `curl`.
+5. Explicar el flujo de una solicitud HTTP: cliente → servidor → respuesta.
 
-Hasta ahora los datos viajaban de nuestro programa a la consola. Una API web es como un restaurant con ventanilla de take-away: el cliente (navegador) pide "dame la lista de pacientes" por la ventanilla (HTTP GET) y el chef (servidor) le pasa el plato (JSON) por la misma ventanilla. No hay pantalla ni consola: la comunicación es puramente electrónica. La Minimal API de .NET nos da las herramientas para montar esa ventanilla en muy pocas líneas.
+## 3. Apertura y motivación (20 min)
 
-## Teoría mínima
+### Charla rápida: ¿Cómo llega un pedido al restaurante?
 
-### Estructura de un proyecto web
+Cuando piden un plato en un restaurante, el mesero toma el pedido, lo lleva a la cocina, la cocina lo prepara y el mesero lo trae de vuelta. En una web, pasa algo parecido: el navegador (cliente) hace una solicitud (pedido), el servidor la recibe, procesa y devuelve una respuesta. Hoy vamos a construir el servidor.
 
-Con `dotnet new web` obtenemos un `Program.cs` con esta estructura canónica:
+### Pregunta de apertura
 
-1. `using` directivas (Dapper, Microsoft.Data.Sqlite — en Unidad 2)
-2. `var builder = WebApplication.CreateBuilder(args);`
-3. `var app = builder.Build();`
-4. Endpoints: `app.MapGet(...)`, `app.MapPost(...)`, etc.
-5. `app.Run();`
-6. Records posicionales (al final, después de `app.Run()`)
+- ¿Qué creen que pasa cuando escriben una URL en el navegador y presionan Enter?
+- ¿Quién es el cliente y quién es el servidor en esa situación?
 
-### Endpoint GET básico
+Se toman 3 minutos para reflexionar en grupos de a 2. Se comparten las respuestas.
 
-```csharp
-app.MapGet("/patients", () =>
-{
-    return Results.Ok(patients);
-});
-```
+## 4. Desarrollo teórico-práctico (120 min)
 
-- `MapGet` asocia la ruta `"/patients"` a una función que se ejecuta cuando el navegador visita esa URL.
-- `Results.Ok(patients)` devuelve HTTP 200 con el contenido serializado como JSON.
+### 4.1 Crear la primera Minimal API (15 min)
 
-### Tipos de respuesta HTTP (canónicos)
-
-| Código | Cuándo se usa | Método |
-|---|---|---|
-| 200 | Lectura correcta | `Results.Ok(dato)` |
-| 404 | Recurso no encontrado | `Results.NotFound(new { mensaje = "..." })` |
-
-> **Regla:** siempre usar `Results.*`, nunca `TypedResults` ni devolver el objeto crudo.
-
-## Práctica guiada: crear la API y devolver pacientes
-
-Vamos a crear un proyecto web y devolver la misma lista de pacientes que usábamos en consola, ahora como JSON.
-
-**Paso 1:** crear el proyecto web:
+Desde la terminal, en la carpeta del proyecto:
 
 ```bash
-cd ..
-dotnet new web -o hospital-api
-cd hospital-api
+# Crear un nuevo proyecto web (Minimal API)
+dotnet new web -n MiApi
+cd MiApi
 ```
 
-**Paso 2:** reemplazar `Program.cs` con:
+El archivo `Program.cs` se genera con una estructura base. Abirlo y observar que contiene:
 
 ```csharp
-// Lista fija de pacientes (sin BD)
-var patients = new List<Patient>
-{
-    new Patient(1, "Ana", "Lopez", "F", "1990-05-15"),
-    new Patient(2, "Luis", "Martinez", "M", "1985-08-22"),
-    new Patient(3, "Elena", "Garcia", "F", "1978-12-03")
-};
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+app.Run();
+```
 
+Estas tres líneas son el esqueleto de toda Minimal API.
+
+### 4.2 El primer endpoint GET (25 min)
+
+Agregar una línea entre `var app = builder.Build();` y `app.Run();`:
+
+```csharp
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-// GET /patients — devolver la lista completa
-app.MapGet("/patients", () =>
+// Definir un endpoint GET en la ruta /
+// Cuando alguien visite la ruta raiz, devuelve este texto
+app.MapGet("/", () => "Hola desde mi primera API");
+
+app.Run();
+```
+
+**Pasos para probar:**
+1. Ejecutar `dotnet run` en la terminal.
+2. Abrir el navegador y visitar `http://localhost:5000` (o el puerto que asigna .NET).
+3. Deberían ver el texto `Hola desde mi primera API`.
+4. Detener el servidor con `Ctrl+C`.
+
+**Salida esperada en el navegador:** `Hola desde mi primera API`
+
+### 4.3 Devolver objetos JSON (20 min)
+
+En lugar de texto plano, se puede devolver un objeto. Minimal API lo convierte automáticamente a JSON.
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// Endpoint que devuelve un objeto como JSON
+app.MapGet("/saludo", () => new
 {
-    return Results.Ok(patients);
+    mensaje = "Hola, mundo!",
+    autor = "Curso Minimal API"
 });
 
 app.Run();
-
-// Record al final, DESPUES de app.Run()
-record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate);
 ```
 
-**Paso 3:** ejecutar el proyecto:
+**Salida esperada en el navegador:** `{"mensaje":"Hola, mundo!","autor":"Curso Minimal API"}`
+
+**Nota:** Los nombres de las propiedades en el JSON salen en camelCase (minúscula la primera letra) sin necesidad de configuración adicional.
+
+### 4.4 Probar con `curl` (15 min)
+
+Desde la terminal, en otra ventana (con el servidor corriendo):
 
 ```bash
-dotnet run
+# Probar el endpoint GET con curl
+curl http://localhost:5000/saludo
 ```
 
-**Paso 4:** abrir el navegador en `http://localhost:5000/patients` (o el puerto que indique la terminal). La respuesta debe ser JSON:
+**Salida esperada:** `{"mensaje":"Hola, mundo!","autor":"Curso Minimal API"}`
 
-```json
-[
-  {
-    "patientId": 1,
-    "firstName": "Ana",
-    "lastName": "Lopez",
-    "gender": "F",
-    "birthDate": "1990-05-15"
-  },
-  {
-    "patientId": 2,
-    "firstName": "Luis",
-    "lastName": "Martinez",
-    "gender": "M",
-    "birthDate": "1985-08-22"
-  },
-  {
-    "patientId": 3,
-    "firstName": "Elena",
-    "lastName": "Garcia",
-    "gender": "F",
-    "birthDate": "1978-12-03"
-  }
-]
-```
+### 4.5 Endpoints con parámetros de ruta (25 min)
 
-Detener el servidor con `Ctrl+C`.
-
-> **Nota:** las propiedades aparecen en camelCase (`patientId`) porque ASP.NET serializa con esa convención. No es necesario configurar nada adicional.
-
-## Ejercicio independiente: agregar endpoint de conteo
-
-Crear un segundo endpoint `GET /patients/count` que devuelva un objeto con la cantidad de pacientes.
-
-**Pista:** declarar otro `app.MapGet` antes de `app.Run()`, con ruta `"/patients/count"`, y devolver `Results.Ok(new { total = patients.Count })`.
-
-**Solución esperada:**
-
-Agregar después del primer `MapGet`:
+Los endpoints pueden recibir valores directamente en la URL.
 
 ```csharp
-// GET /patients/count — devolver la cantidad de pacientes
-app.MapGet("/patients/count", () =>
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// Endpoint con un parametro de ruta :nombre
+// La URL seria: http://localhost:5000/saludo/Carlos
+app.MapGet("/saludo/{nombre}", (string nombre) =>
+    $"Hola, {nombre}! Bienvenido.");
+
+// Endpoint con un parametro numerico :id
+// La URL seria: http://localhost:5000/usuario/5
+app.MapGet("/usuario/{id:long}", (long id) =>
+    new { id, mensaje = $"Usuario con ID {id}" });
+
+app.Run();
+```
+
+**Salida esperada:**
+- `GET /saludo/Carlos` → `Hola, Carlos! Bienvenido.`
+- `GET /usuario/5` → `{"id":5,"mensaje":"Usuario con ID 5"}`
+
+### 4.6 Ejercicio guiado: endpoint de productos (20 min)
+
+Crear un endpoint `/productos` que devuelva una lista de productos como JSON.
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+app.MapGet("/productos", () =>
 {
-    return Results.Ok(new { total = patients.Count });
+    var productos = new[]
+    {
+        new { nombre = "Laptop", precio = 999.99 },
+        new { nombre = "Mouse", precio = 29.99 },
+        new { nombre = "Teclado", precio = 59.99 }
+    };
+
+    return productos;
 });
+
+app.Run();
 ```
 
-Respuesta JSON esperada:
-
+**Salida esperada en `http://localhost:5000/productos`:**
 ```json
-{ "total": 3 }
+[{"nombre":"Laptop","precio":999.99},{"nombre":"Mouse","precio":29.99},{"nombre":"Teclado","precio":59.99}]
 ```
+
+## 5. Consolidación y cierre (20 min)
+
+- Cada grupo prueba su endpoint en el navegador y muestra la salida al docente.
+- Preguntas de verificación:
+  - ¿Qué hace `MapGet`?
+  - ¿Qué diferencia hay entre devolver texto y devolver un objeto?
+  - ¿Cómo se pasa un valor como parámetro en la URL?
+- Se cierra con un commit del trabajo realizado.
+
+## 6. Actividad complementaria (80 min)
+
+### Ejercicio independiente: API de saludos
+
+Crear una Minimal API que tenga los siguientes endpoints:
+
+1. `GET /` — devuelve `{"mensaje":"API de saludos"}`.
+2. `GET /saludo/{nombre}` — devuelve `{"saludo":"Hola, {nombre}!"}`.
+3. `GET /suma/{a}/{b}` — recibe dos números como parámetros de ruta y devuelve `{"resultado":a+b}`.
+
+**Pista:** Para el endpoint `/suma`, los parámetros `a` y `b` deben ser de tipo `int` o `double`. Usen `double` para aceptar decimales.
+
+### Solución esperada
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+app.MapGet("/", () => new { mensaje = "API de saludos" });
+
+app.MapGet("/saludo/{nombre}", (string nombre) =>
+    new { saludo = $"Hola, {nombre}!" });
+
+app.MapGet("/suma/{a:double}/{b:double}", (double a, double b) =>
+    new { resultado = a + b });
+
+app.Run();
+```
+
+**Salida esperada:**
+- `GET /` → `{"mensaje":"API de saludos"}`
+- `GET /saludo/Ana` → `{"saludo":"Hola, Ana!"}`
+- `GET /suma/3/5` → `{"resultado":8}`
+- `GET /suma/2.5/1.5` → `{"resultado":4}`
+
+### Entrega del commit
+
+```bash
+git add .
+git commit -m "tp-u1: primer endpoint minimal api con mapget"
+git push
+```
+
+## 7. Cierre (15 min)
 
 ### Qué te llevás
 
-- Una Minimal API expone datos a través de endpoints HTTP.
-- `MapGet` asocia una ruta a una función.
-- `Results.Ok` serializa como JSON con código 200.
-- Los records van siempre después de `app.Run()`.
+- Una Minimal API se crea con `dotnet new web` y tiene `Program.cs` como archivo único.
+- `MapGet` define un endpoint que responde a solicitudes GET en una ruta específica.
+- Se puede devolver texto plano, un objeto (que se convierte a JSON automáticamente) o una colección.
+- Los parámetros de ruta se declaran entre llaves en la URL y se reciben como argumentos del lambda.
+- Se prueban los endpoints en el navegador o con `curl`.
 
 ### Lo que viene
 
-En el Encuentro 7 se filtra la lista: un endpoint que devuelve un solo paciente por ID y otro que filtra por género, usando parámetros de ruta y query string.
+**Encuentro 7: Parámetros y rutas en GET** — Profundizaremos en parámetros de ruta y query string para filtrar datos en los endpoints.
 
-## Errores comunes y trampas
+## 8. Errores comunes y trampas
 
-| Error | Causa | Solución |
-|---|---|---|
-| CRLF / compilación en otra carpeta | `dotnet run` sin estar dentro de la carpeta del proyecto. | Verificar que el terminal esté en `hospital-api/`. |
-| Record antes de `app.Run()` | CS8803: las declaraciones de tipo no pueden ir antes de las top-level statements. | Mover el record al final del archivo. |
-| Ruta sin barra inicial | `MapGet("patients", ...)` sin `/` no coincide con la URL. | Usar `"/patients"` con la barra. |
-| Olvidar `Results.Ok` | Devolver `patients` directamente serializa el objeto, pero viola la convención del curso. | Envolver siempre con `Results.Ok()`. |
-| Servidor no se detiene | `Ctrl+C` no funciona si la terminal no está enfocada. | Hacer clic en la terminal y luego `Ctrl+C`. |
+1. **No poner `app.Run()` al final** — Sin esta línea, el servidor no arranca. La app compila pero no responde a peticiones.
+2. **Usar comillas simples en C#** — En C# los strings usan comillas dobles `"`. Las comillas simples son para caracteres individuales (`'a'`). Usar comillas simples en un string genera un error de compilación.
+3. **Tipo de parámetro incorrecto en la ruta** — Si la URL tiene `{id:long}` pero el método recibe `int id`, el enrutador no coincide. Usar siempre `long` para parámetros numéricos de ruta.
+4. **Olvidar el `:` en el tipo de parámetro de ruta** — Escribir `{id}` sin `:long` hace que el parámetro sea de tipo `string` por defecto. Para números, usar `{id:long}`.
+5. **No ejecutar `dotnet run` antes de probar en el navegador** — El servidor debe estar corriendo para recibir peticiones. Abrir el navegador sin que el servidor esté activo da error de conexión.
+6. **Devolver el objeto crudo sin `Results`** — En este encuentro se devuelven objetos directamente desde el lambda. En encuentros futuros se usarán `Results.Ok()`, `Results.NotFound()`, etc. No confundir los dos enfoques.

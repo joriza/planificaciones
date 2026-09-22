@@ -1,37 +1,24 @@
 # Anexo docente — Encuentro 14: Cierre U2: repaso y TP
 
-**Tipo:** Anexo docente — material exclusivo para el profesorado. No se entrega a los alumnos.
+> Documento docente formal. No se entrega a los alumnos: contiene la solución del ejercicio independiente, la solución de la extensión, la respuesta esperada, los criterios de corrección y los errores previstos con su intervención.
 
----
+## 1. Solución del ejercicio independiente
 
-## Encuadre
-
-Encuentro de cierre de la Unidad 2. No hay contenido nuevo: es integración y evaluación. La práctica guiada construye la base del TP-U2 (3 endpoints canónicos: listar pacientes, buscar por ID, listar médicos). El ejercicio independiente es el TP-U2 en sí: 4 endpoints adicionales que los alumnos deben completar y entregar. El carácter actitudinal implica que se evalua también la entrega en GitHub (compromiso, orden, commit semántico).
-
-El TP-U2 se entrega en la carpeta `tp-u2/` del repositorio grupal. Evaluar como aprobado/desaprobado con devolución escrita.
-
----
-
-## Qué observar durante la práctica
-
-- **Records duplicados**: algunos alumnos pueden repetir records en vez de declararlos una sola vez. Señalar que `Patient` y `Doctor` ya están definidos en la práctica guiada; los endpoints del TP pueden reutilizarlos.
-- **`QueryFirstOrDefault` sin `?`**: si el record `Patient` no es nullable (`Patient?`) y el paciente no existe, Dapper devuelve `null` pero el tipo no lo admite. La firma del endpoint `(long id)` y el chequeo `patient is null` funcionan si `Patient` es class/record no nullable? Sí, con `QueryFirstOrDefault<Patient>` devuelve `Patient?` (nullable implícito para records de referencia). Verificar.
-- **Commit de los alumnos**: el commit debe ser `"tp-u2: consultas con Dapper y SQLite"` (español, sin tildes, dos puntos). Si no, pedir que corrijan el mensaje con `git commit --amend`.
-- **Carpeta tp-u2**: el proyecto debe estar dentro de `tp-u2/`, no en la raíz del repositorio ni en otra carpeta.
-
----
-
-## Solución completa (TP-U2)
-
-El proyecto base es el de la práctica guiada. Los 4 endpoints del TP se agregan después de `app.Run()`, antes de los records. Código completo del `Program.cs`:
+### Paso 1 — TP-U2 completo: Program.cs
 
 ```csharp
+// Program.cs — TP-U2: SQLite y Dapper basico
+// Minimal API con C# .NET 6 — Unidad 2
+
 using Dapper;
 using Microsoft.Data.Sqlite;
 
+// Cadena de conexion fija: apunta al archivo hospital.db
 var connectionString = "Data Source=hospital.db";
 
-// Records al final del archivo
+// Crear la aplicacion web con Minimal API
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
 
 // GET /patients — listar todos los pacientes
 app.MapGet("/patients", () =>
@@ -49,12 +36,12 @@ app.MapGet("/patients", () =>
                height AS Height,
                weight AS Weight
         FROM patients
-        ORDER BY last_name
     ").ToList();
+
     return Results.Ok(patients);
 });
 
-// GET /patients/{id:long} — buscar paciente por ID
+// GET /patients/{id:long} — obtener un paciente por su ID
 app.MapGet("/patients/{id:long}", (long id) =>
 {
     using var connection = new SqliteConnection(connectionString);
@@ -70,54 +57,15 @@ app.MapGet("/patients/{id:long}", (long id) =>
                height AS Height,
                weight AS Weight
         FROM patients
-        WHERE patient_id = @id
-    ", new { id });
+        WHERE patient_id = @id", new { id });
+
     return patient is null
         ? Results.NotFound(new { mensaje = "Paciente no encontrado" })
         : Results.Ok(patient);
 });
 
-// GET /doctors — listar todos los medicos
-app.MapGet("/doctors", () =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var doctors = connection.Query<Doctor>(@"
-        SELECT doctor_id AS DoctorId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               specialty AS Specialty
-        FROM doctors
-        ORDER BY last_name
-    ").ToList();
-    return Results.Ok(doctors);
-});
-
-// --- TP-U2: 4 endpoints del alumno ---
-
-// 1. GET /patients/by-name/{lastName} — buscar por apellido con LIKE
-app.MapGet("/patients/by-name/{lastName}", (string lastName) =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    var patients = connection.Query<Patient>(@"
-        SELECT patient_id AS PatientId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               gender AS Gender,
-               birth_date AS BirthDate,
-               city AS City,
-               province_id AS ProvinceId,
-               allergies AS Allergies,
-               height AS Height,
-               weight AS Weight
-        FROM patients
-        WHERE last_name LIKE @patron
-        ORDER BY last_name
-    ", new { patron = $"%{lastName}%" }).ToList();
-    return Results.Ok(patients);
-});
-
-// 2. GET /patients/with-province — pacientes con nombre de provincia
-app.MapGet("/patients/with-province", () =>
+// GET /patients-with-province — pacientes con nombre de provincia (JOIN)
+app.MapGet("/patients-with-province", () =>
 {
     using var connection = new SqliteConnection(connectionString);
     var patients = connection.Query<PatientWithProvince>(@"
@@ -135,11 +83,36 @@ app.MapGet("/patients/with-province", () =>
         JOIN province_names pn ON p.province_id = pn.province_id
         ORDER BY p.last_name, p.first_name
     ").ToList();
+
     return Results.Ok(patients);
 });
 
-// 3. GET /doctors/by-specialty/{specialty} — buscar medicos por especialidad
-app.MapGet("/doctors/by-specialty/{specialty}", (string specialty) =>
+// GET /patients/search — busqueda parcial por nombre
+app.MapGet("/patients/search", (string name) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var patients = connection.Query<Patient>(@"
+        SELECT patient_id AS PatientId,
+               first_name AS FirstName,
+               last_name AS LastName,
+               gender AS Gender,
+               birth_date AS BirthDate,
+               city AS City,
+               province_id AS ProvinceId,
+               allergies AS Allergies,
+               height AS Height,
+               weight AS Weight
+        FROM patients
+        WHERE first_name LIKE @name
+           OR last_name LIKE @name
+        ORDER BY last_name, first_name
+    ", new { name = $"%{name}%" }).ToList();
+
+    return Results.Ok(patients);
+});
+
+// GET /doctors — listar todos los medicos
+app.MapGet("/doctors", () =>
 {
     using var connection = new SqliteConnection(connectionString);
     var doctors = connection.Query<Doctor>(@"
@@ -148,91 +121,132 @@ app.MapGet("/doctors/by-specialty/{specialty}", (string specialty) =>
                last_name AS LastName,
                specialty AS Specialty
         FROM doctors
-        WHERE specialty LIKE @patron
-        ORDER BY last_name
-    ", new { patron = $"%{specialty}%" }).ToList();
+        ORDER BY last_name, first_name
+    ").ToList();
+
     return Results.Ok(doctors);
 });
 
-// 4. GET /doctors/{id:long} — buscar medico por ID
-app.MapGet("/doctors/{id:long}", (long id) =>
+// GET /doctors/by-specialty — medicos por especialidad (LIKE)
+app.MapGet("/doctors/by-specialty", (string specialty) =>
 {
     using var connection = new SqliteConnection(connectionString);
-    var doctor = connection.QueryFirstOrDefault<Doctor>(@"
+    var doctors = connection.Query<Doctor>(@"
         SELECT doctor_id AS DoctorId,
                first_name AS FirstName,
                last_name AS LastName,
                specialty AS Specialty
         FROM doctors
-        WHERE doctor_id = @id
-    ", new { id });
-    return doctor is null
-        ? Results.NotFound(new { mensaje = "Medico no encontrado" })
-        : Results.Ok(doctor);
+        WHERE specialty LIKE @specialty
+        ORDER BY last_name, first_name
+    ", new { specialty = $"%{specialty}%" }).ToList();
+
+    return Results.Ok(doctors);
 });
 
+// Arrancar la aplicacion
 app.Run();
 
-// Records
-public record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate, string? City, string ProvinceId, string? Allergies, long? Height, long? Weight);
-public record Doctor(long DoctorId, string FirstName, string LastName, string Specialty);
-public record Province(string ProvinceId, string ProvinceName);
-public record PatientWithProvince(long PatientId, string FirstName, string LastName, string Gender, string BirthDate, string? City, string ProvinceName, string? Allergies, long? Height, long? Weight);
+// Records posicionales: despues de app.Run() (CS8803)
+// INTEGER de SQLite -> long (nunca int)
+// TEXT de SQLite -> string
+// Columnas nullable llevan ?
+public record Patient(
+    long PatientId,
+    string FirstName,
+    string LastName,
+    string Gender,
+    string BirthDate,
+    string? City,
+    string ProvinceId,
+    string? Allergies,
+    long? Height,
+    long? Weight
+);
+
+public record PatientWithProvince(
+    long PatientId,
+    string FirstName,
+    string LastName,
+    string Gender,
+    string BirthDate,
+    string? City,
+    string ProvinceName,
+    string? Allergies,
+    long? Height,
+    long? Weight
+);
+
+public record Doctor(
+    long DoctorId,
+    string FirstName,
+    string LastName,
+    string Specialty
+);
 ```
 
-Verificar que cada endpoint responde correctamente:
-- `GET /patients/by-name/Smi` → pacientes con apellido que contiene "Smi".
-- `GET /patients/with-province` → cada paciente con `provinceName` en vez de `provinceId`.
-- `GET /doctors/by-specialty/Cardio` → médicos con especialidad que contiene "Cardio".
-- `GET /doctors/1` → médico con ID 1. `GET /doctors/9999` → 404.
+## 2. Solución de la actividad de extensión
 
----
+**Paso 1 — Finalizar el TP-U2:** Se espera que cada grupo tenga los 6 endpoints mínimos funcionando y que el proyecto compile sin errores.
 
-## Errores previsibles
+**Paso 2 — Preparar la entrega:** Se espera que la carpeta `tp-u2/` esté en el repositorio del grupo con los archivos del proyecto, `hospital.db` (o en `.gitignore` según la convención del grupo), y que el commit y push se hayan realizado correctamente.
 
-Incluye los defectos de la checklist de `convenciones-tecnicas.md`:
+**Paso 3 — Preparación para la defensa individual:** Cada alumno debe poder explicar los conceptos clave de la unidad y justificar las decisiones de diseño (por qué `long` y no `int`, por qué `AS`, por qué parametrizar, etc.).
 
-| Error | Cómo se manifiesta | Corrección |
-|-------|-------------------|------------|
-| **ID como `int` en el record** | `InvalidOperationException` | Usar `long PatientId` |
-| **Fecha como `DateTime`** | `InvalidOperationException` | Usar `string BirthDate` |
-| **Columna INTEGER nullable como `int?`** | `InvalidOperationException` | Usar `long? Height` |
-| **SELECT sin alias AS** | `InvalidOperationException` | Usar `SELECT patient_id AS PatientId, ...` |
-| **Records antes de `app.Run()`** | Error CS8803 | Mover records después de `app.Run()` |
-| **Olvidar `?` en campos nulables** | Dapper asigna null a campo no nulable | Declarar como `string?` o `long?` |
-| **Concatenar datos al SQL** | Riesgo de inyección | Usar `@patron`, `@id` con `new { ... }` |
-| **LIKE sin `%` en el valor** | Busca coincidencia exacta |  `new { patron = $"%{texto}%" }` |
-| **Proyecto fuera de `tp-u2/`** | El TP no se evalua en la carpeta correcta | Mover todo `tp-u2` a la carpeta correcta |
-| **Mensaje de commit incorrecto** | No sigue la convención | Usar `git commit --amend -m "tp-u2: consultas con Dapper y SQLite"` |
+## 3. Respuesta esperada del ejercicio
 
----
+| Pedido | Respuesta esperada | Verificación |
+| --- | --- | --- |
+| TP-U2 compila sin errores | `dotnet build` sin errores ni advertencias | Ejecutar `dotnet build` en la carpeta `tp-u2/` |
+| `GET /patients` devuelve pacientes | Array de 258 objetos | Navegar al endpoint y verificar la cantidad |
+| `GET /patients/{id:long}` devuelve un paciente | Objeto con los datos del paciente | Verificar con id=1 |
+| `GET /patients-with-province` devuelve JOIN | Array de pacientes con `provinceName` | Verificar que todos tengan `provinceName` |
+| `GET /patients/search?name=Don` devuelve coincidencias | Array con pacientes cuyo nombre contiene "Don" | Verificar que todos los resultados coinciden |
+| `GET /doctors` devuelve médicos | Array de 27 objetos | Verificar la cantidad |
+| `GET /doctors/by-specialty?specialty=Card` devuelve coincidencias | Array de médicos con especialidad que contiene "Card" | Verificar que todos los resultados coinciden |
+| El commit tiene mensaje en español, minúsculas, sin tildes | `git log -1` muestra mensaje correcto | Verificar el último commit |
+| La carpeta `tp-u2/` está en el repositorio | `git ls-files` muestra los archivos | Verificar en el repo remoto |
 
-## Criterios de logro (TP-U2)
+## 4. Criterios de corrección (lista de verificación)
 
-| Criterio | Puntos (aprox.) | Lo evidencia |
-|----------|----------------|--------------|
-| Usa Dapper con records | 20% | `Query<T>`, `QueryFirstOrDefault<T>`, records posicionales |
-| Parametriza todas las consultas | 20% | Ninguna concatenación en el código |
-| Usa alias AS en SELECT | 20% | Todas las columnas snake_case tienen su alias PascalCase |
-| LIKE con % para búsqueda parcial | 15% | Los endpoints de nombre y especialidad usan LIKE con comodín |
-| Maneja 404 correctamente | 15% | `QueryFirstOrDefault` + `Results.NotFound` para IDs inexistentes |
-| Entrega en GitHub (carpeta tp-u2) | 10% | Repositorio con `tp-u2/`, commit semántico, push exitoso |
+- [ ] La carpeta `tp-u2/` existe en el repositorio del grupo.
+- [ ] El archivo `Program.cs` compila sin errores ni advertencias.
+- [ ] Se usa `using Dapper;` y `using Microsoft.Data.Sqlite;` al inicio.
+- [ ] La cadena de conexión es `"Data Source=hospital.db"`.
+- [ ] Cada endpoint abre la conexión con `using var connection = new SqliteConnection(...)`.
+- [ ] Todas las consultas usan alias `AS` para mapear columnas snake_case a PascalCase.
+- [ ] Los records usan `long` para columnas INTEGER (no `int`).
+- [ ] Los campos nullable llevan `?` (`string?`, `long?`).
+- [ ] Los records están declarados después de `app.Run();`.
+- [ ] Los endpoints devuelven `Results.Ok(...)`, `Results.NotFound(...)` o `Results.BadRequest(...)` (nunca el objeto crudo).
+- [ ] Los comentarios en el código están en español y no contienen tildes ni eñes.
+- [ ] Los parámetros se pasan con objetos anónimos `new { ... }` y nunca se concatenan en el SQL.
+- [ ] `LIKE` usa comodines `%` envueltos en el objeto anónimo (`$"%{valor}%"`).
+- [ ] El commit tiene mensaje en español, minúsculas después de los dos puntos, sin tildes.
+- [ ] El push llegó al repositorio remoto.
+- [ ] El alumno puede explicar cada endpoint y cada decisión de diseño en la defensa individual.
 
----
+## 5. Errores esperados y cómo intervenir
 
-## Agrupamiento
+| Error observable | Causa probable | Intervención docente |
+| --- | --- | --- |
+| `InvalidOperationException` al ejecutar un endpoint | El record usa `int` en vez de `long` para una columna INTEGER. | Indicar que SQLite INTEGER siempre devuelve `Int64` (long). |
+| `InvalidOperationException` por falta de alias | Falta `AS` en el SELECT; Dapper busca `patient_id` pero el record tiene `PatientId`. | Mostrar que cada columna necesita `AS NombrePropiedad` que coincida exactamente. |
+| La lista devuelve 0 pacientes | `hospital.db` no está en la carpeta correcta del proyecto. | Verificar que `hospital.db` esté en la raíz del proyecto y que la cadena de conexión sea `"Data Source=hospital.db"`. |
+| CS8803 al compilar | El record está declarado antes de `app.Run()`. | Mover el record para que quede después de `app.Run();`. |
+| El endpoint devuelve el objeto crudo sin `Results` | Se devolvió el objeto directamente en vez de envolverlo con `Results.Ok(...)`. | Recordar que siempre se debe envolver la respuesta con `Results.Ok()`, `Results.NotFound()`, etc. |
+| El commit tiene tildes o mayúsculas | No se siguió la convención del curso. | Indicar que los mensajes deben estar en minúsculas después de los dos puntos y sin tildes. |
+| La carpeta `tp-u2/` no está en el repo | No se creó la carpeta o no se hizo `git add .`. | Recordar la secuencia completa: crear carpeta → copiar archivos → `git add .` → `git commit` → `git push`. |
+| `null` aparece como cadena vacía en el JSON | La propiedad nullable no lleva `?` en la declaración del record. | Declarar como `string?` o `long?` según el tipo canónico. |
 
-- **Apertura (20 min):** grupo completo. Repaso general de la Unidad 2, mapa conceptual en pizarra. Resolver dudas globales.
-- **Práctica guiada (60 min):** individual. Cada alumno construye el proyecto base desde cero. El docente circula y asiste. Proyectar los records y el primer endpoint (`/patients`) como referencia.
-- **TP-U2 (60 min):** individual o pares (según definición del curso). Los alumnos completan los 4 endpoints faltantes. El docente asiste puntualmente.
-- **Consolidación y cierre (20 min):** grupo completo. Verificar que todos tienen los endpoints funcionando. Explicar el flujo de entrega en GitHub.
-- **Actividad complementaria (80 min):** tiempo para entrega en GitHub, resolución de problemas de git, y alumnos que necesitan más tiempo.
+## 6. Registro de la clase
 
----
-
-## Ajustes
-
-- **Si el grupo se atrasa en la práctica guiada:** acortar el repaso de apertura a 10 minutos. El TP sigue siendo obligatorio aunque se entregue después de clase (fecha límite: 48 hs).
-- **Si hay problemas técnicos con GitHub:** dedicar los 20 minutos de consolidación a resolver git. Si un alumno no puede hacer push, que entregue el código comprimido por correo como plan de contingencia.
-- **Alumnos con dificultades:** darles el archivo `Program.cs` completo de la práctica guiada (sin los endpoints del TP) para que solo agreguen los 4 endpoints. Asistencia personalizada en el uso de LIKE.
-- **Alumnos avanzados:** proponer como actividad complementaria que agreguen un quinto endpoint: `GET /doctors/{id:long}/admissions` que devuelva los ingresos atendidos por ese médico (JOIN admissions + patients, filtrado por doctor_id).
+| Indicador | Qué registrar |
+| --- | --- |
+| Repaso de conceptos | Observar si los alumnos pueden enumerar los conceptos clave de la unidad sin ayuda. |
+| Completitud del TP-U2 | Verificar que cada grupo tenga los 6 endpoints mínimos funcionando. |
+| Calidad del commit | Registrar si los mensajes de commit siguen la convención del curso (español, minúsculas, sin tildes). |
+| Push al remoto | Verificar que cada grupo haya hecho push correctamente al repositorio remoto. |
+| Defensa individual | Anotar qué alumnos pueden explicar cada endpoint y qué alumnos necesitan más apoyo. |
+| Errores frecuentes en el TP | Documentar los errores más comunes encontrados en los TP para ajustar la retroalimentación de la evaluación. |
+| Distribución de equipos | Registrar la composición de cada grupo y la cantidad de presentes para calcular el tamaño de los equipos. |

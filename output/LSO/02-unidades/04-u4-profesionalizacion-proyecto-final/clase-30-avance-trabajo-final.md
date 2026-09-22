@@ -1,184 +1,184 @@
 # Encuentro 30 — Avance trabajo final
 
-**Unidad 4:** Profesionalización y proyecto final
-**Carácter:** Procedimental
-**Duración:** 240 minutos
+> Profesionalización y proyecto final
 
----
+## 1. Metadatos de bloque
 
-## Objetivos de aprendizaje
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 30 de 36 |
+| Unidad | 4 — Profesionalización y proyecto final |
+| Eje temático | 6 — Profesionalización y control de versiones |
+| Carácter/Objetivo | Procedimental |
+| Estructura | clase |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Concepto nuevo | Avance trabajo final |
+| Requisitos previos | Encuentro 29: CRUD completo con JOINs funcionando contra hospital.db |
+| Uso de celular | No permitido |
+| Organización del trabajo | Grupos de trabajo (presentes ÷ equipos disponibles); cada grupo opera su propio repositorio |
 
-- Integrar todos los endpoints del CRUD completo con JOINs en el trabajo final.
-- Implementar funcionalidades faltantes según el alcance definido por cada grupo.
-- Verificar el funcionamiento de cada endpoint con pruebas manuales.
-- Preparar la defensa individual del trabajo final.
+### Reparto de tiempos teóricos
 
----
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-## Reparto de tiempos (240 minutos)
+## 2. Objetivos de aprendizaje
 
-| Bloque | Minutos |
-|---|---|
-| Apertura y motivación | 20 |
-| Desarrollo teórico-práctico | 120 |
-| Consolidación y cierre | 20 |
-| Actividad complementaria / trabajo final | 80 |
-| **Total** | **240** |
+1. Planificar el trabajo final como un proyecto con fases y entregables.
+2. Avanzar el trabajo final con commits por feature siguiendo el flujo profesional.
+3. Verificar que cada feature se integra correctamente en `main` a través de PRs revisados.
+4. Preparar la documentación del trabajo final (README técnico, instrucciones de ejecución).
 
----
+## 3. Apertura y motivación (20 min)
 
-## Teoría mínima
+### Charla rápida
 
-### El trabajo final: alcance mínimo
+Construir un proyecto final no es solo escribir código que funciona: es planificar el trabajo, avanzar en etapas claras y dejar un historial de cada decisión en los commits. Un buen flujo de trabajo profesional es como un cuaderno de notas bien organizado: cada página tiene una fecha, un propósito y un resultado. Los commits por feature son esas páginas: cada uno registra un paso concreto del proyecto.
 
-Cada grupo debe tener, al finalizar este encuentro, un proyecto funcional en `trabajo-final/` que incluya:
+### Puente desde el trabajo anterior
 
-| Endpoint | Descripción | Estado ideal |
-|---|---|---|
-| `GET /patients` | Listar todos los pacientes | Funcional |
-| `GET /patients/{id:long}` | Obtener paciente por ID | Funcional |
-| `GET /patients/with-province` | Pacientes con nombre de provincia | Funcional |
-| `GET /patients/count-by-province` | Conteo de pacientes por provincia | Funcional |
-| `POST /patients` | Crear paciente | Funcional |
-| `PUT /patients/{id:long}` | Actualizar paciente | Funcional |
-| `DELETE /patients/{id:long}` | Eliminar paciente | Funcional |
-| `GET /doctors/{id:long}` | Doctor con conteo de admisiones | Funcional |
-| `GET /admissions/with-doctors-patients` | Admisiones con datos completos | Funcional (ideal) |
-| `GET /doctors` | Listar todos los doctores | Deseable |
-| `GET /admissions` | Listar todas las admisiones | Deseable |
+En el encuentro anterior, cada grupo consolidó el CRUD completo y los JOINs contra `hospital.db`. Ahora es momento de poner todo junto: planificar el trabajo final, avanzar con commits por feature y verificar que el flujo profesional de Git funciona de principio a fin. El trabajo final es la API con Dapper que va a defender cada grupo en el próximo encuentro.
 
-### Verificación sistemática
+## 4. Desarrollo teórico-práctico (120 min)
 
-Cada endpoint se verifica con la siguiente rutina:
+### 4.1 — Plan del trabajo final (40 min)
 
-1. Probar el endpoint con `curl` o Thunder Client.
-2. Confirmar el código HTTP (200, 201, 204, 400, 404).
-3. Confirmar la estructura del JSON de respuesta.
-4. Si falla, leer el mensaje de error en la terminal y corregir.
+El trabajo final consiste en una API Minimal completa con Dapper que expone endpoints CRUD contra `hospital.db`. Antes de empezar a codificar, cada grupo debe planificar el trabajo en fases.
 
-### Preparación de la defensa
+**Estructura sugerida del plan:**
 
-En el encuentro 31, cada integrante debe:
+| Fase | Descripción | Ramas de feature esperadas |
+| --- | --- | --- |
+| Fase 1 | Configuración del proyecto y README técnico | `feature/setup-project` |
+| Fase 2 | CRUD completo de pacientes | `feature/crud-pacientes` |
+| Fase 3 | CRUD completo de doctores | `feature/crud-doctorados` |
+| Fase 4 | CRUD completo de admisiones | `feature/crud-admisiones` |
+| Fase 5 | JOINs: pacientes con admisiones | `feature/join-pacientes-admisiones` |
+| Fase 6 | JOINs: doctores con pacientes | `feature/join-doctorados-pacientes` |
+| Fase 7 | Tests de integración básicos | `feature/test-integracion` |
+| Fase 8 | README técnico y documentación final | `feature/readme-tecnico` |
 
-- Explicar qué hace cada endpoint de su trabajo final.
-- Mostrar el código de al menos dos endpoints (GET con JOIN y POST con validación).
-- Responder preguntas conceptuales sobre Dapper, tipos canónicos y HTTP.
-- Demostrar el flujo Git profesional (ramas, PR, main protegida).
+**Práctica guiada:**
 
----
+Cada grupo:
+1. Abre un issue por cada fase del plan.
+2. Asigna las fases a los integrantes del grupo.
+3. Verifica que `main` está protegida y que el flujo de PRs está funcionando.
 
-## Práctica guiada
+**Ejercicio independiente:**
 
-### Paso 1: Inventario del trabajo final
+Cada grupo completa la planificación del trabajo final: crea los issues, asigna las fases y define el orden de trabajo.
 
-Cada grupo revisa su repositorio y verifica qué endpoints tiene implementados en `trabajo-final/`. Usar la tabla anterior como checklist.
+### 4.2 — Avance con commits por feature (40 min)
 
-### Paso 2: Implementar endpoints faltantes
+Ahora cada grupo empieza a trabajar en las primeras fases del plan, usando el flujo profesional de Git que aprendieron en los encuentros anteriores.
 
-Para los endpoints que falten, los grupos toman el código de los encuentros anteriores y lo adaptan a su `Program.cs`. El docente circula para ayudar.
+**Flujo de commits por feature:**
 
-### Paso 3: Verificar cada endpoint
+1. Crear rama de feature: `git checkout -b feature/<nombre>`.
+2. Codificar la funcionalidad en `Program.cs`.
+3. Probar localmente que funciona.
+4. Commitear con mensaje descriptivo: `git commit -m "trabajo-final: <descripcion en espanol, sin tildes>"`
+5. Push de la rama a GitHub.
+6. Abrir PR hacia `main`.
+7. Revisión por un compañero del grupo.
+8. Fusionar y borrar la rama.
 
-Cada grupo ejecuta `dotnet run` y prueba cada endpoint con `curl`:
-
-```bash
-# Listar pacientes
-curl http://localhost:5000/patients
-
-# Paciente por ID
-curl http://localhost:5000/patients/1
-
-# Pacientes con provincia
-curl http://localhost:5000/patients/with-province
-
-# Conteo por provincia
-curl http://localhost:5000/patients/count-by-province
-
-# Crear paciente
-curl -X POST http://localhost:5000/patients \
-  -H "Content-Type: application/json" \
-  -d '{"firstName":"Maria","lastName":"Garcia","gender":"F","birthDate":"1992-08-25","city":"Cordoba","provinceId":2}'
-
-# Actualizar paciente
-curl -X PUT http://localhost:5000/patients/1 \
-  -H "Content-Type: application/json" \
-  -d '{"firstName":"John","lastName":"Smith","gender":"M","birthDate":"1963-02-12","city":"Buenos Aires","provinceId":1,"allergies":"Penicilina"}'
-
-# Eliminar paciente
-curl -X DELETE http://localhost:5000/patients/999
-
-# Doctor con conteo
-curl http://localhost:5000/doctors/1
-```
-
-Cada fallo se anota y se corrige inmediatamente.
-
-### Paso 4: Consolidar en main
-
-Cuando el trabajo final está completo y verificado, se sube a `main` siguiendo el flujo profesional:
+**Ejemplo de ciclo de commit:**
 
 ```bash
-git checkout main
-git pull origin main
-git checkout -b feature/trabajo-final-completo
-# copiar o asegurar que trabajo-final/ tiene el Program.cs actualizado
+# Crear rama para la fase 1
+git checkout -b feature/setup-project
+
+# Realizar cambios en Program.cs
+# ... agregar configuracion inicial, using directives, builder, app.Run(), records ...
+
+# Commitear
 git add .
-git commit -m "trabajo-final: version completa con CRUD y JOINs"
-git push origin feature/trabajo-final-completo
+git commit -m "trabajo-final: configuracion inicial del proyecto con using directives"
+
+# Push y PR
+git push origin feature/setup-project
+# Abrir PR en GitHub, asignar revisor, fusionar
 ```
 
-Abrir PR, asignar revisor, mergear.
+**Práctica guiada:**
 
----
+El docente supervisa que cada grupo:
+- Está usando ramas de feature y no trabajando en `main`.
+- Los mensajes de commit siguen la convención del curso.
+- Los PRs tienen revisión de un compañero antes de fusionar.
 
-## Ejercicio independiente
+**Ejercicio independiente:**
 
-Cada grupo elige y completa **dos funcionalidades adicionales** de las siguientes:
+Cada grupo completa al menos una fase del plan (recomendado: Fase 1 o Fase 2) con el ciclo completo de rama → commit → push → PR → revisión → merge.
 
-1. `GET /doctors` — listar todos los doctores con su especialidad.
-2. `GET /admissions` — listar todas las admisiones con JOIN completo.
-3. `GET /patients?search={texto}` — filtrar pacientes por apellido usando `LIKE`.
-4. `GET /patients/{id:long}/admissions` — historial de admisiones de un paciente.
+### 4.3 — Revisión de avance entre grupos (40 min)
 
-**Pista:** el filtro por apellido usa SQL parametrizado con `LIKE`:
+Cada grupo presenta brevemente su avance al resto de la clase:
 
-```csharp
-app.MapGet("/patients", (string? search) =>
-{
-    using var connection = new SqliteConnection(connectionString);
-    if (string.IsNullOrWhiteSpace(search))
-    {
-        var all = connection.Query<Patient>(...).ToList();
-        return Results.Ok(all);
-    }
-    var filtered = connection.Query<Patient>(@"
-        SELECT patient_id AS PatientId, first_name AS FirstName, ...
-        FROM patients
-        WHERE last_name LIKE @pattern", new { pattern = $"%{search}%" }).ToList();
-    return Results.Ok(filtered);
-});
-```
+- ¿Qué fases completó?
+- ¿Qué ramas de feature tiene abiertas?
+- ¿Cuántos PRs fueron fusionados?
+- ¿Qué dificultades encontró?
 
-**Solución esperada:** al menos dos endpoints adicionales funcionando, probados e integrados en `main` mediante PR.
+**Práctica guiada:**
 
----
+El docente facilita una ronda de presentaciones breves (3-5 min por grupo) y da retroalimentación sobre el flujo de Git y la calidad de los commits.
+
+**Ejercicio independiente:**
+
+Cada grupo actualiza su tabla de avance del trabajo final con el estado de cada fase y la marca los que completó.
+
+## 5. Consolidación y cierre (20 min)
+
+Revisión del avance del trabajo final:
+
+- ¿Cada grupo tiene un plan con fases claras?
+- ¿Los commits siguen la convención del curso (español, sin tildes, minúsculas tras los dos puntos)?
+- ¿Los PRs se están fusionando con revisión de compañeros?
+- ¿`main` permanece limpia durante todo el desarrollo?
+
+El docente verifica el estado de los repositorios de cada grupo y da retroalimentación sobre el plan y el avance.
+
+## 6. Actividad complementaria (80 min)
+
+### Trabajo en grupo: avance del trabajo final con commits por feature
+
+Cada grupo completa las siguientes tareas:
+
+1. **Finalizar la planificación** (15 min): completar la tabla de fases, crear los issues restantes y asignar responsabilidades.
+2. **Avanzar en las fases pendientes** (40 min): completar al menos una fase más del trabajo final con el ciclo completo de rama → commit → push → PR → revisión → merge.
+3. **Verificar la integridad del flujo** (15 min): confirmar que `main` tiene solo fusiones por PR, que no hay commits directos y que cada PR tiene evidencia de revisión.
+4. **Preparar el estado del repositorio** (10 min): asegurar que `Program.cs` tiene el código más reciente, que `hospital.db` está en la carpeta `trabajo-final/` y que el `.gitignore` está configurado correctamente.
+
+La actividad de extensión incluye que los grupos que terminan temprano escriban un README técnico del trabajo final que documente: la arquitectura del proyecto, los endpoints disponibles, las decisiones de diseño tomadas y las instrucciones de ejecución paso a paso.
+
+## 7. Cierre (15 min)
 
 ### Qué te llevás
 
-- El trabajo final es la integración de todo lo aprendido: una API REST completa con cuatro tablas, CRUD, JOINs y flujo Git profesional.
-- En este encuentro se consolidan las funcionalidades y se deja todo listo para la entrega.
+- Un plan de trabajo final con fases claras y issues organizados.
+- La práctica de commits por feature deja un historial limpio y trazable del desarrollo.
+- El flujo profesional de Git (rama → PR → revisión → merge) se aplica de forma consistente durante todo el proyecto.
+- `main` protegida garantiza que solo código revisado se integra.
 
-### Lo que viene
+## Lo que viene
 
-En el Encuentro 31, cierre de la Unidad 4: entrega del trabajo final. Cada integrante presenta su trabajo individualmente y responde preguntas; el README debe estar completo y el repositorio, profesional.
+Encuentro 31: Cierre U4: entrega final — van a realizar los últimos ajustes del trabajo final y a entregar por GitHub.
 
-## Errores comunes y trampas
+## 8. Errores comunes y trampas
 
-| Error | Causa | Solución |
-|---|---|---|
-| Endpoint devuelve 500 porque la base no se copió | `hospital.db` no está junto al `.csproj` | Copiar la base a la carpeta del proyecto y verificar la ruta. |
-| POST devuelve 400 por validación | Falta el `if` de `string.IsNullOrWhiteSpace` | Agregar la validación antes de ejecutar el INSERT. |
-| PUT no actualiza nada | El UPDATE no encuentra el registro o el SQL está mal | Verificar que el `WHERE patient_id = @id` coincida con el parámetro enviado. |
-| DELETE devuelve 204 aunque el recurso no exista | Falta la verificación con `QueryFirstOrDefault` | Agregar el chequeo de existencia antes de borrar. |
-| Conflictos al mergear el PR | Dos integrantes modificaron el mismo `Program.cs` en paralelo | Comunicarse antes de pushear; resolver conflictos localmente si ocurren. |
-| No se puede defender porque el código no está en main | Los cambios quedaron en una rama sin mergear | Verificar que `main` tenga la última versión antes del encuentro 31. |
+| ✔ | Error | Causa probable | Intervención |
+| --- | --- | --- | --- |
+| ☐ | Commits en `main` en lugar de en rama de feature | No crear la rama antes de empezar a codear | Verificar que el grupo crea la rama `feature/<nombre>` antes de cualquier cambio |
+| ☐ | Mensajes de commit en inglés o con tildes | No seguir la convención del curso | Recordar que los mensajes deben estar en español, sin tildes, con minúsculas después de los dos puntos |
+| ☐ | PR fusionado sin revisión | Prisa por avanzar | Recordar que la revisión entre pares es obligatoria antes de fusionar |
+| ☐ | No hay plan de fases, se empieza a codear sin orden | No planificar antes de implementar | Orientar a que el plan con issues es la base del trabajo profesional |
+| ☐ | `main` tiene commits directos | Confusión sobre el flujo de trabajo | Verificar que `main` está protegida y que todos los cambios pasan por PR |
+| ☐ | Commits con cambios mezclados de varias fases | No hacer commits atómicos por feature | Cada commit debe reflejar una sola fase o cambio lógico |

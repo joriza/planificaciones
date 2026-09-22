@@ -1,217 +1,350 @@
 # Encuentro 11 — SQL: JOIN y ORDER BY
 
-**Unidad 2:** Acceso a datos con SQLite y Dapper  
-**Duración:** 240 minutos  
-**Carácter:** Procedimental  
-**Eje 3:** SQLite y SQL básico  
+> Acceso a datos con SQLite y Dapper
 
----
+## 1. Metadatos de bloque
 
-## Objetivos de aprendizaje
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 11 de 36 |
+| Unidad | 2 — Acceso a datos con SQLite y Dapper |
+| Eje temático | 3 — SQLite y SQL básico |
+| Carácter/Objetivo | Procedimental |
+| Estructura | clase |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Concepto nuevo | SQL: JOIN y ORDER BY |
+| Requisitos previos | Haber completado el Encuentro 10; saber ejecutar un SELECT simple con Dapper; conocer la estructura de `hospital.db` (tablas `patients`, `doctors`, `province_names`, `admissions`). |
+| Uso de celular | No permitido |
+| Organización del trabajo | Trabajo en parejas; cada pareja tiene su copia del proyecto con `hospital.db` en la raíz. |
 
-- Combinar datos de dos tablas con INNER JOIN.
-- Ordenar resultados con ORDER BY ascendente y descendente.
-- Mostrar el nombre de la provincia en lugar del código dentro de un listado de pacientes.
-- Ejecutar consultas JOIN desde un endpoint GET.
+### Reparto de tiempos teóricos
 
----
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-## Charla rápida
+## 2. Objetivos de aprendizaje
 
-En la clase anterior consultaban una sola tabla, como leer una sola ficha de la biblioteca. Pero un paciente vive en una provincia, y el código `ON` no les dice nada. Para saber que `ON` significa "Ontario" necesitan cruzar dos fichas: la del paciente y la de la provincia. Eso es un JOIN: sentar dos tablas al lado y decirle "si el `province_id` del paciente coincide con el `province_id` de la provincia, juntá las filas".
+1. Explicar qué es un JOIN en SQL y cuándo se necesita combinar datos de dos tablas.
+2. Escribir un JOIN entre `patients` y `province_names` para obtener el nombre completo de la provincia.
+3. Usar `ORDER BY` para ordenar resultados y `LIMIT` para restringir la cantidad de filas devueltas.
+4. Combinar `JOIN`, `ORDER BY` y `LIMIT` en una sola consulta parametrizada con Dapper.
 
----
+## 3. Apertura y motivación (20 min)
 
-## Teoría mínima
+### Recap del Encuentro 10
 
-### INNER JOIN
+El docente pide que cada pareja abra su proyecto y navegue a `http://localhost:5000/patients`. Se pregunta: ¿qué pasa si necesitamos saber el nombre de la provincia de cada paciente? La tabla `patients` solo tiene `province_id` (como `ON`, `BC`), no el nombre completo. Necesitamos traer datos de otra tabla.
+
+### Introducción al JOIN
+
+Cuando los datos están repartidos en varias tablas, necesitamos unirlos. En SQL esto se hace con un `JOIN`. Pensalo como una reunión: tenés una mesa con las fichas de pacientes y otra mesa con las fichas de provincias. El `JOIN` es el acto de juntar ambas mesas y buscar la ficha que coincide.
+
+## 4. Desarrollo teórico-práctico (120 min)
+
+### Teoría: JOIN entre dos tablas
+
+Un `JOIN` conecta dos tablas a través de una columna que comparten. En nuestra base, `patients.province_id` es una clave foránea que apunta a `province_names.province_id`.
+
+La sintaxis canónica es:
 
 ```sql
-SELECT columna1, columna2, ...
-FROM tablaA
-JOIN tablaB ON tablaA.columna_comun = tablaB.columna_comun
+SELECT columnas_de_la_tabla_1, columnas_de_la_tabla_2
+FROM tabla_1
+JOIN tabla_2 ON tabla_1.columna_fk = tabla_2.columna_pk
+ORDER BY alguna_columna
+LIMIT cantidad;
 ```
 
-`INNER JOIN` (o solo `JOIN`) devuelve las filas que tienen correspondencia en ambas tablas. Si un paciente tuviera un `province_id` que no existe en `province_names`, ese paciente no aparecería.
+**Reglas importantes:**
+- Siempre se usa `AS` para renombrar las columnas y que coincidan con los nombres del record C#.
+- `ORDER BY` va al final de la consulta (después del `JOIN` y el `WHERE` si lo hubiera).
+- `LIMIT` restringe la cantidad de filas devueltas; es útil para probar sin traer todos los registros.
 
-Para nuestro caso:
+### Práctica guiada: JOIN patients + province_names
 
-```sql
-SELECT p.patient_id AS PatientId,
-       p.first_name AS FirstName,
-       p.last_name AS LastName,
-       pn.province_name AS ProvinceName
-FROM patients p
-JOIN province_names pn ON p.province_id = pn.province_id
-```
-
-Se usan alias de tabla (`patients p` equivale a `patients AS p`) para escribir menos.
-
-### ORDER BY
-
-```sql
-ORDER BY columna ASC   -- ascendente (default)
-ORDER BY columna DESC  -- descendente
-```
-
-Se puede ordenar por una columna, por varias o incluso por un alias.
-
----
-
-## Práctica guiada
-
-Van a crear un proyecto nuevo que devuelva pacientes con el nombre completo de su provincia, ordenados alfabeticamente por apellido.
-
-### Paso 1: Crear el proyecto
-
-```bash
-dotnet new web -o join-provincias
-cd join-provincias
-```
-
-Copiar `hospital.db` junto al `.csproj` y agregar el paquete:
-
-```bash
-dotnet add package Microsoft.Data.Sqlite
-```
-
-### Paso 2: Escribir el código
-
-Reemplazar `Program.cs`:
+Vamos a crear un endpoint que devuelva cada paciente con el nombre de su provincia. Esto requiere unir las tablas `patients` y `province_names`.
 
 ```csharp
+// Program.cs — Ejemplo completo: JOIN entre patients y province_names
+// Usar Dapper y Microsoft.Data.Sqlite para conectarse a la base
+
+using Dapper;
 using Microsoft.Data.Sqlite;
 
+// Cadena de conexion fija: apunta al archivo hospital.db
 var connectionString = "Data Source=hospital.db";
 
-// GET /patients-with-province — pacientes con nombre de provincia
+// Crear la aplicacion web con Minimal API
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// GET /patients-with-province — listar pacientes con el nombre de su provincia
+// Usa un JOIN entre la tabla patients y la tabla province_names
 app.MapGet("/patients-with-province", () =>
 {
     using var connection = new SqliteConnection(connectionString);
-    connection.Open();
 
-    var command = connection.CreateCommand();
-    command.CommandText = @"
+    // JOIN entre patients y province_names usando province_id como clave
+    // El alias AS ProvinceName permite que Dapper mapee a la propiedad del record
+    var patients = connection.Query<PatientWithProvince>(@"
         SELECT p.patient_id AS PatientId,
                p.first_name AS FirstName,
                p.last_name AS LastName,
-               pn.province_name AS ProvinceName
+               p.gender AS Gender,
+               p.birth_date AS BirthDate,
+               p.city AS City,
+               pn.province_name AS ProvinceName,
+               p.allergies AS Allergies,
+               p.height AS Height,
+               p.weight AS Weight
         FROM patients p
         JOIN province_names pn ON p.province_id = pn.province_id
         ORDER BY p.last_name, p.first_name
-    ";
-
-    var patients = new List<object>();
-    using var reader = command.ExecuteReader();
-    while (reader.Read())
-    {
-        patients.Add(new
-        {
-            PatientId = reader.GetInt64(0),
-            FirstName = reader.GetString(1),
-            LastName = reader.GetString(2),
-            ProvinceName = reader.GetString(3)
-        });
-    }
+    ").ToList();
 
     return Results.Ok(patients);
 });
 
-app.Run();
-```
-
-### Paso 3: Probar
-
-```bash
-dotnet run
-```
-
-Abrir `http://localhost:5000/patients-with-province`. Verificar:
-- La columna `provinceName` muestra "Ontario", "British Columbia", etc., no los códigos `ON`, `BC`.
-- Los registros estan ordenados por apellido y luego por nombre.
-- Hay exactamente 258 pacientes (los mismos de siempre, pero ahora con el nombre de la provincia).
-
----
-
-## Ejercicio independiente
-
-**Consigna:** Crear un endpoint `/doctors-with-admissions` que devuelva una lista de médicos con la cantidad de ingresos que atendió cada uno, ordenada de mayor a menor cantidad.
-
-**Pista:** Necesitan JOIN entre `doctors` y `admissions`, agrupar con `GROUP BY d.doctor_id`, contar con `COUNT(*)` y ordenar con `ORDER BY total DESC`.
-
-**Solución esperada:**
-
-```csharp
-// GET /doctors-with-admissions — medicos con cantidad de ingresos
-app.MapGet("/doctors-with-admissions", () =>
+// GET /patients-with-province/top/{count} — top N pacientes ordenados por apellido
+app.MapGet("/patients-with-province/top/{count:long}", (long count) =>
 {
     using var connection = new SqliteConnection(connectionString);
-    connection.Open();
 
-    var command = connection.CreateCommand();
-    command.CommandText = @"
-        SELECT d.doctor_id AS DoctorId,
-               d.first_name AS FirstName,
-               d.last_name AS LastName,
-               d.specialty AS Specialty,
-               COUNT(a.admission_date) AS TotalAdmissions
-        FROM doctors d
-        JOIN admissions a ON d.doctor_id = a.attending_doctor_id
-        GROUP BY d.doctor_id
-        ORDER BY TotalAdmissions DESC
-    ";
+    // LIMIT usa un parametro para evitar inyeccion SQL
+    var patients = connection.Query<PatientWithProvince>(@"
+        SELECT p.patient_id AS PatientId,
+               p.first_name AS FirstName,
+               p.last_name AS LastName,
+               p.gender AS Gender,
+               p.birth_date AS BirthDate,
+               p.city AS City,
+               pn.province_name AS ProvinceName,
+               p.allergies AS Allergies,
+               p.height AS Height,
+               p.weight AS Weight
+        FROM patients p
+        JOIN province_names pn ON p.province_id = pn.province_id
+        ORDER BY p.last_name, p.first_name
+        LIMIT @count", new { count }).ToList();
 
-    var doctors = new List<object>();
-    using var reader = command.ExecuteReader();
-    while (reader.Read())
-    {
-        doctors.Add(new
-        {
-            DoctorId = reader.GetInt64(0),
-            FirstName = reader.GetString(1),
-            LastName = reader.GetString(2),
-            Specialty = reader.GetString(3),
-            TotalAdmissions = reader.GetInt64(4)
-        });
-    }
+    return Results.Ok(patients);
+});
 
-    return Results.Ok(doctors);
+// Arrancar la aplicacion
+app.Run();
+
+// Record para pacientes con nombre de provincia
+public record PatientWithProvince(
+    long PatientId,
+    string FirstName,
+    string LastName,
+    string Gender,
+    string BirthDate,
+    string? City,
+    string ProvinceName,
+    string? Allergies,
+    long? Height,
+    long? Weight
+);
+```
+
+**Salida esperada al navegar a `http://localhost:5000/patients-with-province` (primeros 3 registros, ordenados por apellido):**
+
+```json
+[
+  {
+    "patientId": 1,
+    "firstName": "Donald",
+    "lastName": "Waterfield",
+    "gender": "M",
+    "birthDate": "1963-02-12",
+    "city": "Barrie",
+    "provinceName": "Ontario",
+    "allergies": "Penicillin",
+    "height": 185,
+    "weight": 76
+  },
+  {
+    "patientId": 2,
+    "firstName": "Mickey",
+    "lastName": "Baasha",
+    "gender": "M",
+    "birthDate": "2017-11-19",
+    "city": "Hamilton",
+    "provinceName": "Ontario",
+    "allergies": null,
+    "height": null,
+    "weight": null
+  },
+  {
+    "patientId": 3,
+    "firstName": "Jiji",
+    "lastName": "Sharma",
+    "gender": "F",
+    "birthDate": "1990-05-15",
+    "city": "Toronto",
+    "provinceName": "Ontario",
+    "allergies": "Sulfa",
+    "height": 162,
+    "weight": 55
+  }
+]
+```
+
+**Salida esperada al navegar a `http://localhost:5000/patients-with-province/top/2`:**
+
+```json
+[
+  {
+    "patientId": 1,
+    "firstName": "Donald",
+    "lastName": "Waterfield",
+    "gender": "M",
+    "birthDate": "1963-02-12",
+    "city": "Barrie",
+    "provinceName": "Ontario",
+    "allergies": "Penicillin",
+    "height": 185,
+    "weight": 76
+  },
+  {
+    "patientId": 2,
+    "firstName": "Mickey",
+    "lastName": "Baasha",
+    "gender": "M",
+    "birthDate": "2017-11-19",
+    "city": "Hamilton",
+    "provinceName": "Ontario",
+    "allergies": null,
+    "height": null,
+    "weight": null
+  }
+]
+```
+
+### Práctica guiada: JOIN patients + doctors a través de admissions
+
+Ahora vamos a conectar pacientes con los médicos que los atendieron. Esto requiere unir `admissions` con `patients` y con `doctors`.
+
+```csharp
+// GET /admissions-with-details — listar ingresos con nombre de paciente y medico
+app.MapGet("/admissions-with-details", () =>
+{
+    using var connection = new SqliteConnection(connectionString);
+
+    // JOIN triple: admissions + patients + doctors
+    // Usamos alias para cada columna y AS para mapear al record
+    var admissions = connection.Query<AdmissionDetail>(@"
+        SELECT a.admission_date AS AdmissionDate,
+               a.discharge_date AS DischargeDate,
+               a.diagnosis AS Diagnosis,
+               p.first_name || ' ' || p.last_name AS PatientName,
+               d.first_name || ' ' || d.last_name AS DoctorName,
+               d.specialty AS DoctorSpecialty
+        FROM admissions a
+        JOIN patients p ON a.patient_id = p.patient_id
+        JOIN doctors d ON a.attending_doctor_id = d.doctor_id
+        ORDER BY a.admission_date DESC
+        LIMIT 5
+    ").ToList();
+
+    return Results.Ok(admissions);
 });
 ```
 
-Probar en `http://localhost:5000/doctors-with-admissions`. El médico con más ingresos deberia aparecer primero.
+Record correspondiente:
 
----
+```csharp
+// Record para admisiones con datos completos de paciente y medico
+public record AdmissionDetail(
+    string AdmissionDate,
+    string? DischargeDate,
+    string? Diagnosis,
+    string PatientName,
+    string DoctorName,
+    string DoctorSpecialty
+);
+```
+
+**Salida esperada al navegar a `http://localhost:5000/admissions-with-details`:**
+
+```json
+[
+  {
+    "admissionDate": "2019-06-02",
+    "dischargeDate": "2019-06-05",
+    "diagnosis": "Pneumonia",
+    "patientName": "Donald Waterfield",
+    "doctorName": "Claude Walls",
+    "doctorSpecialty": "Internist"
+  },
+  {
+    "admissionDate": "2019-06-01",
+    "dischargeDate": null,
+    "diagnosis": "Asthma",
+    "patientName": "Mickey Baasha",
+    "doctorName": "Joshua Green",
+    "doctorSpecialty": "Cardiologist"
+  },
+  {
+    "admissionDate": "2019-05-30",
+    "dischargeDate": "2019-06-01",
+    "diagnosis": "Appendicitis",
+    "patientName": "Jiji Sharma",
+    "doctorName": "Miriam Tregre",
+    "doctorSpecialty": "General Surgeon"
+  }
+]
+```
+
+## 5. Consolidación y cierre (20 min)
 
 ### Qué te llevás
 
-- JOIN combina dos tablas vinculadas por una clave común.
-- ORDER BY ordena los resultados.
-- GROUP BY + COUNT permite hacer resúmenes.
-- Todo esto se ejecuta desde C# con el mismo patrón de conexión que ya conocen.
+- Un `JOIN` conecta dos tablas a través de una columna que comparten (clave foránea → clave primaria).
+- La sintaxis es `FROM tabla_a JOIN tabla_b ON tabla_a.fk = tabla_b.pk`.
+- `ORDER BY` ordena los resultados; va al final de la consulta.
+- `LIMIT` restringe la cantidad de filas; se usa con un parámetro `@count` para evitar inyección SQL.
+- En Dapper, siempre se usa alias `AS` para que las columnas coincidan con los nombres del record.
+- Se pueden encadenar varios `JOIN` (hasta 2 tablas en esta unidad).
 
 ### Lo que viene
 
-En el Encuentro 12 entra Dapper, un asistente que automatiza la lectura de datos y evita escribir todo el loop de `ExecuteReader` a mano.
+Encuentro 12: Dapper: Query<T> con alias — vamos a profundizar en cómo Dapper mapea los resultados a records y vamos a usar alias de columnas con `AS` de forma más elaborada.
 
-## Errores comunes y trampas
+## 6. Actividad complementaria (80 min)
 
-| Error | Causa | Solución |
-|-------|-------|----------|
-| Faltan filas en el resultado | El JOIN no encuentra coincidencias en la otra tabla | Verificar los valores de la columna de enlace (`province_id`, `doctor_id`) |
-| `ambiguous column name` | Dos tablas tienen una columna con el mismo nombre y no se usa prefijo | Usar alias de tabla: `p.patient_id`, `pn.province_id` |
-| ORDER BY no ordena como se espera | Los string con SQLite se ordenan lexicograficamente (A-Z) | Verificar que no haya espacios extras. Usar `ASC` o `DESC` explicitamente |
-| `no such column: TotalAdmissions` | Se intenta usar el alias en el WHERE (no existe al evaluar WHERE) | Usar el alias solo en ORDER BY; en WHERE usar la expresión original |
-| El GROUP BY requiere las columnas no agregadas | SQLite exige que toda columna no agregada esté en GROUP BY | Incluir `d.doctor_id`, `d.first_name`, `d.last_name`, `d.specialty` en GROUP BY |
+### Practicar JOINs y ORDER BY con diferentes combinaciones
 
----
+En esta actividad vas a crear endpoints que combinen datos de distintas tablas usando `JOIN`, `ORDER BY` y `LIMIT`.
 
-## Reparto de tiempos (240 minutos)
+**Consigna 1 — Pacientes de una provincia específica (25 min):**
+Creá un endpoint `GET /patients-by-province/{provinceId}` que devuelva los pacientes de una provincia dada, ordenados por apellido. Usá un parámetro `@provinceId` en la consulta.
 
-| Bloque | Minutos |
-|--------|---------|
-| Apertura y motivación | 20 |
-| Desarrollo teórico-práctico | 120 |
-| Consolidación y cierre | 20 |
-| Actividad complementaria | 80 |
-| **Total** | **240** |
+Pista: el `provinceId` llega por el path y es un string (como `"ON"` o `"BC"`).
+
+**Consigna 2 — Ingresos por especialidad del médico (25 min):**
+Creá un endpoint `GET /admissions-by-specialty/{specialty}` que devuelva los ingresos filtrados por la especialidad del médico tratante. Usá un `JOIN` entre `admissions` y `doctors`.
+
+Pista: la especialidad es un texto como `"Cardiologist"` o `"General Surgeon"`. Usá `LIKE` con el parámetro para permitir búsquedas parciales.
+
+**Consigna 3 — Top 10 pacientes con más ingresos (30 min):**
+Creá un endpoint `GET /top-patients/{count}` que devuelva los pacientes con más ingresos, ordenados de mayor a menor. Esto requiere un `GROUP BY` con `COUNT(*)` y un `ORDER BY` con `DESC`.
+
+Pista: agrupá por `patient_id` y contá las filas en `admissions`. Limitá los resultados con `LIMIT @count`.
+
+## 7. Errores comunes y trampas
+
+| Error observable | Causa probable | Cómo intervenir |
+| --- | --- | --- |
+| `InvalidOperationException` al usar JOIN | Falta alias `AS` para alguna columna; Dapper no encuentra el constructor que coincida. | Verificar que cada columna del SELECT tenga `AS NombrePropiedad` que coincida con el record. |
+| Los resultados no están ordenados | Falta `ORDER BY` en la consulta SQL. | Agregar `ORDER BY` al final del SELECT; sin él, el orden no está garantizado. |
+| `LIMIT` no funciona con parámetros | Se escribió `LIMIT count` en vez de `LIMIT @count`. | Usar siempre `@count` con `new { count }` para parametrizar el LIMIT. |
+| El JOIN devuelve filas duplicadas | Se usó `JOIN` en vez de `LEFT JOIN` y hay pacientes sin provincia. | Revisar si la relación es obligatoria o opcional; en este curso, usar `JOIN` cuando la relación es 1:N y todos los registros tienen la clave foránea. |
+| La concatenación de nombres falla | Se usó `+` en vez de `||` para concatenar en SQLite. | En SQL de SQLite, el operador de concatenación es `||`, no `+`. |
+| `null` en `DischargeDate` genera error | El record no declara `DischargeDate` como nullable (`string?`). | Declarar `string? DischargeDate` en el record para aceptar valores NULL de la BD. |

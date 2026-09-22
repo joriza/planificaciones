@@ -1,182 +1,314 @@
 # Encuentro 24 — CRUD completo y JOIN triple
 
-## Metadatos de bloque
+> Unidad 3 — CRUD completo con Dapper
 
-| Campo | Valor |
-|---|---|
-| **Duracion** | 240 minutos |
-| **Unidad** | 3 — CRUD completo con Dapper |
-| **Eje** | 5 — CRUD con Dapper |
-| **Tipo** | Procedimental |
-| **Requiere** | Encuentros 21-23 (POST, DELETE, PUT), manejo solido de `ExecuteScalar<long>`, `Execute` y `QueryFirstOrDefault` |
-| **Nuevo concepto** | CRUD completo sobre una tabla, JOIN triple entre `admissions`, `doctors` y `patients`, record anidado |
+## 1. Metadatos de bloque
 
-## Reparto de tiempos (240 minutos)
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 24 de 36 |
+| Unidad | 3 — CRUD completo con Dapper |
+| Eje temático | 5 — CRUD con Dapper |
+| Carácter/Objetivo | Procedimental |
+| Estructura | clase |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Concepto nuevo | CRUD completo y JOIN triple |
+| Requisitos previos | Encuentros 21-23: INSERT, DELETE, UPDATE con Dapper, códigos HTTP 201/204/404/400 |
+| Uso de celular | No permitido |
+| Organización del trabajo | Parejas, una computadora cada dos |
 
-| Bloque | Duracion |
-|---|---|
-| Apertura y motivacion | 20 min |
-| Teoria minima con ejemplo completo | 50 min |
-| Ejercicio progresivo | 120 min |
-| Puesta en comun y correccion de errores | 30 min |
-| Cierre | 20 min |
+### Reparto de tiempos teóricos
 
-## Objetivos de aprendizaje
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-- Consolidar los cuatro verbos CRUD (GET, POST, PUT, DELETE) sobre la tabla `admissions`.
-- Ejecutar una consulta JOIN que combine tres tablas (`admissions` + `doctors` + `patients`) en un solo endpoint.
-- Mapear un resultado de JOIN triple usando un record compuesto con datos de varias tablas.
-- Usar `SELECT` con alias para columnas de tablas distintas que tienen nombres iguales.
+## 2. Objetivos de aprendizaje
 
-## Charla rapida / analogia
+1. Completar los cuatro endpoints CRUD (GET, POST, PUT, DELETE) en un único `Program.cs`.
+2. Construir un JOIN de 3 tablas (`admissions` + `patients` + `doctors`) para consultar datos relacionados.
+3. Exponer el JOIN como endpoint GET con alias `AS` para cada columna del record.
+4. Reforzar la diferencia entre `Query<T>` para lecturas y `Execute` para escrituras en un solo archivo.
 
-Hasta ahora trabajaste cada verbo por separado. Es como tener un martillo, un destornillador y una llave inglesa: cada herramienta sirve para una operacion distinta. Hoy vas a **armar la caja completa** aplicando los cuatro verbos sobre una sola tabla. Ademas, vas a hacer una **consulta que cruza tres tablas** (admisiones, doctores y pacientes) para responder la pregunta: "¿Que doctor atiende a que paciente, en que fecha y con que diagnostico?".
+## 3. Apertura y motivación (20 min)
 
-## Teoria minima
+### Charla rápida: analogía breve que ancle el concepto
 
-### JOIN triple
+Hasta ahora cada encuentro agregó un endpoint nuevo al archivo. Imaginen que el archivo `Program.cs` es el menú de un restaurante: cada endpoint es un plato del menú. El GET es la carta (leer), el POST es el pedido (crear), el PUT es la modificación del pedido (actualizar) y el DELETE es cancelar el pedido (borrar). Hoy armamos el menú completo con los cuatro platos.
 
-Un JOIN triple combina tres tablas encadenando dos JOIN:
+### Lo mínimo indispensable
 
-```sql
-SELECT a.admission_id, a.admission_date, a.diagnosis,
-       d.first_name AS DoctorFirstName, d.last_name AS DoctorLastName,
-       p.first_name AS PatientFirstName, p.last_name AS PatientLastName
-FROM admissions a
-JOIN doctors d ON a.doctor_id = d.doctor_id
-JOIN patients p ON a.patient_id = p.patient_id
-```
+Un `Program.cs` canónico de Minimal API con Dapper tiene: los `using`, el `builder`, el `app`, los cuatro endpoints (`MapGet`, `MapPost`, `MapPut`, `MapDelete`), el `app.Run()`, y los records al final. El JOIN de 3 tablas usa `Query<T>` con un SELECT que une `admissions`, `patients` y `doctors` con alias `AS` para cada columna.
 
-Cada JOIN agrega columnas de una tabla adicional. Cuando dos columnas tienen el mismo nombre (`first_name` en doctores y pacientes), **es obligatorio usar alias** para distinguirlas.
+## 4. Desarrollo teórico-práctico (120 min)
 
-### Record compuesto
-
-Para mapear un JOIN triple necesitas un record que contenga las columnas de las tres tablas:
+### Paso 1 — El Program.cs completo con los cuatro endpoints CRUD
 
 ```csharp
-record AdmissionDetail(long AdmissionId, string AdmissionDate, string? Diagnosis,
-                       long DoctorId, string DoctorFirstName, string? DoctorLastName,
-                       long PatientId, string PatientFirstName, string? PatientLastName);
-```
+using Dapper;
+using Microsoft.Data.Sqlite;
 
-Los nombres del record coinciden con los alias del SELECT.
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
 
-### CRUD completo sobre admissions
+var connectionString = "Data Source=hospital.db";
 
-Al final de este encuentro vas a tener estos endpoints para `admissions`:
+// Records al final del archivo, despues de app.Run() (requerido por CS8803)
 
-| Verbo | Ruta | Accion |
-|---|---|---|
-| GET | `/admissions` | Listar todas con JOIN triple |
-| GET | `/admissions/{id:long}` | Una admision con JOIN triple |
-| POST | `/admissions` | Crear nueva admision |
-| PUT | `/admissions/{id:long}` | Actualizar admision existente |
-| DELETE | `/admissions/{id:long}` | Eliminar admision |
-
-## Practica guiada: endpoint GET /admissions con JOIN triple
-
-Agregamos este endpoint que lista las admisiones con los nombres del doctor y del paciente:
-
-```csharp
-// GET /admissions — listar admisiones con JOIN triple
-app.MapGet("/admissions", () =>
+// GET /patients — listar todos los pacientes
+app.MapGet("/patients", () =>
 {
     using var connection = new SqliteConnection(connectionString);
-    var admisiones = connection.Query<AdmissionDetail>(@"
-        SELECT a.admission_id AS AdmissionId,
-               a.admission_date AS AdmissionDate,
-               a.diagnosis AS Diagnosis,
-               d.doctor_id AS DoctorId,
-               d.first_name AS DoctorFirstName,
-               d.last_name AS DoctorLastName,
-               p.patient_id AS PatientId,
-               p.first_name AS PatientFirstName,
-               p.last_name AS PatientLastName
-        FROM admissions a
-        JOIN doctors d ON a.doctor_id = d.doctor_id
-        JOIN patients p ON a.patient_id = p.patient_id
-        ORDER BY a.admission_date DESC").ToList();
+    var patients = connection.Query<Patient>(@"
+        SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName,
+               gender AS Gender, birth_date AS BirthDate, city AS City,
+               province_id AS ProvinceId, allergies AS Allergies, height AS Height, weight AS Weight
+        FROM patients
+        ORDER BY patient_id"
+    ).ToList();
+    return Results.Ok(patients);
+});
 
-    return Results.Ok(admisiones);
+// GET /patients/{id:long} — obtener un paciente por ID
+app.MapGet("/patients/{id:long}", (long id) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+    var patient = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId, first_name AS FirstName, last_name AS LastName,
+               gender AS Gender, birth_date AS BirthDate, city AS City,
+               province_id AS ProvinceId, allergies AS Allergies, height AS Height, weight AS Weight
+        FROM patients
+        WHERE patient_id = @id", new { id });
+
+    return patient is null
+        ? Results.NotFound(new { mensaje = "Paciente no encontrado" })
+        : Results.Ok(patient);
+});
+
+// POST /patients — crear un paciente nuevo
+app.MapPost("/patients", (Patient nuevoPaciente) =>
+{
+    if (string.IsNullOrWhiteSpace(nuevoPaciente.FirstName) ||
+        string.IsNullOrWhiteSpace(nuevoPaciente.LastName))
+    {
+        return Results.BadRequest(new { mensaje = "El nombre y el apellido son obligatorios" });
+    }
+
+    using var connection = new SqliteConnection(connectionString);
+
+    long newId = connection.ExecuteScalar<long>(@"
+        INSERT INTO patients (first_name, last_name, gender, birth_date, city, province_id, allergies, height, weight)
+        VALUES (@FirstName, @LastName, @Gender, @BirthDate, @City, @ProvinceId, @Allergies, @Height, @Weight);
+        SELECT last_insert_rowid();
+    ", nuevoPaciente);
+
+    var pacienteCreado = nuevoPaciente with { PatientId = newId };
+    return Results.Created($"/patients/{newId}", pacienteCreado);
+});
+
+// PUT /patients/{id:long} — actualizar un paciente existente
+app.MapPut("/patients/{id:long}", (long id, Patient pacienteActualizado) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+
+    var existente = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId FROM patients WHERE patient_id = @id", new { id });
+
+    if (existente is null)
+    {
+        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
+
+    connection.Execute(@"
+        UPDATE patients
+        SET first_name = @FirstName, last_name = @LastName, gender = @Gender,
+            city = @City, province_id = @ProvinceId, allergies = @Allergies,
+            height = @Height, weight = @Weight
+        WHERE patient_id = @id",
+        new
+        {
+            pacienteActualizado.FirstName,
+            pacienteActualizado.LastName,
+            pacienteActualizado.Gender,
+            pacienteActualizado.City,
+            pacienteActualizado.ProvinceId,
+            pacienteActualizado.Allergies,
+            pacienteActualizado.Height,
+            pacienteActualizado.Weight,
+            id
+        });
+
+    return Results.NoContent();
+});
+
+// DELETE /patients/{id:long} — borrar un paciente por ID
+app.MapDelete("/patients/{id:long}", (long id) =>
+{
+    using var connection = new SqliteConnection(connectionString);
+
+    var paciente = connection.QueryFirstOrDefault<Patient>(@"
+        SELECT patient_id AS PatientId FROM patients WHERE patient_id = @id", new { id });
+
+    if (paciente is null)
+    {
+        return Results.NotFound(new { mensaje = "Paciente no encontrado" });
+    }
+
+    connection.Execute(@"
+        DELETE FROM patients
+        WHERE patient_id = @id", new { id });
+
+    return Results.NoContent();
+});
+
+app.Run();
+
+// Records despues de app.Run() — requerido por CS8803
+public record Patient(
+    long PatientId,
+    string FirstName,
+    string LastName,
+    string Gender,
+    string BirthDate,
+    string? City,
+    string ProvinceId,
+    string? Allergies,
+    long? Height,
+    long? Weight
+);
+```
+
+> Comentario: este es el archivo completo. Cada endpoint usa `using var connection` para abrir y cerrar la conexión automáticamente. Los records van después de `app.Run()`.
+
+### Paso 2 — El record para el JOIN de 3 tablas
+
+```csharp
+// Record para la consulta con JOIN de 3 tablas: admissions + patients + doctors
+public record AdmissionDetail(
+    long PatientId,
+    string PatientName,
+    string DoctorName,
+    string DoctorSpecialty,
+    string AdmissionDate,
+    string? DischargeDate,
+    string? Diagnosis
+);
+```
+
+> Comentario: el record `AdmissionDetail` tiene campos calculados (`PatientName`, `DoctorName`) que no existen como columnas en ninguna tabla. Se construyen con `||` en el SQL.
+
+### Paso 3 — El endpoint GET con JOIN de 3 tablas
+
+```csharp
+// GET /admissions/detail — listar ingresos con nombre del paciente y del medico
+app.MapGet("/admissions/detail", () =>
+{
+    using var connection = new SqliteConnection(connectionString);
+
+    var admissions = connection.Query<AdmissionDetail>(@"
+        SELECT a.patient_id AS PatientId,
+               p.first_name || ' ' || p.last_name AS PatientName,
+               d.first_name || ' ' || d.last_name AS DoctorName,
+               d.specialty AS DoctorSpecialty,
+               a.admission_date AS AdmissionDate,
+               a.discharge_date AS DischargeDate,
+               a.diagnosis AS Diagnosis
+        FROM admissions a
+        JOIN patients p ON a.patient_id = p.patient_id
+        JOIN doctors d ON a.attending_doctor_id = d.doctor_id
+        ORDER BY a.admission_date DESC"
+    ).ToList();
+
+    return Results.Ok(admissions);
 });
 ```
 
-Record al final del archivo:
+> Comentario: el JOIN une 3 tablas: `admissions` (alias `a`), `patients` (alias `p`) y `doctors` (alias `d`). Las columnas de nombre se concatenan con `||` y se aliasean como `PatientName` y `DoctorName` para que coincidan con los parámetros del record.
 
-```csharp
-record AdmissionDetail(long AdmissionId, string AdmissionDate, string? Diagnosis,
-                       long DoctorId, string DoctorFirstName, string? DoctorLastName,
-                       long PatientId, string PatientFirstName, string? PatientLastName);
-```
-
-### ¿Que hace cada linea?
-
-1. `FROM admissions a` — alias `a` para admissions (ahorra escritura en JOINs).
-2. `JOIN doctors d ON a.doctor_id = d.doctor_id` — cruza con doctores.
-3. `JOIN patients p ON a.patient_id = p.patient_id` — cruza con pacientes.
-4. `ORDER BY a.admission_date DESC` — las mas recientes primero.
-5. Cada columna tiene alias para que Dapper coincida con el record `AdmissionDetail`.
-6. Las columnas con nombre repetido (`first_name`, `last_name`) se diferencian con prefijos `Doctor` y `Patient`.
-
-### Salida esperada
+### Paso 4 — Probar el endpoint con JOIN
 
 ```bash
-curl http://localhost:5000/admissions
-
-# Respuesta: 200 OK
-# Cuerpo: [
-#   {
-#     "admissionId": 1,
-#     "admissionDate": "2024-03-15",
-#     "diagnosis": "Neumonia",
-#     "doctorId": 3,
-#     "doctorFirstName": "Carlos",
-#     "doctorLastName": "Mendez",
-#     "patientId": 5,
-#     "patientFirstName": "Maria",
-#     "patientLastName": "Garcia"
-#   },
-#   ...
-# ]
+curl http://localhost:5000/admissions/detail | head -c 1000
 ```
 
-## Ejercicio progresivo
+Salida esperada (primeros registros):
 
-### Etapa 1 — GET /admissions/{id:long} con JOIN triple (guiada)
+```json
+[
+  {
+    "patientId": 258,
+    "patientName": "Zoe Anderson",
+    "doctorName": "Monica Singleton",
+    "doctorSpecialty": "Cardiologist",
+    "admissionDate": "2019-06-02",
+    "dischargeDate": null,
+    "diagnosis": "Pregnancy"
+  },
+  {
+    "patientId": 257,
+    "patientName": "Yvonne Fisher",
+    "doctorName": "Larry Miller",
+    "doctorSpecialty": "Cardiovascular Surgeon",
+    "admissionDate": "2019-06-01",
+    "dischargeDate": "2019-06-05",
+    "diagnosis": "Myocardial Infarction"
+  }
+]
+```
 
-Crea el endpoint que devuelve una sola admision con JOIN triple. Usa `QueryFirstOrDefault` con parametro `@id`.
+> Comentario: `patientName` y `doctorName` son campos calculados con `||` (concatenación de strings en SQLite). `dischargeDate` es `null` para ingresos que aún no tienen fecha de alta.
 
-**Pista:** la consulta es la misma que la del listado pero agregando `WHERE a.admission_id = @id` al final.
+### Paso 5 — JOIN de 3 tablas con filtro por provincia (consolidación)
 
-### Etapa 2 — CRUD completo: POST + PUT + DELETE sobre admissions (semiguiada)
+```csharp
+// GET /admissions/detail?provinceId=ON — ingresos de pacientes de Ontario
+app.MapGet("/admissions/detail", (string? provinceId = null) =>
+{
+    using var connection = new SqliteConnection(connectionString);
 
-Combina los endpoints de los encuentros 21, 22 y 23 en un unico archivo `Program.cs` que tenga GET, POST, PUT y DELETE sobre `admissions`. Usa `AdmissionInput` para la entrada y `Admission` para el record basico.
+    var sql = @"
+        SELECT a.patient_id AS PatientId,
+               p.first_name || ' ' || p.last_name AS PatientName,
+               d.first_name || ' ' || d.last_name AS DoctorName,
+               d.specialty AS DoctorSpecialty,
+               a.admission_date AS AdmissionDate,
+               a.discharge_date AS DischargeDate,
+               a.diagnosis AS Diagnosis
+        FROM admissions a
+        JOIN patients p ON a.patient_id = p.patient_id
+        JOIN doctors d ON a.attending_doctor_id = d.doctor_id";
 
-**Pista:** copia los endpoints que ya escribiste en encuentros anteriores y unificalos en el mismo archivo. Asegurate de que los records esten todos despues de `app.Run()`.
+    var parameters = new { provinceId };
 
-### Etapa 3 — GET /patients?search=texto con JOIN a provincia (independiente)
+    if (!string.IsNullOrWhiteSpace(provinceId))
+    {
+        sql += " WHERE p.province_id = @provinceId";
+    }
 
-Crea un endpoint GET que busque pacientes por nombre (o apellido) usando `LIKE` e incluya el nombre de la provincia mediante JOIN con `province_names`. Debe devolver un record compuesto con datos del paciente y de la provincia.
+    sql += " ORDER BY a.admission_date DESC";
 
-**Pista:** `SELECT p.patient_id AS PatientId, p.first_name AS FirstName, ..., pr.province_name AS ProvinceName FROM patients p JOIN province_names pr ON p.province_id = pr.province_id WHERE p.first_name LIKE @search`. El parametro debe ser `"%texto%"`.
+    var admissions = connection.Query<AdmissionDetail>(sql, parameters).ToList();
+
+    return Results.Ok(admissions);
+});
+```
+
+> Comentario: el `WHERE` se agrega dinámicamente solo cuando `provinceId` no es nulo. El parámetro `@provinceId` se pasa siempre en el objeto anónimo, pero solo se usa si la cláusula WHERE existe en el SQL.
+
+## 5. Consolidación y cierre (20 min)
 
 ### Qué te llevás
 
-- Un JOIN triple combina tres tablas con dos `JOIN` consecutivos.
-- Cuando dos tablas tienen columnas con el mismo nombre, los alias del SELECT son obligatorios.
-- El record compuesto refleja las columnas del SELECT con sus alias.
-- CRUD completo = GET + POST + PUT + DELETE sobre una misma tabla.
+- Un `Program.cs` completo con los cuatro endpoints CRUD usa: `MapGet`, `MapPost`, `MapPut`, `MapDelete`.
+- El JOIN de 3 tablas se construye con `JOIN ... ON` y alias en el SELECT con `AS` para cada columna.
+- Los campos calculados (como `PatientName` con `||`) se aliasean con `AS` para coincidir con los nombres del record.
+- `ExecuteScalar<long>` devuelve el ID del INSERT, `Execute` devuelve filas afectadas, `Query<T>` devuelve listas, `QueryFirstOrDefault<T>` devuelve un solo registro o `null`.
+- Los records van siempre después de `app.Run()`.
 
-### Lo que viene
+## Lo que viene
 
-En el Encuentro 25 cerramos la Unidad 3: repaso general y entrega del TP-U3, una API que implementa CRUD completo sobre dos tablas relacionadas.
-
-## Errores comunes y trampas
-
-| Error | Causa | Solucion |
-|---|---|---|
-| `InvalidOperationException` en JOIN triple | Alias faltante o incorrecto en el SELECT. | Verificar que cada alias coincida exactamente con el nombre del parametro del record. |
-| Dos columnas con el mismo nombre sin alias (ej. dos `first_name`) | Dapper construye el record con el ultimo valor, perdiendo datos. | Usar alias distintivos: `d.first_name AS DoctorFirstName`, `p.first_name AS PatientFirstName`. |
-| JOIN sin condicion (`ON`) | Producto cartesiano: cada fila de admissions se combina con cada fila de doctors y patients. | Agregar `ON a.doctor_id = d.doctor_id` y `ON a.patient_id = p.patient_id`. |
-| Olvidar `?.ToList()` en la consulta | `Query<T>` devuelve `IEnumerable<T>`, no `List<T>`. Puede diferir la ejecucion. | Agregar `.ToList()` para ejecutar la consulta inmediatamente. |
-| El PUT de admisiones actualiza todas las filas | Falta `WHERE admission_id = @Id` en el UPDATE. | Verificar que el WHERE este presente y que el objeto anonimo incluya `Id = id`. |
+Encuentro 25: Cierre de la Unidad 3. Repasamos el CRUD completo, entregamos el TP-U3 en GitHub y nos preparamos para la evaluación de la Unidad 3.

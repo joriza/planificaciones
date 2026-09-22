@@ -1,226 +1,163 @@
 # Encuentro 14 — Cierre U2: repaso y TP
 
-**Unidad 2:** Acceso a datos con SQLite y Dapper  
-**Duración:** 240 minutos  
-**Carácter:** Actitudinal — cierre de unidad  
-**Eje 4:** Dapper y consultas parametrizadas  
+> Acceso a datos con SQLite y Dapper
 
----
+## 1. Metadatos de bloque
 
-## Objetivos de aprendizaje
+| Campo | Detalle |
+| --- | --- |
+| Encuentro | 14 de 36 |
+| Unidad | 2 — Acceso a datos con SQLite y Dapper |
+| Eje temático | 4 — Dapper y consultas parametrizadas |
+| Carácter/Objetivo | Actitudinal |
+| Estructura | cierre |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Concepto nuevo | Cierre U2: repaso y TP |
+| Requisitos previos | Haber completado los encuentros 10 a 13; tener el TP-U2 en desarrollo. |
+| Uso de celular | No permitido |
+| Organización del trabajo | Grupos de trabajo según la distribución de equipos disponibles; cada grupo entrega en su carpeta `tp-u2/` del repositorio. |
 
-- Integrar los conceptos de la Unidad 2 (SQLite, SELECT, JOIN, ORDER BY, Dapper, records, parámetros, LIKE).
-- Implementar un sistema de consultas contra `hospital.db` usando Dapper.
-- Publicar el trabajo en GitHub dentro de la carpeta `tp-u2/`.
+### Reparto de tiempos teóricos
 
----
+| Momento | Tiempo teórico |
+| --- | --- |
+| Apertura y motivación | 20 min |
+| Desarrollo teórico-práctico | 120 min |
+| Consolidación y cierre | 20 min |
+| Actividad complementaria | 80 min |
+| **Total** | **240 min** |
 
-## Charla rápida
+## 2. Objetivos de aprendizaje
 
-Esta clase es como el ensayo general antes de la función. Ya tienen todas las piezas: SELECT, JOIN, Dapper, records, parámetros, LIKE. Ahora van a construir un conjunto de endpoints que consulten la base desde distintos ángulos — como si fueran los reportes de un sistema hospitalario real. No hay contenido nuevo: es todo integración y práctica. Al final, entregan el TP-U2 en GitHub.
+1. Sistematizar los conceptos clave de la unidad: SQLite, Dapper, JOIN, parámetros y LIKE.
+2. Revisar los patrones canónicos del curso: tipos de mapeo, alias `AS`, consultas parametrizadas.
+3. Completar y entregar el TP-U2 en el repositorio del grupo.
+4. Prepararse para la entrega y defensa individual de la Unidad 2.
 
----
+## 3. Apertura y motivación (20 min)
 
-## Teoría mínima — Mapa conceptual de la Unidad 2
+### Sistematización de conceptos U2
+
+El docente guía un repaso oral de los conceptos trabajados en los encuentros 10 a 13. Se pide a cada grupo que enumere en una pizarra los puntos clave:
+
+- SQLite es una base de datos en un solo archivo `.db`.
+- La cadena de conexión es `"Data Source=hospital.db"`.
+- Dapper transforma filas SQL en objetos C# con `Query<T>` y `QueryFirstOrDefault<T>`.
+- Los tipos canónicos: INTEGER → `long`, TEXT → `string`, nullable → `?`.
+- Siempre se usa alias `AS` en el SELECT.
+- Las consultas son siempre parametrizadas con `@param` y `new { param }`.
+- `LIKE` permite búsquedas parciales con comodines `%`.
+- Los endpoints devuelven `Results.Ok(...)`, `Results.NotFound(...)`, etc.
+- Los records van después de `app.Run();`.
+
+### Introducción al TP-U2
+
+El docente presenta el TP-U2 y aclara que es la instancia de cierre de la unidad. Se explica el ciclo de entrega: nueva carpeta `tp-u2/` en el repositorio del grupo, commits con mensajes claros y push al remoto.
+
+## 4. Desarrollo teórico-práctico (120 min)
+
+### Repaso: recorrido por los 4 encuentros
+
+El docente recorre brevemente cada encuentro y pide que los alumnos identifiquen el concepto central y un ejemplo de código:
+
+| Encuentro | Concepto central | Método Dapper clave |
+| --- | --- | --- |
+| 10 | SELECT simple desde SQLite | `Query<T>`, `QueryFirstOrDefault<T>` |
+| 11 | JOIN entre 2 tablas, ORDER BY, LIMIT | `Query<T>` con JOIN |
+| 12 | Mapeo con alias `AS`, tipos canónicos | `Query<T>`, `QueryFirstOrDefault<T>` |
+| 13 | Parámetros y LIKE | `Query<T>` con `new { ... }` |
+
+### Trabajo en grupo: TP-U2
+
+Cada grupo trabaja en su carpeta `tp-u2/` del repositorio. El TP-U2 consiste en crear una Minimal API que conecte a `hospital.db` y exponga endpoints que demuestren los conceptos de la unidad.
+
+**Estructura esperada del TP-U2:**
 
 ```
-SQLite (hospital.db)
-  └─ Microsoft.Data.Sqlite (conexión)
-       └─ Dapper (mapeo automático)
-            ├─ Query<T>(sql)         → lista de objetos
-            ├─ QueryFirstOrDefault<T>(sql, params) → un objeto o null
-            ├─ parámetros @var       → new { var = valor }
-            └─ alias AS Siempre      → snake_case → PascalCase
-
-Records posicionales:
-  public record Paciente(long Id, string Nombre, string? Alergia)
-                                       ↑            ↑           ↑
-                                    Int64        String    String? si es NULL
+tp-u2/
+├── Program.cs          — único archivo de código
+├── hospital.db         — copia de la base de datos
+├── tp-u2.csproj        — proyecto .NET 6
+└── .gitignore          — con bin/ y obj/
 ```
 
----
+**Endpoints mínimos del TP-U2:**
 
-## Práctica guiada
+1. `GET /patients` — lista todos los pacientes.
+2. `GET /patients/{id:long}` — un paciente por ID.
+3. `GET /patients-with-province` — pacientes con el nombre de su provincia (JOIN).
+4. `GET /patients/search?name=...` — búsqueda parcial por nombre (LIKE).
+5. `GET /doctors` — lista todos los médicos.
+6. `GET /doctors/by-specialty?specialty=...` — médicos por especialidad (LIKE).
 
-Van a construir el proyecto base del TP-U2 paso a paso. Este proyecto va a contener los endpoints que despues van a completar en el TP.
-
-### Paso 1: Crear el proyecto
+**Ciclo de entrega:**
 
 ```bash
-dotnet new web -o tp-u2
-cd tp-u2
-```
+# Crear la carpeta tp-u2 en el repositorio del grupo
+mkdir tp-u2
+# Copiar los archivos del proyecto a tp-u2/
+# Agregar hospital.db al .gitignore si no se debe commitear
+# O copiarlo si el profesor lo requiere
 
-Copiar `hospital.db` junto al `.csproj`. Agregar paquetes:
-
-```bash
-dotnet add package Microsoft.Data.Sqlite
-dotnet add package Dapper
-```
-
-### Paso 2: Escribir los records
-
-Reemplazar `Program.cs`:
-
-```csharp
-using Dapper;
-using Microsoft.Data.Sqlite;
-
-var connectionString = "Data Source=hospital.db";
-
-// Records canonicos
-public record Patient(long PatientId, string FirstName, string LastName, string Gender, string BirthDate, string? City, string ProvinceId, string? Allergies, long? Height, long? Weight);
-
-public record Doctor(long DoctorId, string FirstName, string LastName, string Specialty);
-
-public record Province(string ProvinceId, string ProvinceName);
-
-public record PatientWithProvince(long PatientId, string FirstName, string LastName, string Gender, string BirthDate, string? City, string ProvinceName, string? Allergies, long? Height, long? Weight);
-
-// GET /patients — listar todos los pacientes
-app.MapGet("/patients", () =>
-{
-    using var connection = new SqliteConnection(connectionString);
-
-    var patients = connection.Query<Patient>(@"
-        SELECT patient_id AS PatientId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               gender AS Gender,
-               birth_date AS BirthDate,
-               city AS City,
-               province_id AS ProvinceId,
-               allergies AS Allergies,
-               height AS Height,
-               weight AS Weight
-        FROM patients
-        ORDER BY last_name
-    ").ToList();
-
-    return Results.Ok(patients);
-});
-
-// GET /patients/{id:long} — buscar paciente por ID
-app.MapGet("/patients/{id:long}", (long id) =>
-{
-    using var connection = new SqliteConnection(connectionString);
-
-    var patient = connection.QueryFirstOrDefault<Patient>(@"
-        SELECT patient_id AS PatientId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               gender AS Gender,
-               birth_date AS BirthDate,
-               city AS City,
-               province_id AS ProvinceId,
-               allergies AS Allergies,
-               height AS Height,
-               weight AS Weight
-        FROM patients
-        WHERE patient_id = @id
-    ", new { id });
-
-    return patient is null
-        ? Results.NotFound(new { mensaje = "Paciente no encontrado" })
-        : Results.Ok(patient);
-});
-
-// GET /doctors — listar todos los medicos
-app.MapGet("/doctors", () =>
-{
-    using var connection = new SqliteConnection(connectionString);
-
-    var doctors = connection.Query<Doctor>(@"
-        SELECT doctor_id AS DoctorId,
-               first_name AS FirstName,
-               last_name AS LastName,
-               specialty AS Specialty
-        FROM doctors
-        ORDER BY last_name
-    ").ToList();
-
-    return Results.Ok(doctors);
-});
-
-app.Run();
-```
-
-### Paso 3: Probar los endpoints
-
-```bash
-dotnet run
-```
-
-Probar:
-- `http://localhost:5000/patients` — 258 pacientes.
-- `http://localhost:5000/patients/1` — paciente con ID 1.
-- `http://localhost:5000/patients/9999` — `{"mensaje":"Paciente no encontrado"}` con 404.
-- `http://localhost:5000/doctors` — 27 médicos.
-
----
-
-## Ejercicio independiente — TP-U2
-
-**Consigna del TP-U2 — SQLite y Dapper básico**
-
-Completar el proyecto iniciado en la práctica guiada agregando los siguientes endpoints en `Program.cs`:
-
-1. `GET /patients/by-name/{lastName}` — buscar pacientes por apellido usando LIKE (ej: `/patients/by-name/Smi` encuentra "Smith", "Smithers").
-2. `GET /patients/with-province` — devolver pacientes con nombre de provincia (JOIN + `PatientWithProvince`).
-3. `GET /doctors/by-specialty/{specialty}` — buscar médicos por especialidad con LIKE.
-4. `GET /doctors/{id:long}` — buscar médico por ID, devolver 404 si no existe.
-
-**Requisitos técnicos:**
-- Todos los endpoints deben usar Dapper y records posicionales.
-- Todas las consultas deben estar parametrizadas (ni una concatenación).
-- Los alias AS son obligatorios en todas las columnas.
-- Los records van después de `app.Run()`.
-- Los campos nulables deben declararse con `?`.
-
-**Entrega en GitHub:**
-```bash
-git init
+# Commit y push
 git add .
-git commit -m "tp-u2: consultas con Dapper y SQLite"
-git remote add origin <url-del-repo-grupal>
-git push -u origin main
+git commit -m "tp-u2: entrega tp u2 sqlite y dapper basico"
+git push
 ```
 
-(El proyecto debe estar dentro de la carpeta `tp-u2/` del repositorio grupal.)
+**Reglas de entrega:**
+- La carpeta `tp-u2/` debe estar en la rama `main` del repositorio del grupo.
+- El commit debe tener un mensaje en español, minúsculas después de los dos puntos, sin tildes.
+- El proyecto debe compilar y ejecutar sin errores.
+- Todos los endpoints deben devolver datos correctos contra `hospital.db`.
 
----
+## 5. Consolidación y cierre (20 min)
 
 ### Qué te llevás
 
-- SQLite es un archivo de base de datos que se consulta desde C#.
-- Dapper mapea automáticamente filas a objetos.
-- Los alias AS enlazan snake_case con PascalCase.
-- Los parámetros `@` con objetos anónimos evitan inyección SQL.
-- `LIKE` con `%` busca texto parcial.
+- SQLite guarda toda la base en un solo archivo y se conecta con `"Data Source=hospital.db"`.
+- Dapper mapea filas SQL a objetos C# con `Query<T>` y `QueryFirstOrDefault<T>`.
+- Los alias `AS` son obligatorios para que los nombres de columna coincidan con los del record.
+- Los tipos canónicos son: INTEGER → `long`, TEXT → `string`, nullable → `?`.
+- Las consultas son siempre parametrizadas con `@param` y `new { param }`.
+- `LIKE` con comodines `%` permite búsquedas parciales.
+- El TP-U2 se entrega en la carpeta `tp-u2/` del repositorio con commits y push.
 
 ### Lo que viene
 
-En el Encuentro 15, evaluación de la Unidad 2: defensa oral y prueba A/B. Después, en la Unidad 3, CRUD completo: crear, actualizar y borrar datos en la base usando POST, PUT y DELETE con Dapper.
+Encuentro 15: Evaluación de la Unidad 2 — entrega y defensa individual del TP-U2.
 
-## Errores comunes y trampas
+## 6. Actividad complementaria (80 min)
 
-| Error | Causa | Solución |
-|-------|-------|----------|
-| `InvalidOperationException` | Tipo incorrecto en el record (int en vez de long, DateTime en vez de string) | Usar `long` para INTEGER, `string` para TEXT |
-| `InvalidOperationException` por alias faltante | SELECT sin AS y Dapper no encuentra el constructor | Usar `SELECT patient_id AS PatientId, ...` |
-| CS8803: tipo antes del código | Record declarado antes de `app.Run()` | Mover los records después de `app.Run()` |
-| LIKE sin `%` | Busca coincidencia exacta en vez de parcial | `new { apellido = $"%{texto}%" }` |
-| Git: `remote origin already exists` | Ya hay un remote configurado | Usar `git remote set-url origin <url>` |
-| La base no se encuentra al hacer `dotnet run` | `hospital.db` no está junto al `.csproj` | Copiar el archivo a la raíz del proyecto |
+### Trabajo de TP-U2 y preparación para la evaluación
 
----
+En esta actividad los grupos trabajan en la finalización y entrega del TP-U2.
 
-## Reparto de tiempos (240 minutos)
+**Paso 1 — Finalizar el TP-U2 (40 min):**
+1. Completar todos los endpoints mínimos del TP-U2.
+2. Probar cada endpoint contra `hospital.db` y verificar que los datos sean correctos.
+3. Revisar que el proyecto compile sin errores ni advertencias.
+4. Verificar que los records usen los tipos canónicos (`long` para INTEGER, `string?` para nullable).
 
-| Bloque | Minutos |
-|--------|---------|
-| Apertura y motivación | 20 |
-| Desarrollo teórico-práctico | 120 |
-| Consolidación y cierre | 20 |
-| Actividad complementaria | 80 |
-| **Total** | **240** |
+**Paso 2 — Preparar la entrega (20 min):**
+1. Crear la carpeta `tp-u2/` en el repositorio del grupo.
+2. Copiar los archivos del proyecto a `tp-u2/`.
+3. Hacer `git add .`, `git commit` y `git push`.
+4. Verificar que el push llegó al remoto.
+
+**Paso 3 — Preparación para la defensa individual (20 min):**
+1. Cada alumno debe poder explicar en voz alta qué hace cada endpoint.
+2. Cada alumno debe poder explicar por qué se usa `long` y no `int` para los IDs.
+3. Cada alumno debe poder explicar por qué se usan alias `AS` en el SELECT.
+4. Cada alumno debe poder explicar la diferencia entre concatenar un valor en el SQL y usar un parámetro.
+
+## 7. Errores comunes y trampas
+
+| Error observable | Causa probable | Cómo intervenir |
+| --- | --- | --- |
+| El proyecto no compila | Falta `using Dapper;` o `using Microsoft.Data.Sqlite;`. | Verificar que los `using` están al inicio del archivo. |
+| `InvalidOperationException` al ejecutar un endpoint | El record usa `int` en vez de `long` para una columna INTEGER. | Indicar que SQLite INTEGER siempre devuelve `Int64` (long). |
+| El endpoint devuelve una lista vacía | `hospital.db` no está en la carpeta correcta del proyecto. | Verificar que `hospital.db` esté en la raíz del proyecto y que la cadena de conexión sea `"Data Source=hospital.db"`. |
+| CS8803 al compilar | El record está declarado antes de `app.Run()`. | Mover el record para que quede después de `app.Run();`. |
+| El commit no se hace | Falta `git add .` antes del commit. | Recordar la secuencia: `git add .` → `git commit -m "..."` → `git push`. |
+| El mensaje del commit tiene tildes o mayúsculas | No se siguió la convención del curso. | Indicar que los mensajes deben estar en minúsculas después de los dos puntos y sin tildes. |

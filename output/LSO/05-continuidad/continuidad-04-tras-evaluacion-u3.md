@@ -1,150 +1,141 @@
-# Continuidad pedagógica — Repaso tras evaluación de la Unidad 3
+# Continuidad pedagógica 04 — Tras evaluación de U3
 
-**Curso:** Minimal API con C# .NET 6
-**Momento de uso:** Tras la evaluación de la Unidad 3 (encuentro 26)
-**Duración teórica:** 240 minutos
-**Requisitos:** Computadora con SDK .NET 6, VS Code, terminal, conexión a Internet, archivo `hospital.db` copiado junto al `.csproj`.
-**Contenido repasado:** Unidades 1, 2 y 3 completas — fundamentos de C#, Minimal API GET, SQLite y Dapper (SELECT, JOIN, parámetros, LIKE), INSERT con POST, DELETE con MapDelete, UPDATE con MapPut, JOIN triple y CRUD completo.
+## Datos de referencia
+
+| Campo | Valor |
+|-------|-------|
+| Curso | Minimal API con C# .NET 6 |
+| Momento de uso | Tras la evaluación de U3 (encuentro 26) |
+| Duración teórica | 240 minutos (4 horas reloj) |
+| Requisitos | Computadora, VS Code, SDK .NET 6, terminal. Archivo `hospital.db` disponible. |
+
+## Objetivos de aprendizaje
+
+1. Repasar U1 y U2 como base para el trabajo con operaciones de escritura y modificación.
+2. Practicar las operaciones CRUD completas con Dapper: INSERT, DELETE, UPDATE parametrizados.
+3. Consolidar el uso de `MapPost`, `MapDelete`, `MapPut` y los códigos de respuesta HTTP (201, 200, 204, 404).
+4. Revisar la validación de existencia previa y el manejo de errores en operaciones de escritura.
+5. Practicar JOIN triple y consultas complejas que integren múltiples tablas.
+
+## Actividades puntuadas (sobre 100)
+
+### Actividad 1 — Repaso U1+U2 rápido (10 puntos / 20 minutos)
+
+**Consigna:** En la computadora, respondé las siguientes preguntas breves sin escribir código nuevo (solo recordá conceptos).
+
+a) ¿Qué tipos canónicos se usan para las columnas INTEGER y TEXT de SQLite? ¿Por qué no se usa `int` para las claves primarias?
+
+b) ¿Qué error ocurre si se omite el alias `AS` en un SELECT con Dapper?
+
+c) ¿Cuál es la diferencia entre `Results.Ok`, `Results.Created`, `Results.NotFound` y `Results.NoContent`?
+
+d) Escribí la sentencia SQL parametrizada para buscar pacientes cuya ciudad coincida con un patrón dado.
+
+**Puntos:** 10
 
 ---
 
-## Objetivos
+### Actividad 2 — INSERT/DELETE/UPDATE parametrizados (25 puntos / 55 minutos)
 
-- Implementar los cuatro verbos HTTP (GET, POST, PUT, DELETE) con Dapper sobre SQLite.
-- Ejecutar INSERT con `ExecuteScalar<long>` para obtener el ID generado.
-- Ejecutar DELETE con `Execute` y devolver `Results.NoContent`.
-- Ejecutar UPDATE con `Execute` y devolver `Results.NoContent` si se actualizó algo, o `Results.NotFound` si no existe.
-- Escribir un JOIN entre tres tablas (`patients`, `admissions`, `doctors`) con alias y parámetros.
-- Aplicar todas las convenciones del curso: `long` en PK, `string` en fechas, alias `AS`, consultas parametrizadas.
+**Consigna:** En la computadora, escribí los siguientes endpoints en un proyecto de Minimal API.
+
+a) `POST /patients` — recibe un paciente (sin ID) y lo inserta en la tabla `patients`. Devolvé `Results.Created` con la URL del nuevo recurso y el ID generado. Usá `ExecuteScalar<long>` para obtener el ID.
+
+b) `DELETE /patients/{id:long}` — elimina un paciente por ID. Si no existe, devolvé `Results.NotFound`. Si existe y se elimina, devolvé `Results.NoContent`.
+
+c) `PUT /patients/{id:long}` — actualiza los datos de un paciente existente. Si no existe, devolvé `Results.NotFound`. Si se actualiza correctamente, devolvé `Results.NoContent`.
+
+**Requisitos:**
+- Todas las consultas SQL deben ser parametrizadas.
+- Usá `Execute` para INSERT/DELETE/UPDATE.
+- Usá `ExecuteScalar<long>` para obtener el ID del INSERT.
+- Validá la existencia del paciente antes de DELETE y PUT.
+- Comentarios en español en cada paso.
+
+**Puntos:** 25
 
 ---
 
-## Actividades (100 puntos — 240 minutos)
+### Actividad 3 — MapPost/MapDelete/MapPut y códigos de respuesta (20 puntos / 45 minutos)
 
-### Actividad 1 — POST: INSERT con Dapper (20 puntos — 50 minutos)
+**Consigna:** En la computadora, completá las siguientes tareas.
 
-Escribí el código completo de un endpoint `POST /patients` que reciba en el cuerpo de la solicitud (`Body`) un objeto JSON con los siguientes campos: `firstName`, `lastName`, `gender`, `birthDate`, `city` (opcional) y `allergies` (opcional).
+a) Escribí el código C# para un endpoint `POST /doctors` que inserte un médico en la tabla `doctors`. La tabla tiene las columnas `first_name`, `last_name`, `specialty`. Devolvé `Results.Created` con la URL y el ID generado.
 
-El endpoint debe:
+b) Escribí el código C# para un endpoint `DELETE /doctors/{id:long}` que elimine un médico. Devolvé `Results.NotFound` si no existe, `Results.NoContent` si se eliminó correctamente.
 
-1. Validar que `firstName`, `lastName`, `gender` y `birthDate` no sean `null` ni estén vacíos. Si falta alguno, devolver `Results.BadRequest`.
-2. Insertar el nuevo paciente con `ExecuteScalar<long>`.
-3. Devolver `Results.Created` con la URL del nuevo recurso y los datos insertados.
+c) ¿Qué código HTTP se devuelve cuando un DELETE elimina exitosamente un recurso? ¿Y cuando el recurso no existía? ¿Por qué no se devuelve `200 OK` en el DELETE exitoso?
 
-Usá un record `PatientCreateRequest` para el *body* y reutilizá el `Patient` existente para la respuesta. Incluí el record posicional `Patient` si no está declarado.
+d) ¿Qué diferencia hay entre `Results.NoContent()` y `Results.Ok()` en un endpoint PUT? ¿Cuál es el semánticamente correcto?
 
-| Criterio | Puntaje |
-| --- | --- |
-| Validación de campos obligatorios con `Results.BadRequest` | 6 ptos. |
-| INSERT con `ExecuteScalar<long>` para obtener el nuevo ID | 6 ptos. |
-| Devolución `Results.Created` con URL (`$"/patients/{newId}"`) y datos | 5 ptos. |
-| Record de request correcto (tipos `string?` en opcionales) | 3 ptos. |
+**Puntos:** 20
 
-### Actividad 2 — DELETE: borrar un paciente (20 puntos — 50 minutos)
+---
 
-Escribí un endpoint `DELETE /patients/{id:long}` que:
+### Actividad 4 — Validación de existencia y manejo de errores (15 puntos / 40 minutos)
 
-1. Ejecute un DELETE sobre la tabla `patients` con `@id`.
-2. Si `Execute` devuelve 0 (no se borró nada, el paciente no existe), devolver `Results.NotFound`.
-3. Si se borró al menos una fila, devolver `Results.NoContent`.
+**Consigna:** En la computadora, escribí un endpoint `POST /admissions` que cree una admisión nueva. La tabla `admissions` tiene las columnas `patient_id`, `doctor_id`, `admission_date`, `discharge_date`.
 
-| Criterio | Puntaje |
-| --- | --- |
-| Ruta `{id:long}` y parámetro `long id` | 5 ptos. |
-| DELETE parametrizado con `Execute` | 5 ptos. |
-| Comprobación del valor de retorno de `Execute` (filas afectadas) | 5 ptos. |
-| `Results.NotFound` vs. `Results.NoContent` correctos | 5 ptos. |
+a) Antes de insertar, validá que el `patient_id` exista en la tabla `patients` y que el `doctor_id` exista en la tabla `doctors`. Si alguno no existe, devolvé `Results.BadRequest` con un mensaje en español que indique cuál no se encontró.
 
-### Actividad 3 — PUT: actualizar un paciente (20 puntos — 50 minutos)
+b) Si ambos existen, insertá la admisión y devolvé `Results.Created`.
 
-Escribí un endpoint `PUT /patients/{id:long}` que reciba en el cuerpo un objeto JSON con los mismos campos que en la Actividad 1.
+c) ¿Qué problema podrías tener si dos grupos insertan admisiones para el mismo paciente al mismo tiempo? ¿Cómo lo mitigás? (Solo respuesta conceptual, sin código.)
 
-El endpoint debe:
+**Puntos:** 15
 
-1. Verificar que el paciente existe con `QueryFirstOrDefault<Patient>`.
-2. Si no existe, devolver `Results.NotFound`.
-3. Si existe, ejecutar un UPDATE con `Execute` para todos los campos.
-4. Devolver `Results.NoContent`.
+---
 
-| Criterio | Puntaje |
-| --- | --- |
-| Verificación de existencia con `QueryFirstOrDefault` | 6 ptos. |
-| UPDATE parametrizado con `Execute` (todos los campos) | 6 ptos. |
-| `Results.NotFound` y `Results.NoContent` correctos | 4 ptos. |
-| Reutilización del record `PatientCreateRequest` o similar para el body | 4 ptos. |
+### Actividad 5 — JOIN triple y consultas complejas (20 puntos / 50 minutos)
 
-### Actividad 4 — JOIN triple con filtro (20 puntos — 50 minutos)
+**Consigna:** En la computadora, escribí y ejecutá las siguientes consultas contra `hospital.db`.
 
-La tabla `admissions` tiene las columnas: `admission_id`, `patient_id`, `admission_date`, `discharge_date`, `diagnosis` y `doctor_id`.
+a) Escribí un SELECT que obtenga el nombre completo del paciente, el nombre del médico y la fecha de admisión para todas las admisiones. Usá JOIN triple (admissions + patients + doctors). Usá alias `AS` para todos los campos.
 
-Escribí un endpoint `GET /admissions` que devuelva todas las admisiones con el nombre del paciente y el nombre del médico, combinando las tres tablas con JOIN.
+b) Modificá la consulta anterior para que retorne solo las admisiones donde el médico tenga specialty = 'Cardiología'.
 
-El resultado debe ser una lista de objetos con esta estructura:
+c) Escribí una consulta que cuente cuántas admisiones hay por médico, mostrando el nombre del médico y el conteo. Ordená por cantidad descendente.
 
-```json
-[
-  {
-    "admissionId": 1,
-    "patientName": "James Smith",
-    "doctorName": "William Johnson",
-    "diagnosis": "Allergy",
-    "admissionDate": "2024-01-15"
-  }
-]
-```
+d) ¿Qué pasa si un paciente no tiene admisiones en la consulta del inciso a)? Se pierde de los resultados? Explicá qué tipo de JOIN usarías para incluirlo y por qué.
 
-Incluí el record `AdmissionDetail` necesario para el mapeo.
+**Puntos:** 20
 
-| Criterio | Puntaje |
-| --- | --- |
-| JOIN entre 3 tablas (admissions → patients, admissions → doctors) | 8 ptos. |
-| Alias AS para todas las columnas del SELECT | 5 ptos. |
-| Record `AdmissionDetail` con tipos correctos | 4 ptos. |
-| Devolución con `Results.Ok` | 3 ptos. |
+---
 
-### Actividad 5 — Repaso integrador U1+U2 (20 puntos — 40 minutos)
+### Actividad 6 — Integración final: CRUD completo en un endpoint (10 puntos / 30 minutos)
 
-Sin ejecutar en la computadora, escribí en tu hoja el código de un endpoint `GET /doctors/{id:long}/summary` que devuelva un resumen de un médico:
+**Consigna:** En la computadora, creá un proyecto de Minimal API completo con un solo archivo `Program.cs` que exponga los siguientes endpoints:
 
-1. Obtenga el médico por ID desde la tabla `doctors`.
-2. Obtenga la cantidad de admisiones a su cargo desde la tabla `admissions` (COUNT).
-3. Devuelva:
+a) `GET /patients` — lista completa.
+b) `GET /patients/{id:long}` — uno por ID o 404.
+c) `POST /patients` — alta con `Results.Created`.
+d) `PUT /patients/{id:long}` — actualización o 404.
+e) `DELETE /patients/{id:long}` — baja o 404.
 
-```json
-{
-  "doctorId": 3,
-  "fullName": "William Johnson",
-  "specialty": "Cardiology",
-  "totalAdmissions": 12
-}
-```
+**Requisitos:**
+- Un solo archivo `Program.cs`.
+- Record `Patient` después de `app.Run()`.
+- Todos los SQL parametrizados con alias `AS`.
+- Códigos de respuesta correctos (200, 201, 204, 404).
+- Validación de existencia en PUT y DELETE.
+- Comentarios en español.
 
-Si el médico no existe, devolver `Results.NotFound`.
-
-| Criterio | Puntaje |
-| --- | --- |
-| Consulta del médico con `QueryFirstOrDefault` | 6 ptos. |
-| Consulta de COUNT con `ExecuteScalar<long>` | 6 ptos. |
-| Objeto de respuesta con las cuatro propiedades | 4 ptos. |
-| Manejo de médico inexistente con `Results.NotFound` | 4 ptos. |
+**Puntos:** 10
 
 ---
 
 ## Autoevaluación para el alumno
 
-| Afirmación | Lo logré | Lo logré parcialmente | No lo logré |
-| --- | --- | --- | --- |
-| Implemento POST con `ExecuteScalar<long>` y `Results.Created`. | ☐ | ☐ | ☐ |
-| Implemento DELETE con `Execute` y `Results.NoContent`. | ☐ | ☐ | ☐ |
-| Implemento PUT con verificación de existencia y `Results.NoContent`. | ☐ | ☐ | ☐ |
-| Escribo un JOIN entre tres tablas con alias. | ☐ | ☐ | ☐ |
-| Uso `ExecuteScalar<long>` para COUNT. | ☐ | ☐ | ☐ |
-| Aplico las convenciones del curso (long en PK, alias AS, parámetros @). | ☐ | ☐ | ☐ |
+Antes de la próxima clase, respondé con honestidad las siguientes preguntas. No hay puntos en juego; es una herramienta para que identifiques qué repasar.
 
-**Tiempo real que me llevó:** ________ minutos.
+- ¿Puedo escribir un INSERT parametrizado con `ExecuteScalar<long>` para obtener el ID generado?
+- ¿Sé validar la existencia de un recurso antes de DELETE o UPDATE?
+- ¿Puedo construir un JOIN triple que integre tres tablas con alias `AS`?
+- ¿Entiendo la diferencia semántica entre los códigos 200, 201, 204 y 404?
+- ¿Sé manejar errores de validación con `Results.BadRequest`?
 
----
+Si respondiste "no" a alguna de estas preguntas, repasá la actividad correspondiente antes del próximo encuentro.
 
-## Nota académica obligatoria
+## Nota de registro académico
 
-La resolución de estas actividades se realiza en forma habitual, por lo general en grupo. Las tareas de programación requieren el uso de la computadora. La presentación es **individual y manuscrita**, al inicio de la próxima clase, y constituye una actividad más de la asignatura que forma parte del proceso de evaluación.
+la resolución se realiza en forma habitual (por lo general, en grupo); las tareas de programación requieren el uso de la computadora; la presentación es individual y manuscrita, al inicio de la próxima clase, y constituye una actividad más de la asignatura que forma parte del proceso de evaluación.

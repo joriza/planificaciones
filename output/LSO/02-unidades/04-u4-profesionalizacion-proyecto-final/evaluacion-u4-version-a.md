@@ -1,80 +1,69 @@
-# Evaluación U4 — Versión A: Proyecto final sobre pacientes
+# Evaluación de la Unidad 4 — Encuentro 32 — Versión A
 
-## Metadatos de versión
+> Dominio de esta versión: doctors/admissions (dominio u2-A). Duración: 90 minutos. Puntaje total: 100 puntos. Resolución individual, con computadora, sin celular. Las condiciones completas están en `evaluacion-u4.md`.
 
-| Campo | Valor |
-|---|---|
-| Versión | A |
-| Versiones equivalentes | B (Proyecto final sobre doctores) |
-| Dominio de datos | Pacientes (principal), doctores como segunda tabla |
-| Rama feature de ejemplo | `feature/endpoint-pacientes-provincia` |
-| Proyecto base | `trabajo-final/` |
+## Antes de empezar
 
-## Consigna
+- Realizar un ejercicio breve de profesionalización sobre flujo de ramas, PR y main protegida usando el dominio de doctores/admissions de hospital.db.
+- Resolver la prueba en un único archivo `Program.cs` si se requiere código.
+- Usar las convenciones del curso: tipos canónicos, alias `AS`, consultas parametrizadas, `Results.*`.
+- No se permite concatenar datos al SQL.
+- El docente provee el esqueleto del ejercicio de profesionalización; el alumno completa las operaciones.
+- Al terminar, detener la aplicación con `Ctrl+C` y dejar el proyecto en estado limpio.
 
-Construir el trabajo final integrador del curso: una API completa sobre la base `hospital.db` con CRUD sobre pacientes, endpoints de lectura con JOIN, flujo Git profesional (issues, ramas, PR, main protegida) y README profesional. La defensa individual se realiza en el encuentro 32.
+## Objetivos de la prueba
 
-### Endpoints requeridos
+1. Demostrar el flujo profesional de ramas por feature, PR revisada y main protegida.
+2. Demostrar la API final funcionando con operaciones CRUD completas.
+3. Demostrar que el README de portada contiene la información requerida.
+4. Demostrar que los issues están creados y vinculados a las PR.
 
-| Método | Ruta | Comportamiento |
-|---|---|---|
-| GET | `/patients` | Lista todos los pacientes ordenados. |
-| GET | `/patients/{id:long}` | Paciente por ID; 404 si no existe. |
-| GET | `/patients/with-province` | Pacientes con nombre de provincia (JOIN). |
-| GET | `/patients/count-by-province` | Conteo de pacientes por provincia (LEFT JOIN + GROUP BY). |
-| POST | `/patients` | Crear paciente. Validar `FirstName`. 201. |
-| PUT | `/patients/{id:long}` | Actualizar paciente. 204 o 404. |
-| DELETE | `/patients/{id:long}` | Eliminar paciente. 204 o 404. |
-| GET | `/doctors/{id:long}` | Doctor por ID; 404 si no existe. |
+## Material provisto — Esqueleto del ejercicio de profesionalización
 
-### Records necesarios (al final de `Program.cs`)
+El docente provee un repositorio pre-configurado con las siguientes condiciones:
+- Rama `main` protegida (sin permisos de push directo).
+- Un issue abierto: "Implementar endpoint GET /doctors".
+- El alumno debe crear una rama por feature, resolver el issue, abrir una PR, y hacer merge a `main` siguiendo el flujo profesional.
 
-```csharp
-record PatientInput(string FirstName, string LastName, string Gender,
-                    string BirthDate, string? City, string ProvinceId,
-                    string? Allergies, long? Height, long? Weight);
+## Parte 1 — Flujo de ramas y PR (40 puntos)
 
-record Patient(long PatientId, string FirstName, string LastName, string Gender,
-               string BirthDate, string? City, string ProvinceId, string? Allergies,
-               long? Height, long? Weight);
+| Ítem | Consigna | Puntos |
+| --- | --- | --- |
+| 1.1 | Crear una rama por feature llamada `feature/get-doctors` partiendo de `main`. | 10 |
+| 1.2 | Resolver el issue "Implementar endpoint GET /doctors" en la rama de feature. | 10 |
+| 1.3 | Abrir una PR desde `feature/get-doctors` a `main` con descripción clara del cambio. | 10 |
+| 1.4 | Realizar una revisión de la PR (al menos un comentario de revisión). | 10 |
 
-record PatientWithProvince(long PatientId, string FirstName, string LastName, string Gender,
-                           string BirthDate, string? City, string ProvinceName, string? Allergies,
-                           long? Height, long? Weight);
+## Parte 2 — Protección de main (25 puntos)
 
-record Doctor(long DoctorId, string FirstName, string LastName, string Specialty);
-```
+| Ítem | Consigna | Puntos |
+| --- | --- | --- |
+| 2.1 | Configurar la protección de la rama `main` para requerir al menos 1 revisión de PR antes del merge. | 15 |
+| 2.2 | Demostrar que no es posible hacer push directo a `main`. | 10 |
 
-### Flujo Git profesional (obligatorio para esta unidad)
+## Parte 3 — README de portada (20 puntos)
 
-1. Crear la carpeta `trabajo-final/` al inicio de la U4.
-2. Crear issues en GitHub para cada endpoint o grupo de endpoints.
-3. Trabajar en ramas `feature/nombre` (una por issue).
-4. Abrir pull requests y asignar a otro integrante para revisión.
-5. Mergear cada PR a `main` después de revisión.
-6. Activar branch protection en `main` (Settings → Branches → Add rule: `main`, require PR).
-7. Mantener `.gitignore` y `hospital.db` junto al `.csproj`.
+| Ítem | Consigna | Puntos |
+| --- | --- | --- |
+| 3.1 | Redactar un README de portada que incluya: título del proyecto, descripción breve, instrucciones de instalación, uso de la API (endpoints principales), y convenciones del curso. | 20 |
 
-### README.md
+## Parte 4 — Ítems conceptuales (15 puntos)
 
-Debe incluir:
-- Nombre del proyecto y descripción
-- Requisitos (.NET 6 SDK, paquetes NuGet)
-- Instrucciones de instalación (`dotnet run`)
-- Estructura del repositorio
-- Tecnologías (.NET 6, Dapper, SQLite)
-- Integrantes del grupo
+| Ítem | Pregunta | Puntos |
+| --- | --- | --- |
+| 4.1 | ¿Por qué se protege la rama `main`? (Respuesta: para evitar pushes directos que puedan romper la rama principal; toda changes debe pasar por revisión de PR.) | 8 |
+| 4.2 | ¿Qué diferencia hay entre una rama por feature y trabajar directamente en `main`? (Respuesta: las ramas por feature aislán los cambios, permiten revisión, y facilitan la trazabilidad de cada mejora.) | 7 |
 
-### Puntaje
+## Batería de verificación: salida esperada de cada prueba
 
-100 puntos según la rúbrica de la evaluación maestra de U4.
+| Prueba | Pedido | Salida esperada |
+| --- | --- | --- |
+| Verificar rama `feature/get-doctors` | Rama creada desde `main` | Rama existente en el repositorio |
+| Verificar PR abierta | PR con descripción clara | PR visible en GitHub con label y descripción |
+| Verificar protección de `main` | Al menos 1 revisión requerida | Configuración de protección activa en GitHub |
+| Verificar README | README con secciones requeridas | Archivo README.md con título, descripción, instalación, uso |
+| Verificar issue vinculado | Issue creado y referenciado en PR | Issue existente y mencionado en la descripción de la PR |
 
-## Criterios de corrección específicos
+## Al terminar
 
-| Criterio | Esperado |
-|---|---|
-| Branch protection en main | Activa en GitHub Settings. Sin ella, descontar 5 puntos. |
-| Al menos 2 PR mergeados | Debe haber evidencia en el historial de PR. |
-| Cada PR con revisión | Comentario o approval de otro integrante. |
-| README completo | Debe incluir los 5 elementos de la rúbrica. |
-| Defensa individual | 20 puntos aparte; si es insatisfactoria, no aprueba aunque tenga 100 en entrega. |
+Dejar el repositorio en estado limpio con la PR mergeada a `main`. No hacer push de cambios adicionales después del merge. El docente verificará el flujo Git y la API durante la defensa.
