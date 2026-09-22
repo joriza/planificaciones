@@ -69,6 +69,8 @@ $baseCmd = 'pandoc'
 $cssPorDefecto = Join-Path $raiz 'input\plantillas\print.css'
 $rutaCss = if ($Css -ne '') { $Css } elseif (Test-Path -LiteralPath $cssPorDefecto) { $cssPorDefecto } else { '' }
 $cssArg = if ($rutaCss -ne '') { @('--css', (Resolve-Path -LiteralPath $rutaCss).Path) } else { @() }
+$luaFilterRuta = Join-Path $raiz 'tools\pdf-numerar-lineas.lua'
+$luaFilterArg = if (Test-Path -LiteralPath $luaFilterRuta) { @('--lua-filter', $luaFilterRuta) } else { @() }
 $engineArg = @('--pdf-engine', $pdfEngine)
 
 # Margenes para wkhtmltopdf: simetricos 15mm/15mm (decision +det41 del docente).
@@ -101,7 +103,7 @@ function Invoke-Pandoc([string[]]$inputFiles, [string]$outFile) {
     '--pdf-engine-opt=4',
     '--pdf-engine-opt=--footer-line'
   ) } else { @() }
-  $pandocArgs = $absInputs + $marginOpts + $headerFooterArg + @('-f', 'markdown', '-t', 'pdf') + $cssArg + $engineArg + @('-o', $outPath)
+  $pandocArgs = $absInputs + $marginOpts + $headerFooterArg + @('-f', 'markdown', '-t', 'pdf') + $cssArg + $luaFilterArg + $engineArg + @('-o', $outPath)
   Write-Output "Generando: $outFile ($($absInputs.Count) archivos)"
   & $baseCmd @pandocArgs 2>$null
   if ($LASTEXITCODE -eq 0) {
