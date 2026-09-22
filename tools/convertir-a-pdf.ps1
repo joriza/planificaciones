@@ -19,11 +19,12 @@ param(
   [string]$Materia = '',
   [string]$Css = '',
   [switch]$Combinado,
+  [switch]$Force,
   [string]$Unidad = '',
   [string]$Salida = ''
 )
 
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Continue'
 $raiz = Split-Path -Parent $PSScriptRoot
 $rutaMateria = Join-Path $raiz "output\$Materia"
 
@@ -66,6 +67,10 @@ $engineArg = @('--pdf-engine', $pdfEngine)
 function Invoke-Pandoc([string[]]$inputFiles, [string]$outFile) {
   $absInputs = $inputFiles | ForEach-Object { (Resolve-Path -LiteralPath $_).Path }
   $outPath = Join-Path $Salida $outFile
+  if (-not $Force -and (Test-Path -LiteralPath $outPath)) {
+    Write-Output "  Omitido (ya existe, use -Force para sobrescribir): $outFile"
+    return
+  }
   $pandocArgs = $absInputs + @('-f', 'markdown', '-t', 'pdf') + $cssArg + $engineArg + @('-o', $outPath)
   Write-Output "Generando: $outFile ($($absInputs.Count) archivos)"
   & $baseCmd @pandocArgs 2>$null
