@@ -28,3 +28,4 @@ Incorporar al canon dos cambios decididos por el docente: (1) una parada adicion
 - (2026-09-21) T1-T3 aplicados por writers en paralelo (superficies disjuntas); diffs verificados por el orquestador: 20 inserciones / 6 borrados en 3 archivos, textos exactos sin reformulación.
 - (2026-09-21) T4: `validar-curso-data.ps1 -Materia input/materias/LAP` → OK exit 0 sin aviso; con fake `output/LAP/curso-data.json` → «AVISO: curso-data duplicado en output\LAP\curso-data.json (vale el de input; considere eliminar el duplicado).» + OK exit 0; cleanup verificado.
 - Incidente: worker del validador (task mubx3uar-5-t6mw) falló sin reporte final tras aplicar el cambio y limpiar; verificación restante completada inline por el orquestador.
+- Work-unit commit (2026-09-21): `c7c2001` — `feat(canon): add post-Fase-1 stop and duplicated curso-data rule` en `regen/minimal-api-csharp` (4 archivos, +50/−6), autorizado por el docente. Notas del docente registradas aparte en `29c5804`.

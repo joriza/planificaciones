@@ -26,6 +26,7 @@ Ejecutar `prompt-plantilla-planificacion.md` para la materia LAP (Programación 
 - T2 (2026-09-21): `validar-curso-data.ps1 -Materia input/materias/LAP` → OK (20 encuentros, slots completos, celdas ≤35). Smoke render a temp (`-HorasPorEncuentro 2`): 16 filas anual, 36/72 libros, tramos genéricos + unidades compuestas desde el JSON.
 - T3 (2026-09-21): spike 3 corridas Python 3.11 (conversiones/ValueError, / vs //, mutabilidad str/tuple, append/sort→None, sorted, index, pop, slicing tolerante, KeyError/.get, split/strip/join/replace, f-strings, ámbito/NameError, return None, `__name__`). Ejemplo canónico de la hoja compilado y ejecutado (ruta feliz + reintento). Hoja: 9 secciones, sin BD (secciones 4/5/6 adaptadas a tipos canónicos, E/S en memoria y validación). Digest Python junto a la materia.
 - T4 (2026-09-21): FRENO del modo materia nueva aplicado tras el curso-data validado. Pendientes de decisión: escala +5 min (propuesta: mayor-resto en Convert-EscalaMinutos), tabla-dominio LAP en Fase 3, work-unit commit sin autorización explícita aún.
+- Work-unit commit (2026-09-21): `440c1ff` — `feat(LAP): author Fase 0 artifacts and genericize shared phrase bank` en `regen/minimal-api-csharp` (9 archivos, +749/−50), autorizado por el docente («comitee todo lo pendiente»).
 
 ## Pendientes y deriva registrada
 
