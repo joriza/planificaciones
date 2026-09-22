@@ -480,14 +480,11 @@ Se aceptan sugerencias y consulte todo lo que considere antes de continuar.
 consulta de openrouter. Por que en el listado de modelos disponible no tengo modelos deepseek flash con opcion floor, para los workers me viene bien.
 
 ## +det32
-
 Consulta. Pernsando en una ejecucion con menor necesidad de revision, pero todavia en estado de pruebas.
 Si tiene json y la carpeta de salida no existe o está vacía, se ha realizado alguna revision, pero todavía materia nueva. Seria bueno incorporar otra detencion en un punto intermedio estratégico. Realice una propuesta para este cambio.
 
+
 ## +det33
-
-Ejecutar el prompt plantilla para la materia **LAP**
-
 Necesito realizar un plan para incluir estos cambios / modificaciones.
 Si encuentra ambiguedades en el proceso, si son cosas menores decida y reaice sino consulte las opociones disponibles y guarde en memoria para revision posterior a la ejecucion.
 Evalue la posibilidad de una parada adicional en un punto estrategico antes de continuar con el diseño del grueso de los documentos solo para cuando es una materia nueva que ademas se ha generado curso-data.json en la misma ejecucion.
@@ -495,4 +492,24 @@ Realice todas las actividades posibles en sub agentes, para preservar el context
 Si encuentra archivo curso-data.json en la carpeta input y en la carpeta output para la misma materia es un error mio involuntario, vale el del plan de trabajo que es la carpeta input.
 Me gusta mucho todas las aclaraciones y consultas que me hizo al momento de realizar la parada luego de crear el archivo curso-data.json.
 Antes de comenzar Pregunte sobre todo lo que necesite
+
+## +det34
+Ejecutar el prompt plantilla para la materia **LAP**
+
+## +det35 crecion de pdf
+
+Realizar un plan para incorporar la conversion de todos los markdown de una materia de la carpeta output por medio de un programa determinista.
+El archivo d:\Desarrollo\z-material-didactico\README.md describe este proceso ya realizado para otro proyecto. Lo describe en la seccion ## 10. Conversión a PDF.
+Evalue la posibilidad de implementarlo en este proyecto y evalue tambien la posibilidad de mejorarlo.
+Evalue utilizar la misma plantilla css para los estilos del pdf resultante. Evalue tambien una opcion mejor.
+Esta sería una accion manual por parte del docente no forma parte del flujo de creacion de material didactico.
+Esta funcionalidad debe quedar reflejada y explicada en el readme del proyecto.
+
+## +det 36
+Tiene algun error de la ejecucion que ha solucionado y valga la pena mensionar?                                                                                                      │
+Tiene errores de ejecucion pendientes de correjir en el flujo?                                                                                                                       │
+3. si escala de a 5min la unidad minima                                                                                                                                              │
+5. Pushee todo lo pendiente                                                                                                                                                          │
+4. si arme un plan 
+
 

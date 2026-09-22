@@ -82,14 +82,52 @@ try {
 function Convert-EscalaMinutos([string]$texto, [double]$factor) {
   $sb = New-Object System.Text.StringBuilder
   $pos = 0
+  # Colectar todas las cajas del texto
+  $all_matches = New-Object System.Collections.Generic.List[object]
   foreach ($m in [regex]::Matches($texto, '\((\d+) min\)|\b(\d+) minutos\b|\b(\d+) min\b')) {
+    $val = if ($m.Groups[1].Success) { [int]$m.Groups[1].Value } elseif ($m.Groups[2].Success) { [int]$m.Groups[2].Value } else { [int]$m.Groups[3].Value }
+    $kind = if ($m.Groups[1].Success) { 'caja' } elseif ($m.Groups[2].Success) { 'minutos' } else { 'min' }
+    $all_matches.Add([PSCustomObject]@{ m = $m; orig_val = $val; kind = $kind; exact = $val * $factor; rounded = 0; diff = 0 })
+  }
+  if ($all_matches.Count -eq 0) { return $texto }
+  # Redondear cada uno a múltiplo de 5 (AwayFromZero, mínimo 5) y calcular exacto y suma
+  [double]$total_exact = 0
+  foreach ($item in $all_matches) {
+    $total_exact += $item.exact
+    $item.rounded = [int][Math]::Max(5, [Math]::Round($item.exact / 5, [MidpointRounding]::AwayFromZero) * 5)
+    $item.diff = $item.rounded - $item.exact
+  }
+  $rounded_sum = ($all_matches | Measure-Object -Property rounded -Sum).Sum
+  $desfase = [int][Math]::Sign($total_exact - $rounded_sum) * ([int][Math]::Abs($total_exact - $rounded_sum))
+  # Si hay desfase, distribuirlo a las cajas con mayor resto absoluto
+  $remaining = [int][Math]::Abs($desfase)
+  $step = [Math]::Sign($desfase) * 5
+  if ($remaining -gt 0 -and $remaining % 5 -eq 0) {
+    $sorted_indices = 0..($all_matches.Count-1) | Sort-Object { [Math]::Abs($all_matches[$_].diff) } -Descending
+    $idx_work = 0
+    while ($remaining -gt 0 -and $idx_work -lt $sorted_indices.Count) {
+      $i = $sorted_indices[$idx_work]
+      $new_val = $all_matches[$i].rounded + $step
+      if ($new_val -ge 5) {
+        $all_matches[$i].rounded = $new_val
+        $remaining -= 5
+      }
+      $idx_work++
+    }
+  }
+  # Reconstruir el texto con los valores redondeados ajustados
+  for ($i = 0; $i -lt $all_matches.Count; $i++) {
+    $item = $all_matches[$i]
+    $m = $item.m
     [void]$sb.Append($texto.Substring($pos, $m.Index - $pos))
-    $esCaja = $m.Groups[1].Success
-    $esMinutos = $m.Groups[2].Success
-    $valor = if ($esCaja) { $m.Groups[1].Value } elseif ($esMinutos) { $m.Groups[2].Value } else { $m.Groups[3].Value }
-    $escalado = [int]([Math]::Round(([double]$valor) * $factor / 5, [MidpointRounding]::AwayFromZero) * 5)
-    if ($escalado -lt 5) { $escalado = 5 }
-    if ($esCaja) { [void]$sb.Append('(' + $escalado + ' min)') } elseif ($esMinutos) { [void]$sb.Append([string]$escalado + ' minutos') } else { [void]$sb.Append([string]$escalado + ' min') }
+    $escalado = $item.rounded
+    if ($m.Groups[1].Success) {
+      [void]$sb.Append('(' + $escalado + ' min)')
+    } elseif ($m.Groups[2].Success) {
+      [void]$sb.Append([string]$escalado + ' minutos')
+    } else {
+      [void]$sb.Append([string]$escalado + ' min')
+    }
     $pos = $m.Index + $m.Length
   }
   [void]$sb.Append($texto.Substring($pos))
