@@ -127,6 +127,17 @@ pre code {
     background: none;
 }
 
+/* Numeros de linea (clase numberLines de pandoc): color fijo verde de comentario
+   de editor, alineados a la derecha en el gutero; fuera del resaltado de sintaxis. */
+.sourceCode code a::before {
+    content: attr(aria-label);
+    display: inline-block;
+    width: 1.8em;
+    text-align: right;
+    margin-right: 0.6em;
+    color: #6a9955;
+}
+
 /* ---- Listas ---- */
 ul, ol {
     margin: 0.4em 0;
