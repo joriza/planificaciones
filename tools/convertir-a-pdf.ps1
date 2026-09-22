@@ -64,7 +64,7 @@ $baseCmd = 'pandoc'
 $cssArg = if ($Css -ne '') { @('--css', (Resolve-Path -LiteralPath $Css).Path) } else { @() }
 $engineArg = @('--pdf-engine', $pdfEngine)
 
-$marginOpts = if ($pdfEngine -eq 'wkhtmltopdf') { @('--pdf-engine-opt=--margin-top', '--pdf-engine-opt=8mm', '--pdf-engine-opt=--margin-bottom', '--pdf-engine-opt=8mm', '--pdf-engine-opt=--margin-left', '--pdf-engine-opt=8mm', '--pdf-engine-opt=--margin-right', '--pdf-engine-opt=8mm') } else { @() }
+$marginOpts = if ($pdfEngine -eq 'wkhtmltopdf') { @('-V', 'margin-top=9', '-V', 'margin-bottom=10', '-V', 'margin-left=8', '-V', 'margin-right=8') } else { @() }
 
 function Invoke-Pandoc([string[]]$inputFiles, [string]$outFile) {
   $absInputs = $inputFiles | ForEach-Object { (Resolve-Path -LiteralPath $_).Path }
