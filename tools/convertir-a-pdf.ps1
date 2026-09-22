@@ -10,7 +10,7 @@
 #
 # Parametros:
 #   -Materia   (obligatorio) nombre de la carpeta en output/ (ej. LAP, LSO).
-#   -Css       ruta a una plantilla CSS opcional para el PDF.
+#   -Css       ruta a una plantilla CSS (por defecto: input/plantillas/print.css).
 #   -Combinado  (switch) genera UN PDF por subcarpeta (unidad, encuadre, etc.) en vez de uno por archivo.
 #   -Unidad    (opcional, solo con -Combinado) limita la conversión a una unidad numerada (1, 2, 3, 4, etc.).
 #   -Salida    carpeta destino (por defecto: output/<Materia>/pdf/).
@@ -61,10 +61,17 @@ if (-not (Test-Path -LiteralPath $Salida)) { New-Item -ItemType Directory -Path 
 
 # Armar comando base de pandoc
 $baseCmd = 'pandoc'
-$cssArg = if ($Css -ne '') { @('--css', (Resolve-Path -LiteralPath $Css).Path) } else { @() }
+# CSS por defecto: plantilla del repo, salvo que se pase -Css explicito
+$cssPorDefecto = Join-Path $raiz 'input\plantillas\print.css'
+$rutaCss = if ($Css -ne '') { $Css } elseif (Test-Path -LiteralPath $cssPorDefecto) { $cssPorDefecto } else { '' }
+$cssArg = if ($rutaCss -ne '') { @('--css', (Resolve-Path -LiteralPath $rutaCss).Path) } else { @() }
 $engineArg = @('--pdf-engine', $pdfEngine)
 
-$marginOpts = if ($pdfEngine -eq 'wkhtmltopdf') { @('-V', 'margin-top=20', '-V', 'margin-bottom=20', '-V', 'margin-left=10', '-V', 'margin-right=10') } else { @() }
+# Margenes para wkhtmltopdf: simetricos 15mm/15mm (decision +det41 del docente).
+# wkhtmltopdf no soporta @page :left/:right (sin espejo posible); 15mm a cada lado
+# deja lugar de lomo tanto a una cara como a doble. Los markdown nunca llevan LaTeX:
+# el docente los renderiza con una herramienta que se rompe con LaTeX.
+$marginOpts = if ($pdfEngine -eq 'wkhtmltopdf') { @('-V', 'margin-top=20', '-V', 'margin-bottom=20', '-V', 'margin-left=15', '-V', 'margin-right=15') } else { @() }
 
 function Invoke-Pandoc([string[]]$inputFiles, [string]$outFile) {
   $absInputs = $inputFiles | ForEach-Object { (Resolve-Path -LiteralPath $_).Path }
