@@ -28,17 +28,17 @@
     "eje": 6,
     "ejeNombre": "Intensificación y Fortalecimiento",
     "caracter": "Procedimental",
-    "tema": "Nivelación: web y JSON",
-    "act1linea": "Petición y respuesta, JSON",
+    "tema": "Nivelación: web y entregas",
+    "act1linea": "URL, navegador y entregas",
     "act2lineas": [
-      "URL, petición y respuesta",
-      "HTTP informal, lectura JSON"
+      "URL, navegador y plataforma",
+      "web de entregas del curso"
     ]
   },
   {
     "n": 9,
     "eje": 1,
-    "ejeNombre": "Fundamentos de Minimal API",
+    "ejeNombre": "Evaluación de unidad",
     "caracter": "Procedimental",
     "tema": "Evaluación de la Unidad 1",
     "act1linea": "Defensa oral y prueba A/B",
@@ -50,7 +50,7 @@
   {
     "n": 15,
     "eje": 2,
-    "ejeNombre": "Acceso a datos con Dapper",
+    "ejeNombre": "Evaluación de unidad",
     "caracter": "Procedimental",
     "tema": "Evaluación de la Unidad 2",
     "act1linea": "Defensa oral y prueba A/B",
@@ -122,7 +122,7 @@
   {
     "n": 26,
     "eje": 3,
-    "ejeNombre": "Integración y publicación",
+    "ejeNombre": "Evaluación de unidad",
     "caracter": "Procedimental",
     "tema": "Evaluación de la Unidad 3",
     "act1linea": "Defensa oral y prueba A/B",

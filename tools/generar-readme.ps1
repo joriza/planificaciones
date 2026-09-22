@@ -193,7 +193,15 @@ foreach ($u in @('u1', 'u2', 'u3', 'u4')) {
   $slotsGlobales["tp.$u"] = [string]$p.Value
   $slotsGlobales["unidad.$u"] = Get-DenominacionUnidad $u
 }
-$slotsGlobales['cargaHoraria'] = '36 encuentros de 4 horas reloj (240 minutos teóricos por encuentro): 144 horas anuales, 18 encuentros por cuatrimestre'
+$propHorasEnc = $data.slots.PSObject.Properties['horasPorEncuentro']
+if ($null -ne $propHorasEnc -and $null -ne $propHorasEnc.Value -and [int]$propHorasEnc.Value -gt 0 -and [int]$propHorasEnc.Value -ne 4) {
+  $hEnc = [int]$propHorasEnc.Value
+  $minEnc = $hEnc * 60
+  $horasAnuales = 36 * $hEnc
+  $slotsGlobales['cargaHoraria'] = "36 encuentros de $hEnc horas reloj ($minEnc minutos teóricos por encuentro): $horasAnuales horas anuales, 18 encuentros por cuatrimestre"
+} else {
+  $slotsGlobales['cargaHoraria'] = '36 encuentros de 4 horas reloj (240 minutos teóricos por encuentro): 144 horas anuales, 18 encuentros por cuatrimestre'
+}
 $materiaNorm = ($Materia -replace '\\', '/').TrimEnd('/')
 $slotsGlobales['rutaData'] = $materiaNorm + '/curso-data.json'
 $slotsGlobales['linkConvenciones'] = '../../' + $materiaNorm + '/convenciones-tecnicas.md'
