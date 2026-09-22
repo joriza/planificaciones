@@ -64,7 +64,7 @@ $baseCmd = 'pandoc'
 $cssArg = if ($Css -ne '') { @('--css', (Resolve-Path -LiteralPath $Css).Path) } else { @() }
 $engineArg = @('--pdf-engine', $pdfEngine)
 
-$marginOpts = if ($pdfEngine -eq 'wkhtmltopdf') { @('-V', 'margin-top=9', '-V', 'margin-bottom=10', '-V', 'margin-left=8', '-V', 'margin-right=8') } else { @() }
+$marginOpts = if ($pdfEngine -eq 'wkhtmltopdf') { @('-V', 'margin-top=20', '-V', 'margin-bottom=20', '-V', 'margin-left=10', '-V', 'margin-right=10') } else { @() }
 
 function Invoke-Pandoc([string[]]$inputFiles, [string]$outFile) {
   $absInputs = $inputFiles | ForEach-Object { (Resolve-Path -LiteralPath $_).Path }
@@ -87,7 +87,7 @@ function Invoke-Pandoc([string[]]$inputFiles, [string]$outFile) {
 $ignorar = @('README.md', 'criterios-aprobacion.md', 'planificacion-anual.csv', 'libro-de-aula-1-linea-por-encuentro.csv', 'libro-de-aula-2-lineas-por-encuentro.csv', 'libro-de-aula-1-linea-por-encuentro.md', 'libro-de-aula-2-lineas-por-encuentro.md', 'planificacion-anual.md')
 
 function Get-MarkdownFiles([string]$dir) {
-  return @(Get-ChildItem -LiteralPath $dir -Filter '*.md' -Recurse | Where-Object { $ignorar -notcontains $_.Name })
+  return @(Get-ChildItem -LiteralPath $dir -Filter '*.md' -Recurse | Where-Object { $ignorar -notcontains $_.Name -and $_.Name -notlike '*-anexo-docente.md' })
 }
 
 $rutaUnidades = Join-Path $rutaMateria '02-unidades'

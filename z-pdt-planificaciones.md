@@ -505,11 +505,16 @@ Evalue utilizar la misma plantilla css para los estilos del pdf resultante. Eval
 Esta sería una accion manual por parte del docente no forma parte del flujo de creacion de material didactico.
 Esta funcionalidad debe quedar reflejada y explicada en el readme del proyecto.
 
-## +det 36
-Tiene algun error de la ejecucion que ha solucionado y valga la pena mensionar?                                                                                                      │
-Tiene errores de ejecucion pendientes de correjir en el flujo?                                                                                                                       │
-3. si escala de a 5min la unidad minima                                                                                                                                              │
-5. Pushee todo lo pendiente                                                                                                                                                          │
+## +det36
+Tiene algun error de la ejecucion que ha solucionado y valga la pena mensionar?
+Tiene errores de ejecucion pendientes de correjir en el flujo?
+3. si escala de a 5min la unidad minima
+5. Pushee todo lo pendiente
 4. si arme un plan 
 
-
+## +det37
+Analice el impacto de agregar numeracion de pagina en los pdf en el margen inferior de forma centrada.
+Analice agregando total de paginas del documento.
+Analice agregar nombre del documento en el margen superior centrado.
+Analice realizar refactor de la plantilla, creo que se podria mejorar.
+Analice el impacto de colocar margenes distintos segun hoja par o impar, eso favorece anillar las hojas.
