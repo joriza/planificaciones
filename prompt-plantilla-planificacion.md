@@ -193,7 +193,7 @@ Consulte todo lo que considere necesario antes de comenzar a realizar.
 
 [Datos particulares] ← carga por referencia — este prompt NO se edita por materia
 
-El identificador de la materia —el nombre de su carpeta en `input/materias/`— se declara en la orden de ejecución (p. ej.: «genere la documentación de la materia LAP»). Todas las rutas se derivan de él, sin editar este archivo:
+El identificador de la materia —el nombre de su carpeta en `input/materias/`— se declara en la orden de ejecución (p. ej.: «genere la documentación de la materia LPR»). Todas las rutas se derivan de él, sin editar este archivo:
 - Ficha de la materia: `@input/materias/<materia>/materia.md` (curso, stack, contenidos mínimos, tiempos e institución).
 - Curso-data: `input/materias/<materia>/curso-data.json` (si existe y está vigente: validarlo y reutilizarlo, no re-redactarlo). Si existiera además un `curso-data.json` en `output/<materia>/`, es un duplicado involuntario: **vale siempre el de `input/materias/`** (canon del plan de trabajo); la corrida lo reporta como hallazgo y sugiere eliminar el duplicado, pero nunca lo borra automáticamente.
 - Pedido particular: `@input/materias/<materia>/pedido.md` — sus secciones (Libro de aula, Continuidad pedagógica, Qué tomar de memoria, Control de este pedido) SON el bloque [Datos particulares] de esta corrida y mandan sobre los valores por defecto. Si no existe, crearlo desde `input/plantillas/plantilla-pedido.md` junto al docente antes de continuar.

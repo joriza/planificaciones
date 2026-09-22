@@ -1,6 +1,6 @@
 # Digest de código para writers — Programación en Python
 
-> Digest de trabajo para writers — canon completo: `input/materias/LAP/convenciones-tecnicas.md`; ante conflicto manda el canon completo.
+> Digest de trabajo para writers — canon completo: `input/materias/LPR/convenciones-tecnicas.md`; ante conflicto manda el canon completo.
 
 - **Entorno:** VS Code + terminal, Python 3; el programa corre con `python <archivo>.py` y se corta con `Ctrl+C`.
 - **Un solo archivo:** todo el código del ejemplo o trabajo en un único `.py`; funciones `def` arriba, bloque `if __name__ == "__main__":` al final; sin carpetas ni módulos propios, sin `models/` ni `services/`.
