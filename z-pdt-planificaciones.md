@@ -473,7 +473,6 @@ tambien queda el readme
 y mi archivo de notas z-pdt-planificaciones.md que no es vinculante.
 Se aceptan sugerencias y consulte todo lo que considere antes de continuar.
 
----
 
 ## +det31
 
@@ -494,10 +493,10 @@ Me gusta mucho todas las aclaraciones y consultas que me hizo al momento de real
 Antes de comenzar Pregunte sobre todo lo que necesite
 
 ## +det34
-Ejecutar el prompt plantilla para la materia **LAP**
+Ejecutar el prompt plantilla para la materia LSO
+
 
 ## +det35 crecion de pdf
-
 Realizar un plan para incorporar la conversion de todos los markdown de una materia de la carpeta output por medio de un programa determinista.
 El archivo d:\Desarrollo\z-material-didactico\README.md describe este proceso ya realizado para otro proyecto. Lo describe en la seccion ## 10. Conversión a PDF.
 Evalue la posibilidad de implementarlo en este proyecto y evalue tambien la posibilidad de mejorarlo.
@@ -505,12 +504,14 @@ Evalue utilizar la misma plantilla css para los estilos del pdf resultante. Eval
 Esta sería una accion manual por parte del docente no forma parte del flujo de creacion de material didactico.
 Esta funcionalidad debe quedar reflejada y explicada en el readme del proyecto.
 
+
 ## +det36
 Tiene algun error de la ejecucion que ha solucionado y valga la pena mensionar?
 Tiene errores de ejecucion pendientes de correjir en el flujo?
-3. si escala de a 5min la unidad minima
-5. Pushee todo lo pendiente
-4. si arme un plan 
+1. si escala de a 5min la unidad minima
+1. Pushee todo lo pendiente
+2. si arme un plan 
+
 
 ## +det37
 Analice el impacto de agregar numeracion de pagina en los pdf en el margen inferior de forma centrada.
@@ -518,3 +519,44 @@ Analice agregando total de paginas del documento.
 Analice agregar nombre del documento en el margen superior centrado.
 Analice realizar refactor de la plantilla, creo que se podria mejorar.
 Analice el impacto de colocar margenes distintos segun hoja par o impar, eso favorece anillar las hojas.
+
+---
+
+## +det38
+Me gusta eso de generar pdf consolidado es algo que no había pensado.
+Pero se mezcla con el material que es anexo docente.
+Analice como hacer para que no salgan mezclados para todos los casos que hay documentos anexo docente y que tenga el menor impacto de cambio posible.
+
+## +det39
+Perdon. me refiero a los margenes originales de a plantila, como está en d:\Desarrollo\z-material-didactico\convert.ps1 
+
+## +det40
+Respecto al generador de pdfs.
+Si los margenes espejo estan funcionando no es algo visible, los margenes izquierdo y derecho se ven del mismo tamaño. amplie un poco el margen izquierdo para que tenga algo visual en que basarme.
+
+## +det41
+Si implementar latex simplifica las cosas, hagalo solo en la creacion de pdf.
+El generar los documentos markdown no debe conener latex, para conversiones rapidas, utilizo un render que tiene problemas con latex, por eso no lo utilizo en ninguno de mis markdown.
+
+## +det42
+Para los pdfs si tienen margen 15 implementado, ese tamalo de margenes laterales está bien.
+Consulta, por que no se ven los documentos de anexo docente en los pdfs consolidados? Donde se encuentran esos pfs ahora?
+
+## Analizar otro posible refactor.
+Los documentos de cada una de las unidades temáticas, está orientado a ser una guia detallada para el docente, por eso no comprendo bien la utilidad de los anexos docentes.
+Necesito que realice un plan y luego lo documente en la carpeta docs:
+Analizar profundamente el proyecto desde el punto de vista con el que fue pensado originalmente, que es ser de ayuda para un docente en la creacion de toda la documentacion anual que requiere un docente para llevar a cabo su trabajo, habiendo programado previamente toda su trabajo.
+Analice posibles mejoras, tanto en lo pedagogico, funcional e implementacion. Sin dejar de lado la optimizacion de tiempos de creacion y ahorro de tokens.
+En las plantillas, ahora que tiene 2 materias, puede comparar y generizar ciertas frases para que sirvan para cualquier materia. Aun faltan algunas materias que su contenido y forma de impartirla es muy distinta a estas, pero atacaremos los conflictos a medida que aparezcan.
+Se aceptan sugerencias, realice todas las consultas que considere antes de comenzar.
+
+## Ampliacion del refactor.
+Analice lo viable y lo correcto de la siguiente modificacion.
+Dentro de la carpeta output/<materia> hay varios destinos de los documentos. Para el propio docente, para los alumnos de forma regular, para los alumnos que han perdido la regularidad o la tienen incompleta y administracon.
+Detallo los destinos:
+Docente: 02-unidades (los que hoy si tienen en el nombre anexo docente) + 03-encuadre-y-cierres + 04-intensificaciones
+Alumnos regulares: 02-unidades (los que hoy no tienen en el nombre anexo docente)
+Alumnos sin regularidad: Falta definir estos documentos.
+Administracion: 01-planificacion (definir otras acciones, creo que deterministas) + 05-continuidad
+Los pdfs generados deben tener dentro de esa carpeta una distribucion por destinatario.
+Si la conclucion es que es correcta agreguelo al plan de mejoras.
