@@ -1,5 +1,7 @@
 # Planificaciones — biblioteca de plantillas + herramientas deterministas
 
+> **Versión 0.1.0** — funcional, aún no estable: la estructura y las herramientas pueden cambiar.
+
 > Este repositorio es un **meta-proyecto de generación de material docente**: una biblioteca de reglas, un archivo de datos por materia y una suite de herramientas deterministas (`tools/`) que reemplazan autoría LLM por render. La primera implementación completa del sistema es el curso [`output/LSO/`](output/LSO/README.md).
 
 ---
