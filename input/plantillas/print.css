@@ -127,25 +127,17 @@ pre code {
     background: none;
 }
 
-/* Numeros de linea (clase numberLines de pandoc): color fijo verde de comentario
-   de editor; fuera del resaltado de sintaxis. En bloques numerados el fondo lo
-   dibuja SOLO el pre (caja de bloque): el code interno queda sin fondo/borde para
-   que WebKit no fragmente dos cajas grises desalineadas. Especificidad >= a la de
-   la plantilla embebida de pandoc, que subraya este pseudo-elemento en media screen. */
-pre.numberSource > code.sourceCode {
-    background: none;
-    border: none;
-    border-radius: 0;
-    padding: 0;
-}
-pre.numberSource > code.sourceCode > span > a:first-child::before {
+/* Numeros de linea (clase numberLines de pandoc): verde palido + subrayado.
+   Estado 66ec36d: el unico con layout correcto en wkhtmltopdf 0.12.6 (verificado
+   por el docente). El refinamiento (verde firme sin subrayado) queda PENDIENTE:
+   ver docs/plan-de-mejoras-del-proyecto.md §10. */
+.sourceCode code a::before {
     content: attr(aria-label);
     display: inline-block;
     width: 1.8em;
     text-align: right;
-    margin-right: 0.5em;
-    color: #2e7d32;
-    text-decoration: none;
+    margin-right: 0.6em;
+    color: #6a9955;
 }
 
 /* ---- Listas ---- */

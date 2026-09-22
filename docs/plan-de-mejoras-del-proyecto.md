@@ -448,7 +448,14 @@ Notas de la secuencia:
 - **Fuera de la matriz:** P1-A (declinado por ahora), los documentos de cierre ya implementados, y el
   link roto LAP→LPR del README del corpus (decisión del docente de no tocar output; se resuelve si ese
   README se regenera algún día).
+- **Motor LaTeX para PDFs: DESCARTADO (2026-09-22, análisis de viabilidad en el acta).** El pipeline
+  wkhtmltopdf cumple los lineamientos vigentes (densidad −24,3%, numeración de código, look validado)
+  y la decisión es no tocar lo que funciona. Consecuencias operativas: **no instalar MiKTeX/xelatex en
+  esta máquina** — el conversor elige xelatex primero si existe y el cambio sería silencioso, perdiendo
+  el look y la métrica de 368 páginas. La regla «los markdown del corpus no contienen LaTeX» se mantiene
+  por diseño (todo vive en conversión).
 - **Lectura del orden:** los pasos 1-3 son higiene (casi gratis, sin dependencias, dejan los portones y
   bancos limpios); el paso 4 es la mayor ganancia funcional con costo moderado; el paso 5 es la mayor
   ganancia de tokens y va al final sobre base estable. Invertir el orden es factible solo renunciando a
   la higiene previa: el linter con baseline sucia hace ruido en medio del trabajo grande.
+- **Numeración de código — refinamiento pendiente (2026-09-22):** verde firme (#2e7d32) sin subrayado para los números de línea. El estado vigente (verde pálido #6a9955 + subrayado, commit 66ec36d) es el único con layout validado por el docente en wkhtmltopdf 0.12.6; los intentos de refinamiento (effb6ea, aa30da9, fdee9f6) desalinearon el fondo del código por fragmentación de cajas inline en el WebKit viejo. Diagnóstico cuantificado para retomar: los fondos de `code` inline se pintan ~2,4pt a la derecha del texto y recortados ~11,5pt por la derecha; los bloques `pre` no pintan fondo en absoluto en este motor; pandoc 3.10 + numberLines emite spans por línea que disparan la fragmentación. Retomar con: post-proceso de HTML en el conversor (control total del markup, sin peleas con WebKit) o cambio de motor (descartado: §9.6-10).
