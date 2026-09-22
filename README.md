@@ -33,6 +33,7 @@ Todas corren con Windows PowerShell 5.1 desde la raíz del repositorio.
 | `lint-canon.ps1` | Linter de canon sobre el corpus: tipos en records (`long`/`string`), respuestas HTTP, identificadores en inglés, repartos que suman 240, correlación anual↔libro↔previews y avisos de prosa estampada. | `powershell -File tools\lint-canon.ps1 [-Curso <curso>]` |
 | `impacto.ps1` | Análisis de impacto de un cambio de curso-data/canon: tres listas — (a) derivados a re-render (siempre todos, costo cero), (b) prosa afectada (la única que abre el LLM), (c) intocado. | `powershell -File tools\impacto.ps1 -Materia input\materias\<m> [-Desde <commit>] [-Json]` |
 | `verificar-curso.ps1` | Suite de integridad del curso: BOM, suma de Tiempo = encuentros, filas N/2N, celdas ≤35, links del README, anexos separados, mojibake, records y cobertura informativa. | `powershell -File tools\verificar-curso.ps1 [-Curso <curso>]` |
+| `convertir-a-pdf.ps1` | Convierte los .md de una materia a PDF (acción manual del docente, no parte del flujo). Usa pandoc + wkhtmltopdf. Soporta `-Combinado` (un PDF por unidad/carpeta), `-Unidad N`, y `-Css` para plantilla propia. Los PDFs se generan en `output/<m>/pdf/`. | `powershell -File tools\\convertir-a-pdf.ps1 -Materia LAP -Combinado -Unidad 1` |
 
 ## Orden de creación y fases del flujo
 
