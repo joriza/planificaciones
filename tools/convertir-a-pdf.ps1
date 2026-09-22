@@ -73,7 +73,24 @@ function Invoke-Pandoc([string[]]$inputFiles, [string]$outFile) {
     Write-Output "  Omitido (ya existe, use -Force para sobrescribir): $outFile"
     return
   }
-  $pandocArgs = $absInputs + $marginOpts + @('-f', 'markdown', '-t', 'pdf') + $cssArg + $engineArg + @('-o', $outPath)
+  $baseName = [System.IO.Path]::GetFileNameWithoutExtension($outFile)
+  $headerFooterArg = if ($pdfEngine -eq 'wkhtmltopdf') { @(
+    '--pdf-engine-opt=--header-center',
+    "--pdf-engine-opt=$baseName",
+    '--pdf-engine-opt=--header-font-size',
+    '--pdf-engine-opt=8',
+    '--pdf-engine-opt=--header-spacing',
+    '--pdf-engine-opt=4',
+    '--pdf-engine-opt=--header-line',
+    '--pdf-engine-opt=--footer-center',
+    '--pdf-engine-opt=[page] / [topage]',
+    '--pdf-engine-opt=--footer-font-size',
+    '--pdf-engine-opt=8',
+    '--pdf-engine-opt=--footer-spacing',
+    '--pdf-engine-opt=4',
+    '--pdf-engine-opt=--footer-line'
+  ) } else { @() }
+  $pandocArgs = $absInputs + $marginOpts + $headerFooterArg + @('-f', 'markdown', '-t', 'pdf') + $cssArg + $engineArg + @('-o', $outPath)
   Write-Output "Generando: $outFile ($($absInputs.Count) archivos)"
   & $baseCmd @pandocArgs 2>$null
   if ($LASTEXITCODE -eq 0) {
