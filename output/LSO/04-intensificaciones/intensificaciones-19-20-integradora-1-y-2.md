@@ -55,6 +55,26 @@ El docente presenta el proyecto puente: "Van a construir una Minimal API que con
 3. **(15 min)** Probar ambos endpoints con `curl` o Thunder Client. Verificar que los tipos se mapean correctamente (`long` para IDs, `string` para nombres, `string?` para campos nullable).
 4. **(10 min)** Commit parcial: `git add .`, `git commit -m "feat: endpoints GET patients con JOIN y LIKE"`, `git push`. El docente verifica los commits en GitHub.
 
+### Desarrollo — Bloque 1b: Revisión entre pares de diagramas (30 min)
+
+1. **(10 min)** Revisión cruzada: cada estudiante intercambia su diagrama con otro par y verifica que los records, endpoints y consultas SQL estén completos y usen los tipos canónicos.
+2. **(10 min)** Retroalimentación breve: el par identifica al menos un punto para mejorar (nombre de record, alias faltante, tipo incorrecto).
+3. **(10 min)** Puesta en común: el docente recoge las correcciones más frecuentes y las aclara en vivo.
+
+### Desarrollo — Bloque 2b: Pruebas con curl/Thunder Client y depuración de errores (35 min)
+
+1. **(10 min)** Prueba de cada endpoint con `curl` o Thunder Client: verificar que `GET /patients/{id:long}` devuelve el paciente correcto o 404, y que `GET /patients/search?name=...` devuelve la lista filtrada.
+2. **(10 min)** Depuración guiada de errores comunes: el docente presenta los errores típicos (alias `AS` faltante, `int` en lugar de `long`, LIKE sin parámetro) y cada estudiante los identifica y corrige en su propio código.
+3. **(10 min)** Corrección de errores detectados: cada estudiante arregla los problemas encontrados, vuelve a probar y hace commit del fix.
+4. **(15 min)** Commit y push del fix: `git add .`, `git commit -m "fix: corrección de errores en endpoints GET del proyecto puente"`, `git push`. El docente verifica los commits.
+
+### Desarrollo — Bloque 3: Consolidación, commit y ensayo de defensa (35 min)
+
+1. **(10 min)** Verificación final de todos los endpoints funcionando: cada estudiante prueba los dos endpoints con `curl` o Thunder Client una última vez.
+2. **(10 min)** Ensayo de la defensa oral en parejas: cada estudiante prepara y practica una explicación de 2-3 minutos sobre su proyecto, cómo conecta U1 y U2, y una decisión de diseño que tomó.
+3. **(10 min)** Plenaria de cierre del E19: el docente anticipa las tareas del E20 (endpoint de admisiones con triple JOIN, pulido del código, README, defensa oral) y responde preguntas pendientes.
+4. **(5 min)** Último commit de cierre: `git add .`, `git commit -m "feat: proyecto puente E19 — endpoints GET funcionando"`, `git push`.
+
 ### Cierre (15 min)
 
 Puesta en común de pantallas: el docente verifica que cada estudiante tenga los dos primeros endpoints funcionando. Revisa commits en GitHub. Anticipa las opciones del próximo encuentro (endpoint de admisiones con triple JOIN) y recuerda que el proyecto se completa en el E20 con la defensa oral.
@@ -88,6 +108,24 @@ Repaso de lo creado en el encuentro anterior. El docente muestra una versión co
 2. **(15 min)** README de portada: crear `README.md` en la raíz del repo con título ("Minimal API Hospital — Proyecto Puente U1+U2"), descripción, tecnologías (C# .NET 6, Dapper, SQLite), cómo ejecutar (`dotnet run`, `curl`) y ejemplo de uso para cada endpoint.
 3. **(15 min)** Commit final y push: `git add .`, `git commit -m "feat: proyecto puente U1+U2 completo con README"`, `git push`. Cada estudiante verifica que GitHub muestre el archivo `Program.cs` y el `README.md` correctamente.
 4. **(10 min)** Preparación de la defensa: cada estudiante prepara una breve explicación (2-3 minutos) de su proyecto: qué hace, cómo conecta U1 y U2, y una decisión de diseño que tomó.
+
+### Desarrollo — Bloque 3b: Pruebas del endpoint de admisiones y depuración (30 min)
+
+1. **(10 min)** Prueba del endpoint `GET /admissions/{id:long}` con `curl` o Thunder Client para tres casos: admisión existente, admisión inexistente (404), y admisión con datos completos de paciente y doctor.
+2. **(10 min)** Depuración guiada de errores comunes del triple JOIN: el docente presenta los errores típicos (alias `AS` faltante en el triple JOIN, `int` en lugar de `long` para foreign keys, concatenación de datos al SQL) y cada estudiante los identifica y corrige en su propio código.
+3. **(10 min)** Corrección de errores detectados: cada estudiante arregla los problemas encontrados, vuelve a probar y hace commit del fix.
+
+### Desarrollo — Bloque 4b: Revisión entre pares del código y README (30 min)
+
+1. **(15 min)** Revisión cruzada: cada estudiante intercambia su proyecto con otro par y verifica que todos los endpoints usen tipos canónicos, alias `AS`, parámetros parametrizados y respuestas `Results.*`. Marca observaciones.
+2. **(15 min)** Revisión del README: el par verifica que el README tenga título, descripción, tecnologías, instrucciones de ejecución y ejemplo de uso para cada endpoint. Se corrigen deficiencias.
+
+### Desarrollo — Bloque 5: Ensayo de defensa oral y cierre extendido (40 min)
+
+1. **(15 min)** Ensayo de la defensa oral en parejas: cada estudiante practica su explicación de 2-3 minutos sobre el proyecto, cómo conecta U1 y U2, y una decisión de diseño que tomó. El par da retroalimentación.
+2. **(10 min)** Plenaria de cierre: el docente recorre los puestos y cada estudiante da su defensa oral breve. El docente registra los puntajes parciales en la rúbrica de 100 puntos.
+3. **(10 min)** Entrega final: el docente confirma que cada repo tiene el commit final y el README. Se entrega el resultado de la evaluación al final del encuentro.
+4. **(5 min)** Último commit de cierre: `git add .`, `git commit -m "feat: proyecto puente E20 — completo con README y defensa"`, `git push`.
 
 ### Cierre con defensa (15 min)
 

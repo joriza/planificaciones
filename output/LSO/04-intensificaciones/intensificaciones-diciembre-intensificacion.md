@@ -47,6 +47,16 @@ El docente explica la modalidad de la instancia de diciembre: "No es un curso nu
 3. **(15 min)** Ejercicio 11 — COUNT: endpoint GET `/patients/count` que devuelva el total de pacientes con `ExecuteScalar<long>` y `Results.Ok(new { total = count })`.
 4. **(10 min)** Ejercicio 12 — validación de existencia: endpoint GET `/patients/{id:long}` que devuelva 404 si el paciente no existe (`patient is null ? Results.NotFound(...) : Results.Ok(patient)`). El docente verifica cada implementación.
 
+### Desarrollo — Bloque 3b: Ejercicios adicionales de verificación (25 min)
+
+1. **(15 min)** Autoverificación con lista de objetivos mínimos: cada estudiante revisa su propio código contra la lista de objetivos 1 a 12 (tipos, control de flujo, métodos, endpoint GET, conexión a SQLite, SELECT con WHERE, LIKE, alias `AS`, lista de pacientes, ORDER BY, COUNT, validación de existencia). Marca como logrado o pendiente cada uno.
+2. **(10 min)** Ejercicio adicional — endpoint GET `/patients/{id:long}` con error intencional: el docente entrega una versión con un error deliberado (por ejemplo, `int` en lugar de `long` o sin alias `AS`). Cada estudiante lo identifica, lo corrige y lo prueba con `curl`.
+
+### Desarrollo — Bloque 3c: Depuración guiada de errores típicos (20 min)
+
+1. **(10 min)** El docente presenta los tres errores más frecuentes del encuentro (tipo `int` en lugar de `long`, SELECT sin alias `AS`, concatenación de parámetros al SQL). Cada estudiante los reproduce en su código y los corrige.
+2. **(10 min)** Práctica de la segunda ronda: cada estudiante reejecuta los objetivos que marcó como pendientes en la autoverificación, con asistencia del docente y sus pares.
+
 ### Cierre (15 min)
 
 Verificación individual: el docente recorre los puestos y marca en la lista de verificación qué objetivos están logrados (1 a 12) y cuáles quedan pendientes para el encuentro siguiente. Cada estudiante hace commit del avance con mensaje `"feat: camino mínimo encuentro 1 — tipos, GET y SQLite"`.
@@ -88,6 +98,16 @@ Repaso de lo logrado en el encuentro anterior. El docente presenta los objetivos
 2. **(15 min)** Ejercicio 22 — commit final: `git add .`, `git commit -m "feat: camino mínimo completo — CRUD, triple JOIN y README"`, `git push`. Verificar que GitHub muestre el archivo `Program.cs` y el `README.md`.
 3. **(15 min)** Ejercicio 23 — defensa oral: cada estudiante explica brevemente (2-3 minutos): qué hace el proyecto, cómo conecta los conocimientos de cada unidad, y una operación CRUD que le haya costado más.
 4. **(10 min)** Ejercicio 24 — cierre: el docente recorre los puestos con la lista de verificación y marca cada objetivo como logrado o pendiente.
+
+### Desarrollo — Bloque 6b: Ejercicios adicionales de verificación (25 min)
+
+1. **(15 min)** Autoverificación con lista de objetivos mínimos: cada estudiante revisa su propio código contra la lista de objetivos 13 a 24 (CRUD completo, triple JOIN, LIKE en lectura avanzada, conteos, prueba completa de endpoints, README, commit y push, defensa oral). Marca como logrado o pendiente cada uno.
+2. **(10 min)** Ejercicio adicional — endpoint POST/PUT/DELETE con error intencional: el docente entrega una versión con un error deliberado (por ejemplo, falta de validación de existencia antes de DELETE o sin `Results` en la respuesta). Cada estudiante lo identifica, lo corrige y lo prueba.
+
+### Desarrollo — Bloque 6c: Depuración guiada de errores típicos (20 min)
+
+1. **(10 min)** El docente presenta los tres errores más frecuentes del encuentro (tipo `int` en lugar de `long`, SELECT sin alias `AS`, concatenación de datos al SQL). Cada estudiante los reproduce en su código y los corrige.
+2. **(10 min)** Práctica de la segunda ronda: cada estudiante reejecuta los objetivos que marcó como pendientes en la autoverificación, con asistencia del docente y sus pares.
 
 ### Cierre con evaluación (15 min)
 

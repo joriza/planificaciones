@@ -40,6 +40,23 @@ El docente da la bienvenida a la instancia de marzo. Explica que el estándar es
 3. **(15 min)** Verificación 7 — LIKE para búsqueda parcial: el estudiante ejecuta el endpoint GET `/patients/search?name=...` y muestra que devuelve la lista filtrada. El docente verifica que use parámetros parametrizados (`@name` con `new { name = $"%{query}%" }`).
 4. **(10 min)** Verificación 8 — alias `AS` y tipos canónicos: el docente revisa que el record use `long PatientId` (no `int`) y que el SELECT use `SELECT patient_id AS PatientId, first_name AS FirstName, ...`. Marca objetivo como logrado o pendiente.
 
+### Desarrollo — Bloque 1b: Verificación adicional con lista de objetivos mínimos (35 min)
+
+1. **(15 min)** Autoverificación con lista de objetivos: cada estudiante revisa su propio código contra los objetivos 1 a 8 (tipos canónicos, control de flujo, métodos, endpoint GET, conexión a SQLite, SELECT con WHERE, LIKE, alias `AS`). Marca como logrado o pendiente cada uno.
+2. **(10 min)** Ejercicio adicional — refactorización de errores detectados: cada estudiante corrige los objetivos que marcó como pendientes, con asistencia del docente y sus pares.
+3. **(10 min)** Práctica de la segunda ronda: el docente asigna un objetivo pendiente a cada estudiante y lo guía para completar una segunda implementación correcta.
+
+### Desarrollo — Bloque 2b: Depuración guiada de errores típicos (30 min)
+
+1. **(15 min)** El docente presenta los errores más frecuentes del encuentro (tipo `int` en lugar de `long`, SELECT sin alias `AS`, concatenación de parámetros al SQL). Cada estudiante los reproduce en su código y los corrige.
+2. **(15 min)** Práctica de la segunda ronda de los objetivos con más fálogos pendientes: cada estudiante reejecuta los objetivos que marcó como pendientes en la autoverificación, con asistencia del docente y sus pares.
+
+### Desarrollo — Bloque 2c: Segunda ronda de práctica de objetivos pendientes (35 min)
+
+1. **(15 min)** Práctica guiada de endpoints GET con parámetros: el docente asigna un nuevo valor de búsqueda a cada estudiante y lo guía para completar la verificación del endpoint `/patients/{id:long}` y `/patients/search?name=...`.
+2. **(10 min)** Verificación cruzada entre pares: cada estudiante intercambia su terminal con otro par y verifica que los endpoints funcionen correctamente con diferentes valores de entrada.
+3. **(10 min)** Última verificación y commit: cada estudiante hace un último commit de sus correcciones con `git add .`, `git commit -m "feat: verificación camino mínimo E1 — tipos, GET y SQLite"`, `git push`.
+
 ### Cierre (15 min)
 
 El docente registra los objetivos logrados en el encuentro. Si un estudiante completó todos los objetivos 1 a 8, recibe el pase al encuentro 2 para CRUD, triple JOIN y defensa. Si no, se le asigna trabajo adicional para el segundo encuentro. Cada estudiante hace commit si hubo modificaciones.
@@ -81,6 +98,16 @@ Repaso de los objetivos de CRUD, triple JOIN y entrega. El docente muestra en vi
 2. **(15 min)** Verificación 18 — commit final y push: el estudiante muestra el commit final (`"feat: camino mínimo completo — CRUD, triple JOIN y README"`) en el repo grupal. Verificar que GitHub muestre el archivo `Program.cs` y el `README.md`.
 3. **(15 min)** Verificación 19 — defensa oral: cada estudiante explica brevemente (2-3 minutos): qué hace el proyecto, cómo conecta los conocimientos de cada unidad, y una operación CRUD que le haya costado más.
 4. **(10 min)** Verificación 20 — cierre: el docente recorre los puestos con la lista de verificación y marca cada objetivo como logrado o pendiente.
+
+### Desarrollo — Bloque 5b: Verificación adicional de CRUD y depuración (25 min)
+
+1. **(15 min)** Autoverificación con lista de objetivos: cada estudiante revisa su propio código contra los objetivos 9 a 16 (INSERT, UPDATE, DELETE, validación de existencia, triple JOIN, LIKE en lectura avanzada, conteos, prueba completa de endpoints). Marca como logrado o pendiente cada uno.
+2. **(10 min)** Ejercicio adicional — endpoint CRUD con error intencional: el docente entrega una versión con un error deliberado (por ejemplo, falta de validación de existencia antes de DELETE o sin `Results` en la respuesta). Cada estudiante lo identifica, lo corrige y lo prueba.
+
+### Desarrollo — Bloque 5c: Depuración guiada de errores típicos y segunda ronda (20 min)
+
+1. **(10 min)** El docente presenta los tres errores más frecuentes del encuentro (tipo `int` en lugar de `long`, SELECT sin alias `AS`, concatenación de datos al SQL). Cada estudiante los reproduce en su código y los corrige.
+2. **(10 min)** Práctica de la segunda ronda: cada estudiante reejecuta los objetivos que marcó como pendientes en la autoverificación, con asistencia del docente y sus pares.
 
 ### Cierre con evaluación (15 min)
 
