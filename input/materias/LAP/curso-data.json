@@ -1,0 +1,514 @@
+{
+  "materia": "Programación en Python",
+  "denominacion": "Programación en Python",
+  "varianteFraseos": 1,
+  "encuentros": [
+    {
+      "n": 4,
+      "unidad": "u1",
+      "caracter": "Conceptual",
+      "eje": 1,
+      "estructura": "clase",
+      "tema": "Primer programa y variables",
+      "contenido": "Primer programa en Python; ejecución desde VS Code y terminal; variables, asignación y tipos básicos int, float, str y bool; operadores aritméticos (+, -, *, /, //, %, **); comentarios como documentación del código.",
+      "actividadesAnual": "primer programa con ejecución en VS Code y terminal, variables, tipos básicos y operadores aritméticos documentados con comentarios",
+      "actividadesLibro1": "print, variables y tipos",
+      "actividadesLibro2": [
+        "Primer programa en Python con",
+        "VS Code; variables y tipos"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 5,
+      "unidad": "u1",
+      "caracter": "Procedimental",
+      "eje": 1,
+      "estructura": "clase",
+      "tema": "Entrada y salida por consola",
+      "contenido": "Entrada y salida por consola: input() y print(); conversión de tipos con int(), float() y str(); primeras f-strings para armar mensajes.",
+      "actividadesAnual": "lectura de datos del usuario con input(), conversión de tipos y salida con print() y f-strings",
+      "actividadesLibro1": "input, print y conversiones",
+      "actividadesLibro2": [
+        "Leer datos con input() y",
+        "convertir tipos; print y f-strings"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 6,
+      "unidad": "u1",
+      "caracter": "Procedimental",
+      "eje": 1,
+      "estructura": "clase",
+      "tema": "Condicionales y operadores",
+      "contenido": "Operadores de comparación y lógicos (and, or, not); estructura if/elif/else; combinación de condiciones para decidir el flujo del programa.",
+      "actividadesAnual": "resolución de problemas con condicionales if/elif/else y operadores de comparación y lógicos",
+      "actividadesLibro1": "if/elif/else y operadores",
+      "actividadesLibro2": [
+        "Comparaciones y operadores",
+        "lógicos; if, elif y else"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 7,
+      "unidad": "u1",
+      "caracter": "Procedimental",
+      "eje": 1,
+      "estructura": "clase",
+      "tema": "Bucles for y while",
+      "contenido": "Bucles: for sobre rangos (range) y sobre strings; while con condición de corte; contadores y acumuladores.",
+      "actividadesAnual": "repetición con for sobre range y strings y con while, usando contadores y acumuladores",
+      "actividadesLibro1": "for con range y while",
+      "actividadesLibro2": [
+        "Repetir con for sobre range",
+        "y strings; bucles while"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 8,
+      "unidad": "u1",
+      "caracter": "Actitudinal",
+      "eje": 1,
+      "estructura": "cierre",
+      "tema": "Cierre U1: repaso y TP",
+      "contenido": "Sistematización y consolidación de la Unidad 1; cierre del TP-U1; ciclo completo de entrega con Git y GitHub (gitignore, init, commits, repo remoto, remote add, push) que se enseña una sola vez y queda como rutina del curso.",
+      "actividadesAnual": "sistematización y consolidación de la Unidad 1, cierre del trabajo del tp-u1 y enseñanza por única vez del ciclo completo de entrega con Git y GitHub (gitignore, init, commits, repo remoto, remote add y push)",
+      "actividadesLibro1": "Sistematización y TP-U1",
+      "actividadesLibro2": [
+        "Repasar U1 y cerrar el TP-U1;",
+        "ciclo de entrega con Git"
+      ],
+      "tp": "TP-U1: programa de consola con entrada y control de flujo",
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 10,
+      "unidad": "u2",
+      "caracter": "Conceptual",
+      "eje": 2,
+      "estructura": "clase",
+      "tema": "Listas y mutabilidad",
+      "contenido": "Listas: creación, acceso por índice y métodos append, pop, index y sort; mutabilidad frente a str y tuple; slicing [i:j] sobre listas y strings.",
+      "actividadesAnual": "trabajo con listas y sus métodos, contraste de mutabilidad con los tipos inmutables y slicing sobre secuencias",
+      "actividadesLibro1": "Listas: métodos básicos",
+      "actividadesLibro2": [
+        "Crear listas; append, pop,",
+        "index y sort; mutabilidad"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 11,
+      "unidad": "u2",
+      "caracter": "Procedimental",
+      "eje": 2,
+      "estructura": "clase",
+      "tema": "Tuplas y conjuntos (set)",
+      "contenido": "Tuplas como secuencias inmutables; conjuntos (set): unicidad de elementos y operaciones básicas; criterios de elección entre list, tuple y set según el problema.",
+      "actividadesAnual": "uso de tuplas y conjuntos con criterio de elección de la estructura según el problema",
+      "actividadesLibro1": "Tuplas y conjuntos set",
+      "actividadesLibro2": [
+        "Tuplas inmutables y sets",
+        "sin duplicados ni orden"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 12,
+      "unidad": "u2",
+      "caracter": "Procedimental",
+      "eje": 2,
+      "estructura": "clase",
+      "tema": "Diccionarios: clave y valor",
+      "contenido": "Diccionarios: pares clave-valor; acceso y modificación; keys(), values() e items(); altas, bajas y recorridos; KeyError y su prevención.",
+      "actividadesAnual": "modelado de datos con diccionarios, con altas, bajas y recorridos por keys, values e items",
+      "actividadesLibro1": "Dict: keys, values, items",
+      "actividadesLibro2": [
+        "Consultar y recorrer",
+        "diccionarios; altas y bajas"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 13,
+      "unidad": "u2",
+      "caracter": "Procedimental",
+      "eje": 2,
+      "estructura": "clase",
+      "tema": "Funciones y ámbito local",
+      "contenido": "Funciones: def, parámetros y return; ámbito local (lo necesario); bloque de ejecución principal if __name__ == \"__main__\" como organización estándar del archivo.",
+      "actividadesAnual": "descomposición de programas en funciones con def, parámetros y return, y organización del archivo con bloque de ejecución principal",
+      "actividadesLibro1": "def, parámetros y return",
+      "actividadesLibro2": [
+        "Definir funciones con",
+        "parámetros; return y ámbito"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 14,
+      "unidad": "u2",
+      "caracter": "Actitudinal",
+      "eje": 2,
+      "estructura": "cierre",
+      "tema": "Cierre U2: repaso y TP",
+      "contenido": "Sistematización y consolidación de la Unidad 2; cierre del TP-U2 con colecciones y funciones; entrega con carpeta nueva, commits y push.",
+      "actividadesAnual": "sistematización y consolidación de la Unidad 2 y cierre del trabajo del tp-u2 con carpeta nueva, commits y push",
+      "actividadesLibro1": "Sistematización y TP-U2",
+      "actividadesLibro2": [
+        "Repasar colecciones y",
+        "funciones; entregar TP-U2"
+      ],
+      "tp": "TP-U2: programa con colecciones y funciones",
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 21,
+      "unidad": "u3",
+      "caracter": "Conceptual",
+      "eje": 3,
+      "estructura": "clase",
+      "tema": "Cadenas: métodos de texto",
+      "contenido": "Métodos de cadenas para procesar la entrada del usuario: split, strip, join y replace; f-strings con formato numérico; el texto como dato procesable.",
+      "actividadesAnual": "procesamiento de la entrada del usuario con métodos de cadenas y f-strings con formato",
+      "actividadesLibro1": "split, strip, join, replace",
+      "actividadesLibro2": [
+        "Procesar entrada con",
+        "split, strip, join, replace"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 22,
+      "unidad": "u3",
+      "caracter": "Procedimental",
+      "eje": 3,
+      "estructura": "clase",
+      "tema": "Validación con try/except",
+      "contenido": "Excepciones: try/except para validar la entrada (ValueError del int()); patrón de reintento con while; mensajes de error claros para el usuario.",
+      "actividadesAnual": "validación de la entrada del usuario con try/except y patrón de reintento con while",
+      "actividadesLibro1": "try/except: entrada válida",
+      "actividadesLibro2": [
+        "Atrapar ValueError al",
+        "convertir; reintentos"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 23,
+      "unidad": "u3",
+      "caracter": "Procedimental",
+      "eje": 3,
+      "estructura": "clase",
+      "tema": "Módulos y menú en memoria",
+      "contenido": "Módulos: import de built-ins (random, math) como mención puntual; integración de funciones, colecciones, texto y validación en un menú de consola en memoria.",
+      "actividadesAnual": "uso puntual de import de módulos built-in e integración de los núcleos del curso en un menú de consola en memoria",
+      "actividadesLibro1": "import random y math",
+      "actividadesLibro2": [
+        "Mención de import para",
+        "built-ins: random y math"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 24,
+      "unidad": "u3",
+      "caracter": "Procedimental",
+      "eje": 3,
+      "estructura": "clase",
+      "tema": "Integración: menú del TP",
+      "contenido": "Diseño de un programa completo en un solo archivo .py: funciones, colecciones, menú textual en memoria y validación de entrada; avance del TP-U3.",
+      "actividadesAnual": "diseño e integración de un programa completo en un solo archivo con avance del tp-u3",
+      "actividadesLibro1": "Diseño del menú del TP",
+      "actividadesLibro2": [
+        "Funciones, colecciones y",
+        "texto en un solo archivo"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 25,
+      "unidad": "u3",
+      "caracter": "Actitudinal",
+      "eje": 3,
+      "estructura": "cierre",
+      "tema": "Cierre U3: repaso y TP",
+      "contenido": "Sistematización y consolidación de la Unidad 3; cierre del TP-U3 con menú validado en memoria; entrega con carpeta nueva, commits y push.",
+      "actividadesAnual": "sistematización y consolidación de la Unidad 3 y cierre del trabajo del tp-u3 con carpeta nueva, commits y push",
+      "actividadesLibro1": "Sistematización y TP-U3",
+      "actividadesLibro2": [
+        "Repasar texto y validación;",
+        "entregar TP-U3"
+      ],
+      "tp": "TP-U3: menú de consola validado",
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 27,
+      "unidad": "u4",
+      "caracter": "Conceptual",
+      "eje": 4,
+      "estructura": "clase",
+      "tema": "Lanzamiento del integrador",
+      "contenido": "Devolución de la Unidad 3; lanzamiento del trabajo final integrador; README de portada del repositorio del grupo; apertura de issues con el plan de trabajo.",
+      "actividadesAnual": "devolución de la Unidad 3, lanzamiento del trabajo final y confección del README de portada del repositorio con issues del plan",
+      "actividadesLibro1": "Consigna y portada del repo",
+      "actividadesLibro2": [
+        "Devolución U3 y consigna",
+        "del trabajo final; README"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 28,
+      "unidad": "u4",
+      "caracter": "Procedimental",
+      "eje": 5,
+      "estructura": "clase",
+      "tema": "Ramas y pull requests",
+      "contenido": "Flujo profesional del repositorio: ramas por feature, pull requests con revisión entre pares y main protegida; distribución de responsabilidades por issue.",
+      "actividadesAnual": "flujo profesional con ramas por feature, pull requests revisados y main protegida, con responsabilidades por issue",
+      "actividadesLibro1": "Issues, ramas y PR",
+      "actividadesLibro2": [
+        "Ramas por feature y pull",
+        "requests; main protegida"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 29,
+      "unidad": "u4",
+      "caracter": "Procedimental",
+      "eje": 4,
+      "estructura": "clase",
+      "tema": "Desarrollo del integrador",
+      "contenido": "Desarrollo del trabajo final por issues y ramas; revisión entre pares de pull requests; integración de los núcleos del año en el propio programa.",
+      "actividadesAnual": "desarrollo del trabajo final por issues y ramas con revisión entre pares de los pull requests",
+      "actividadesLibro1": "Sprint del trabajo final",
+      "actividadesLibro2": [
+        "Desarrollo por issues y",
+        "ramas; revisión entre pares"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 30,
+      "unidad": "u4",
+      "caracter": "Procedimental",
+      "eje": 4,
+      "estructura": "clase",
+      "tema": "Consolidación del integrador",
+      "contenido": "Consolidación del trabajo final: cierre de issues, ajustes finales del programa y preparación de la defensa individual; commit de cierre del encuentro.",
+      "actividadesAnual": "consolidación del trabajo final con cierre de issues, ajustes finales y preparación de la defensa individual",
+      "actividadesLibro1": "Cerrar issues y ajustar",
+      "actividadesLibro2": [
+        "Completar funcionalidades;",
+        "preparar la defensa"
+      ],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    },
+    {
+      "n": 31,
+      "unidad": "u4",
+      "caracter": "Actitudinal",
+      "eje": 4,
+      "estructura": "cierre",
+      "tema": "Cierre U4: entrega final",
+      "contenido": "Sistematización y cierre del trabajo final con preparación de la defensa; repaso de los núcleos del año sobre el repositorio profesional del grupo.",
+      "actividadesAnual": "sistematización y cierre del trabajo final con preparación de la defensa",
+      "actividadesLibro1": "Sistematización y entrega TF",
+      "actividadesLibro2": [
+        "Repasar ejes del curso;",
+        "cerrar el trabajo final"
+      ],
+      "tp": "Trabajo final: programa integrador con repositorio profesional",
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 10 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 60 },
+        { "bloque": "Consolidación y cierre", "min": 10 },
+        { "bloque": "Actividad complementaria", "min": 40 }
+      ]
+    }
+  ],
+  "slots": {
+    "celular": "No permitido",
+    "horasPorEncuentro": 2,
+    "stack": "Python 3 (programación imperativa con funciones)",
+    "entorno": "VS Code + terminal",
+    "recursos": [
+      "Python 3 instalado",
+      "VS Code y terminal",
+      "Git y GitHub",
+      "PC por grupo",
+      "Proyector"
+    ],
+    "denominaciones": {
+      "u1": "Fundamentos de Python y control del flujo",
+      "u2": "Estructuras de datos y funciones",
+      "u3": "Procesamiento de texto y validación",
+      "u4": "Trabajo integrador y flujo profesional"
+    },
+    "tps": {
+      "u1": "TP-U1: programa de consola con entrada y control de flujo",
+      "u2": "TP-U2: programa con colecciones y funciones",
+      "u3": "TP-U3: menú de consola validado",
+      "u4": "Trabajo final: programa integrador con repositorio profesional"
+    },
+    "unidades": {
+      "u1": {
+        "denominacion": "Fundamentos de Python y control del flujo",
+        "expectativas": "Escribir programas sencillos en Python que lean datos del usuario, decidan con condicionales y repitan con bucles.",
+        "transversales": "Terminal, VS Code, ejecución de scripts; rutina de entregas con Git y GitHub desde el encuentro 8.",
+        "actividadesApertura": "Puente desde la programación ya conocida: qué se conserva y qué cambia al programar en Python.",
+        "extension": "Desafíos de extensión con formatos de salida y bucles anidados simples, sin adelantar colecciones.",
+        "nota": "Primer contacto con el lenguaje; todo se resuelve en memoria, sin archivos ni bases de datos."
+      },
+      "u2": {
+        "denominacion": "Estructuras de datos y funciones",
+        "expectativas": "Organizar datos con listas, tuplas, conjuntos y diccionarios, y descomponer programas en funciones.",
+        "transversales": "Rutina de entregas con Git y GitHub (carpeta nueva, commits, push); terminal y VS Code.",
+        "actividadesApertura": "De las variables sueltas a las colecciones: recuperar tipos y control del flujo de la Unidad 1.",
+        "extension": "Combinar colecciones (listas de diccionarios) en ejercicios de extensión.",
+        "nota": "La mutabilidad es el concepto central; el TP-U2 integra colecciones y funciones."
+      },
+      "u3": {
+        "denominacion": "Procesamiento de texto y validación",
+        "expectativas": "Procesar texto de entrada con métodos de cadenas y validar datos con excepciones para construir programas robustos.",
+        "transversales": "Git y GitHub en cada entrega; funciones y colecciones como base de la integración.",
+        "actividadesApertura": "Recuperar funciones y colecciones y llevarlas a programas que no se rompen ante una entrada incorrecta.",
+        "extension": "Menús con opciones compuestas y validación de rangos, siempre en memoria.",
+        "nota": "Unidad de integración: un solo archivo, sin persistencia de ningún tipo."
+      },
+      "u4": {
+        "denominacion": "Trabajo integrador y flujo profesional",
+        "expectativas": "Desarrollar y defender un trabajo integrador versionado con flujo profesional: README, issues, ramas y pull requests.",
+        "transversales": "Flujo profesional de Git y GitHub; comunicación técnica para la defensa individual.",
+        "actividadesApertura": "Recuperar el programa integrador de la Unidad 3 y presentarlo como base del trabajo final.",
+        "extension": "Mejoras opcionales del integrador gestionadas con issues propios del grupo.",
+        "nota": "Cierre del ciclo: el repositorio del grupo se profesionaliza y el trabajo final integra el año."
+      }
+    },
+    "ejes": {
+      "1": "Fundamentos del lenguaje Python",
+      "2": "Estructuras de datos y funciones",
+      "3": "Procesamiento de texto y validación",
+      "4": "Trabajo integrador profesional",
+      "5": "Git, GitHub y trabajo colaborativo",
+      "6": "Entorno de trabajo y práctica profesional"
+    }
+  }
+}

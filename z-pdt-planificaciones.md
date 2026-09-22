@@ -1,8 +1,31 @@
+# Apuntes personales del docente (archivo no vinculante)
+
+> **Nota para agentes LLM y lectores automáticos**
+>
+> - Estos apuntes son **personales y NO vinculantes**: ninguna nota de este archivo decide, reemplaza ni modifica las opciones vigentes del proyecto. El canon vigente vive en `prompt-plantilla-planificacion.md`, `input/` y `README.md`; ante cualquier conflicto, manda el canon, nunca estos apuntes.
+> - Si encontrás una **discrepancia** entre estos apuntes y el estado actual del repositorio, podés consultarme antes de actuar.
+> - Es muy probable que sean **notas viejas** y que por eso no coincidan con las opciones actuales del sistema (rutas, nombres, convenciones o decisiones ya cambiadas).
+
+## Indicaciones de ejecucion
+
+> Esta sección es la **orden de ejecución vigente**: manda sobre el resto de este archivo (apuntes no vinculantes) y nunca sobre el canon (`prompt-plantilla-planificacion.md`), cuyas fases y reglas sigue tal cual.
+
+**Orden vigente:** ejecutar el prompt plantilla para la materia **LAP**. El modo y los frenos por defecto se derivan del estado del repositorio según el canon (hoy: sin `input/materias/LAP/curso-data.json` → materia nueva, con pausa tras el curso-data validado).
+
+- **Sin memoria**: no consultar memoria del proyecto ni historiales de sesiones; actuar como primera vez.
+- **Autonomía — resolver y registrar** (mínimo/mecánico): typos, links, rutas, formato, fallas de herramienta de causa clara.
+- **Consultar antes de tocar**: contenido pedagógico (tiempos, temas, evaluaciones, TPs, criterios) y cualquier error con más de una solución posible.
+- **Excepciones a la regla derivada**: solo con declaración explícita en esta sección (p. ej. «corrida completa forzada», «frenar tras la Fase 0 completa»); sin declaración, manda la derivación del canon.
+- **Reporte final**: toda modificación hecha fuera del flujo canónico, con su motivo.
+
+
+
+
 # Flujo completo de planificacion anual con todos los documentos necesarios para ejecutar en agente de codificacion.
 
 [Datos generales]
 como docente me encuentro frecuentemente ante la necesidad de planificar las clases para todo el año.
-Necesito que me prepare las clases segun la plantilla ../estructura-de-la-clase.md (biblioteca de plantillas en z-planificaciones_en-General)
+Necesito que me prepare las clases segun la plantilla ../input/estructura-de-la-clase.md (biblioteca de plantillas en z-planificaciones_en-General)
 
 [Datos generales Distribucion de recurso tiempo]
 Si sele pasan las horas totales, solo es un dato nominal.
@@ -261,7 +284,7 @@ Relice todo lo que considere en subagentes, para preservar el contexto principal
 Fijo y General
 
 [Datos generales]
-@estructura-de-la-clase.md
+@input/estructura-de-la-clase.md
 [Flujo de trabajo por fases — regla fija]
 @estructura-anual-36.md
 @encuentros-especiales.md
@@ -302,8 +325,9 @@ mueva el archivo @verificar-curso.ps1 a la carpeta raiz, para que sirva para cua
 
 ## inicio desde cero sin historial.
 
-realiza las acciones indicadas en el documento @0-prompt-plantilla-planificacion.md
-todo lo necesario está en la ruta raiz del proyecto + la sub carpeta database-docs y sus subcarpetas que contiene la informacion de la base de datos, ignore las otras sub carpetas, son de otros proyectos que algunos son parecidos y pueden generar mucho ruido.
+realiza las acciones indicadas en el documento @prompt-plantilla-planificacion.md
+todo lo necesario está en la ruta raiz del proyecto + la sub carpeta input/database-docs y sus subcarpetas que contiene la informacion de la base de datos, ignore las otras sub carpetas, son de otros proyectos que algunos son parecidos y pueden generar mucho ruido.
+Solo por esta ejecucion respete los frenos humanos indicados, le tengo fe a la ejecucion.
 A) Utilice sub agentes todo lo que sea posible, para preservar el contexto principal.
 B) Utilice sub agentes con el mismo modelo que el principal todo lo que sea posible, para mejorar los tiempos debido al procesamiento paralelo y para preservar el contexto principal.
 
@@ -317,3 +341,180 @@ Muesteme con un ejemplo de un documento existente la variante que resiste un rev
 Actualice el documento @z-analisis-pi-agent-glm53flash.md y el punto 5. **Observación honesta sobre el recorte efectivo del 50%.** Modifiquelo para que tenga un nombre tecnico acompañado de florituras en lenguaje pedagógico que indiquen un comportamiento politicamente correcto. (Es que me dá verguenza reconocer un engaño directo y además dejarlo documentado)
 Actualice el prompt plantilla y el readme del proyecto en todos los lugares donde sea necesario.
 
+## +det21
+
+Las evaluaciones son una por cada unidad didáctica, no recuerdo si lo he cambiado en algun lugar, pero son un error las evaluaciones que están en la carpeta instancias, ademas se contradice con la planificion anual. Pensandolo mejor, creo que instancias son las evaluaciones incluidas en la intensificacion. La carpeta instancias creo que tiene cosas mezcladas
+
+## Reestructuracion de documentos fuente.
+
+- Me parece que como humano, la subseccion denominada (Curso, stack y contenidos mínimos), de la seccion [Indicaciones finales — reglas fijas] debería estan en un archivo por separado, esto cambia con cada materia, que es el centro del armado de toda esta documentacion docente.
+- Y creo que la redundancia del armado de evaluaciones está justamente en la linea que dice: - Evaluación: en documento por separado, 2 versiones para cada instancia de evaluación.
+- La seccion (Tiempo) tambien deberia pertenecer a este nuevo archivo
+- La seccion (Institución), tambien deberia pertenecer a este nuevo archivo, aunque no es el mas adecuado, porque hay cuestiones particulares de cada escuela aun cuando la materia sea la misma, como son pocas especificaciones es el lugar mas parecido al correcto.
+ 
+- La carpeta denominada especiales, debería llamarse intensificaciones, porque contiene documentos y evaluaciones de intensificacion y fortalecimiento.
+
+Ahora el momento de juntar indicaciones, el contenido de @encuentros-especiales.md y @estructura-anual-36.md debería estar en el prompt principal, hacen mas a cuestiones generales que se realizan siempre, sin impotar para que materia son.
+
+el carchivo @input/estructura-de-la-clase.md debe permanecer por separado, depende el tipo de materia, porque ejemplo una materia netamente teorica es muy distinta a una materia netamente practica o una balanceada, cambian las formas de encararla. Tambien cambia si cambia el alumnado, no es lo mismo adolescentes y que adultos.
+
+Luego de validar y conciliar diferencias, actualice promp plantilla y readme.
+Realice todas las consultas que considere necesarias.
+
+## Estimacion superficial
+
+Estime muy superficial y rapidamente, cuanto tiempo en horas le lllevaría a un humano promedio leer toda la documentacion generada en este proyecto. Y cuanto tiempo le llevaria armar, estructutar y escribir el mismo proyecto desde cero con poca experiencia en el dictado de esa materia puntual.
+
+
+## Necesito optimizar los tiempos y consumos de token del proyecto
+
+arme un plan para analizar y debatir.
+con estrategias como:
+- generar apps deterministas para los pasos que sea posible.
+- re-organizar las carpetas o la cascada de procesos.
+- proponga otras alternativas posibles.
+luego de analizado y debatido el plan le indicaré cuando aplicarlo
+
+
+## Plan de ahorro de recursos.
+
+### 1
+- Derivados, concuerdo, anual y libros de aula puede cambiarse a generar solo archivos .csv
+- Derivados. Aun mejor, en la anual, lo que mas cambia son los 20 encuentros en los que se imparte contenido, los que pertenecen las las 4 unidades didacticas, si se redacta de forma genérica pero que suene bonito pedagogicamante los otros encuentros pueden ser siempre iguales, o tener algunas plantilla de ejemplo con contenido equivalente para ir alternando.
+- Las opciones B de las evaluaciones, si se elige con cuidado el contenido de la consigna A, reemplazar estrategicamente los datos de contexto sirve para otras opciones. Siendo mucho mas barato crear hasta opcion C o D con menos gasto que el actual.
+
+## Error en el nuevo flujo a solucionar
+
+@convenciones-tecnicas.md no es un archivo generado manualmente por mi, no es un archivo facil de crear, necesito solucionar eso, es distinto para cada materia, está muy acoplado a la materia.
+
+## Nueva instruccion
+
+Antes de hacer lio pregunto.
+si elimino la carpeta minimal-api-csharp y ejecuto la orden:
+Regeneración completa del corpus de la materia ubicada en input/materias/minimal-api-csharp.md, según @prompt-plantilla-planificacion.md en modo CORRIDA COMPLETA. 
+Va a funcionar, o hay un forma mas adecuada de simular la generacion de una materia por primera vez?
+Al menos en esta ejecucion necesito mas frenos que antes, hubo muchos cambios.
+
+
+## +det22
+
+Tiene alguna skill para que muestre en el cuadro de estatus algunos datos adicionales como como los tokens consumidos y el modelo que está utilizando?
+
+
+## Datos de la primera ejecucion mixta de inicio a fin
+
+Algunas cosas para pulir.
+
+Todos los documentos y carpetas generados deben ir dentro de la subcarpeta output, asi los docuementos de todas las materia queden en una carpeta comun.
+
+- Planificacion
+En la planificacion, acotar un poco la cantidad de texto, mas que nada en las columnas contenido y actividades, es mucho para el espacio que dispongo.
+En actividades: quitar algo que se repite mucho al comienzo de cada actividad "Encuentro de 240 minutos: " para cada uno de los encuentros no colocar la palabra "encuentro", solo colocar los numeros entre parentesis.
+
+- Libro de temas
+El primer eje temático debe ser presentación y diagnóstico. (o 2 palabras pedagógicas para ello)
+Los otros ejes que digan "Diagnóstico, integración y metacognición" deben decir "Intensificación y Fortalecimiento"
+
+
+## Modificaciones luego de ejecucion completa de version mixta.
+
+modificacion solicitada, cada materia debe estar contenida en una sub carpeta de la ruta actual. El nombre de la carpeta la elijo yo y es la que me va a servir para indicar al prompt plantilla la materia que debe renerar la documentacion. consulta. cual es la diferencia de contenido del archivo @nota-catedra-minimal-api-csharp.md y de minimal-api-csharp.md. Generalizar el nombre para que sirva para cualquier materia. Adecuar segun eston cambios en todos los documentos que sea necesario.   
+
+
+## +det23
+
+analice los 2 archivos dentro de la carpeta input/materias/LAP analice coherencia entre ambos, corrija prosa y consulte inconsitencias o faltantes de contenido basico.
+
+
+## +det24
+adecue el promp principal para la materia LAP. Que es la siguiente materia a generar documentacion. Analice y proponga la posibilidad de externalizar ese dato / parámetro, es uno variable para cada materia y no es correcto tanto acoplamiento.
+
+
+## +det25
+Tener en cuenta que no todas las materias tienen la misma cantidad de horas por encuentro. Eso debe contemplarse.
+
+
+## +det26
+quite los frenos por defecto, el proyecto va tomando forma, le pediré explicitamente si necesito que aplique frenos.
+consulta. como se trabaja ahora en el pedido sobre la materia a generar los documentos?
+
+
+## +det27
+El repo remoto es https://github.com/joriza/planificaciones.git pushee todo allí.
+
+
+## +det28
+Genere la documentación de la materia LAP según @prompt-plantilla-planificacion.md sin consultar la memoria, como una materia nueva sin historial.
+
+
+## +det29
+Indique en el archivo LAP/materia.md que el manejo de archivos de texto plano debe impartirse luego del encuentro 27.
+Que no se imparte Menú con persistencia, tampoco csv ni json
+Tampoco se imparte Comparar formatos y migrar
+
+
+## +det30
+Indique en el readme de la raiz del proyecto. como es el orden de creacion y como como estan conformadas las fases.
+
+## +det31
+
+Necesito que unifique la ubicacion de los archivos generados, el archivo curso-data.json debe generarlo en la carpeta de salida para la materia correspondientes, a la par de convenciones-tecnicas.md
+Indique si hay algun otro archivo que no lo está creando en la ruta /output/<materia>
+
+## Otro refactor.
+
+Ahora que el proyecto ha tomado cierta dimension.
+Necesito armar un plan para organizar la estructura actual. 
+basicamente es mover carpetas y archivos. Y actualizar las referencias necesarias para que el sistema siga funionando.
+Todo lo generado debe ir carpeta output y subcarpetas.
+Todo lo que alimenta al corpus en carpeta input y subcarpetas.
+En la carpeta raiz del proyecto queda la menor cantidad de archivos posibles. 0-prompt-plantilla-planificacion.md que debe renombrarse, quitar el prefijo 0-
+tambien queda el readme
+y mi archivo de notas z-pdt-planificaciones.md que no es vinculante.
+Se aceptan sugerencias y consulte todo lo que considere antes de continuar.
+
+---
+
+## +det31
+
+consulta de openrouter. Por que en el listado de modelos disponible no tengo modelos deepseek flash con opcion floor, para los workers me viene bien.
+
+## +det32
+Consulta. Pernsando en una ejecucion con menor necesidad de revision, pero todavia en estado de pruebas.
+Si tiene json y la carpeta de salida no existe o está vacía, se ha realizado alguna revision, pero todavía materia nueva. Seria bueno incorporar otra detencion en un punto intermedio estratégico. Realice una propuesta para este cambio.
+
+
+## +det33
+Necesito realizar un plan para incluir estos cambios / modificaciones.
+Si encuentra ambiguedades en el proceso, si son cosas menores decida y reaice sino consulte las opociones disponibles y guarde en memoria para revision posterior a la ejecucion.
+Evalue la posibilidad de una parada adicional en un punto estrategico antes de continuar con el diseño del grueso de los documentos solo para cuando es una materia nueva que ademas se ha generado curso-data.json en la misma ejecucion.
+Realice todas las actividades posibles en sub agentes, para preservar el contexto principal y economizar el gasto en tokens.
+Si encuentra archivo curso-data.json en la carpeta input y en la carpeta output para la misma materia es un error mio involuntario, vale el del plan de trabajo que es la carpeta input.
+Me gusta mucho todas las aclaraciones y consultas que me hizo al momento de realizar la parada luego de crear el archivo curso-data.json.
+Antes de comenzar Pregunte sobre todo lo que necesite
+
+## +det34
+Ejecutar el prompt plantilla para la materia **LAP**
+
+## +det35 crecion de pdf
+
+Realizar un plan para incorporar la conversion de todos los markdown de una materia de la carpeta output por medio de un programa determinista.
+El archivo d:\Desarrollo\z-material-didactico\README.md describe este proceso ya realizado para otro proyecto. Lo describe en la seccion ## 10. Conversión a PDF.
+Evalue la posibilidad de implementarlo en este proyecto y evalue tambien la posibilidad de mejorarlo.
+Evalue utilizar la misma plantilla css para los estilos del pdf resultante. Evalue tambien una opcion mejor.
+Esta sería una accion manual por parte del docente no forma parte del flujo de creacion de material didactico.
+Esta funcionalidad debe quedar reflejada y explicada en el readme del proyecto.
+
+## +det36
+Tiene algun error de la ejecucion que ha solucionado y valga la pena mensionar?
+Tiene errores de ejecucion pendientes de correjir en el flujo?
+3. si escala de a 5min la unidad minima
+5. Pushee todo lo pendiente
+4. si arme un plan 
+
+## +det37
+Analice el impacto de agregar numeracion de pagina en los pdf en el margen inferior de forma centrada.
+Analice agregando total de paginas del documento.
+Analice agregar nombre del documento en el margen superior centrado.
+Analice realizar refactor de la plantilla, creo que se podria mejorar.
+Analice el impacto de colocar margenes distintos segun hoja par o impar, eso favorece anillar las hojas.

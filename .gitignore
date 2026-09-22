@@ -1,5 +1,11 @@
 # Local Pi runtime state
 .atl/
 
-# Local CodeGraph index
+# Local codegraph index
 .codegraph/
+
+# Python bytecode
+__pycache__/
+
+# PDFs generados manualmente (accion manual del docente, regenerables)
+output/*/pdf/

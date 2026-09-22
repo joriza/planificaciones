@@ -1,0 +1,36 @@
+{
+  "_comentario": "Plantillas de descripción del README índice, por tipo de documento reconocido por tools/generar-readme.ps1. Los slots {{...}} se interpolan con datos del árbol del corpus y del curso-data (input/materias/<materia>/curso-data.json). Registro docente formal; una sola línea por descripción.",
+  "secciones": {
+    "indice": "Cada documento se presenta con una descripción de qué es y cuándo se usa. Los archivos con sufijo `-anexo-docente.md` son **anexos docentes: material de uso exclusivo del docente** (soluciones, criterios de corrección y guías de conducción); no se entregan a alumnos ni a administración.",
+    "unidades": "Cada unidad reúne los documentos de clase dirigidos al alumno (con su anexo docente como material de uso exclusivo del docente) y el documento de evaluación de la unidad con sus versiones equivalentes.",
+    "encuadre": "Documentos de encuadre y cierres definidos en la estructura anual. No imparten contenido nuevo ni tienen evaluación propia: los cierres son encuentros de síntesis y metacognición, y el cierre cuatrimestral abre con la devolución de la unidad evaluada en el encuentro anterior.",
+    "intensificaciones": "Un documento por cada momento de intensificación y fortalecimiento, cubriendo los encuentros que el momento define. Los momentos dentro de la estructura anual no imparten contenido nuevo; diciembre y marzo (fuera de la planificación anual) evalúan el camino mínimo completo del curso. Cada momento tiene su evaluación en versiones equivalentes, con sus anexos docentes (solo docente) en la subcarpeta `evaluaciones/`.",
+    "intensificacionesCierre": "Los momentos de recuperación (17-18 y 34-35) usan criterio de **Apto / No apto aún por objetivo mínimo**; el proyecto puente (19-20) usa **rúbrica de 100 puntos**; diciembre y marzo evalúan el **camino mínimo completo** del curso (el estándar de marzo es idéntico al de diciembre).",
+    "continuidad": "Actividades de repaso y fijación para que los alumnos trabajen sin presencia docente; se entregan a la administración para los casos de ausencia del docente. Cada documento incluye actividades puntuadas sobre 100 y autoevaluación; la resolución se presenta de forma individual y manuscrita al inicio de la clase siguiente.",
+    "orden": "El corpus se genera en cascada, en el siguiente orden: cada documento deriva del anterior y mantiene con él correlación exacta. Cualquier creación futura de material para esta materia debe respetar esta misma secuencia.",
+    "otros": "Documentos presentes en el corpus que el generador no clasificó según las convenciones de nombres: revisarlos y clasificarlos o incorporarlos a las convenciones antes de la próxima regeneración."
+  },
+  "tipos": {
+    "convenciones": { "descripcion": "Canon del curso: fuente única de verdad de tipos, formatos y estructura de código. Se consulta ante cualquier duda técnica; toda divergencia con esta hoja es un defecto." },
+    "anual": { "descripcion": "Documento madre del curso: presentación y organización de los 16 tramos del ciclo anual (una fila por tramo), con ejes temáticos y correlación exacta. Es un render determinista de la firma pedagógica del curso (`input/materias/{{materia}}/curso-data.json`) mediante `tools/generar-administrativos.ps1`. Versión planilla (separador `;`, UTF-8 con BOM) para la carga institucional." },
+    "libro1": { "descripcion": "Síntesis del plan de clases con una línea por encuentro (36 filas), para completar el libro de aula. El docente completa manualmente Fecha y Material al dictar cada encuentro. Render determinista del mismo origen; UTF-8 con BOM." },
+    "libro2": { "descripcion": "Versión del libro de aula con 2 líneas por encuentro (72 filas), para instituciones que solicitan mayor detalle. Render determinista del mismo origen; UTF-8 con BOM." },
+    "clase": { "descripcion": "{{contenido}}." },
+    "clase-anexo": { "descripcion": "Anexo docente de la clase {{n}}: soluciones de referencia, puntos de control y guía de conducción del encuentro. Material de uso exclusivo del docente." },
+    "evaluacion-unidad": { "descripcion": "Encuentro dedicado de evaluación de la {{unidadNombre}}: entrega, defensa individual y prueba práctica según los acuerdos de la unidad. Documento de metadatos de la instancia." },
+    "evaluacion-version": { "descripcion": "Prueba práctica individual en versiones equivalentes (mismos objetivos y requisitos, distinto dominio o datos)." },
+    "evaluacion-version-anexo": { "descripcion": "Anexo docente de la versión {{letra}}: solución de referencia y criterios de corrección. Material de uso exclusivo del docente." },
+    "encuadre": { "descripcion": "Encuentro {{n}}: presentación de la asignatura y contrato pedagógico; diagnóstico de saberes previos. Se usa al inicio del ciclo lectivo." },
+    "cierre-cuatrimestre": { "descripcion": "Encuentro {{n}}: cierre integrador del cuatrimestre {{k}} —síntesis, integración y metacognición del cuatrimestre, sin evaluación propia—; abre con la devolución de la unidad evaluada en el encuentro anterior. Se usa al finalizar el cuatrimestre {{k}}." },
+    "cierre-integral": { "descripcion": "Encuentro {{n}}: cierre integral de la asignatura; balance del recorrido, metacognición final y proyección formativa, sin contenidos nuevos. Se usa en el último encuentro del ciclo." },
+    "intensificacion-doc": { "titulo": "{{momentoTitulo}}", "descripcion": "Momento de intensificación y fortalecimiento{{alcance}}: organización de los encuentros del momento, acuerdos y actividades. Se usa en los encuentros que el momento define." },
+    "intens-evaluacion-base": { "descripcion": "Evaluación del momento de intensificación {{momentoClave}}: consigna base del momento, con versiones equivalentes y anexos docentes en la misma carpeta." },
+    "intens-evaluacion-version": { "descripcion": "Versión {{letra}} de la evaluación del momento {{momentoClave}}, equivalente a las demás versiones (mismos objetivos y requisitos, distinto dominio o datos)." },
+    "intens-evaluacion-anexo": { "descripcion": "Anexo docente de la evaluación del momento {{momentoClave}}: solución de referencia y criterios de corrección. Material de uso exclusivo del docente." },
+    "intens-evaluacion-version-anexo": { "descripcion": "Anexo docente de la versión {{letra}} de la evaluación del momento {{momentoClave}}: solución de referencia y criterios de corrección. Material de uso exclusivo del docente." },
+    "continuidad": { "descripcion": "Documento {{i}} de {{total}}: {{alcance}}. Se usa ante ausencia docente." },
+    "continuidad-anexo": { "descripcion": "Anexo docente del documento {{i}} de continuidad: resolución de referencia y guía de corrección. Material de uso exclusivo del docente." },
+    "criterios": { "descripcion": "Documento institucional dirigido a alumnos, familias y dirección: qué se evalúa en cada unidad, mínimos exigibles, regla de entrega incompleta y capas de recuperación. Se informa a los alumnos al inicio de la cursada y se consulta en cada instancia de evaluación y recuperación." },
+    "otros": { "descripcion": "Documento presente en el corpus sin tipo reconocido por las convenciones de nombres del generador; clasificarlo o incorporarlo a las convenciones antes de la próxima regeneración." }
+  }
+}

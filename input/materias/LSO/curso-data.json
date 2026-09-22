@@ -1,0 +1,412 @@
+{
+  "materia": "Minimal API con C# .NET 6",
+  "denominacion": "Minimal API con C# .NET 6",
+  "varianteFraseos": 1,
+  "encuentros": [
+    {
+      "n": 4,
+      "unidad": "u1",
+      "caracter": "Conceptual",
+      "eje": 1,
+      "estructura": "clase",
+      "tema": "Introducción a .NET y C#",
+      "actividadesLibro1": "Presentación .NET, tipos, variables",
+      "actividadesLibro2": ["Explicar .NET y C# básico", "Crear primer proyecto dotnet"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 5,
+      "unidad": "u1",
+      "caracter": "Procedimental",
+      "eje": 1,
+      "estructura": "clase",
+      "tema": "Estructuras de control y métodos",
+      "actividadesLibro1": "Condicionales, bucles y funciones",
+      "actividadesLibro2": ["Repaso escritura de código C#", "Ejercicios con métodos"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 6,
+      "unidad": "u1",
+      "caracter": "Procedimental",
+      "eje": 2,
+      "estructura": "clase",
+      "tema": "Minimal API y endpoint GET",
+      "actividadesLibro1": "Primera Minimal API con MapGet",
+      "actividadesLibro2": ["Crear web API con dotnet new web", "Probar endpoint GET en navegador"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 7,
+      "unidad": "u1",
+      "caracter": "Procedimental",
+      "eje": 2,
+      "estructura": "clase",
+      "tema": "Parámetros y rutas en GET",
+      "actividadesLibro1": "Endpoint con parámetros de ruta",
+      "actividadesLibro2": ["Agregar parámetros a rutas GET", "Filtrar datos con query string"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 8,
+      "unidad": "u1",
+      "caracter": "Actitudinal",
+      "eje": 2,
+      "estructura": "cierre",
+      "tema": "Cierre U1: repaso y TP",
+      "actividadesLibro1": "Sistematización y TP-U1",
+      "actividadesLibro2": ["Repasar conceptos de U1", "Entregar TP-U1 en GitHub"],
+      "tp": "TP-U1: Minimal API GET",
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 10,
+      "unidad": "u2",
+      "caracter": "Conceptual",
+      "eje": 3,
+      "estructura": "clase",
+      "tema": "SQLite y SELECT básico",
+      "actividadesLibro1": "Consultas SELECT con WHERE",
+      "actividadesLibro2": ["Conectar SQLite desde C#", "Ejecutar SELECT simple"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 11,
+      "unidad": "u2",
+      "caracter": "Procedimental",
+      "eje": 3,
+      "estructura": "clase",
+      "tema": "SQL: JOIN y ORDER BY",
+      "actividadesLibro1": "JOIN entre pacientes y provincias",
+      "actividadesLibro2": ["Consultas JOIN entre 2 tablas", "Ordenar resultados con ORDER BY"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 12,
+      "unidad": "u2",
+      "caracter": "Procedimental",
+      "eje": 4,
+      "estructura": "clase",
+      "tema": "Dapper: Query<T> con alias",
+      "actividadesLibro1": "Mapeo con Dapper y records",
+      "actividadesLibro2": ["Instalar Dapper, mapear columnas", "Query<T> con registros canónicos"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 13,
+      "unidad": "u2",
+      "caracter": "Procedimental",
+      "eje": 4,
+      "estructura": "clase",
+      "tema": "Parámetros y LIKE en Dapper",
+      "actividadesLibro1": "Consultas parametrizadas con Dapper",
+      "actividadesLibro2": ["Filtrar por alergias con LIKE", "Parametrizar valores con new {}"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 14,
+      "unidad": "u2",
+      "caracter": "Actitudinal",
+      "eje": 4,
+      "estructura": "cierre",
+      "tema": "Cierre U2: repaso y TP",
+      "actividadesLibro1": "Sistematización y TP-U2",
+      "actividadesLibro2": ["Repasar U1-U2 con Dapper", "Entregar TP-U2 en GitHub"],
+      "tp": "TP-U2: SQLite y Dapper básico",
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 21,
+      "unidad": "u3",
+      "caracter": "Procedimental",
+      "eje": 5,
+      "estructura": "clase",
+      "tema": "INSERT con Dapper y POST",
+      "actividadesLibro1": "Alta con ExecuteScalar y POST",
+      "actividadesLibro2": ["Crear endpoint POST con Dapper", "ExecuteScalar para nuevo ID"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 22,
+      "unidad": "u3",
+      "caracter": "Procedimental",
+      "eje": 5,
+      "estructura": "clase",
+      "tema": "DELETE con Dapper y MapDelete",
+      "actividadesLibro1": "Borrado con Execute",
+      "actividadesLibro2": ["Endpoint DELETE con Dapper", "Devolver 204 en borrado"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 23,
+      "unidad": "u3",
+      "caracter": "Procedimental",
+      "eje": 5,
+      "estructura": "clase",
+      "tema": "UPDATE con Dapper y MapPut",
+      "actividadesLibro1": "Actualización con Execute PUT",
+      "actividadesLibro2": ["Endpoint PUT para actualizar", "QueryFirstOrDefault existente"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 24,
+      "unidad": "u3",
+      "caracter": "Procedimental",
+      "eje": 5,
+      "estructura": "clase",
+      "tema": "CRUD completo y JOIN triple",
+      "actividadesLibro1": "JOIN 3 tablas en API CRUD",
+      "actividadesLibro2": ["JOIN 3 admissions+doctors", "QueryFirstOrDefault con parámetro"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 25,
+      "unidad": "u3",
+      "caracter": "Actitudinal",
+      "eje": 5,
+      "estructura": "cierre",
+      "tema": "Cierre U3: repaso y TP",
+      "actividadesLibro1": "Sistematización y TP-U3",
+      "actividadesLibro2": ["Repasar JOINs y CRUD completo", "Entregar TP-U3 en GitHub"],
+      "tp": "TP-U3: CRUD completo",
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 27,
+      "unidad": "u4",
+      "caracter": "Procedimental",
+      "eje": 6,
+      "estructura": "clase",
+      "tema": "Git profesional: ramas y PR",
+      "actividadesLibro1": "Issues, ramas feature y PR",
+      "actividadesLibro2": ["Crear issues en repo grupal", "Abrir ramas por feature"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 28,
+      "unidad": "u4",
+      "caracter": "Procedimental",
+      "eje": 6,
+      "estructura": "clase",
+      "tema": "README de portada y más",
+      "actividadesLibro1": "README, main protegida",
+      "actividadesLibro2": ["Redactar README de portada", "Proteger main con reglas"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 29,
+      "unidad": "u4",
+      "caracter": "Procedimental",
+      "eje": 6,
+      "estructura": "clase",
+      "tema": "Consolidación CRUD con JOINs",
+      "actividadesLibro1": "Repaso CRUD + JOINs",
+      "actividadesLibro2": ["Consolidar operaciones CRUD", "Diseñar endpoint de conteo"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 30,
+      "unidad": "u4",
+      "caracter": "Procedimental",
+      "eje": 6,
+      "estructura": "clase",
+      "tema": "Avance trabajo final",
+      "actividadesLibro1": "Trabajo final con DB real",
+      "actividadesLibro2": ["Implementar funcionalidades finales", "Preparar defensa individual"],
+      "tp": null,
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    },
+    {
+      "n": 31,
+      "unidad": "u4",
+      "caracter": "Actitudinal",
+      "eje": 6,
+      "estructura": "cierre",
+      "tema": "Cierre U4: entrega final",
+      "actividadesLibro1": "Sistematización y entrega TF",
+      "actividadesLibro2": ["Repasar ejes 1-6 integrados", "Entregar trabajo final en GitHub"],
+      "tp": "Trabajo final: API con Dapper",
+      "tiempos": [
+        { "bloque": "Apertura y motivación", "min": 20 },
+        { "bloque": "Desarrollo teórico-práctico", "min": 120 },
+        { "bloque": "Consolidación y cierre", "min": 20 },
+        { "bloque": "Actividad complementaria", "min": 80 }
+      ]
+    }
+  ],
+  "slots": {
+    "celular": "No permitido",
+    "recursos": [
+      "VS Code y terminal",
+      "SDK .NET 6",
+      "hospital.db",
+      "Git y GitHub",
+      "Extensiones C# para VS Code",
+      "Thunder Client o curl"
+    ],
+    "denominaciones": {
+      "u1": "Fundamentos de C# y Minimal API",
+      "u2": "Acceso a datos con SQLite y Dapper",
+      "u3": "CRUD completo con Dapper",
+      "u4": "Profesionalización y proyecto final"
+    },
+    "tps": {
+      "u1": "TP-U1: Minimal API GET",
+      "u2": "TP-U2: SQLite y Dapper básico",
+      "u3": "TP-U3: CRUD completo",
+      "u4": "Trabajo final: API con Dapper"
+    },
+    "unidades": {
+      "u1": {
+        "denominacion": "Fundamentos de C# y Minimal API",
+        "expectativas": "Comprender la estructura de .NET y crear endpoints GET básicos.",
+        "transversales": "Git inicial, terminal de comandos, estructura Program.cs.",
+        "actividadesApertura": "Diagnóstico de saberes previos sobre lógica y algoritmos.",
+        "extension": "Explorar más verbos HTTP y tipos de respuesta sin base de datos.",
+        "nota": "Primer contacto con C# y Minimal API. Sin base de datos aún."
+      },
+      "u2": {
+        "denominacion": "Acceso a datos con SQLite y Dapper",
+        "expectativas": "Consultar una base SQLite desde C# usando Dapper con consultas parametrizadas.",
+        "transversales": "Git para entregas, terminal, SQL básico.",
+        "actividadesApertura": "Recuperar conceptos de endpoints GET y conectar con base de datos.",
+        "extension": "Explorar más funciones SQL de agregación en Dapper.",
+        "nota": "Introducción a Dapper. JOIN entre 2 tablas."
+      },
+      "u3": {
+        "denominacion": "CRUD completo con Dapper",
+        "expectativas": "Implementar las cuatro operaciones CRUD vía endpoints HTTP con Dapper.",
+        "transversales": "Git para entregas, JOIN de 3 tablas, validación de existencia.",
+        "actividadesApertura": "Recuperar SELECT parametrizado y avanzar a escritura en BD.",
+        "extension": "Agregar filtros combinados y paginación simple.",
+        "nota": "POST, PUT, DELETE con Dapper. JOIN triple."
+      },
+      "u4": {
+        "denominacion": "Profesionalización y proyecto final",
+        "expectativas": "Publicar un repositorio profesional con README, issues y PR; exponer una API completa.",
+        "transversales": "Git profesional (ramas, PR, main protegida), documentación técnica.",
+        "actividadesApertura": "Recuperar CRUD completo y presentar flujo profesional.",
+        "extension": "Agregar tests de integración básicos con la API.",
+        "nota": "Cierre del ciclo. Defensa individual del trabajo final."
+      }
+    },
+    "ejes": {
+      "1": "Introducción a C# y .NET 6",
+      "2": "Minimal API y endpoints HTTP",
+      "3": "SQLite y SQL básico",
+      "4": "Dapper y consultas parametrizadas",
+      "5": "CRUD con Dapper",
+      "6": "Profesionalización y control de versiones"
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "u1": {
+    "unidad": "u1",
+    "clases": [4, 5, 6, 7],
+    "cierre": 8,
+    "secuenciaFija": "Encuentros 4 a 7 con la secuencia teórica fija de clase: apertura y puente (20 min), teoría mínima (40 min), práctica guiada (70 min), ejercicio independiente (50 min), extensión y consolidación (45 min) y cierre (15 min): ",
+    "formatoItem": "encuentro {n}, {actividadesAnual}",
+    "separadorItems": "; ",
+    "formatoCierre": "Encuentro {cierre}, cierre de unidad: {actividadesAnual}.",
+    "rotacion": "Rotación de integrantes en el trabajo grupal según los presentes y los equipos disponibles, sin dejar equipos sin usar.",
+    "plantilla": "{actividadesApertura} {secuenciaFija}{items}. {cierre} {rotacion} {extension} {celular}.",
+    "notas": [
+      "U1 encabeza con «Cinco encuentros de 240 minutos.» (actividadesApertura) y su secuencia fija parentiza cada caja de tiempo: «apertura y puente (20 min), … y cierre (15 min):».",
+      "La rotación de U1 es la versión larga: agrega «sin dejar equipos sin usar»; U2-U3 la acortan y U4 la combina con redistribución por issue.",
+      "El contenido del tp se escribe como texto literal dentro de actividadesAnual del cierre (trabajo del tp-u1)."
+    ],
+    "tecnicas": "Resolución de problemas, pensamiento computacional, trabajo colaborativo, uso de TIC.",
+    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
+    "metodologia": "Evaluación formativa de proceso con revisión del historial de commits del grupo y revisiones parciales en clase; evaluación sumativa del {{tp.u1}} en el encuentro 9 mediante entrega por GitHub y defensa individual; devolución al inicio del encuentro 10."
+  },
+  "u2": {
+    "unidad": "u2",
+    "clases": [10, 11, 12, 13],
+    "cierre": 14,
+    "secuenciaFija": "Encuentros 10 a 13 con la secuencia teórica fija (apertura y puente 20 min, teoría mínima 40 min, práctica guiada 70 min, ejercicio independiente 50 min, extensión y consolidación 45 min, cierre 15 min): ",
+    "formatoItem": "encuentro {n}, {actividadesAnual}",
+    "separadorItems": "; ",
+    "formatoCierre": "Encuentro {cierre}, cierre de unidad: {actividadesAnual}.",
+    "rotacion": "Rotación de integrantes en el trabajo grupal según presentes y equipos disponibles.",
+    "plantilla": "{actividadesApertura} {secuenciaFija}{items}. {cierre} {rotacion} {extension} {celular}.",
+    "notas": [
+      "U2 abre con la devolución: «Devolución de la Unidad 1 al inicio del encuentro 10.» (actividadesApertura).",
+      "A diferencia de U1, la secuencia fija va con la lista de cajas de tiempo entre paréntesis y sin «(» por caja."
+    ],
+    "tecnicas": "Resolución de problemas, pensamiento computacional, trabajo colaborativo, uso de TIC.",
+    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
+    "metodologia": "Evaluación formativa de proceso con revisiones parciales de los ejercicios de la materia y seguimiento del repositorio (carpeta nueva, commits, push); evaluación sumativa del {{tp.u2}} en el encuentro 15 mediante entrega por GitHub y defensa individual; devolución al inicio del encuentro 16."
+  },
+  "u3": {
+    "unidad": "u3",
+    "clases": [21, 22, 23, 24],
+    "cierre": 25,
+    "secuenciaFija": "Encuentros 21 a 24 con la secuencia teórica fija (apertura y puente 20 min, teoría mínima 40 min, práctica guiada 70 min, ejercicio independiente 50 min, extensión y consolidación 45 min, cierre 15 min): ",
+    "formatoItem": "encuentro {n}, {actividadesAnual}",
+    "separadorItems": "; ",
+    "formatoCierre": "Encuentro {cierre}, cierre de unidad: {actividadesAnual}.",
+    "rotacion": "Rotación de integrantes en el trabajo grupal según presentes y equipos disponibles.",
+    "plantilla": "{actividadesApertura} {secuenciaFija}{items}. {cierre} {rotacion} {extension} {celular}.",
+    "notas": [
+      "U3 abre con la devolución: «Devolución de la Unidad 2 al inicio del encuentro 21.» (actividadesApertura).",
+      "Mismo estilo de secuencia fija que U2."
+    ],
+    "tecnicas": "Resolución de problemas, pensamiento computacional, trabajo colaborativo, uso de TIC.",
+    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
+    "metodologia": "Evaluación formativa de proceso con revisiones parciales y seguimiento del repositorio; evaluación sumativa del {{tp.u3}} en el encuentro 26 mediante entrega por GitHub y defensa individual; devolución al inicio del encuentro 27."
+  },
+  "u4": {
+    "unidad": "u4",
+    "clases": [28, 29, 30],
+    "cierre": 31,
+    "secuenciaFija": "Encuentros 28 a 30 con la secuencia teórica fija (apertura y puente 20 min, teoría mínima 40 min, práctica guiada 70 min, ejercicio independiente 50 min, extensión y consolidación 45 min, cierre 15 min): ",
+    "formatoItem": "encuentro {n}, {actividadesAnual}",
+    "separadorItems": "; ",
+    "formatoCierre": "Encuentro {cierre}, cierre de unidad: {actividadesAnual}.",
+    "rotacion": "Rotación de integrantes y redistribución de responsabilidades por issue según presentes y equipos disponibles.",
+    "plantilla": "{actividadesApertura} {secuenciaFija}{items}. {cierre} {rotacion} {extension} {celular}.",
+    "notas": [
+      "En U4 el encuentro 27 NO aparece como ítem «encuentro 27, …»: su aporte está integrado en la apertura («Devolución de la Unidad 3 al inicio del encuentro 27 y lanzamiento de la consigna integradora, con confección del README de portada del repositorio.»). El actividadesAnual de n=27 en el JSON queda como dato para el writer de la clase, no se renderiza aquí.",
+      "El cierre de U4 añade «, con preparación de la defensa» al final de activitiesAnual de n=31 (ya incluido en el campo).",
+      "La rotación de U4 menciona «redistribución de responsabilidades por issue»."
+    ],
+    "tecnicas": "Trabajo colaborativo, resolución de problemas, comunicación técnica, uso de TIC.",
+    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, navegador, GitHub, proyector.",
+    "metodologia": "Evaluación formativa de proceso mediante seguimiento de issues, ramas y pull requests, con la revisión entre pares como instancia formativa; evaluación sumativa del {{tp.u4}} en el encuentro 32 mediante entrega por GitHub y defensa individual; devolución al inicio del encuentro 33."
+  }
+}

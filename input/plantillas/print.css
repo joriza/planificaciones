@@ -1,0 +1,159 @@
+/*
+ * print.css — estilos base para PDFs de material didáctico de planificaciones.
+ * Refactorizado con márgenes espejo para anillar, saltos de página entre clases,
+ * tablas con encabezado con fondo, código numerado y separadores entre documentos.
+ *
+ * Editá este archivo libremente. Es solo un punto de partida.
+ */
+
+/* ---- Página ---- */
+@page {
+    size: A4;
+    margin: 0;
+}
+@page :left {
+    margin: 20mm 10mm 20mm 18mm;  /* margen izquierdo extra para encuadernacion */
+}
+@page :right {
+    margin: 20mm 18mm 20mm 10mm;  /* margen derecho extra en paginas impares */
+}
+
+/* ---- Tipografía base ---- */
+body {
+    font-family: "Arial", "Helvetica", sans-serif;
+    font-size: 12pt;
+    line-height: 1.70;
+    color: #1a1a1a;
+}
+
+p {
+    margin: 0.6em 0;
+    text-align: justify;
+}
+
+/* ---- Encabezados ---- */
+h1, h2, h3, h4 {
+    font-family: "Arial", "Helvetica", sans-serif;
+    color: #1a4d8f;
+    line-height: 1.25;
+    page-break-after: avoid;
+}
+
+h1 {
+    font-size: 20pt;
+    border-bottom: 2px solid #1a4d8f;
+    padding-bottom: 4px;
+    margin-top: 0;
+    page-break-before: always;
+}
+
+/* El primer h1 (titulo del PDF combinado) no fuerza salto antes */
+h1:first-of-type {
+    page-break-before: avoid;
+}
+
+h2 {
+    font-size: 15pt;
+    color: #2a6db0;
+    margin-top: 1.4em;
+    border-bottom: 1px solid #c5d4e3;
+    padding-bottom: 2px;
+}
+
+h3 {
+    font-size: 12.5pt;
+    color: #3a7fb8;
+    margin-top: 1.2em;
+}
+
+h4 {
+    font-size: 11pt;
+    color: #555;
+    margin-top: 1em;
+}
+
+/* ---- Tablas ---- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8em 0;
+    font-size: 10.5pt;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 4px 6px;
+    text-align: left;
+    vertical-align: top;
+}
+
+th {
+    background-color: #1a4d8f;
+    color: white;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+/* ---- Código ---- */
+pre, code {
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 9.5pt;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+pre {
+    padding: 8px 10px;
+    margin: 0.6em 0;
+    white-space: pre-wrap;
+    page-break-inside: avoid;
+}
+
+code {
+    padding: 1px 3px;
+}
+
+pre code {
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+/* ---- Listas ---- */
+ul, ol {
+    margin: 0.4em 0;
+    padding-left: 1.8em;
+}
+
+li {
+    margin: 0.15em 0;
+}
+
+/* ---- Blockquotes ---- */
+blockquote {
+    margin: 0.6em 0;
+    padding: 6px 12px;
+    border-left: 4px solid #1a4d8f;
+    background-color: #f0f5fa;
+    color: #333;
+}
+
+blockquote p {
+    margin: 0.2em 0;
+}
+
+/* ---- Separador entre documentos combinados (visible en pantalla no en PDF) ---- */
+hr {
+    margin: 1em 0;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+/* ---- Pagina de portada (facultativa) ---- */
+.page-break {
+    page-break-before: always;
+}

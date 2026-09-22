@@ -1,0 +1,5 @@
+Este curso propone un primer acercamiento al desarrollo en Python construyendo desde cero pequeñas aplicaciones en un único archivo y sin recursos externos, sin abstracciones intermedias —sin patrón repositorio ni inyección de dependencias—, con cada pieza explicada antes de usarse y todo el resultado verificable.
+
+Elegimos ese formato por carga cognitiva: para estudiantes del nivel secundario que se inician en Python, cada archivo, cada abstracción y cada herramienta no comprendida es carga que no aporta. Preferimos un programa corto que se entiende completo a una arquitectura correcta que se copia sin entender; lo que el alumno no puede explicar, no lo damos por aprendido.
+
+El repositorio se lee en cascada: la planificación anual (`01-planificacion/`) define el recorrido del año; cada unidad (`02-unidades/`) desarrolla sus encuentros con clases y evaluaciones; los momentos de intensificación, la continuidad pedagógica y los criterios de aprobación completan el ciclo. La hoja de convenciones técnicas es la referencia obligada ante cualquier duda de código.

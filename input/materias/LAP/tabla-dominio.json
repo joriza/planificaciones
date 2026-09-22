@@ -1,0 +1,81 @@
+{
+  "descripcion": "Tabla de mapeo de dominio para generar versiones equivalentes (B) desde una versión A en LAP (Programación en Python). La usa tools/generar-version-b.ps1 con -Tabla input/materias/LAP/tabla-dominio.json. Los tokens A de cada dominio ocurren textualmente en las evaluaciones reales del corpus (versiones A de unidades y momentos). Consolidación en un solo pase: los tokens A son únicos en TODA la tabla.",
+  "reglas": [
+    "Reemplazo de palabra completa (whole-word), insensible a mayúsculas, preservando el patrón de caja del token hallado: articulos -> LIBROS si el original era PRODUCTOS, memberName -> toolName si el original era memberName.",
+    "La sustitución es una sola pasada sobre el texto base: un reemplazo nunca se vuelve a mapear (la alternancia evalúa de mayor a menor longitud).",
+    "Cada letra generada usa SU propia fila del grupo (B->B); las filas deben ser distintas entre sí y distintas de A. Si a una letra pedida le falta la fila de un token presente en la base, el generador corta con error (no recicla otra fila).",
+    "Un token del vocabulario presente en la base sin grupo en la tabla queda intacto y se informa como AVISO al docente.",
+    "La prosa natural y los datos de ejemplo se ajustan en la pasada de lectura natural del docente: el generador mapea solo los tokens canónicos del dominio."
+  ],
+  "notaExtension": "Instancias por unidad (u1..u4). Los momentos de intensificación y fortalecimiento reusan los dominios de las unidades que evalúan (sus consignas usan tokens A de u1..u4); no declaran tokens propios. Para agregar una versión: agregue la clave de letra (B/C/D) en cada grupo del dominio.",
+  "dominios": {
+    "u1": {
+      "descripcion": "Unidad 1 — programa de consola con entrada y control de flujo: A=kiosco escolar, B=biblioteca de aula.",
+      "vocabulario": [],
+      "grupos": [
+        { "A": "kiosco", "B": "biblioteca" },
+        { "A": "venta", "B": "préstamo" },
+        { "A": "articulos", "B": "libros" },
+        { "A": "precio", "B": "tarifa" },
+        { "A": "stock", "B": "ejemplares" },
+        { "A": "descuento", "B": "recargo" },
+        { "A": "cliente", "B": "lector" },
+        { "A": "saleTotal", "B": "loanTotal" },
+        { "A": "itemPrice", "B": "bookPrice" },
+        { "A": "itemStock", "B": "bookCopies" },
+        { "A": "registerSale", "B": "registerLoan" },
+        { "A": "discountRate", "B": "lateFee" }
+      ]
+    },
+    "u2": {
+      "descripcion": "Unidad 2 — programa con colecciones y funciones: A=socios de un club de barrio, B=herramientas de un taller de escuela.",
+      "vocabulario": [],
+      "grupos": [
+        { "A": "socio", "B": "herramienta" },
+        { "A": "socios", "B": "herramientas" },
+        { "A": "cuota", "B": "depósito" },
+        { "A": "club", "B": "taller" },
+        { "A": "vencimiento", "B": "devolución" },
+        { "A": "memberList", "B": "toolList" },
+        { "A": "memberName", "B": "toolName" },
+        { "A": "memberAge", "B": "toolCondition" },
+        { "A": "clubFee", "B": "toolDeposit" },
+        { "A": "findMember", "B": "findTool" },
+        { "A": "activeMembers", "B": "availableTools" }
+      ]
+    },
+    "u3": {
+      "descripcion": "Unidad 3 — procesamiento de texto y validación: A=pedidos de una pizzería, B=turnos de una veterinaria.",
+      "vocabulario": [],
+      "grupos": [
+        { "A": "pedido", "B": "turno" },
+        { "A": "pizzería", "B": "veterinaria" },
+        { "A": "ingredientes", "B": "vacunas" },
+        { "A": "telefono", "B": "historial" },
+        { "A": "comprador", "B": "mascota" },
+        { "A": "orderText", "B": "appointmentText" },
+        { "A": "customerName", "B": "petName" },
+        { "A": "orderList", "B": "appointmentList" },
+        { "A": "orderPrice", "B": "consultPrice" },
+        { "A": "parseOrder", "B": "parseAppointment" },
+        { "A": "validPhone", "B": "validName" }
+      ]
+    },
+    "u4": {
+      "descripcion": "Unidad 4 — trabajo integrador con repositorio profesional: A=verdulería con control de venta, B=videoteca con alquiler de películas.",
+      "vocabulario": [],
+      "grupos": [
+        { "A": "verdulería", "B": "videoteca" },
+        { "A": "producto", "B": "película" },
+        { "A": "productos", "B": "películas" },
+        { "A": "kilos", "B": "copias" },
+        { "A": "factura", "B": "alquiler" },
+        { "A": "productList", "B": "movieList" },
+        { "A": "productName", "B": "movieTitle" },
+        { "A": "productPrice", "B": "moviePrice" },
+        { "A": "stockWeight", "B": "stockCopies" },
+        { "A": "sellProduct", "B": "rentMovie" }
+      ]
+    }
+  }
+}

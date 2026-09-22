@@ -1,0 +1,194 @@
+[
+  {
+    "n": 1,
+    "eje": 6,
+    "ejeNombre": "Presentación y diagnóstico",
+    "caracter": "Actitudinal",
+    "tema": "Encuadre y diagnóstico",
+    "act1linea": "Contrato, SyH, EPP, diagnóstico",
+    "act2lineas": [
+      "Contrato, seguridad, higiene,",
+      "EPP y diagnóstico de saberes"
+    ]
+  },
+  {
+    "n": 2,
+    "eje": 6,
+    "ejeNombre": "Intensificación y Fortalecimiento",
+    "caracter": "Procedimental",
+    "tema": "Nivelación: terminal",
+    "act1linea": "Archivos, carpetas y comandos",
+    "act2lineas": [
+      "Manejo de archivos, carpetas",
+      "y comandos de terminal"
+    ]
+  },
+  {
+    "n": 3,
+    "eje": 6,
+    "ejeNombre": "Intensificación y Fortalecimiento",
+    "caracter": "Procedimental",
+    "tema": "Nivelación: web y entregas",
+    "act1linea": "URL, navegador y entregas",
+    "act2lineas": [
+      "URL, navegador y plataforma",
+      "web de entregas del curso"
+    ]
+  },
+  {
+    "n": 9,
+    "eje": 1,
+    "ejeNombre": "Evaluación de unidad",
+    "caracter": "Procedimental",
+    "tema": "Evaluación de la Unidad 1",
+    "act1linea": "Defensa oral y prueba A/B",
+    "act2lineas": [
+      "Entrega por GitHub y defensa",
+      "individual, prueba A/B"
+    ]
+  },
+  {
+    "n": 15,
+    "eje": 2,
+    "ejeNombre": "Evaluación de unidad",
+    "caracter": "Procedimental",
+    "tema": "Evaluación de la Unidad 2",
+    "act1linea": "Defensa oral y prueba A/B",
+    "act2lineas": [
+      "Entrega por GitHub y defensa",
+      "individual, prueba A/B"
+    ]
+  },
+  {
+    "n": 16,
+    "eje": 6,
+    "ejeNombre": "Intensificación y Fortalecimiento",
+    "caracter": "Conceptual",
+    "tema": "Cierre del cuatrimestre 1",
+    "act1linea": "Devolución U2, síntesis y metac.",
+    "act2lineas": [
+      "Devolución U2 y síntesis",
+      "Metacognición del cuatrimestre"
+    ]
+  },
+  {
+    "n": 17,
+    "eje": 6,
+    "ejeNombre": "Intensificación y Fortalecimiento",
+    "caracter": "Procedimental",
+    "tema": "Intensif. y fortalec. U1-U2 (1/2)",
+    "act1linea": "Pistas diferenciadas",
+    "act2lineas": [
+      "Pistas diferenciadas por",
+      "condición; núcleos U1-U2"
+    ]
+  },
+  {
+    "n": 18,
+    "eje": 6,
+    "ejeNombre": "Intensificación y Fortalecimiento",
+    "caracter": "Procedimental",
+    "tema": "Intensif. y fortalec. U1-U2 (2/2)",
+    "act1linea": "Refuerzo y profundización",
+    "act2lineas": [
+      "Refuerzo y profundización",
+      "con evaluación del momento"
+    ]
+  },
+  {
+    "n": 19,
+    "eje": 6,
+    "ejeNombre": "Intensificación y Fortalecimiento",
+    "caracter": "Procedimental",
+    "tema": "Proyecto puente (1/2)",
+    "act1linea": "Consigna única y plan",
+    "act2lineas": [
+      "Consigna única, planificación",
+      "grupal y primer desarrollo"
+    ]
+  },
+  {
+    "n": 20,
+    "eje": 6,
+    "ejeNombre": "Intensificación y Fortalecimiento",
+    "caracter": "Procedimental",
+    "tema": "Proyecto puente (2/2)",
+    "act1linea": "Entrega y rúbrica de 100",
+    "act2lineas": [
+      "Finalización y puesta en",
+      "común, rúbrica de 100 puntos"
+    ]
+  },
+  {
+    "n": 26,
+    "eje": 3,
+    "ejeNombre": "Evaluación de unidad",
+    "caracter": "Procedimental",
+    "tema": "Evaluación de la Unidad 3",
+    "act1linea": "Defensa oral y prueba A/B",
+    "act2lineas": [
+      "Entrega por GitHub y defensa",
+      "individual, prueba A/B"
+    ]
+  },
+  {
+    "n": 32,
+    "eje": 4,
+    "ejeNombre": "Trabajo integrador profesional",
+    "caracter": "Actitudinal",
+    "tema": "Defensa del integrador",
+    "act1linea": "Defensas individuales",
+    "act2lineas": [
+      "Defensas individuales del",
+      "trabajo integrador"
+    ]
+  },
+  {
+    "n": 33,
+    "eje": 6,
+    "ejeNombre": "Intensificación y Fortalecimiento",
+    "caracter": "Conceptual",
+    "tema": "Cierre del cuatrimestre 2",
+    "act1linea": "Devolución U4, síntesis y metac.",
+    "act2lineas": [
+      "Devolución U4 y síntesis",
+      "Metacognición anual"
+    ]
+  },
+  {
+    "n": 34,
+    "eje": 6,
+    "ejeNombre": "Intensificación y Fortalecimiento",
+    "caracter": "Procedimental",
+    "tema": "Intensif. y fortalec. U3-U4 (1/2)",
+    "act1linea": "Pistas diferenciadas",
+    "act2lineas": [
+      "Pistas diferenciadas por",
+      "condición; núcleos U3-U4"
+    ]
+  },
+  {
+    "n": 35,
+    "eje": 6,
+    "ejeNombre": "Intensificación y Fortalecimiento",
+    "caracter": "Procedimental",
+    "tema": "Intensif. y fortalec. U3-U4 (2/2)",
+    "act1linea": "Refuerzo y profundización",
+    "act2lineas": [
+      "Refuerzo y profundización",
+      "con evaluación del momento"
+    ]
+  },
+  {
+    "n": 36,
+    "eje": 6,
+    "ejeNombre": "Intensificación y Fortalecimiento",
+    "caracter": "Actitudinal",
+    "tema": "Cierre integral anual",
+    "act1linea": "Balance y proyección",
+    "act2lineas": [
+      "Balance grupal del año,",
+      "metacognición y proyección"
+    ]
+  }
+]
