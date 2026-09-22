@@ -45,6 +45,14 @@ try {
   exit 1
 }
 
+# --- Aviso de duplicado input/output (regla: vale el de input; nunca se borra) ---
+$raizRepo = Split-Path -Parent $PSScriptRoot
+$nombreMateria = Split-Path ((Resolve-Path -LiteralPath $Materia).Path) -Leaf
+$rutaDuplicado = Join-Path $raizRepo ("output\" + $nombreMateria + "\curso-data.json")
+if (Test-Path -LiteralPath $rutaDuplicado) {
+  Write-Output "AVISO: curso-data duplicado en output\$nombreMateria\curso-data.json (vale el de input; considere eliminar el duplicado)."
+}
+
 $errores = New-Object System.Collections.Generic.List[string]
 function Add-Error([string]$mensaje) { $errores.Add($mensaje) | Out-Null }
 function Test-NoVacio($valor) { -not [string]::IsNullOrWhiteSpace([string]$valor) }

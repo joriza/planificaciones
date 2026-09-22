@@ -24,7 +24,7 @@ Todas corren con Windows PowerShell 5.1 desde la raíz del repositorio.
 
 | Script | Qué hace | Uso |
 | --- | --- | --- |
-| `validar-curso-data.ps1` | Valida `input/materias/<m>/curso-data.json` (carpeta del curso): 20 encuentros en rangos de unidad, vocabulario de carácter, cierres con TP, celdas ≤35, slots completos. | `powershell -File tools\validar-curso-data.ps1 -Materia input\materias\<m>` |
+| `validar-curso-data.ps1` | Valida `input/materias/<m>/curso-data.json` (carpeta del curso): 20 encuentros en rangos de unidad, vocabulario de carácter, cierres con TP, celdas ≤35, slots completos; avisa (sin bloquear) si detecta un `curso-data.json` duplicado en `output/<m>/` (vale el de input). | `powershell -File tools\validar-curso-data.ps1 -Materia input\materias\<m>` |
 | `generar-administrativos.ps1` | Render determinista de los 3 administrativos **solo CSV** (anual + libro de aula de 1 y 2 líneas; UTF-8 con BOM, LF). Idempotente: misma entrada, mismos bytes; con `-HorasPorEncuentro <h>` escala minutos de tramos a horas de la materia (default 4). | `powershell -File tools\generar-administrativos.ps1 -Materia input\materias\<m> -Salida <curso>\01-planificacion [-Variante N] [-HorasPorEncuentro <h>]` |
 | `generar-readme.ps1` | README del curso mayormente derivado: índice, links y orden desde el árbol + curso-data; fundamentación por plantilla; nota de cátedra manual si existe. Protege el archivo existente sin `-Force`. | `powershell -File tools\generar-readme.ps1 -Materia input\materias\<m> -Curso output\<curso> [-Salida <file>] [-Force]` |
 | `scaffold-clase.ps1` | Esqueleto BOPPPS+GRR de una clase (y su anexo docente) desde el curso-data: headings canónicos y reparto de tiempos según `estructura` (clase/cierre), sin prosa. | `powershell -File tools\scaffold-clase.ps1 -Materia input\materias\<m> -Encuentro 22 -Salida <dir> [-Force]` |
@@ -53,13 +53,13 @@ Toda corrida genera el corpus en **cinco fases consecutivas** (cascada data-firs
 | 11 | `output/<X>/06-aprobacion/criterios-aprobacion.md` + README índice | **Fase 4** | LLM (criterios) + `generar-readme.ps1` (README derivado) |
 | 12 | Puerta de salida | **Fase 4** | `verificar-curso.ps1` y `lint-canon.ps1` en verde |
 
-Reglas transversales de la cascada: la Fase 0 es la única con autoría LLM de la firma (el curso-data queda propiedad del docente); la Fase 1 es determinista (cero LLM); los writers de las Fases 2-3 reciben solo su slice de curso-data, la hoja de convenciones (que es canon) y la estructura de la clase; los cambios posteriores entran por el modo **actualización** (nunca editando derivados).
+Reglas transversales de la cascada: la Fase 0 es la única con autoría LLM de la firma (el curso-data queda propiedad del docente); la Fase 1 es determinista (cero LLM); los writers de las Fases 2-3 reciben solo su slice de curso-data, la hoja de convenciones (que es canon) y la estructura de la clase; los cambios posteriores entran por el modo **actualización** (nunca editando derivados). En materia nueva cuyo curso-data se redactó en la misma corrida, la cascada frena además al cerrar la Fase 1: el docente revisa la anual y los libros contra la plantilla institucional antes de derivar la prosa; los ajustes entran por el curso-data y se re-renderizan los administrativos.
 
 ## Modo de ejecución (derivado del estado del repositorio)
 
 | Estado detectado | Modo | Freno por defecto |
 | --- | --- | --- |
-| Sin `input/materias/<m>/curso-data.json` | Materia nueva (Fase 0 desde cero) | Pausa tras el curso-data validado |
+| Sin `input/materias/<m>/curso-data.json` | Materia nueva (Fase 0 desde cero) | Pausa tras el curso-data validado + parada post-Fase 1 (administrativos) |
 | Con curso-data, sin `output/<m>/` | Regeneración completa (reusa firma y hoja) | Continua |
 | Con curso-data y `output/<m>/` vigente | Actualización (solo lo afectado) | Continua |
 
@@ -70,7 +70,7 @@ Una declaración explícita en la orden pisa el modo derivado y los frenos por d
 1. Crear `input/materias/<nombre>/materia.md` desde `input/plantillas/plantilla-materia.md`, y `input/materias/<nombre>/pedido.md` desde `input/plantillas/plantilla-pedido.md`, y completarlos. El nombre de la carpeta es el identificador de la materia.
 2. **Fase 0** (única autoría LLM de la firma pedagógica): redactar `input/materias/<nombre>/curso-data.json` — los 20 encuentros de unidad + slots — según `prompt-plantilla-planificacion.md`. El JSON queda bajo propiedad del docente (versionado en git; no se re-redacta en corridas siguientes). Para materias con código, redactar también la hoja de convenciones técnicas del curso desde `input/plantillas/plantilla-convenciones-tecnicas.md`, con spike de verificación (misma regla de propiedad).
 3. Validar: `tools\validar-curso-data.ps1 -Materia input\materias\<nombre>`.
-4. **Fase 1** (cero LLM): render de administrativos con `tools\generar-administrativos.ps1 -Materia input\materias\<nombre> -Salida output\<nombre>\01-planificacion`; opcionalmente el README derivado con `tools\generar-readme.ps1 -Materia input\materias\<nombre> -Curso output\<nombre>`.
+4. **Fase 1** (cero LLM): render de administrativos con `tools\generar-administrativos.ps1 -Materia input\materias\<nombre> -Salida output\<nombre>\01-planificacion`; opcionalmente el README derivado con `tools\generar-readme.ps1 -Materia input\materias\<nombre> -Curso output\<nombre>`. Si el curso-data se redactó en esta corrida: parada de revisión de los administrativos antes de continuar con la Fase 2.
 5. **Fases 2-3** (prosa viva): writers por carpeta — cada uno recibe solo el slice de sus encuentros, `input/plantillas/digest-codigo.md` si escribe código, la hoja de convenciones técnicas (leerla primero) y `input/estructura-de-la-clase.md`. Evaluaciones con scaffolds + consigna maestra + versiones equivalentes.
 6. **Fase 4**: `tools\verificar-curso.ps1 -Curso output\<nombre>` y `tools\lint-canon.ps1 -Curso output\<nombre>` en verde.
 
@@ -98,3 +98,4 @@ Una declaración explícita en la orden pisa el modo derivado y los frenos por d
 - Administrativos **solo CSV** (UTF-8 con BOM, separador `;`); no se corrigen a mano: el cambio se hace en el curso-data y se re-renderiza.
 - `verificar-curso.ps1` y `lint-canon.ps1` son la puerta de salida de toda corrida; la baseline vigente de `output/LSO` está documentada en `odd/tasks/optimizacion-tiempo-tokens.md`.
 - Las evaluaciones usan versiones equivalentes (A/B/C/D; mínimo dos según los grupos); la equivalencia se genera por reglas y se verifica con checklist determinista + pasada de lectura natural del docente.
+- `curso-data.json` vive en `input/materias/<m>/`; si apareciera un duplicado en `output/<m>/` es involuntario: vale el de input (el validador lo avisa) y se sugiere eliminarlo; nunca se borra automáticamente.
