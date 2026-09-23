@@ -27,8 +27,8 @@
 - [x] Fase 4: cierre anual (`generar-cierre-anual.ps1`)
 - [x] Puerta de salida: `verificar-curso.ps1` TODO OK
 - [x] Puerta de salida: `lint-canon.ps1 -HorasPorEncuentro 2` sin regresiones (0 errores, 9 avisos: 5 preview-libro + 4 prosa-estampada por diseño del scaffold, patrón baseline LAP)
-- [ ] Commit work-unit de la corrida + push
-- [ ] PDFs consolidados: `-Combinado` + `-SoloAnexos`
+- [x] Commit work-unit de la corrida + push (b3d96f4, merge a main 7f3ad4f)
+- [x] PDFs consolidados: `-Combinado` (7) + `-SoloAnexos` (6) = 13 PDFs en output/LPR/pdf/
 
 ## Reglas de la corrida
 
