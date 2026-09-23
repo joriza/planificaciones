@@ -1,0 +1,209 @@
+# Programación en Python — Índice del curso
+
+> Documento índice del corpus de la asignatura **Programación en Python**, redactado en registro docente formal. Presenta el curso, organiza el corpus completo mediante vínculos a cada documento, documenta el orden de creación de los materiales y la fundamentación pedagógica del enfoque. Es un documento derivado: se genera con `tools/generar-readme.ps1` a partir del árbol del corpus y de la firma pedagógica del curso (`input/materias/LPR/curso-data.json`).
+
+---
+
+## 1. Presentación del curso
+
+| Campo | Detalle |
+| --- | --- |
+| Asignatura (denominación formal) | Programación en Python |
+| Nivel y modalidad | Nivel secundario, escuela técnica |
+| Stack tecnológico | Python 3 (programación imperativa con funciones) |
+| Entorno de trabajo | VS Code + terminal |
+| Carga horaria | 36 encuentros de 2 horas reloj (120 minutos teóricos por encuentro): 72 horas anuales, 18 encuentros por cuatrimestre |
+| Uso del celular | No permitido |
+
+El ciclo lectivo sigue una estructura fija de 36 encuentros organizados en 16 tramos: encuadre y diagnóstico (encuentro 1), recuperación y profundización de saberes previos (encuentros 2-3), cuatro unidades didácticas con su encuentro dedicado de evaluación (encuentros 4-9, 10-15, 21-26 y 27-32), cierres integradores cuatrimestrales sin evaluación propia (encuentros 16 y 33), momentos de intensificación y fortalecimiento (encuentros 17-20 y 34-35) y cierre integral (encuentro 36). La terminal, git y GitHub, y el trabajo colaborativo se enseñan de forma explícita antes de su primer uso y se ejercitan como saberes transversales durante todo el año.
+
+---
+
+## 2. Índice completo del corpus
+
+Cada documento se presenta con una descripción de qué es y cuándo se usa. Los archivos con sufijo `-anexo-docente.md` son **anexos docentes: material de uso exclusivo del docente** (soluciones, criterios de corrección y guías de conducción); no se entregan a alumnos ni a administración.
+
+### 2.1 Canon técnico — hoja de convenciones
+
+| Documento | Qué es y cuándo se usa |
+| --- | --- |
+| [convenciones-tecnicas.md](../../input/materias/LPR/convenciones-tecnicas.md) | Canon del curso: fuente única de verdad de tipos, formatos y estructura de código. Se consulta ante cualquier duda técnica; toda divergencia con esta hoja es un defecto. |
+
+### 2.2 Carpeta `01-planificacion/` — documentos administrativos
+
+| Documento | Qué es y cuándo se usa |
+| --- | --- |
+| [01-planificacion/planificacion-anual.csv](01-planificacion/planificacion-anual.csv) | Documento madre del curso: presentación y organización de los 16 tramos del ciclo anual (una fila por tramo), con ejes temáticos y correlación exacta. Es un render determinista de la firma pedagógica del curso (`input/materias/LPR/curso-data.json`) mediante `tools/generar-administrativos.ps1`. Versión planilla (separador `;`, UTF-8 con BOM) para la carga institucional. |
+| [01-planificacion/libro-de-aula-1-linea-por-encuentro.csv](01-planificacion/libro-de-aula-1-linea-por-encuentro.csv) | Síntesis del plan de clases con una línea por encuentro (36 filas), para completar el libro de aula. El docente completa manualmente Fecha y Material al dictar cada encuentro. Render determinista del mismo origen; UTF-8 con BOM. |
+| [01-planificacion/libro-de-aula-2-lineas-por-encuentro.csv](01-planificacion/libro-de-aula-2-lineas-por-encuentro.csv) | Versión del libro de aula con 2 líneas por encuentro (72 filas), para instituciones que solicitan mayor detalle. Render determinista del mismo origen; UTF-8 con BOM. |
+
+### 2.3 Carpeta `02-unidades/` — unidades didácticas y sus evaluaciones
+
+Cada unidad reúne los documentos de clase dirigidos al alumno (con su anexo docente como material de uso exclusivo del docente) y el documento de evaluación de la unidad con sus versiones equivalentes.
+
+#### Fundamentos de Python y control del flujo (`01-u1-fundamentos-de-python-y-control-del-flujo/`, encuentros 4 a 9)
+
+| Encuentro | Documento del alumno | Qué trabajó | Anexo docente (solo docente) |
+| --- | --- | --- | --- |
+| 4 | [clase-04-primer-programa-y-variables.md](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-04-primer-programa-y-variables.md) | Primer programa en Python; ejecución desde VS Code y terminal; variables, asignación y tipos básicos int, float, str y bool; operadores aritméticos (+, -, *, /, //, %, **); comentarios como documentación del código.. | [anexo clase 4](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-04-primer-programa-y-variables-anexo-docente.md) |
+| 5 | [clase-05-entrada-y-salida-por-consola.md](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-05-entrada-y-salida-por-consola.md) | Entrada y salida por consola: input() y print(); conversión de tipos con int(), float() y str(); primeras f-strings para armar mensajes.. | [anexo clase 5](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-05-entrada-y-salida-por-consola-anexo-docente.md) |
+| 6 | [clase-06-condicionales-y-operadores.md](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-06-condicionales-y-operadores.md) | Operadores de comparación y lógicos (and, or, not); estructura if/elif/else; combinación de condiciones para decidir el flujo del programa.. | [anexo clase 6](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-06-condicionales-y-operadores-anexo-docente.md) |
+| 7 | [clase-07-bucles-for-y-while.md](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-07-bucles-for-y-while.md) | Bucles: for sobre rangos (range) y sobre strings; while con condición de corte; contadores y acumuladores.. | [anexo clase 7](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-07-bucles-for-y-while-anexo-docente.md) |
+| 8 | [clase-08-cierre-u1-repaso-y-tp.md](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-08-cierre-u1-repaso-y-tp.md) | Sistematización y consolidación de la Unidad 1; cierre del TP-U1; ciclo completo de entrega con Git y GitHub (gitignore, init, commits, repo remoto, remote add, push) que se enseña una sola vez y queda como rutina del curso.. | [anexo clase 8](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-08-cierre-u1-repaso-y-tp-anexo-docente.md) |
+| 9 | [evaluacion-u1.md](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/evaluacion-u1.md) | Encuentro dedicado de evaluación de la Unidad 1: entrega, defensa individual y prueba práctica según los acuerdos de la unidad. Documento de metadatos de la instancia. | — |
+| 9 | [evaluacion-u1-version-a.md](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/evaluacion-u1-version-a.md) · [evaluacion-u1-version-b.md](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/evaluacion-u1-version-b.md) | Prueba práctica individual en versiones equivalentes (mismos objetivos y requisitos, distinto dominio o datos). | [anexo versión A](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/evaluacion-u1-version-a-anexo-docente.md) · [anexo versión B](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/evaluacion-u1-version-b-anexo-docente.md) |
+
+#### Estructuras de datos y funciones (`02-u2-estructuras-de-datos-y-funciones/`, encuentros 10 a 15)
+
+| Encuentro | Documento del alumno | Qué trabajó | Anexo docente (solo docente) |
+| --- | --- | --- | --- |
+| 10 | [clase-10-listas-y-mutabilidad.md](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-10-listas-y-mutabilidad.md) | Listas: creación, acceso por índice y métodos append, pop, index y sort; mutabilidad frente a str y tuple; slicing [i:j] sobre listas y strings.. | [anexo clase 10](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-10-listas-y-mutabilidad-anexo-docente.md) |
+| 11 | [clase-11-tuplas-y-conjuntos-set.md](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-11-tuplas-y-conjuntos-set.md) | Tuplas como secuencias inmutables; conjuntos (set): unicidad de elementos y operaciones básicas; criterios de elección entre list, tuple y set según el problema.. | [anexo clase 11](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-11-tuplas-y-conjuntos-set-anexo-docente.md) |
+| 12 | [clase-12-diccionarios-clave-y-valor.md](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-12-diccionarios-clave-y-valor.md) | Diccionarios: pares clave-valor; acceso y modificación; keys(), values() e items(); altas, bajas y recorridos; KeyError y su prevención.. | [anexo clase 12](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-12-diccionarios-clave-y-valor-anexo-docente.md) |
+| 13 | [clase-13-funciones-y-ambito-local.md](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-13-funciones-y-ambito-local.md) | Funciones: def, parámetros y return; ámbito local (lo necesario); bloque de ejecución principal if __name__ == "__main__" como organización estándar del archivo.. | [anexo clase 13](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-13-funciones-y-ambito-local-anexo-docente.md) |
+| 14 | [clase-14-cierre-u2-repaso-y-tp.md](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-14-cierre-u2-repaso-y-tp.md) | Sistematización y consolidación de la Unidad 2; cierre del TP-U2 con colecciones y funciones; entrega con carpeta nueva, commits y push.. | [anexo clase 14](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-14-cierre-u2-repaso-y-tp-anexo-docente.md) |
+| 15 | [evaluacion-u2.md](02-unidades/02-u2-estructuras-de-datos-y-funciones/evaluacion-u2.md) | Encuentro dedicado de evaluación de la Unidad 2: entrega, defensa individual y prueba práctica según los acuerdos de la unidad. Documento de metadatos de la instancia. | — |
+| 15 | [evaluacion-u2-version-a.md](02-unidades/02-u2-estructuras-de-datos-y-funciones/evaluacion-u2-version-a.md) · [evaluacion-u2-version-b.md](02-unidades/02-u2-estructuras-de-datos-y-funciones/evaluacion-u2-version-b.md) | Prueba práctica individual en versiones equivalentes (mismos objetivos y requisitos, distinto dominio o datos). | [anexo versión A](02-unidades/02-u2-estructuras-de-datos-y-funciones/evaluacion-u2-version-a-anexo-docente.md) · [anexo versión B](02-unidades/02-u2-estructuras-de-datos-y-funciones/evaluacion-u2-version-b-anexo-docente.md) |
+
+#### Procesamiento de texto y validación (`03-u3-procesamiento-de-texto-y-validacion/`, encuentros 21 a 26)
+
+| Encuentro | Documento del alumno | Qué trabajó | Anexo docente (solo docente) |
+| --- | --- | --- | --- |
+| 21 | [clase-21-cadenas-metodos-de-texto.md](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-21-cadenas-metodos-de-texto.md) | Métodos de cadenas para procesar la entrada del usuario: split, strip, join y replace; f-strings con formato numérico; el texto como dato procesable.. | [anexo clase 21](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-21-cadenas-metodos-de-texto-anexo-docente.md) |
+| 22 | [clase-22-validacion-con-try-except.md](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-22-validacion-con-try-except.md) | Excepciones: try/except para validar la entrada (ValueError del int()); patrón de reintento con while; mensajes de error claros para el usuario.. | [anexo clase 22](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-22-validacion-con-try-except-anexo-docente.md) |
+| 23 | [clase-23-modulos-y-menu-en-memoria.md](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-23-modulos-y-menu-en-memoria.md) | Módulos: import de built-ins (random, math) como mención puntual; integración de funciones, colecciones, texto y validación en un menú de consola en memoria.. | [anexo clase 23](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-23-modulos-y-menu-en-memoria-anexo-docente.md) |
+| 24 | [clase-24-integracion-menu-del-tp.md](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-24-integracion-menu-del-tp.md) | Diseño de un programa completo en un solo archivo .py: funciones, colecciones, menú textual en memoria y validación de entrada; avance del TP-U3.. | [anexo clase 24](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-24-integracion-menu-del-tp-anexo-docente.md) |
+| 25 | [clase-25-cierre-u3-repaso-y-tp.md](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-25-cierre-u3-repaso-y-tp.md) | Sistematización y consolidación de la Unidad 3; cierre del TP-U3 con menú validado en memoria; entrega con carpeta nueva, commits y push.. | [anexo clase 25](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-25-cierre-u3-repaso-y-tp-anexo-docente.md) |
+| 26 | [evaluacion-u3.md](02-unidades/03-u3-procesamiento-de-texto-y-validacion/evaluacion-u3.md) | Encuentro dedicado de evaluación de la Unidad 3: entrega, defensa individual y prueba práctica según los acuerdos de la unidad. Documento de metadatos de la instancia. | — |
+| 26 | [evaluacion-u3-version-a.md](02-unidades/03-u3-procesamiento-de-texto-y-validacion/evaluacion-u3-version-a.md) · [evaluacion-u3-version-b.md](02-unidades/03-u3-procesamiento-de-texto-y-validacion/evaluacion-u3-version-b.md) | Prueba práctica individual en versiones equivalentes (mismos objetivos y requisitos, distinto dominio o datos). | [anexo versión A](02-unidades/03-u3-procesamiento-de-texto-y-validacion/evaluacion-u3-version-a-anexo-docente.md) · [anexo versión B](02-unidades/03-u3-procesamiento-de-texto-y-validacion/evaluacion-u3-version-b-anexo-docente.md) |
+
+#### Trabajo integrador y flujo profesional (`04-u4-trabajo-integrador-y-flujo-profesional/`, encuentros 27 a 32)
+
+| Encuentro | Documento del alumno | Qué trabajó | Anexo docente (solo docente) |
+| --- | --- | --- | --- |
+| 27 | [clase-27-lanzamiento-del-integrador.md](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-27-lanzamiento-del-integrador.md) | Devolución de la Unidad 3; lanzamiento del trabajo final integrador; README de portada del repositorio del grupo; apertura de issues con el plan de trabajo.. | [anexo clase 27](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-27-lanzamiento-del-integrador-anexo-docente.md) |
+| 28 | [clase-28-ramas-y-pull-requests.md](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-28-ramas-y-pull-requests.md) | Flujo profesional del repositorio: ramas por feature, pull requests con revisión entre pares y main protegida; distribución de responsabilidades por issue.. | [anexo clase 28](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-28-ramas-y-pull-requests-anexo-docente.md) |
+| 29 | [clase-29-desarrollo-del-integrador.md](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-29-desarrollo-del-integrador.md) | Desarrollo del trabajo final por issues y ramas; revisión entre pares de pull requests; integración de los núcleos del año en el propio programa.. | [anexo clase 29](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-29-desarrollo-del-integrador-anexo-docente.md) |
+| 30 | [clase-30-consolidacion-del-integrador.md](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-30-consolidacion-del-integrador.md) | Consolidación del trabajo final: cierre de issues, ajustes finales del programa y preparación de la defensa individual; commit de cierre del encuentro.. | [anexo clase 30](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-30-consolidacion-del-integrador-anexo-docente.md) |
+| 31 | [clase-31-cierre-u4-entrega-final.md](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-31-cierre-u4-entrega-final.md) | Sistematización y cierre del trabajo final con preparación de la defensa; repaso de los núcleos del año sobre el repositorio profesional del grupo.. | [anexo clase 31](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-31-cierre-u4-entrega-final-anexo-docente.md) |
+| 32 | [evaluacion-u4.md](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/evaluacion-u4.md) | Encuentro dedicado de evaluación de la Unidad 4: entrega, defensa individual y prueba práctica según los acuerdos de la unidad. Documento de metadatos de la instancia. | — |
+| 32 | [evaluacion-u4-version-a.md](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/evaluacion-u4-version-a.md) · [evaluacion-u4-version-b.md](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/evaluacion-u4-version-b.md) | Prueba práctica individual en versiones equivalentes (mismos objetivos y requisitos, distinto dominio o datos). | [anexo versión A](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/evaluacion-u4-version-a-anexo-docente.md) · [anexo versión B](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/evaluacion-u4-version-b-anexo-docente.md) |
+
+### 2.4 Carpeta `03-encuadre-y-cierres/` — encuadre y cierres del ciclo anual
+
+Documentos de encuadre y cierres definidos en la estructura anual. No imparten contenido nuevo ni tienen evaluación propia: los cierres son encuentros de síntesis y metacognición, y el cierre cuatrimestral abre con la devolución de la unidad evaluada en el encuentro anterior.
+
+| Documento | Qué es y cuándo se usa |
+| --- | --- |
+| [encuadre-01-diagnostico.md](03-encuadre-y-cierres/encuadre-01-diagnostico.md) | Encuentro 1: presentación de la asignatura y contrato pedagógico; diagnóstico de saberes previos. Se usa al inicio del ciclo lectivo. |
+| [cierre-16-cuatrimestre-1.md](03-encuadre-y-cierres/cierre-16-cuatrimestre-1.md) | Encuentro 16: cierre integrador del cuatrimestre 1 —síntesis, integración y metacognición del cuatrimestre, sin evaluación propia—; abre con la devolución de la unidad evaluada en el encuentro anterior. Se usa al finalizar el cuatrimestre 1. |
+| [cierre-33-cuatrimestre-2.md](03-encuadre-y-cierres/cierre-33-cuatrimestre-2.md) | Encuentro 33: cierre integrador del cuatrimestre 2 —síntesis, integración y metacognición del cuatrimestre, sin evaluación propia—; abre con la devolución de la unidad evaluada en el encuentro anterior. Se usa al finalizar el cuatrimestre 2. |
+| [cierre-36-integral.md](03-encuadre-y-cierres/cierre-36-integral.md) | Encuentro 36: cierre integral de la asignatura; balance del recorrido, metacognición final y proyección formativa, sin contenidos nuevos. Se usa en el último encuentro del ciclo. |
+
+### 2.5 Carpeta `04-intensificaciones/` — momentos de intensificación y fortalecimiento y sus evaluaciones
+
+Un documento por cada momento de intensificación y fortalecimiento, cubriendo los encuentros que el momento define. Los momentos dentro de la estructura anual no imparten contenido nuevo; diciembre y marzo (fuera de la planificación anual) evalúan el camino mínimo completo del curso. Cada momento tiene su evaluación en versiones equivalentes, con sus anexos docentes (solo docente) en la subcarpeta `evaluaciones/`.
+
+| Momento | Documento del momento | Evaluaciones (subcarpeta `evaluaciones/`) |
+| --- | --- | --- |
+| Saberes previos (encuentros 2-3) | [intensificaciones-02-03-saberes-previos.md](04-intensificaciones/intensificaciones-02-03-saberes-previos.md) | [base](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-02-03.md) · [versión A](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-02-03-version-a.md) · [anexo A](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-02-03-version-a-anexo-docente.md) · [versión B](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-02-03-version-b.md) · [anexo B](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-02-03-version-b-anexo-docente.md) |
+| Unidades 1 y 2 (encuentros 17-18) | [intensificaciones-17-18-unidades-1-y-2.md](04-intensificaciones/intensificaciones-17-18-unidades-1-y-2.md) | [base](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-17-18.md) · [versión A](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-17-18-version-a.md) · [anexo A](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-17-18-version-a-anexo-docente.md) · [versión B](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-17-18-version-b.md) · [anexo B](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-17-18-version-b-anexo-docente.md) |
+| Integradora 1 y 2 (encuentros 19-20) | [intensificaciones-19-20-integradora-1-y-2.md](04-intensificaciones/intensificaciones-19-20-integradora-1-y-2.md) | [base](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-19-20.md) · [versión A](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-19-20-version-a.md) · [anexo A](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-19-20-version-a-anexo-docente.md) · [versión B](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-19-20-version-b.md) · [anexo B](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-19-20-version-b-anexo-docente.md) |
+| Unidades 3 y 4 (encuentros 34-35) | [intensificaciones-34-35-unidades-3-y-4.md](04-intensificaciones/intensificaciones-34-35-unidades-3-y-4.md) | [base](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-34-35.md) · [versión A](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-34-35-version-a.md) · [anexo A](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-34-35-version-a-anexo-docente.md) · [versión B](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-34-35-version-b.md) · [anexo B](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-34-35-version-b-anexo-docente.md) |
+| Diciembre (fuera de la planificación anual) | [intensificaciones-diciembre-intensificacion.md](04-intensificaciones/intensificaciones-diciembre-intensificacion.md) | [base](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-diciembre.md) · [versión A](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-diciembre-version-a.md) · [anexo A](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-diciembre-version-a-anexo-docente.md) · [versión B](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-diciembre-version-b.md) · [anexo B](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-diciembre-version-b-anexo-docente.md) |
+| Marzo (fuera de la planificación anual) | [intensificaciones-marzo-intensificacion.md](04-intensificaciones/intensificaciones-marzo-intensificacion.md) | [base](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-marzo.md) · [versión A](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-marzo-version-a.md) · [anexo A](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-marzo-version-a-anexo-docente.md) · [versión B](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-marzo-version-b.md) · [anexo B](04-intensificaciones/evaluaciones/evaluacion-intensificaciones-marzo-version-b-anexo-docente.md) |
+
+Los momentos de recuperación (17-18 y 34-35) usan criterio de **Apto / No apto aún por objetivo mínimo**; el proyecto puente (19-20) usa **rúbrica de 100 puntos**; diciembre y marzo evalúan el **camino mínimo completo** del curso (el estándar de marzo es idéntico al de diciembre).
+
+### 2.6 Carpeta `05-continuidad/` — continuidad pedagógica
+
+Actividades de repaso y fijación para que los alumnos trabajen sin presencia docente; se entregan a la administración para los casos de ausencia del docente. Cada documento incluye actividades puntuadas sobre 100 y autoevaluación; la resolución se presenta de forma individual y manuscrita al inicio de la clase siguiente.
+
+| Documento | Qué es y cuándo se usa | Anexo docente (solo docente) |
+| --- | --- | --- |
+| [continuidad-01-saberes-previos.md](05-continuidad/continuidad-01-saberes-previos.md) | Documento 1 de 4: repaso de saberes previos antes de la primera unidad didáctica. Se usa ante ausencia docente. | [anexo continuidad 1](05-continuidad/continuidad-01-saberes-previos-anexo-docente.md) |
+| [continuidad-02-tras-evaluacion-u1.md](05-continuidad/continuidad-02-tras-evaluacion-u1.md) | Documento 2 de 4: repaso de los contenidos trabajados hasta la evaluación de la Unidad 1. Se usa ante ausencia docente. | [anexo continuidad 2](05-continuidad/continuidad-02-tras-evaluacion-u1-anexo-docente.md) |
+| [continuidad-03-tras-evaluacion-u2.md](05-continuidad/continuidad-03-tras-evaluacion-u2.md) | Documento 3 de 4: repaso de los contenidos trabajados hasta la evaluación de la Unidad 2. Se usa ante ausencia docente. | [anexo continuidad 3](05-continuidad/continuidad-03-tras-evaluacion-u2-anexo-docente.md) |
+| [continuidad-04-tras-evaluacion-u3.md](05-continuidad/continuidad-04-tras-evaluacion-u3.md) | Documento 4 de 4: repaso de los contenidos trabajados hasta la evaluación de la Unidad 3. Se usa ante ausencia docente. | [anexo continuidad 4](05-continuidad/continuidad-04-tras-evaluacion-u3-anexo-docente.md) |
+
+### 2.7 Carpeta `06-aprobacion/` — criterios de aprobación
+
+| Documento | Qué es y cuándo se usa |
+| --- | --- |
+| [06-aprobacion/criterios-aprobacion.md](06-aprobacion/criterios-aprobacion.md) | Documento institucional dirigido a alumnos, familias y dirección: qué se evalúa en cada unidad, mínimos exigibles, regla de entrega incompleta y capas de recuperación. Se informa a los alumnos al inicio de la cursada y se consulta en cada instancia de evaluación y recuperación. |
+
+### 2.8 Otros documentos
+
+Documentos presentes en el corpus que el generador no clasificó según las convenciones de nombres: revisarlos y clasificarlos o incorporarlos a las convenciones antes de la próxima regeneración.
+
+| Documento | Qué es y cuándo se usa |
+| --- | --- |
+| [07-cierre-anual/informe-mesa-diciembre.md](07-cierre-anual/informe-mesa-diciembre.md) | Documento presente en el corpus sin tipo reconocido por las convenciones de nombres del generador; clasificarlo o incorporarlo a las convenciones antes de la próxima regeneración. |
+| [07-cierre-anual/informe-mesa-marzo.md](07-cierre-anual/informe-mesa-marzo.md) | Documento presente en el corpus sin tipo reconocido por las convenciones de nombres del generador; clasificarlo o incorporarlo a las convenciones antes de la próxima regeneración. |
+| [07-cierre-anual/memoria-anual.md](07-cierre-anual/memoria-anual.md) | Documento presente en el corpus sin tipo reconocido por las convenciones de nombres del generador; clasificarlo o incorporarlo a las convenciones antes de la próxima regeneración. |
+| [07-cierre-anual/seguimiento-anual.csv](07-cierre-anual/seguimiento-anual.csv) | Documento presente en el corpus sin tipo reconocido por las convenciones de nombres del generador; clasificarlo o incorporarlo a las convenciones antes de la próxima regeneración. |
+
+---
+
+## 3. Orden de creación de los documentos
+
+El corpus se genera en cascada, en el siguiente orden: cada documento deriva del anterior y mantiene con él correlación exacta. Cualquier creación futura de material para esta materia debe respetar esta misma secuencia.
+
+1. **Mapa maestro del encargo** (fuera del corpus, en el repositorio de planificación) y hoja de canon técnico: [convenciones-tecnicas.md](../../input/materias/LPR/convenciones-tecnicas.md).
+2. **Planificación anual**, documento madre (render determinista de la firma pedagógica `input/materias/LPR/curso-data.json` mediante `tools/generar-administrativos.ps1`): [01-planificacion/planificacion-anual.csv](01-planificacion/planificacion-anual.csv); y **libro de aula**, derivado directo de la anual: [01-planificacion/libro-de-aula-1-linea-por-encuentro.csv](01-planificacion/libro-de-aula-1-linea-por-encuentro.csv), [01-planificacion/libro-de-aula-2-lineas-por-encuentro.csv](01-planificacion/libro-de-aula-2-lineas-por-encuentro.csv).
+3. **Encuadre del ciclo**: [encuadre-01-diagnostico.md](03-encuadre-y-cierres/encuadre-01-diagnostico.md).
+4. **Saberes previos** (momento de intensificación previo a las unidades): [intensificaciones-02-03-saberes-previos.md](04-intensificaciones/intensificaciones-02-03-saberes-previos.md), con su evaluación en `04-intensificaciones/evaluaciones/`.
+5. **Fundamentos de Python y control del flujo** (encuentros 4 a 8), cada clase con su anexo docente: [clase-04](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-04-primer-programa-y-variables.md), [clase-05](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-05-entrada-y-salida-por-consola.md), [clase-06](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-06-condicionales-y-operadores.md), [clase-07](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-07-bucles-for-y-while.md), [clase-08](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/clase-08-cierre-u1-repaso-y-tp.md).
+6. **Estructuras de datos y funciones** (encuentros 10 a 14), cada clase con su anexo docente: [clase-10](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-10-listas-y-mutabilidad.md), [clase-11](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-11-tuplas-y-conjuntos-set.md), [clase-12](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-12-diccionarios-clave-y-valor.md), [clase-13](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-13-funciones-y-ambito-local.md), [clase-14](02-unidades/02-u2-estructuras-de-datos-y-funciones/clase-14-cierre-u2-repaso-y-tp.md).
+7. **Procesamiento de texto y validación** (encuentros 21 a 25), cada clase con su anexo docente: [clase-21](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-21-cadenas-metodos-de-texto.md), [clase-22](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-22-validacion-con-try-except.md), [clase-23](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-23-modulos-y-menu-en-memoria.md), [clase-24](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-24-integracion-menu-del-tp.md), [clase-25](02-unidades/03-u3-procesamiento-de-texto-y-validacion/clase-25-cierre-u3-repaso-y-tp.md).
+8. **Trabajo integrador y flujo profesional** (encuentros 27 a 31), cada clase con su anexo docente: [clase-27](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-27-lanzamiento-del-integrador.md), [clase-28](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-28-ramas-y-pull-requests.md), [clase-29](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-29-desarrollo-del-integrador.md), [clase-30](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-30-consolidacion-del-integrador.md), [clase-31](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/clase-31-cierre-u4-entrega-final.md).
+9. **Evaluaciones de unidad** (documento base, versiones equivalentes y anexos docentes en la carpeta de cada unidad): [evaluacion-u1](02-unidades/01-u1-fundamentos-de-python-y-control-del-flujo/evaluacion-u1.md), [evaluacion-u2](02-unidades/02-u2-estructuras-de-datos-y-funciones/evaluacion-u2.md), [evaluacion-u3](02-unidades/03-u3-procesamiento-de-texto-y-validacion/evaluacion-u3.md), [evaluacion-u4](02-unidades/04-u4-trabajo-integrador-y-flujo-profesional/evaluacion-u4.md).
+10. **Cierres del ciclo**: [cierre-16-cuatrimestre-1.md](03-encuadre-y-cierres/cierre-16-cuatrimestre-1.md), [cierre-33-cuatrimestre-2.md](03-encuadre-y-cierres/cierre-33-cuatrimestre-2.md), [cierre-36-integral.md](03-encuadre-y-cierres/cierre-36-integral.md).
+11. **Momentos de intensificación y fortalecimiento** del ciclo y de diciembre y marzo (cada uno con su evaluación —base, versiones equivalentes y anexos docentes— en `04-intensificaciones/evaluaciones/`): [intensificaciones-17-18-unidades-1-y-2.md](04-intensificaciones/intensificaciones-17-18-unidades-1-y-2.md), [intensificaciones-19-20-integradora-1-y-2.md](04-intensificaciones/intensificaciones-19-20-integradora-1-y-2.md), [intensificaciones-34-35-unidades-3-y-4.md](04-intensificaciones/intensificaciones-34-35-unidades-3-y-4.md), [intensificaciones-diciembre-intensificacion.md](04-intensificaciones/intensificaciones-diciembre-intensificacion.md), [intensificaciones-marzo-intensificacion.md](04-intensificaciones/intensificaciones-marzo-intensificacion.md).
+12. **Continuidad pedagógica** (con anexos docentes): [continuidad-01-saberes-previos.md](05-continuidad/continuidad-01-saberes-previos.md), [continuidad-02-tras-evaluacion-u1.md](05-continuidad/continuidad-02-tras-evaluacion-u1.md), [continuidad-03-tras-evaluacion-u2.md](05-continuidad/continuidad-03-tras-evaluacion-u2.md), [continuidad-04-tras-evaluacion-u3.md](05-continuidad/continuidad-04-tras-evaluacion-u3.md).
+13. **Criterios de aprobación**: [06-aprobacion/criterios-aprobacion.md](06-aprobacion/criterios-aprobacion.md).
+14. **README índice**: este documento, generado con `tools/generar-readme.ps1` a partir del árbol del corpus y de la firma pedagógica (`input/materias/LPR/curso-data.json`).
+
+---
+
+## 4. Fundamentación pedagógica del enfoque
+
+El diseño de la asignatura no es una suma de temas ordenados cronológicamente: cada decisión de estructura responde a un principio instruccional reconocido. La siguiente tabla asocia cada decisión de diseño adoptada en este curso con su fundamento y su referencia.
+
+| Decisión de diseño | Fundamento | Referencia |
+| --- | --- | --- |
+| **Secuenciación de prerrequisitos antes de su primer uso.** Las herramientas de infraestructura del curso (terminal, plataforma de entregas y control de versiones) se enseñan de forma explícita antes de su primer uso exigido y se ejercitan como saberes transversales durante todo el año. Ningún encuentro depende de un saber que aún no se enseñó. | El aprendizaje significativo exige que el nuevo contenido se ancle en saberes ya disponibles en la estructura cognitiva del alumno; los organizadores previos preparan ese anclaje. | Ausubel (1968) |
+| **Reducción de la carga cognitiva.** La implementación se concentra en el mínimo de piezas posible para el nivel del curso (un único archivo de programa, sin abstracciones intermedias), con ejemplos mínimos y funcionales y comentarios abundantes; el alumno no necesita retener la organización de múltiples archivos. | La memoria de trabajo es limitada: eliminar fuentes de carga extrínseca (archivos múltiples, abstracciones tempranas) libera capacidad para el aprendizaje del contenido. | Sweller (1988) |
+| **Práctica distribuida de los saberes transversales.** La terminal, git y GitHub reaparecen en cada encuentro: rutina de commit al final de cada clase, carpeta nueva y push en cada entrega, repositorio vivo durante todo el año. | La revisión diaria y la práctica distribuida consolidan los saberes y automatizan los procedimientos, reduciendo el olvido y liberando recursos cognitivos para el contenido nuevo. | Rosenshine (2012) |
+| **Progresión GRR dentro del encuentro.** Cada clase transita de la teoría mínima y la práctica guiada (yo hago) al ejercicio independiente (hacés solo), con el anexo docente como soporte de la etapa guiada; en la Unidad 4 el acompañamiento se retira gradualmente hasta el sprint mentorizado. | Liberación gradual de la responsabilidad: la explicitación y el modelado del docente ceden progresivamente hacia la práctica autónoma del alumno. | Pearson y Gallagher (1983) |
+| **Ancla motivadora previa a las herramientas de infraestructura.** Primero el propio programa funcionando y recién después las herramientas de versionado y entrega: la experiencia de ver correr el propio trabajo da sentido a las herramientas de infraestructura que le siguen. | El nuevo aprendizaje se ancla en una experiencia concreta y significativa: aquello que el alumno comprende y valora se vuelve punto de partida para lo que viene. | Ausubel (1968) |
+| **Retroalimentación oportuna.** La evaluación de cada unidad se devuelve al encuentro siguiente; los anexos docentes incluyen soluciones y criterios de corrección que habilitan devoluciones inmediatas durante la clase. | La retroalimentación efectiva responde a las preguntas «¿hacia dónde voy?», «¿cómo voy?» y «¿qué sigue?», y llega a tiempo para poder usarse. | Hattie y Timperley (2007) |
+| **Evaluación auténtica.** Los productos evaluados son reales y versionados en GitHub (TP-U1: programa de consola con entrada y control de flujo, TP-U2: programa con colecciones y funciones, TP-U3: menú de consola validado y Trabajo final: programa integrador con repositorio profesional), con defensa oral individual del propio código y un trabajo integrador final que replica el flujo profesional de un repositorio (README de portada, issues, ramas por feature, pull requests revisados y main protegida). | La evaluación auténtica valora el desempeño en situaciones reales del dominio: la comprensencia se evidencia cuando el alumno puede explicar y justificar lo que hizo. | Wiggins (1998) |
+| **Trabajo cooperativo estructurado.** Los grupos se recalculan en cada encuentro según presentes y equipos disponibles (ningún equipo sin usar mientras haya alumnos sin equipo), con rotación de integrantes y revisión entre pares en los pull requests. | El aprendizaje cooperativo, con interdependencia positiva y responsabilidad individual, mejora los logros de todos los integrantes del grupo. | Johnson y Johnson (1999) |
+| **Anticipación de errores comunes.** Cada clase cierra con los errores típicos del tema, su causa y su corrección; los momentos de intensificación y fortalecimiento retoman esos núcleos con pistas diferenciadas. | El monitoreo de la comprensión y la anticipación de los errores que los alumnos suelen cometer permiten corregir las confusiones antes de que se fijen. | Rosenshine (2012) |
+
+### Referencias
+
+- Ausubel, D. P. (1968). *Educational Psychology: A Cognitive View*. Holt, Rinehart and Winston.
+- Hattie, J. y Timperley, H. (2007). «The Power of Feedback». *Review of Educational Research*, 77(1), 81-112.
+- Johnson, D. W. y Johnson, R. T. (1999). *Learning Together and Alone: Cooperative, Competitive, and Individualistic Learning* (5.ª ed.). Allyn and Bacon.
+- Pearson, P. D. y Gallagher, M. C. (1983). «The Instruction of Reading Comprehension». *Contemporary Educational Psychology*, 8(3), 317-344.
+- Rosenshine, B. (2012). «Principles of Instruction: Research-Based Strategies That All Teachers Should Know». *American Educator*, 36(1), 12-19.
+- Sweller, J. (1988). «Cognitive Load During Problem Solving: Effects on Learning». *Cognitive Science*, 12(2), 257-285.
+- Wiggins, G. (1998). *Educative Assessment: Designing Assessments to Inform and Improve Student Performance*. Jossey-Bass.
+
+---
+
+## 5. Nota de correlación
+
+La planificación anual ([`01-planificacion/planificacion-anual.csv`](01-planificacion/planificacion-anual.csv), render determinista de la firma pedagógica del curso `input/materias/LPR/curso-data.json`) es el **documento madre** del curso: el libro de aula, las unidades didácticas y sus clases, las evaluaciones, el encuadre y los cierres del ciclo, los momentos de intensificación y fortalecimiento, la continuidad pedagógica y los criterios de aprobación derivan de ella con correlación exacta de numeración de encuentros, denominaciones de tramos, ejes, tiempos y momentos de evaluación y recuperación. Todo cambio futuro se ajusta **primero** en `input/materias/LPR/curso-data.json`, se re-renderizan los administrativos con `tools/generar-administrativos.ps1` y este índice con `tools/generar-readme.ps1`, y se propaga **en cascada** a los documentos derivados; nunca se dejan documentos desalineados. Ante cualquier duda técnica de contenido, decide la hoja de [convenciones-tecnicas.md](../../input/materias/LPR/convenciones-tecnicas.md).
+
+---
+
+## Nota de la cátedra
+
+Este curso propone un primer acercamiento al desarrollo en Python construyendo desde cero pequeñas aplicaciones en un único archivo y sin recursos externos, sin abstracciones intermedias —sin patrón repositorio ni inyección de dependencias—, con cada pieza explicada antes de usarse y todo el resultado verificable.
+
+Elegimos ese formato por carga cognitiva: para estudiantes del nivel secundario que se inician en Python, cada archivo, cada abstracción y cada herramienta no comprendida es carga que no aporta. Preferimos un programa corto que se entiende completo a una arquitectura correcta que se copia sin entender; lo que el alumno no puede explicar, no lo damos por aprendido.
+
+El repositorio se lee en cascada: la planificación anual (`01-planificacion/`) define el recorrido del año; cada unidad (`02-unidades/`) desarrolla sus encuentros con clases y evaluaciones; los momentos de intensificación, la continuidad pedagógica y los criterios de aprobación completan el ciclo. La hoja de convenciones técnicas es la referencia obligada ante cualquier duda de código.
