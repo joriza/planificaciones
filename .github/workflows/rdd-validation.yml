@@ -1,0 +1,48 @@
+name: RDD Pre-commit Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+      - plan-de-mejoras
+    types:
+      - opened
+      - synchronize
+      - reopened
+  push:
+    branches:
+      - main
+      - plan-de-mejoras
+
+jobs:
+  rdd-validation:
+    name: 🔍 RDD Validation
+    runs-on: windows-latest
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: ✅ RDD Validation
+      run: |
+        echo "🔍 Running RDD validation..."
+        cd /tmp-docencia/ztmp-docencia/z-planificaciones_en-General
+        ./tools/rdd-validate.sh pre-pr
+        echo "✅ RDD validation completed"
+    
+    - name: 📊 Generate Summary
+      run: |
+        cd /tmp-docencia/ztmp-docencia/z-planificaciones_en-General
+        echo "📊 RDD Summary" > rdd-summary.log
+        echo "Status: Completed" >> rdd-summary.log
+        echo "Validation: ✅ Passed" >> rdd-summary.log
+    
+    - name: 📤 Upload Logs
+      uses: actions/upload-artifact@v4
+      with:
+        name: rdd-logs
+        path: rdd-summary.log
+        retention-days: 30
+

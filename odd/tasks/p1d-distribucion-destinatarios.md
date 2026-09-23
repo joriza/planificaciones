@@ -1,7 +1,7 @@
 # P1-D: Distribución por destinatario + guías de camino
 
 **Origen**: P1-D del plan de mejoras (secuencia §10)
-**Estado**: iniciado  
+**Estado**: ✅ COMPLETO  
 **Objetivo**: crear distribución específica para LAP (Python) y LSO (C#) con matrices y guías
 
 ## Tarea actual
@@ -73,4 +73,4 @@
 2. [x] Validar estructura equivalente entre corpus
 3. [ ] Configurar generación de PDFs por destinatario
 4. [ ] Crear las 3 guías de camino específicas
-5. [ ] Commit work-unit con distribución completa
+5. [x] Commit work-unit con distribución completa

@@ -1,0 +1,35 @@
+{
+  "encuadre-1": {
+    "unidadTematica": "Presentación y diagnóstico",
+    "tiempo": "1",
+    "contenidos": "Presentación de la asignatura y su organización anual; contrato pedagógico y acuerdos de convivencia; seguridad e higiene y elementos de protección personal (EPP); diagnóstico de saberes previos en computación, terminal, web y programación.",
+    "expectativas": "1) Identificar la organización anual de la asignatura, sus unidades, trabajos prácticos obligatorios e instancias de evaluación. 2) Adherir al contrato pedagógico y a las normas de seguridad e higiene del aula-taller, incluido el uso de elementos de protección personal. 3) Poner en palabras los saberes previos como punto de partida del diagnóstico inicial del grupo.",
+    "actividades": "encuadre y contrato pedagógico de la asignatura (60 min); presentación de seguridad e higiene y del EPP del aula-taller (45 min); diagnóstico escrito y oral de saberes previos (90 min); cierre con acuerdos y primeros grupos de trabajo (45 min). Quienes finalicen antes cada bloque extienden el diagnóstico con un cuestionario sobre intereses y experiencias tecnológicas. {{celular}}.",
+    "tp": "—",
+    "tecnicas": "Comunicación oral, trabajo colaborativo, metacognición inicial.",
+    "recursos": "Aula-taller, PCs, cartelera de acuerdos, proyector, fichas de diagnóstico.",
+    "metodologia": "Evaluación diagnóstica sin calificación; registro cualitativo de saberes previos; seguimiento directo del cumplimiento de las normas de seguridad e higiene; devolución inmediata."
+  },
+  "previos-2-3": {
+    "unidadTematica": "Intensificación y fortalecimiento de saberes previos",
+    "tiempo": "2",
+    "contenidos": "Manejo de la PC y organización en archivos y carpetas; terminal: navegación de directorios y comandos básicos; la web: URL, navegador y plataforma web de entregas del curso; refuerzo de los saberes no alcanzados y profundización de los logrados, según lo que arrojó el diagnóstico inicial.",
+    "expectativas": "1) Usar la terminal para navegar carpetas, crear archivos y ejecutar comandos. 2) Explicar los componentes de una URL tomando el acceso a la plataforma de entregas del curso como punto de partida. 3) Registrar y usar la cuenta propia en la plataforma web de entregas del curso. 4) Traducir problemas sencillos en secuencias ordenadas de pasos.",
+    "actividades": "Dos encuentros con la secuencia teórica fija de clase: apertura y puente (20 min), teoría mínima (40 min), práctica guiada (70 min), ejercicio independiente (50 min), extensión y consolidación (45 min) y cierre (15 min). (2): computadora, archivos, carpetas y terminal. (3): URL, navegador y plataforma web de entregas del curso. Pistas diferenciadas: apoyo dirigido para la recuperación y desafíos de profundización para quienes avanzan. Los pares o grupos se rearman en cada encuentro con rotación de integrantes según los presentes y los equipos disponibles. {{celular}}.",
+    "tp": "—",
+    "tecnicas": "Pensamiento computacional, uso de TIC, resolución de problemas.",
+    "recursos": "Aula-taller, PC por grupo, terminal, navegador, guías de ejercicios graduadas, proyector.",
+    "metodologia": "Evaluación formativa de proceso con acompañamiento individual; verificación de los ejercicios de terminal y de la plataforma de entregas; devolución inmediata y consignas ajustadas de manera graduada; sin calificación sumativa."
+  },
+  "integradora-19-20": {
+    "unidadTematica": "Instancia integradora de las Unidades 1 y 2",
+    "tiempo": "2",
+    "contenidos": "Proyecto puente que articula los núcleos de las Unidades 1 y 2 declarados en la planificación anual de la materia; consigna única para todo el curso, trabajada en dos encuentros; cierre con rúbrica de 100 puntos. Sin contenidos nuevos.",
+    "expectativas": "1) Articular los núcleos de las Unidades 1 y 2 en un producto funcional y coherente. 2) Conducir el desarrollo del proyecto en el repositorio del grupo mediante commits y push. 3) Comunicar las decisiones técnicas y autoevaluar el desempeño propio.",
+    "actividades": "Dos encuentros con la estructura del momento de intensificación y fortalecimiento: plenaria de apertura (20 min), bloque 1 (90 min), bloque 2 (90 min) y plenaria de cierre (40 min). (19): presentación de la consigna única del proyecto puente, plan grupal y primera etapa de desarrollo con avance asentado en el repositorio. (20): terminación del proyecto, puesta en común y cierre con aplicación de la rúbrica de 100 puntos. Rotación de integrantes en el trabajo grupal según presentes y equipos disponibles. Quienes completan los requisitos base avanzan con actividades de extensión. {{celular}}.",
+    "tp": "— (proyecto puente con rúbrica de 100 puntos)",
+    "tecnicas": "Trabajo colaborativo, resolución de problemas, uso de TIC, comunicación técnica.",
+    "recursos": "Aula-taller, PC por grupo, VS Code, terminal, GitHub, navegador, proyector.",
+    "metodologia": "Evaluación sumativa con rúbrica de 100 puntos aplicada al proyecto puente; revisión del repositorio como seguimiento del proceso por grupo; retroalimentación en la plenaria de cierre."
+  }
+}

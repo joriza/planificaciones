@@ -202,17 +202,22 @@ echo "✅ Hooks configurados exitosamente"
 
 ### Test del Hook
 ```bash
-# Probar el hook sin commit real
-touch test-file.txt
-git add test-file.txt
-git commit -m "test: archivo de prueba" --dry-run
+# Probar el script manualmente
+./tools/rdd-validate.sh pre-commit
 
-# Ejecutar manualmente
-tools/rdd-validate.sh pre-commit
+# Verificar hook (dry-run)
+git add .
+git commit -m "test: hook validation" --dry-run
 
 # Verificar estado
 gentle-ai review status --cwd . --contract gentle-ai.review-integration/v2 --agent pi
 ```
+
+### ✅ IMPLEMENTACIÓN EXITOSA:
+- ✅ Script tools/rdd-validate.sh creado y probado
+- ✅ Pre-commit hook .git/hooks/pre-commit configurado
+- ✅ Logging en .git/rdd-logs/
+- ✅ Validación exitosa con resultado: repository-policy
 
 ### Escenarios de Prueba
 
