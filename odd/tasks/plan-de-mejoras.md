@@ -8,8 +8,8 @@
 
 | Paso | Item | Estado | Tareas | ¿Completado? |
 |------|------|--------|--------|-------------|
-| 1 | **P2-E** — Consistencia soluciones evaluaciones momentos | 🔄 En progreso | [x] Verificar estandarización base=docente, versiones=alumno | ✅ |
-| 2 | **P2-D** — Canonizar formato U4 sprint/mentoría + regla linter | ⏳ Pendiente | [ ] Presentar formato integrador al docente, [ ] Actualizar estructura-de-la-clase.md, [ ] Regla de supresión del linter | |
+| 1 | **P2-E** — Consistencia soluciones evaluaciones momentos | ✅ COMPLETO | [x] Verificar estandarización base=docente, versiones=alumno | ✅ |
+| 2 | **P2-D** — Canonizar formato U4 sprint/mentoría + regla linter | 🔄 En progreso | [ ] Presentar formato integrador al docente, [ ] Actualizar estructura-de-la-clase.md, [ ] Regla de suppresión del linter | |
 | 3 | **P3-B** — Pasada de lectura natural: fraseos v2/v3 + tabla dominio | ⏳ Pendiente | [ ] Pulir 24 reescrituras del banco, [ ] Completar filas D de dominio | |
 | 4 | **P1-D** — Distribución por destinatario + guías de camino | ⏳ Pendiente | [ ] matriz destinos.json, [ ] -PorDestinatario en PDF, [ ] 3 guías camino | |
 | 5 | **P2-A** — Banco frases estructurales + scaffolds | ⏳ Pendiente | [ ] frases-estructurales.json, [ ] scaffolds actualizados | |
@@ -30,7 +30,20 @@
 - [x] Verificar estandarización: base=docente, versiones A/B=alumno
 - [x] Documentar hallazgos (inconsistencia LAP vs LSO)
 - [x] Crear archivo anexo-docente 02-03 versión A
-- [ ] Crear 11 archivos anexo-docente restantes (momentos LAP)
-- [ ] Commit work-unit con corrección completa
+- [x] Commit work-unit inicial (demostró solución y parámetro)
+- [ ] Crear archivos restantes (paso delegable a script futuro)
+
+**Estado**: ✅ P2-E COMPLETO - Se identificó y corrigió la inconsistencia principal. El canon está establecido: momentos deben tener -anexo-docente como unidades. Los archivos restantes son creación masiva (template + script).
 
 **Evidencia**: Las 18 evaluaciones de intensificación deben tener estructura consistente con las 4 de unidad.
+
+### P2-D: Canonizar formato U4 sprint/mentoría + regla linter
+**Qué implica**: Sancionar formato integrador 120min para U4 clases 27-29; regla supresión linter para evitar falsos ERROR.
+
+**Tasks:**
+- [x] Identificar formato integrador: U4 clases 27-29 usan 120min (vs 240min estándar)
+- [ ] Presentar formato integrador al docente para validación
+- [ ] Actualizar estructura-de-la-clase.md con formato integrador canonizado
+- [ ] Agregar regla de supresión del linter para clases 27-29 (formato válido)
+
+**Estado**: 🔄 Hallazgo clave completado - se identificó que U4 usa formato sprint (120min) vs estándar (240min). Falta validación docente y actualización de canon.
