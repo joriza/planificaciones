@@ -42,3 +42,15 @@ Pasar tal cual cuando se pide crear un encuentro:
 |---|---|
 | Comentario breve sobre `() =>` (expresión lambda) | Encuentro 1 — despeja la incógnita sin profundizar |
 | Cuadro "Referencia rápida: verbos HTTP y códigos de respuesta" | Encuentro 4 — consolidación al completar el CRUD |
+| **Formato integrador (120 min)** | Encuentros 27-29 de U4 — sprint intensivo con reparto de tiempos ajustado |
+
+## Formatos canónicos
+
+El proyecto define dos formatos de encuentro válidos:
+
+| Formato | Duración | Aplicación | Característica |
+|---|---|---|---|
+| **Estándar (BOPPPS + GRR)** | 240 minutos | Unidades 1-3 | Formato completo con reparto detallado de tiempos |
+| **Integrador (BOPPPS + GRR Sprint)** | 120 minutos | Unidad 4, clases 27-29 | Formato intensivo para trabajo final consolidador |
+
+**Nota**: El formato integrador es válido por diseño y no constituye un error de estructura. Se aplica exclusivamente a las clases finales de integración del curso.

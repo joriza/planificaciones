@@ -1,0 +1,88 @@
+{
+  "descripcion": "Matriz de distribución de contenido por destinatario. Define qué contenido específico corresponde a cada carrera: LAP (Licenciatura en Analítica y Programación) y LSO (Licenciatura en Software).",
+  "version": "1.0",
+  "destinatarios": {
+    "LAP": {
+      "nombre": "Licenciatura en Analítica y Programación",
+      "lenguaje": "Python",
+      "framework": "Minimal API (Python)",
+      "enfoque": "Analítica de datos y procesamiento de información",
+      "dominios": {
+        "u1": "Sistema de tickets de soporte (biblioteca, cursos, canciones)",
+        "u2": "Sistema de hospital con médicos y pacientes"
+      },
+      "diferencias_tecnicas": {
+        "sintaxis": "Sintaxis Python más simple y legible",
+        "paradigma": "Enfoque en procesamiento y análisis de datos",
+        "bibliotecas": "Enfasis en pandas, numpy, data science",
+        "despliegue": "Deploy con Flask/FastAPI, Docker ligero"
+      }
+    },
+    "LSO": {
+      "nombre": "Licenciatura en Software", 
+      "lenguaje": "C#",
+      "framework": ".NET Minimal API",
+      "enfoque": "Desarrollo software profesional y construcción de sistemas",
+      "dominios": {
+        "u1": "Sistema de gestión de biblioteca (modelo .NET)",
+        "u2": "Sistema hospitalario completo con múltiples entidades"
+      },
+      "diferencias_tecnicas": {
+        "sintaxis": "Sintaxis C# con tipado fuerte y OOP",
+        "paradigma": "Enfoque en arquitectura y patrones de diseño",
+        "bibliotecas": "Entity Framework, ASP.NET Core, enterprise patterns",
+        "despliegue": "Deploy con .NET, contenedores empresariales"
+      }
+    }
+  },
+  "contenido_comun": {
+    "estructura_curso": "Misma estructura de 4 unidades con evaluaciones formativas y sumativas",
+    "metodologia": "Aprendizaje basado en proyectos con evaluación continua",
+    "base_datos": "SQLite en ambas versiones",
+    "control_versiones": "Git workflow profesional con ramas y pull requests",
+    "evaluaciones": "Mismo formato de evaluaciones A/B con rúbrica de 100 puntos"
+  },
+  "mapeo_contenido": {
+    "encuadre_1": {
+      "LAP": "Presentación orientada a análisis de datos y procesamiento",
+      "LSO": "Presentación orientada a desarrollo profesional y construcción de sistemas"
+    },
+    "unidad_1": {
+      "LAP": "Fundamentos Python + API para procesamiento de tickets",
+      "LSO": "Fundamentos C# + API para gestión de biblioteca"
+    },
+    "unidad_2": {
+      "LAP": "Acceso a datos + API hospital para análisis de información",
+      "LSO": "Acceso a datos + API hospital completo con múltiples entidades"
+    },
+    "unidad_3": {
+      "LAP": "CRUD para análisis de datos con enfoque procesamiento",
+      "LSO": "CRUD completo para aplicaciones empresariales"
+    },
+    "unidad_4": {
+      "LAP": "Integrador de analítica con APIs y procesamiento batch",
+      "LSO": "Integrador profesional con despliegue y operaciones"
+    },
+    "intensificaciones": {
+      "LAP": "Refuerzo de habilidades de análisis y procesamiento de datos",
+      "LSO": "Refuerzo de habilidades de desarrollo profesional y arquitectura"
+    }
+  },
+  "generacion_recursos": {
+    "pdfs": {
+      "LAP": "Libro de aula con ejemplos de tickets, bibliotecas, cursos",
+      "LSO": "Libro de aula con ejemplos de sistemas médicos y empresariales"
+    },
+    "guias": {
+      "LAP": "Guía de carrera en analítica y programación con Python",
+      "LSO": "Guía de carrera en desarrollo software profesional con C#",
+      "comparativa": "Diferencias y transiciones entre Python y C# en contextos profesionales"
+    }
+  },
+  "validacion": {
+    "corpus_LAP": "input/output/LAP - 28 clases + 6 evaluaciones",
+    "corpus_LSO": "input/output/LSO - 32 clases + 6 evaluaciones", 
+    "estructura_equivalente": "Misma estructura pedagógica con adaptación tecnológica",
+    "objetivos_aprendizaje": "Comparables con diferencias en enfoque tecnológico"
+  }
+}

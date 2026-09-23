@@ -1,0 +1,214 @@
+{
+  "descripcion": "Banco de frases estructurales extraídas del corpus existente. Contiene patrones reutilizables para scaffolds de clases y evaluaciones, con naturalidad pulida según P3-B.",
+  "version": "1.0",
+  "categorias": {
+    "metadatos": {
+      "encuentro": {
+        "formato": "# Encuentro {numero} — {tema}",
+        "subtitulo": "> {unidad} · {caracter}",
+        "campos": {
+          "encuentro": "{numero} de {total}",
+          "unidad": "{numero} — {unidad_corta}",
+          "eje_tematico": "{eje} — {nombre_eje}",
+          "caracter_objetivo": "{caracter}",
+          "estructura": "{estructura}",
+          "duracion": "{tiempo} minutos ({horas} reloj)",
+          "uso_celular": "{celular}",
+          "concepto_nuevo": "{tema}",
+          "requisitos_previos": "{requisitos}"
+        },
+        "reparto_tiempos": {
+          "formato_tabla": "| Momento | Tiempo teórico |\n| --- | --- |",
+          "linea_estandar": "| {momento} | {tiempo} min |",
+          "total": "| **Total** | **{total} min** |"
+        }
+      },
+      "evaluacion": {
+        "formato": "# {titulo} — {version}",
+        "destinatario": "{destinatarios} · {duracion}",
+        "estructura_general": {
+          "metadatos": "## 1. Identificación",
+          "estructura": "## 2. Estructura del encuentro ({tiempo} min)",
+          "reglas": "## 3. Regla canónica de la instancia",
+          "defensa": "## 4. Defensa individual del TP (modalidad)",
+          "alcance": "## 5. Alcance",
+          "prueba": "## 6. Prueba práctica individual (versiones equivalentes)",
+          "criterios": "## 7. Criterios de calificación",
+          "condiciones": "## 8. Condiciones de resolución de la prueba",
+          "equivalencia": "## 9. Regla de equivalencia entre versiones",
+          "asignacion": "## 10. Mecánica de asignación de versiones",
+          "devolucion": "## 11. Devolución"
+        }
+      }
+    },
+    "objetivos_aprendizaje": {
+      "formato": "## 2. Objetivos de aprendizaje",
+      "patrones": [
+        "Usar {tecnica} para {propósito} en un programa {lenguaje}.",
+        "Implementar {estructura} para {accion} sobre {colección}.",
+        "Definir {elemento} con {caracteristicas} para organizar el código en {beneficio}.",
+        "Distinguir entre {diferencia1} y {diferencia2} en el contexto {contexto}.",
+        "Aplicar {herramientas} para resolver {tipo_problema} de {complejidad}."
+      ],
+      "ejemplos": [
+        "1. Usar condicionales (`if`, `else if`, `else`) para tomar decisiones en un programa C#.",
+        "2. Implementar bucles (`for`, `foreach`, `while`) para repetir acciones sobre colecciones.",
+        "3. Definir métodos con parámetros y tipo de retorno para organizar el código en bloques reutilizables.",
+        "4. Distinguir entre un método que devuelve un valor (`return`) y uno que no devuelve nada (`void`).",
+        "5. Aplicar estructuras de control y métodos para resolver un problema simple de lógica."
+      ]
+    },
+    "teoria_minima": {
+      "estructura": "## {numero}. {nombre_seccion} ({tiempo} min)",
+      "charla_rapida": {
+        "formato": "### Charla rápida: {titulo}",
+        "plantillas": [
+          "¿Por qué {problema} es una mala idea?",
+          "Si {condicion}, ¿qué pasaría si {accion}?",
+          "Imagine {escenario} donde {elemento} debe {funcion}.",
+          "Hoy vamos a aprender {herramientas} que nos permiten {beneficio}."
+        ]
+      },
+      "diagnostico_rapido": {
+        "formato": "### Diagnóstico rápido",
+        "preguntas": [
+          "Si {variable} = {valor}, ¿qué pasaría si {condicion}?",
+          "¿Cuántas veces se ejecuta {bucle}?",
+          "¿Qué es {concepto} y para qué sirve?"
+        ]
+      },
+      "explicacion_minima": {
+        "formato": "### Lo mínimo indispensable",
+        "estructura": "{tecnica} permite {propósito}.",
+        "ejemplo": "**{lenguaje} ejemplo:**\n```{lenguaje}\n{codigo}\n```\n\n**Salida esperada:**\n```\n{salida}\n```"
+      }
+    },
+    "practica_guiada": {
+      "formato": "## {numero}. {nombre_seccion} ({tiempo} min)",
+      "estructura_pasos": [
+        "**{tecnica} {descripcion}:**",
+        "",
+        "**{lenguaje} ejemplo:**",
+        "```{lenguaje}",
+        "{codigo}",
+        "```",
+        "",
+        "**Salida esperada:**",
+        "```",
+        "{salida}",
+        "```"
+      ],
+      "ejercicio_guiado": {
+        "formato": "**Ejercicio guiado:** {instrucciones}",
+        "verificacion": "Verificar que {resultado}."
+      }
+    },
+    "ejercicio_independiente": {
+      "formato": "## {numero}. {nombre_seccion} ({tiempo} min)",
+      "consigna": "Crear un programa en `{archivo}` que:",
+      "pasos": [
+        "{numero}. {paso}",
+        "{numero}. {paso}",
+        "{numero}. {paso}",
+        "{numero}. {paso}"
+      ],
+      "pista": "**Pista:** {sugerencia}",
+      "solucion_esperada": {
+        "formato": "### Solución esperada del docente",
+        "codigo": "```{lenguaje}\n{codigo}\n```",
+        "salida": "**Salida esperada:**\n```\n{salida}\n```"
+      },
+      "entrega": {
+        "formato": "### Entrega del commit",
+        "comando": "```bash\ngit add .\ngit commit -m \"{mensaje}\"\ngit push\n```"
+      }
+    },
+    "cierre": {
+      "formato": "## {numero}. Cierre ({tiempo} min)",
+      "te_lllevas": {
+        "formato": "### Qué te llevás",
+        "estructura": [
+          "- {tecnica1} {propósito1}.",
+          "- {tecnica2} {propósito2}.",
+          "- {tecnica3} {propósito3}.",
+          "- {concepto} {beneficio}."
+        ]
+      },
+      "lo_que_viene": {
+        "formato": "### Lo que viene",
+        "plantilla": "**Encuentro {numero}: {tema}** — {descripcion}"
+      }
+    },
+    "errores_comunes": {
+      "formato": "## {numero}. Errores comunes y trampas",
+      "estructura": "{numero}. **{error}** — {explicacion}",
+      "ejemplos": [
+        "1. **Usar `=` en lugar de `==` en un condicional** — `if (nota = 7)` asigna 7 a `nota` en lugar de comparar. El compilador puede dar un error o un comportamiento inesperado. Siempre usar `==` para comparar.",
+        "2. **Olvidar las llaves `{}` en un `if`/`else`** — Si no se usan llaves, solo la primera línea después del condicional pertenece al bloque. Esto genera errores lógicos difíciles de detectar.",
+        "3. **Bucle infinito con `while`** — Si la condición nunca se vuelve falsa, el bucle no termina y la app se cuelga. Siempre asegurarse de que la variable de control cambie dentro del bucle.",
+        "4. **Definir un método antes de `app.Run()` sin contexto adecuado** — En top-level statements, los métodos locales deben definirse antes de ser llamados, o como métodos de nivel de archivo después de `app.Run()`.",
+        "5. **Confundir `return` con `Console.WriteLine`** — `return` sale del método y entrega un valor; `Console.WriteLine` solo muestra texto en consola pero no sale del método.",
+        "6. **No incrementar el contador en el bucle `for`** — Olvidar `i++` hace que el bucle se ejecute infinitamente."
+      ]
+    },
+    "evaluacion_anexo_docente": {
+      "formato": "# Anexo docente — {titulo} — {version}",
+      "destinatario": "> Documento docente formal. No se entrega a los alumnos: contiene la solución completa de la versión {version}, las respuestas esperadas de los ítems conceptuales, los criterios de corrección ítem por ítem y la pauta de devolución.",
+      "secciones": {
+        "solucion_completa": "## 1. Solución completa",
+        "salidas_referencia": "## 2. Salidas de referencia para la corrección",
+        "criterios_correccion": "## 3. Criterios de corrección ítem por ítem",
+        "errores_previstos": "## 4. Errores previstos y criterio de intervención",
+        "devolucion": "## 5. Pauta de devolución"
+      },
+      "salidas_referencia": {
+        "formato_tabla": "| Prueba | Pedido | Respuesta esperada | Comando de verificación |\n| --- | --- | --- | --- |",
+        "fila": "| {prueba} | {pedido} | {respuesta} | {verificacion} |"
+      },
+      "criterios_correccion": {
+        "formato": "- **{item} ({puntos} pts):** {descripcion}",
+        "total": "**Total:** {puntos} puntos. Criterio de Apto: ≥ {aprobacion} puntos."
+      },
+      "errores_previstos": {
+        "formato": "- Si {condicion}, {intervencion}.",
+        "ejemplos": [
+          "- Si el alumno confunde secuencia con decisión, pedirle que identifique dónde hay un punto de bifurcación.",
+          "- Si el alumno no distingue `cd` de `mkdir`, reforzar con el ejemplo de la carpeta `proyecto`.",
+          "- Si el alumno no logra el diagrama del mayor con dos comparaciones, aceptar una versión con comparaciones encadenadas."
+        ]
+      }
+    }
+  },
+  "variantes_por_destinatario": {
+    "LAP": {
+      "lenguaje": "Python",
+      "framework": "Minimal API (Python)",
+      "enfoque": "analítica de datos",
+      "ejemplos": "tickets, bibliotecas, cursos, canciones"
+    },
+    "LSO": {
+      "lenguaje": "C#",
+      "framework": ".NET Minimal API",
+      "enfoque": "desarrollo profesional",
+      "ejemplos": "sistemas médicos, bibliotecas, aplicaciones empresariales"
+    }
+  },
+  "scaffolds_actualizados": {
+    "scaffold-clase": {
+      "mejoras": [
+        "Integrar frases pulidas de P3-B para mayor naturalidad",
+        "Adicionar soporte para formato integrador (120min)",
+        "Mejorar placeholders con contexto específico",
+        "Incluir ejemplos por destinatario (LAP/LSO)"
+      ]
+    },
+    "scaffold-evaluacion": {
+      "mejoras": [
+        "Estándarizar estructura de anexo docente",
+        "Incluir criterios de corrección detallados",
+        "Mejor descripción de errores previstos",
+        "Adicionar patrones de devolución por tipo de instancia"
+      ]
+    }
+  }
+}

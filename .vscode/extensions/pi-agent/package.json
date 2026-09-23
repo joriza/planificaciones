@@ -1,0 +1,236 @@
+{
+  "name": "Pi Agent Configuration for Planificaciones Project",
+  "description": "Configuración completa de Pi Agent para el proyecto de planificaciones educativas",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "pi.startAgent",
+        "title": "🚀 Start Pi Agent",
+        "category": "Pi",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "pi.stopAgent", 
+        "title": "🛑 Stop Pi Agent",
+        "category": "Pi",
+        "icon": "$(stop)"
+      },
+      {
+        "command": "pi.inspectCode",
+        "title": "🔍 Inspect Code with Pi",
+        "category": "Pi",
+        "icon": "$(search)"
+      },
+      {
+        "command": "pi.refactorCode",
+        "title": "🔄 Refactor Code with Pi", 
+        "category": "Pi",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "pi.generateTests",
+        "title": "🧪 Generate Tests with Pi",
+        "category": "Pi",
+        "icon": "$(beaker)"
+      },
+      {
+        "command": "pi.generateDocs",
+        "title": "📚 Generate Documentation",
+        "category": "Pi",
+        "icon": "$(book)"
+      },
+      {
+        "command": "pi.rddValidate",
+        "title": "🔒 RDD Validation",
+        "category": "Pi",
+        "icon": "$(lock)"
+      },
+      {
+        "command": "pi.quickChat",
+        "title": "💬 Quick Chat with Pi",
+        "category": "Pi",
+        "icon": "$(comment)"
+      },
+      {
+        "command": "pi.analyzeProject",
+        "title": "📊 Analyze Project Structure",
+        "category": "Pi",
+        "icon": "$(database)"
+      },
+      {
+        "command": "pi.optimizeCode",
+        "title": "⚡ Optimize Code",
+        "category": "Pi",
+        "icon": "$(zap)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "pi.startAgent",
+        "key": "ctrl+shift+p pi-start",
+        "mac": "cmd+shift+p pi-start"
+      },
+      {
+        "command": "pi.inspectCode", 
+        "key": "ctrl+shift+i",
+        "mac": "cmd+shift+i"
+      },
+      {
+        "command": "pi.refactorCode",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r"
+      },
+      {
+        "command": "pi.generateTests",
+        "key": "ctrl+shift+t",
+        "mac": "cmd+shift+t"
+      },
+      {
+        "command": "pi.quickChat",
+        "key": "ctrl+shift+c",
+        "mac": "cmd+shift+c"
+      },
+      {
+        "command": "pi.rddValidate",
+        "key": "ctrl+shift+v",
+        "mac": "cmd+shift+v"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "pi.inspectCode",
+          "when": "editorHasSelection",
+          "group": "Pi@1"
+        },
+        {
+          "command": "pi.refactorCode",
+          "when": "editorHasSelection", 
+          "group": "Pi@2"
+        },
+        {
+          "command": "pi.generateTests",
+          "when": "editorHasSelection",
+          "group": "Pi@3"
+        },
+        {
+          "command": "pi.generateDocs",
+          "when": "editorHasSelection",
+          "group": "Pi@4"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "pi.inspectCode",
+          "when": "editorTextFocus",
+          "group": "Pi"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "pi.quickChat",
+          "when": "pi.agentActive"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "pi.analyzeProject",
+          "when": "view == pi-explorer",
+          "group": "navigation"
+        }
+      ]
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "pi-explorer",
+          "name": "🤖 Pi Explorer",
+          "when": "pi.agentActive"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Pi Agent",
+      "properties": {
+        "pi.agent.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Pi Agent integration"
+        },
+        "pi.agent.model": {
+          "type": "string",
+          "default": "glm-4.5-flash",
+          "enum": ["glm-4.5-flash", "claude-3-sonnet", "gpt-4"],
+          "description": "Pi model to use"
+        },
+        "pi.agent.autoSave": {
+          "type": "boolean", 
+          "default": true,
+          "description": "Auto-save Pi suggestions"
+        },
+        "pi.agent.shortcuts.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Pi keyboard shortcuts"
+        },
+        "pi.agent.validation.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable code validation on save"
+        },
+        "pi.agent.rdd.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable RDD validation"
+        },
+        "pi.agent.memory.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable memory persistence"
+        },
+        "pi.agent.terminal.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable terminal integration"
+        }
+      }
+    },
+    "languages": [
+      {
+        "id": "markdown",
+        "extensions": [".md", ".markdown"],
+        "configuration": "./language-configuration.json"
+      }
+    ]
+  },
+  "activationEvents": [
+    "onStartupFinished",
+    "onLanguage:python",
+    "onLanguage:javascript",
+    "onLanguage:typescript", 
+    "onLanguage:markdown",
+    "onCommand:pi.startAgent"
+  ],
+  "main": "./extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.60.0",
+    "@types/node": "^14.x",
+    "typescript": "^4.4.0",
+    "@vscode/test-electron": "^2.0.0"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^7.0.0",
+    "vscode-languageserver": "^7.0.0",
+    "ws": "^8.0.0"
+  }
+}

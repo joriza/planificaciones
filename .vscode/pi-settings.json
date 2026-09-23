@@ -1,0 +1,40 @@
+{
+  "pi": {
+    "model": "glm-4.5-flash",
+    "workspace": "${workspaceFolder}",
+    "enabled": true,
+    "auto-save": true,
+    "context-files": [
+      "package.json",
+      "tsconfig.json", 
+      "pyproject.toml",
+      "requirements.txt"
+    ],
+    "ignore-files": [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/.git/**"
+    ],
+    "commands": {
+      "format": "prettier --write",
+      "lint": "eslint src/",
+      "test": "npm test"
+    },
+    "shortcuts": {
+      "ctrl+shift+p": "pi:quick-chat",
+      "ctrl+shift+i": "pi:inspect-code",
+      "ctrl+shift+r": "pi:refactor"
+    }
+  },
+  "python": {
+    "linting": "flake8",
+    "formatting": "black",
+    "testing": "pytest"
+  },
+  "javascript": {
+    "linting": "eslint",
+    "formatting": "prettier",
+    "testing": "jest"
+  }
+}

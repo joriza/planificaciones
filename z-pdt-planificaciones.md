@@ -535,7 +535,10 @@ Respecto al generador de pdfs.
 Si los margenes espejo estan funcionando no es algo visible, los margenes izquierdo y derecho se ven del mismo tamaño. amplie un poco el margen izquierdo para que tenga algo visual en que basarme.
 
 ## +det41
+Analice la viabilidad de lo siguiente:
 Si implementar latex simplifica las cosas, hagalo solo en la creacion de pdf.
+Instalar un programa en la computadora local para trabajar con latex, no es un problema, se indicaen el readme para no perder referencia.
+Si se pierde la plantilla actual no es problema mientras la impresion respete los lineamientos actuales o sean muy similares.
 El generar los documentos markdown no debe conener latex, para conversiones rapidas, utilizo un render que tiene problemas con latex, por eso no lo utilizo en ninguno de mis markdown.
 
 ## +det42
@@ -560,3 +563,10 @@ Alumnos sin regularidad: Falta definir estos documentos.
 Administracion: 01-planificacion (definir otras acciones, creo que deterministas) + 05-continuidad
 Los pdfs generados deben tener dentro de esa carpeta una distribucion por destinatario.
 Si la conclucion es que es correcta agreguelo al plan de mejoras.
+
+## Otro agregado al refactor.
+Tomar en cuenta otra posibilidad.
+Para un alumnos sin regularidad puede haber momento de reincorporarse a mitad de ciclo. Si lo hace a fin del ciclo es igual que el de diciembre. Tomar como referencia del curso justo entre el encuentro 18 y 19.
+
+## +det43
+Un detalle. la numeracion de las lineas en los fragmentos de código cambia de color segun los colores del codigo, es posible fijarlo en un solo color? Si es posible que sea color verde, como en general se ven los co,mentarios en un editor de codigo.
