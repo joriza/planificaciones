@@ -31,8 +31,8 @@ en los renders (verificación byte a byte contra baseline capturada antes de toc
 | T1 | S1 | inline | `dd7143b` |
 | T2 | S2 | inline | `476d835` |
 | T3 | S3 | inline | `f29ac21` |
-| T4 | S4 | inline | pendiente |
-| T5 | S5 | inline | pendiente |
+| T4 | S4 | inline | `350efdb` |
+| T5 | S5 | inline | `0a0d5f2` |
 | T6 | S1-S5 | inline | (verificación final: renders byte-idénticos vs baseline + puerta verde ambos cursos) |
 
 Baseline de verificación: renders pre-cambio capturados en temp (validar/lint/verificar stdout+exit de
@@ -57,3 +57,10 @@ falla en alto si la unidad falta) no altera salida alguna con curso-data válido
   `origin/main`, porque la rama feature nace de `regen/lpr` que arrastra los commits NO fusionados de
   la regeneración del corpus LPR. Líneas autoría de esta feature: T1 173 (111+/62-), T2/T3 menores.
   La entrega de esta feature es independiente del merge de `regen/lpr`.
+- L6 (verificación T5/T6): `generar-curso.ps1` smoke-tested en copias del repo (no toca el corpus
+  real): happy path 5/5 exit 0 con puerta verde LPR (0E/9A con `-HorasPorEncuentro 2`); materia
+  inexistente corta en [1] con exit 1; sin `-Force` sobre corpus existente corta en [3] por README
+  protegido (comportamiento canónico). El runner no duplica lógica: llama a los scripts existentes.
+  Gotcha corregida en el camino: splatting de hashtable (el array pasaba los tokens como posicionales
+  y rompía el binding de `-Materia`). Verificación final T1-T4 intacta: renders reales sin drift
+  (`git status --short output/` vacío).
