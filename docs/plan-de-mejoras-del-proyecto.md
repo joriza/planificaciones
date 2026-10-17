@@ -246,12 +246,15 @@ medición real del entorno); la palanca restante es la **salida**, que es la car
 
 ### 5.4 Deuda técnica registrada (no olvidar)
 
-- Baseline del linter (`odd/tasks/optimizacion-tiempo-tokens.md`): 5 ERROR U4 (→ P-3), 1 ERROR snippet
-  defectuoso intencional (`int PatientId` — convención de supresión pendiente), 4 AVISO preview-libro
-  (falsos positivos leves), 3 AVISO prosa-estampada (estructura intencional).
+- Baseline del linter (actualizada 2026-10, feature higiene): **0 ERROR en ambos cursos**. Los 5 ERROR U4
+  se resolvieron con P2-D (canonización U4 + regla de supresión del linter) y el snippet intencional
+  (`int PatientId`) ya no dispara: no se necesita una convención de supresión adicional. Avisos vigentes,
+  todos por diseño: LPR 9 (5 preview-libro + 4 prosa-estampada) corriendo con `-HorasPorEncuentro 2`;
+  LSO 4 (4 prosa-estampada) con el default 4. Registro: `odd/tasks/higiene-tools-historial.md`.
 - `tabla-dominio.json` filas D: pasada de lectura natural pendiente.
-- Anexos de clase (si se aprueba la fusión): actualizar `convertir-a-pdf.ps1 -SoloAnexos`, scaffolds,
-  verificador y linter en la misma feature (una sola unidad de trabajo, no incremental suelto).
+- Anexos de clase (si se aprueba la fusión — P1-A declinado §6.1; la condición solo revive si se retoma):
+  actualizar `convertir-a-pdf.ps1 -SoloAnexos`, scaffolds, verificador y linter en la misma feature
+  (una sola unidad de trabajo, no incremental suelto).
 
 ---
 

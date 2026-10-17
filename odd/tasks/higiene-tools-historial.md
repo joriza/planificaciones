@@ -28,9 +28,9 @@ en los renders (verificación byte a byte contra baseline capturada antes de toc
 
 | ID | Specs | Ruta | Commit |
 | --- | --- | --- | --- |
-| T1 | S1 | inline | pendiente |
-| T2 | S2 | inline | pendiente |
-| T3 | S3 | inline | pendiente |
+| T1 | S1 | inline | `dd7143b` |
+| T2 | S2 | inline | `476d835` |
+| T3 | S3 | inline | `f29ac21` |
 | T4 | S4 | inline | pendiente |
 | T5 | S5 | inline | pendiente |
 | T6 | S1-S5 | inline | (verificación final: renders byte-idénticos vs baseline + puerta verde ambos cursos) |
@@ -49,3 +49,11 @@ falla en alto si la unidad falta) no altera salida alguna con curso-data válido
   con `-HorasPorEncuentro 2` (los "24 errores" iniciales eran del flag default 4 h) → S4 es solo doc,
   sin mecanismo de supresión. `curso-data.json` ya trae `slots.horasPorEncuentro` (LPR=2): mejora futura
   candidate — que las herramientas lo deriven solas — registrada, no implementada (cambio de contrato).
+- L4 (evidencia de ejecución): T1 `dd7143b` (renders byte-idénticos: 10 archivos + 6 validadores
+  stdout+exit contra baseline pre-cambio), T2 `476d835`, T3 `f29ac21` (PDF 591784 bytes queda en disco
+  sin versionar; 6 branches fusionadas podadas con `-d`; borado remoto pendiente de decisión del
+  docente). Baseline linter vigente: LPR 0E/9A con `-HorasPorEncuentro 2`, LSO 0E/4A default.
+- L5 (frontera de slice): el contador de la plataforma reporta ~15.9k líneas en 5 commits desde
+  `origin/main`, porque la rama feature nace de `regen/lpr` que arrastra los commits NO fusionados de
+  la regeneración del corpus LPR. Líneas autoría de esta feature: T1 173 (111+/62-), T2/T3 menores.
+  La entrega de esta feature es independiente del merge de `regen/lpr`.
