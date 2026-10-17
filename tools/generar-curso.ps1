@@ -4,20 +4,23 @@
 #
 # Uso (desde la raiz del repositorio):
 #   powershell -File tools\generar-curso.ps1 -Materia input\materias\<m> [-Curso output\<m>] [-HorasPorEncuentro <h>] [-Force] [-SoloVerificacion]
+#   -HorasPorEncuentro es opcional: si no se pasa, se deriva de curso-data.json (campo
+#   slots.horasPorEncuentro cuando existe, suma de tiempos[].min / 60 si falta). El flag
+#   sigue existiendo para overrides manuales o materias sin campo declarado.
 #
 # Pasos (cada uno es el script existente; este runner no duplica logica):
 #   [1/5] validar-curso-data      firma del docente en verde (corte si falla)
 #   [2/5] generar-administrativos render CSV a <Curso>\01-planificacion (idempotente)
 #   [3/5] generar-readme          README derivado; protege el existente salvo -Force
 #   [4/5] verificar-curso         integridad del corpus
-#   [5/5] lint-canon              canon del corpus (-HorasPorEncuentro, default 4; LPR corre con 2)
+#   [5/5] lint-canon              canon del corpus (-HorasPorEncuentro; deriva de curso-data si no se pasa)
 # Con -SoloVerificacion corre solo [4/5] y [5/5] (puerta de salida de una corrida ya renderizada).
 #
 # Exit codes: 0 = todo en verde | el exit code del primer paso que falla (1 uso/parseo, 2 hallazgos ERROR).
 param(
   [string]$Materia = '',
   [string]$Curso = '',
-  [int]$HorasPorEncuentro = 4,
+  [int]$HorasPorEncuentro = 0,
   [switch]$Force,
   [switch]$SoloVerificacion
 )
@@ -29,6 +32,12 @@ if ($Materia -eq '') {
 }
 if ($Curso -eq '') {
   $Curso = Join-Path 'output' (Split-Path -Leaf $Materia)
+}
+
+# Derivacion automatica de horas por encuentro cuando el flag no se paso explicitamente.
+if ($HorasPorEncuentro -eq 0) {
+  Import-Module (Join-Path $PSScriptRoot '_comun.psm1') -Force
+  $HorasPorEncuentro = [int](Get-HorasPorEncuentro $Materia)
 }
 
 $steps = @()
