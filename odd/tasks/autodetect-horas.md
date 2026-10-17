@@ -13,10 +13,10 @@ El docente autoriza en el historial de higiene (L1/L2) derivar `slots.horasPorEn
 
 | ID | Specs | Ruta | Commit |
 | --- | --- | --- | --- |
-| T1 | S1 | inline | pendiente |
-| T2 | S2 | inline | pendiente |
-| T3 | S3 | inline | pendiente |
-| T4 | S1-S3 | inline | (verificación final: renders byte-idénticos + puerta verde) |
+| T1 | S1 | inline | `07a36d5` |
+| T2 | S2 | inline | `9e59ed1` |
+| T3 | S3 | inline | `4b87570` |
+| T4 | S1-S3 | inline | `b6ddb3b` |
 
 Baseline de verificación: capturar antes de T1: renders administrativos LPR/LSO + lint LPR/LSO con el flag actual (`-HorasPorEncuentro 2` para LPR, default 4 para LSO). Después de T1/T2/T3 re-renderizar los mismos y comparar con `cmp`. La puerta de salida de cada materia debe permanecer en verde (0 errores).
 
@@ -26,3 +26,5 @@ Baseline de verificación: capturar antes de T1: renders administrativos LPR/LSO
 - L2 (autorización): "ok. realice las tareas de higiene de los puntos 1 a 5"
 - L3 (post-higiene, autorización explicita del docente para deriva de horas): ver historial.
 - L4 (evidencia): suma de `tiempos[].min` constante por materia: LPR 120 min (2h), LSO 240 min (4h). Agregar el campo es seguro porque el factor de escala es 1.0 para LSO.
+- L5 (gotcha corregida): splatting de hashtable — usar array pasaba los tokens como posicionales y rompía el binding de `-Materia`. Solución: hashtable con `@{}` y `@argumentos`.
+- L6 (verificación T4): admin CSVs byte-idénticos contra HEAD para ambos cursos (LPR y LSO) al regenerar sin flag; puerta verde: LPR 0E/9A, LSO 0E/4A. Diff contenido vacío, warnings LF→CRLF son normalización git preexistente.
