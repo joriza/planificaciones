@@ -39,4 +39,21 @@ function Get-DenominacionUnidad($data, [string]$u) {
   return [string]$prop.Value.denominacion
 }
 
-Export-ModuleMember -Function Write-Csv, Convert-Slug, Test-EsCurso, Read-Texto, Get-LineaCsv, Get-DenominacionUnidad
+function Get-HorasPorEncuentro([string]$materia) {
+  # Horas por encuentro de la materia (double). Precedencia: slots.horasPorEncuentro explicito >
+  # suma de tiempos[].min del primer encuentro / 60. Ambos cursos validados hoy declaran el campo
+  # (LPR 2, LSO 4); la derivacion es redundancia defensiva por si una materia futura no lo declara.
+  $rutaJson = Join-Path $materia 'curso-data.json'
+  $data = Read-Texto $rutaJson | ConvertFrom-Json
+  if ($null -ne $data.slots -and $null -ne $data.slots.horasPorEncuentro) {
+    return [double]$data.slots.horasPorEncuentro
+  }
+  $enc = @($data.encuentros)
+  if ($enc.Count -eq 0) { throw "CURSO-DATA SIN ENCUENTROS en $materia" }
+  $mins = ($enc[0].tiempos | ForEach-Object { [double]$_.min } | Measure-Object -Sum).Sum
+  $horas = $mins / 60
+  if ($horas -le 0) { throw "HORAS DERIVADAS INVALIDAS (0 o negativas) para ${materia}: suma $mins min" }
+  return $horas
+}
+
+Export-ModuleMember -Function Write-Csv, Convert-Slug, Test-EsCurso, Read-Texto, Get-LineaCsv, Get-DenominacionUnidad, Get-HorasPorEncuentro
