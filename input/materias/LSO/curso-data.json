@@ -346,6 +346,7 @@
   ],
   "slots": {
     "celular": "No permitido",
+    "horasPorEncuentro": 4,
     "recursos": [
       "VS Code y terminal",
       "SDK .NET 6",
