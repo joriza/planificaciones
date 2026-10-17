@@ -28,6 +28,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+# Helpers compartidos (unica fuente): tools/_comun.psm1
+Import-Module (Join-Path $PSScriptRoot '_comun.psm1') -Force
 
 if ($Materia -eq '') {
   Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
@@ -92,12 +94,6 @@ if ($estructura -ne 'clase' -and $estructura -ne 'cierre') {
 }
 
 # --- Slug: minusculas, sin tildes, solo [a-z0-9-] ---
-function Convert-Slug([string]$texto) {
-  $t = $texto.ToLowerInvariant().Normalize([System.Text.NormalizationForm]::FormD)
-  $t = [regex]::Replace($t, '\p{M}', '')
-  $t = [regex]::Replace($t, '[^a-z0-9]+', '-').Trim('-')
-  return $t
-}
 $slug = $Slug
 if ($slug -eq '') { $slug = "$($enc.tema)" }
 $slug = Convert-Slug $slug

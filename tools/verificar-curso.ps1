@@ -28,15 +28,13 @@ param(
   [int]$MaxCell = 35
 )
 $ErrorActionPreference = 'Stop'
+# Helpers compartidos (unica fuente): tools/_comun.psm1
+Import-Module (Join-Path $PSScriptRoot '_comun.psm1') -Force
 # El script vive en tools\, pero la deteccion de cursos sigue anclada a la raiz del repositorio.
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
 # Deuda conocida del corpus (rutas relativas a la raiz; reparada la entrada, quitar de aqui):
 $deudaConocida = @{}
-
-function Test-EsCurso([string]$dir) {
-  return (Test-Path -LiteralPath (Join-Path $dir '01-planificacion\planificacion-anual.csv'))
-}
 
 function Format-Rangos([int[]]$nums) {
   if (-not $nums -or $nums.Count -eq 0) { return '(ninguno)' }

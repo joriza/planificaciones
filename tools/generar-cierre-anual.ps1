@@ -26,6 +26,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+# Helpers compartidos (unica fuente): tools/_comun.psm1
+Import-Module (Join-Path $PSScriptRoot '_comun.psm1') -Force
 
 if ($Materia -eq '') {
   Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
@@ -68,11 +70,6 @@ if (-not (Test-Path -LiteralPath $salidaAbs)) {
 }
 
 # Leer las fuentes de datos.
-function Read-Texto([string]$ruta) {
-  $t = [System.IO.File]::ReadAllText((Resolve-Path -LiteralPath $ruta).Path)
-  return $t.Replace("`r`n", "`n")
-}
-
 try {
   $data = Read-Texto $rutaJson | ConvertFrom-Json
   $invariantes = Read-Texto $rutaInvariantes | ConvertFrom-Json
@@ -104,13 +101,6 @@ function Get-EjeNombre([int]$nEje) {
   return [string]$prop.Value
 }
 
-# Obtener denominacion de unidad desde slots.unidades.
-function Get-DenominacionUnidad([string]$u) {
-  $prop = $data.slots.unidades.PSObject.Properties[$u]
-  if ($null -eq $prop -or $null -eq $prop.Value) { return $u }
-  return [string]$prop.Value.denominacion
-}
-
 # Obtener TP de unidad desde slots.tps.
 function Get-TPUnidad([string]$u) {
   $prop = $data.slots.tps.PSObject.Properties[$u]
@@ -131,16 +121,6 @@ foreach ($arch in $archivosGenerados) {
   if ((Test-Path -LiteralPath $rutaArch) -and -not $Force) {
     Write-Output "AVISO: archivo existente protegido (use -Force para sobrescribir): $rutaArch"
   }
-}
-
-# --- Utilidades CSV ---
-function Get-LineaCsv([string[]]$campos) {
-  ($campos | ForEach-Object { '"' + $_.Replace('"', '""') + '"' }) -join ';'
-}
-function Write-Csv([string]$ruta, [string[]]$lineas) {
-  # UTF-8 con BOM, LF de terminador en cada linea (incluida la ultima).
-  $contenido = ($lineas -join "`n") + "`n"
-  [System.IO.File]::WriteAllText($ruta, $contenido, (New-Object System.Text.UTF8Encoding($true)))
 }
 
 # --- Construir las 38 filas del seguimiento (36 encuentros + 2 mesas) ---
@@ -327,7 +307,7 @@ function Build-Memoria([string]$raiz, [object]$data, [string]$salidaAbs) {
 
   foreach ($u in @('u1', 'u2', 'u3', 'u4')) {
     $tp = Get-TPUnidad $u
-    $denom = Get-DenominacionUnidad $u
+    $denom = Get-DenominacionUnidad $data $u
     [void]$sb.AppendLine('| ' + $tp + ' | ' + $denom + ' | — | — | — |')
   }
   [void]$sb.AppendLine('')
@@ -399,7 +379,7 @@ function Build-InformeMesa([string]$tituloMesa, [string]$mesaNombre, [string]$ev
   # Construir alcance evaluado: camino minimo por unidad + TPs.
   $alcanceLines = New-Object System.Collections.Generic.List[string]
   foreach ($u in @('u1', 'u2', 'u3', 'u4')) {
-    $denom = Get-DenominacionUnidad $u
+    $denom = Get-DenominacionUnidad $data $u
     $propUni = $data.slots.unidades.PSObject.Properties[$u]
     $expectativas = ''
     if ($null -ne $propUni -and $null -ne $propUni.Value) {

@@ -29,6 +29,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+# Helpers compartidos (unica fuente): tools/_comun.psm1
+Import-Module (Join-Path $PSScriptRoot '_comun.psm1') -Force
 
 if ($Materia -eq '') {
   Write-Output 'ERROR: falta -Materia <ruta a la carpeta de la materia (contiene curso-data.json)>'
@@ -64,11 +66,6 @@ foreach ($ruta in @($rutaJson, $rutaPlantilla, $rutaDescripciones)) {
     Write-Output "ERROR: no se encontro el archivo requerido: $ruta"
     exit 1
   }
-}
-
-function Read-Texto([string]$ruta) {
-  $t = [System.IO.File]::ReadAllText((Resolve-Path -LiteralPath $ruta).Path)
-  return $t.Replace("`r`n", "`n")
 }
 
 try {
@@ -138,11 +135,6 @@ function Get-DescripcionTipo([string]$tipo, [string]$campo) {
   if ($null -eq $c) { throw "CAMPO '$campo' AUSENTE para el tipo $tipo en readme-descripciones.json" }
   return [string]$c.Value
 }
-function Get-DenominacionUnidad([string]$u) {
-  $p = $data.slots.unidades.PSObject.Properties[$u]
-  if ($null -eq $p -or $null -eq $p.Value) { throw "UNIDAD SIN DATOS EN CURSO-DATA: $u" }
-  return [string]$p.Value.denominacion
-}
 function Get-NombreUnidad([string]$u) {
   if ($u -match '^u(\d+)$') { return 'Unidad ' + $Matches[1] }
   return $u
@@ -191,7 +183,7 @@ foreach ($u in @('u1', 'u2', 'u3', 'u4')) {
     exit 1
   }
   $slotsGlobales["tp.$u"] = [string]$p.Value
-  $slotsGlobales["unidad.$u"] = Get-DenominacionUnidad $u
+  $slotsGlobales["unidad.$u"] = Get-DenominacionUnidad $data $u
 }
 $propHorasEnc = $data.slots.PSObject.Properties['horasPorEncuentro']
 if ($null -ne $propHorasEnc -and $null -ne $propHorasEnc.Value -and [int]$propHorasEnc.Value -gt 0 -and [int]$propHorasEnc.Value -ne 4) {
@@ -381,7 +373,7 @@ if ($unidadesArbol.Count -gt 0) {
     $desde = 0
     foreach ($e in $encuentrosPorUnidad[$u]) { if ($desde -eq 0 -or [int]$e.n -lt $desde) { $desde = [int]$e.n } }
     $hasta = Get-EvalN $u
-    Add-Indice ('#### ' + (Get-DenominacionUnidad $u) + ' (`' + $carpetaUnidad[$u] + '/`, encuentros ' + $desde + ' a ' + $hasta + ')')
+    Add-Indice ('#### ' + (Get-DenominacionUnidad $data $u) + ' (`' + $carpetaUnidad[$u] + '/`, encuentros ' + $desde + ' a ' + $hasta + ')')
     Add-Indice ''
     Add-Indice '| Encuentro | Documento del alumno | Qué trabajó | Anexo docente (solo docente) |'
     Add-Indice '| --- | --- | --- | --- |'
@@ -423,7 +415,7 @@ if ($unidadesArbol.Count -gt 0) {
       $d = Expand-Plantilla (Get-DescripcionTipo 'evaluacion-unidad' 'descripcion') (New-FilaSlots @{
           n             = $hasta
           unidadNombre  = (Get-NombreUnidad $u)
-          'unidad.denominacion' = (Get-DenominacionUnidad $u)
+          'unidad.denominacion' = (Get-DenominacionUnidad $data $u)
         }) "evaluacion-unidad ($($evBase[0].rel))"
       Add-Indice ('| ' + $hasta + ' | [' + (Split-Path -Leaf $evBase[0].rel) + '](' + $evBase[0].rel + ') | ' + $d + ' | — |')
     }
@@ -627,7 +619,7 @@ foreach ($u in $unidadesArbol) {
     if ($texto -match '^(clase-\d+)') { $texto = $Matches[1] }
     $links += (Link-Md $texto $c.rel)
   }
-  $denom = (Get-DenominacionUnidad $u) -replace ':', ' —'
+  $denom = (Get-DenominacionUnidad $data $u) -replace ':', ' —'
   Add-Orden ('**' + $denom + '** (encuentros ' + [int]$clases[0].n + ' a ' + [int]$clases[$clases.Count - 1].n + '), cada clase con su anexo docente: ' + ($links -join ', ') + '.')
 }
 # 6) Evaluaciones de unidad (base, versiones equivalentes y anexos en la carpeta de cada unidad).

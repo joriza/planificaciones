@@ -42,13 +42,11 @@ param(
   [int]$HorasPorEncuentro = 4
 )
 $ErrorActionPreference = 'Stop'
+# Helpers compartidos (unica fuente): tools/_comun.psm1
+Import-Module (Join-Path $PSScriptRoot '_comun.psm1') -Force
 # El script vive en tools\; la deteccion de cursos queda anclada a la raiz del repositorio.
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $minPorEncuentro = $HorasPorEncuentro * 60
-
-function Test-EsCurso([string]$dir) {
-  return (Test-Path -LiteralPath (Join-Path $dir '01-planificacion\planificacion-anual.csv'))
-}
 
 # --- Deteccion de cursos (mismo patron que verificar-curso.ps1) ---
 if ($Curso -ne '') {

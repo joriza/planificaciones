@@ -29,6 +29,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+# Helpers compartidos (unica fuente): tools/_comun.psm1
+Import-Module (Join-Path $PSScriptRoot '_comun.psm1') -Force
 
 # Valores por defecto explicitos (equivalentes a los defaults inline del param).
 if ($null -eq $Materia -or $Materia -eq '') { $Materia = '' }
@@ -202,16 +204,6 @@ function Expand-Plantilla([string]$texto, [hashtable]$valores, [string]$patron, 
 
 $patronSlots = '\{\{([^{}]+)\}\}'      # slots de datos: {{celular}}, {{tp.uX}}
 $patronMolde = '\{([A-Za-z]+)\}'       # tokens del molde de esqueletos: {items}, {cierre}, ...
-
-# --- Utilidades CSV ---
-function Get-LineaCsv([string[]]$campos) {
-  ($campos | ForEach-Object { '"' + $_.Replace('"', '""') + '"' }) -join ';'
-}
-function Write-Csv([string]$ruta, [string[]]$lineas) {
-  # UTF-8 con BOM, LF de terminador en cada linea (incluida la ultima), como los CSV vigentes.
-  $contenido = ($lineas -join "`n") + "`n"
-  [System.IO.File]::WriteAllText($ruta, $contenido, (New-Object System.Text.UTF8Encoding($true)))
-}
 
 # --- Carpeta de salida ---
 if (-not (Test-Path -LiteralPath $Salida)) { New-Item -ItemType Directory -Path $Salida -Force | Out-Null }
