@@ -9,3 +9,6 @@ __pycache__/
 
 # PDFs generados manualmente (accion manual del docente, regenerables)
 output/*/pdf/
+
+# Anotaciones personales z-*.pdf (peso binario; decision higiene 2026-10)
+z-*.pdf
